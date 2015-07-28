@@ -17,6 +17,9 @@ Brainfock is a modern web-based CMF started out as task & project management too
 - Customizable issue types
 - Access control per container (e.g. project, discussion board) and items (e.g. issue, board topic)
 - Customizable workflows per container & issue group/type
+- User notificaitons
+- Activity stream per object (project, issue etc.)
+- I18n & L10n
 
 ![](http://i57.tinypic.com/5cjfkh.png)
 
@@ -33,6 +36,7 @@ v0.16.0 - currently in develoment. Public code release is planned on August-Sept
 
 ### Tech summary
 Brainfock uses a number of open source projects to work properly:
+
 * React.js/FLUX for client
 * Google Material Design (utilizing powerful <http://material-ui.com>) 
 * Node.js' NPM, Webpack & Bower
