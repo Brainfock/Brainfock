@@ -31,5 +31,53 @@
   "Role": {
     "dataSource": "db",
     "public": false
+  },
+  "WikiPage": {
+    "dataSource": "db",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "WikiLink": {
+    "dataSource": "db",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "WikiPageRevision": {
+    "dataSource": "db",
+    "public": true
+  },
+  "Topic": {
+    "dataSource": "db",
+    "public": true
+  },
+  "TopicGroup": {
+    "dataSource": "db",
+    "public": true
+  },
+  "TopicType": {
+    "dataSource": "db",
+    "public": true
+  },
+  "SettingsField": {
+    "dataSource": "db",
+    "public": true
+  },
+  "Settings": {
+    "dataSource": "db",
+    "public": false
+  },
+  "Entity": {
+    "dataSource": "db",
+    "public": true
+  },
+  "EntityAccessAssign": {
+    "dataSource": "db",
+    "public": false
+  },
+  "Comment": {
+    "dataSource": "db",
+    "public": true
   }
 }
