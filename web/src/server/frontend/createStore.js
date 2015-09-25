@@ -11,22 +11,21 @@ export default function createStore(req) {
 
     var ctx = loopback.getCurrentContext();
     var currentUser = ctx && ctx.get('currentUser');
-
-    var state = {
+    var _state ={
       device: {
         isMobile: ['phone', 'tablet'].indexOf(req.device.type) > -1
       },
-      users:{
-        viewer: currentUser ? ctx.get('currentUser') : null,
+      users: {
+        viewer: currentUser ? ctx.get('currentUser') : null
       }
     };
 
     // provide auth token id to client
     if(currentUser) {
-      state.users.viewer.authToken = ctx.get('accessToken').id;
+      _state.users.viewer.authToken = ctx.get('accessToken').id;
     }
 
-    const requestState = fromJS(initialState).mergeDeep(state);
+    const requestState = fromJS(initialState).mergeDeep(_state);
     const store = configureStore(requestState.toJS());
     const {actions} = mapDispatchToProps(store.dispatch);
 

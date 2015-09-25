@@ -12,30 +12,30 @@ module.exports = function(app) {
     cookies: ['authorization'],
   }));
 
-    app.use(function(req, res, next) {
-        if (!req.accessToken) {
-            return next();
-        }
+  app.use(function(req, res, next) {
+      if (!req.accessToken) {
+          return next();
+      }
 
-        app.models.User.findById(req.accessToken.userId, function(err, user) {
-            var loopbackContext;
-            if (err) {
-                return next(err);
-            }
-            if (!user) {
-                return next(new Error('No user with this access token was found.'));
-            }
-            loopbackContext = loopback.getCurrentContext();
-            if (loopbackContext) {
-              // providing `loopbackContext.set('currentUser', user);` will not work correctly
-              // for server rendering - only defaults will be set, juggle __date
-              const {__data} = user;
-              let userData = {...__data};
-              loopbackContext.set('currentUser', userData);
-            }
-            next();
-        });
-    });
+      app.models.User.findById(req.accessToken.userId, function(err, user) {
+          var loopbackContext;
+          if (err) {
+              return next(err);
+          }
+          if (!user) {
+              return next(new Error('No user with this access token was found.'));
+          }
+          loopbackContext = loopback.getCurrentContext();
+          if (loopbackContext) {
+            // providing `loopbackContext.set('currentUser', user);` will not work correctly
+            // for server rendering - only defaults will be set, juggle __date
+            const {__data} = user;
+            let userData = {...__data};
+            loopbackContext.set('currentUser', userData);
+          }
+          next();
+      });
+  });
 
   app.use(function(req, res, next) {
     if (!req.accessToken && req.signedCookies && req.signedCookies.authorization) {

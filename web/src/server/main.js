@@ -13,12 +13,11 @@ app.start = function() {
   return server;
 };
 
-var cookieParser = require("cookie-parser");
-app.use(cookieParser("SECRET"));
+app.use(loopback.cookieParser("SECRET"));
 
 var bodyParser= require('body-parser');
 
-app.use(bodyParser.json()); // application/json
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //s Bootstrap the application, configure models, datasources and middleware.
