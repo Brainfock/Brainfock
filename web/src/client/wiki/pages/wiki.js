@@ -25,7 +25,7 @@ var promisingagent = require('promisingagent');
 var React = require('react'),
     Router = require('react-router'),
     {RouteHandler, Link, Navigation} = Router,
-    mui = require('material-ui'),
+    mui = require('material-ui-io'),
     Menu = mui.Menu;
 
 var Loader = require('../../components/Loader');
@@ -42,7 +42,7 @@ var $ = require('jquery');
    */
   function(props)
   {
-    console.log('RESOLVER PROPS:',props);
+    //console.log('RESOLVER PROPS:',props);
     var query = [];
     query.push('filter[where][contextEntityId]=0');
     query.push('filter[where][pageUid]='+props.params.uid);
@@ -55,13 +55,13 @@ var $ = require('jquery');
 
     return promisingagent.get(`http://${host}/api/wikiPages/findOne?` + query.join('&'))
       .then((response) => {
-        if(process.env.IS_BROWSER)
-          props.actions.findWikiSuccess(response.body);
+        // this creates infinite loop:
+        //if(process.env.IS_BROWSER)
+        //  props.actions.findWikiSuccess(response.body);
         return response.body
       });
   })
 class Page extends React.Component{
-
 
   render()
   {

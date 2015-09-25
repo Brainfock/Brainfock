@@ -46,41 +46,32 @@ export default function todosReducer(state = initialState, action) {
 
   switch (action.type) {
 
-    case actions.SET_NEW_TODO_FIELD: {
+    case actions.SET_EDIT_WIKI_FIELD: {
       const {name, value} = action.payload;
-      return state.setIn(['newTodo', name], value);
+      return state.setIn(['viewPage', name], value);
     }
 
-    case actions.ADD_TODO: {
-      const {todo} = action.payload;
-      const newTodo = todo.merge({
-        id: getRandomString(),
-        title: todo.title.trim()
-      });
+    case actions.SAVE: {
       return state
-        .update('list', list => list.push(newTodo))
-        .set('newTodo', new Todo);
+        // disable form buttons from being pressed while page is being loaded
+        .setIn(['viewPage', 'loading'], true);
     }
-
-    case actions.DELETE_TODO: {
-      const {id} = action.payload;
-      return state.update('list', list =>
-          list.delete(list.findIndex(todo => todo.id === id))
-      );
-    }
-
-    case actions.CLEAR_ALL: {
+    case actions.SAVE_ERROR:
+    case actions.SAVE_SUCCESS: {
       return state
-        .update('list', list => list.clear())
-        .set('newTodo', new Todo);
+        // enable form buttons from being pressed while page is being loaded
+        .setIn(['viewPage', 'loading'], false);
+    }
+    case actions.FIND: {
+      return state
+        // disable form buttons from being pressed while page is being loaded
+        .setIn(['viewPage', 'loading'], true);
     }
 
-    case actions.ADD_HUNDRED_TODOS: {
-      const todos = Range(0, 100).map(() => {
-        const id = getRandomString();
-        return new Todo({id, title: `Item #${id}`});
-      }).toArray();
-      return state.update('list', list => list.push(...todos));
+    case actions.FIND_SUCCESS: {
+      return state
+        .set('viewPage', new Todo(action.payload))
+        .setIn(['viewPage', 'loading'], false);
     }
 
   }

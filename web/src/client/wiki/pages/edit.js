@@ -1,15 +1,13 @@
 var React = require('react'),
     Router = require('react-router'),
     {RouteHandler, Link, Navigation} = Router,
-    mui = require('material-ui'),
+    mui = require('material-ui-io'),
     Menu = mui.Menu;
 
 var $ = require('jquery');
 
 
 var Page = React.createClass({
-
-  mixins: [Router.State, Navigation],
 
   getDefaultProps: function() {
     return {
@@ -43,6 +41,7 @@ var Page = React.createClass({
   render: function()
   {
     const page = this.getViewPage();
+    console.log('page:',page);
     if(page.loading == true) {
       var disabled=true;
     } else {
@@ -82,14 +81,11 @@ var Page = React.createClass({
   },
 
   cancelAndReturn: function() {
+
     const page = this.getViewPage();
-    this.transitionTo('wiki_page',
-        {
-          uid: page.pageUid
-        },
-        {}
-    );
+    this.props.history.pushState(null, `/wiki/${page.pageUid}`);
   },
+
   save: function() {
     const page = this.getViewPage();
     var content = this.refs.contentInput.getValue();
@@ -101,7 +97,7 @@ var Page = React.createClass({
   },
 
   componentWillReceiveProps: function(newProps,b,c)  {
-    if(newProps.wiki.viewPage.pageUid !==  props.params.uid)
+    if(newProps.wiki.viewPage.pageUid !==  this.props.params.uid)
     {
       //Actions.findContextPage(0, this.getParams().uid);
     }

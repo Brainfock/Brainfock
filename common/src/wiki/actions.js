@@ -19,15 +19,20 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 
-export const FIND = 'FIND';
-export const FIND_ERROR = 'FIND_ERROR';
-export const FIND_SUCCESS = 'FIND_SUCCESS';
+export const FIND = 'WIKI_FIND';
+export const FIND_ERROR = 'WIKI_FIND_ERROR';
+export const FIND_SUCCESS = 'WIKI_FIND_SUCCESS';
+export const SAVE = 'WIKI_SAVE';
+export const SAVE_ERROR = 'WIKI_SAVE_ERROR';
+export const SAVE_SUCCESS = 'WIKI_SAVE_SUCCESS';
+export const SET_EDIT_WIKI_FIELD = 'SET_EDIT_WIKI_FIELD';
 
 
 const getApi = (fetch, endpoint) =>
   fetch(`/api/${endpoint}`, {
     headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
-    method: 'get'
+    method: 'get',
+    credentials: 'include', // accept cookies from server, for authentication
   })
     .then(response => {
       if (response.status === 200) return response.json();
@@ -58,4 +63,69 @@ export function findWikiSuccess(data) {
     type: FIND_SUCCESS,
     payload: {data}
   };
+}
+
+export function setWikiViewPageField({target: {name, value}}) {
+  switch (name) {
+    case 'title':
+      value = value.slice(0, 250); break;
+  }
+  return {
+    type: SET_EDIT_WIKI_FIELD,
+    payload: {name, value}
+  };
+}
+
+const validateForm = (validate, fields) => validate(fields)
+  .prop('email').required().email()
+  .prop('password').required().simplePassword()
+  .promise;
+
+const post = (fetch, endpoint, body) =>
+  fetch(`/api/${endpoint}`, {
+    body: JSON.stringify(body),
+    credentials: 'include', // accept cookies from server, for authentication
+    headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+    method: 'put'
+  })
+    .then(response => {
+      if (response.status === 200) return response.json();
+      throw response;
+    });
+
+
+export function saveWikiChanges(id, fields) {
+
+  if(id) {
+    var endpoint = 'wikiPages/'+id;
+  }
+  else {
+    let query=[];
+    if(fields.pageUid) {
+      query.push('filter[where][pageUid]='+fields.pageUid);
+    }
+    if(fields.contextEntityId) {
+      query.push('filter[where][contextEntityId]='+fields.contextEntityId);
+    }
+    var endpoint =  'wikiPages/?'+query.join('&')
+  }
+
+  return ({fetch, validate}) => ({
+    types: [
+      SAVE,
+      SAVE_SUCCESS,
+      SAVE_ERROR
+    ],
+    payload: {
+      promise: post(fetch, endpoint, fields)
+        .catch(response => {
+          throw response;
+        })
+      //promise: validateForm(validate, fields)
+      //  .then(() => post(fetch, endpoint, fields))
+      //  .catch(response => {
+      //    throw response;
+      //  })
+    }
+  });
 }
