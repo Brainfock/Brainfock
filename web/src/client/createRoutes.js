@@ -7,6 +7,9 @@ import React from 'react';
 import Todos from './pages/todos.react';
 import {IndexRoute, Route} from 'react-router';
 
+import Wiki from './wiki/pages/wiki';
+import WikiEdit from './wiki/pages/edit';
+
 export default function createRoutes(getState) {
 
   function requireAuth(nextState, replaceState) {
@@ -22,6 +25,10 @@ export default function createRoutes(getState) {
       <Route component={Login} path="login" />
       <Route component={Me} onEnter={requireAuth} path="me" />
       <Route component={Todos} path="todos" />
+
+      <Route component={Wiki} name="wiki_page" path="wiki/:uid" />
+      <Route component={WikiEdit} name="wiki_edit" path="wiki/:uid/edit" />
+
       <Route component={NotFound} path="*" />
     </Route>
   );
