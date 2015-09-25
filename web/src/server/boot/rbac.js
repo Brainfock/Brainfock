@@ -63,14 +63,10 @@ module.exports = function(app) {
   });*/
 
   Role.registerResolver('topicEntityAccess', function(role, context, cb) {
-    console.log('[RBAC] Validate access to  operation `'+context.remotingContext.method.name+'` of model `'+context.modelName+'`')
+
     var userId = context.accessToken.userId;
-    //console.log('[topicEntityAccess]: userId='+userId)
-    //console.log('context.result',context.remotingContext.result);
-    //console.log('context.remotingContext.req',context.remotingContext.req);
-    //console.log('context.remotingContext.method.name',context.remotingContext.method.name);
+    console.log('[RBAC] Validate access to  operation `'+context.remotingContext.method.name+'` of model `'+context.modelName+'`, user:'+userId)
     function reject() {
-      //console.log('[RBAC] Reject access to ['+context.modelName+'] operation `'+context.remotingContext.method.name+'`')
       process.nextTick(function() {
         cb(null, false);
       });
@@ -82,10 +78,10 @@ module.exports = function(app) {
       && context.modelName !== 'WikiPage'
       && context.modelName !== 'Entity'
     ) {
-      //console.log('[RBAC] Model ['+context.modelName+'] is not supported by `topicEntityAccess` resolver')
+      console.log('[RBAC] Model ['+context.modelName+'] is not supported by `topicEntityAccess` resolver')
       return reject();
     }
-//
+
 
     // TODO: currently, even if user does not have access to entity, he will be able to fetch EMPTY comments list like /api/entities/1699/comments
     if(context.remotingContext.method.name == 'find'
@@ -102,7 +98,6 @@ module.exports = function(app) {
             function(err,data)
             {
               if (err) {
-                //console.log('err:',err)
                 // apply base
                 context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
                   {where: {
