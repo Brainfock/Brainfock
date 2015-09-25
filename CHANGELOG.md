@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 26 Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.17.0:
++ Update to new Este dev stack, adding new react-router (1.0.x), React 0.14 (beta), React Redux, better hot reload for Webpack
++ Port wiki module to 0.17.0
+
 ## Sergii Gamaiunov <hello@webkadabra.com> v0.16.0:
 + Drop Yii backend support, introduce Node.js/Loopback backend app;
 + Change project structure
