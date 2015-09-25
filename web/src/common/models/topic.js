@@ -1,4 +1,4 @@
-var app = require("server/main");
+var app = require("../../server/main");
 
 module.exports = function(Topic) {
   /*Topic.on('attached', function() {

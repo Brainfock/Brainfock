@@ -1,6 +1,6 @@
 var Promise = require('bluebird')
 var marked = require('marked');
-var app = require("server/main");
+var app = require("../../server/main");
 
 marked.setOptions({
   renderer: new marked.Renderer(),

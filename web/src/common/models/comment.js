@@ -1,5 +1,5 @@
 var marked = require('marked');
-var app = require('server/main');
+var app = require('../../server/main');
 var loopback = require('loopback');
 
 
