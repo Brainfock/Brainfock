@@ -1,10 +1,8 @@
 {
-  "name": "@este/universal",
-  "description": "Universal Este app.",
-  "authors": [
-    "Daniel Steigerwald",
-    "Mike Grabowski"
-  ],
+  "name": "brainfock-app",
+  "description": "Brainfock - community & issue management software.",
+  "author": "Sergii Gamaiunov <hello@webkadabra.com>",
+  "version": "0.17.0",
   "private": true,
   "scripts": {
     "preinstall": "(cd web && npm link ../common) && (cd native && npm link ../common)",
