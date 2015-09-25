@@ -4,7 +4,7 @@ import autoprefixer from 'autoprefixer';
 import constants from './constants';
 import path from 'path';
 import webpack from 'webpack';
-
+var pkg = require('../package.json');
 // Webpack does not like npm link
 // https://github.com/webpack/webpack/issues/784#issuecomment-126835731
 const babelLoader = require.resolve('babel-loader');
@@ -79,7 +79,9 @@ export default function makeConfig(isDevelopment) {
           'process.env': {
             NODE_ENV: JSON.stringify(isDevelopment ? 'development' : 'production'),
             IS_BROWSER: true
-          }
+          },
+          "VERSION": JSON.stringify(pkg.version),
+          "VERSION_FULL": JSON.stringify(pkg.name + ' ' + pkg.version),
         })
       ];
       if (isDevelopment) plugins.push(
