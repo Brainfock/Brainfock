@@ -16,6 +16,8 @@ var Colors = mui.Styles.Colors;
 var Typography = mui.Styles.Typography;
 var ThemeManager = new mui.Styles.ThemeManager();
 
+import AppSideNav from './components/app-left-nav';
+
 @connect(mapStateToProps, mapDispatchToProps)
 export default class App extends Component {
 
@@ -85,15 +87,30 @@ export default class App extends Component {
     // links update their active className.
     const {location: {pathname}, msg, users: {viewer}} = this.props;
 
+    // todo: looks like we may remove `onLeftIconButtonTouchTap` event
     return (
       <mui.AppCanvas predefinedLayout={1}>
-      <div className="page">
-        <Header msg={msg.app.header} {...{viewer, pathname}} />
-        {React.cloneElement(this.props.children, this.props)}
-        <Footer msg={msg.app.footer} />
-      </div>
+        <mui.AppBar
+          autoWidth={false}
+          title="Brainfock"
+          zDepth={0}
+          onLeftIconButtonTouchTap={this._onLeftIconButtonTouchTap.bind(this)}
+          onLeftIconButtonClick={this._onLeftIconButtonTouchTap.bind(this)}
+         /*iconElementRight={iconElementRight} */
+          />
+        <AppSideNav ref="leftNav" {...this.props} />
+        <div className="page">
+          <Header msg={msg.app.header} {...{viewer, pathname}} />
+          {React.cloneElement(this.props.children, this.props)}
+          <Footer msg={msg.app.footer} />
+        </div>
       </mui.AppCanvas>
     );
+  }
+
+  _onLeftIconButtonTouchTap (test,two) {
+    if(this.refs.leftNav)
+      this.refs.leftNav.toggle();
   }
 
 }
