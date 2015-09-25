@@ -42,7 +42,6 @@ var $ = require('jquery');
    */
   function(props)
   {
-    //console.log('RESOLVER PROPS:',props);
     var query = [];
     query.push('filter[where][contextEntityId]=0');
     query.push('filter[where][pageUid]='+props.params.uid);
@@ -55,7 +54,7 @@ var $ = require('jquery');
 
     return promisingagent.get(`http://${host}/api/wikiPages/findOne?` + query.join('&'))
       .then((response) => {
-        // this creates infinite loop:
+        // TODO: review, as this creates infinite loop with redux stuff, turned off for now
         //if(process.env.IS_BROWSER)
         //  props.actions.findWikiSuccess(response.body);
         return response.body
