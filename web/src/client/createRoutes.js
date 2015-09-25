@@ -26,8 +26,8 @@ export default function createRoutes(getState) {
       <Route component={Me} onEnter={requireAuth} path="me" />
       <Route component={Todos} path="todos" />
 
-      <Route component={Wiki} name="wiki_page" path="wiki/:uid" />
-      <Route component={WikiEdit} name="wiki_edit" path="wiki/:uid/edit" />
+      <Route component={Wiki} path="wiki/:uid" />
+      <Route component={WikiEdit} path="wiki/:uid/edit" />
 
       <Route component={NotFound} path="*" />
     </Route>
