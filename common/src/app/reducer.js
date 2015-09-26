@@ -7,6 +7,7 @@ import intl from '../intl/reducer';
 import todos from '../todos/reducer';
 import users from '../users/reducer';
 import wiki from '../wiki/reducer';
+import boards from '../boards/reducer';
 
 const appReducer = combineReducers({
   auth,
@@ -14,7 +15,8 @@ const appReducer = combineReducers({
   intl,
   todos,
   users,
-  wiki
+  wiki,
+  boards
 });
 
 export default appReducer;
