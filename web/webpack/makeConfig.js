@@ -59,9 +59,12 @@ export default function makeConfig(isDevelopment) {
         loader: 'url-loader?limit=100000',
         test: /\.(gif|jpg|png|woff|woff2|eot|ttf|svg)$/
       }, {
-        exclude: /node_modules/,
+        exclude: [
+          /node_modules/,
+          /bower_components/
+        ],
         loaders: [babelLoader],
-        test: /\.js$/
+        test: [/\.js$/, /\.jsx$/]
       }].concat(stylesLoaders())
     },
     output: isDevelopment ? {
@@ -110,9 +113,11 @@ export default function makeConfig(isDevelopment) {
     })(),
     postcss: () => [autoprefixer({browsers: 'last 2 version'})],
     resolve: {
-      extensions: ['', '.js', '.json'],
-      modulesDirectories: ['src', 'node_modules'],
-      root: constants.ABSOLUTE_BASE,
+      extensions: ['', '.js', '.jsx', '.json'],
+      modulesDirectories: ['src', 'node_modules', 'bower_components'],
+      root:  [constants.ABSOLUTE_BASE,
+        path.join(constants.ABSOLUTE_BASE, 'bower_components'),
+      ],
       alias: {
         'react$': require.resolve(path.join(constants.NODE_MODULES_DIR, 'react'))
       }
