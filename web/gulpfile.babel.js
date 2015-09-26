@@ -39,7 +39,7 @@ gulp.task('test', (done) => {
 gulp.task('server-hot', bg('node', './webpack/server'));
 
 gulp.task('server', ['set-dev-environment', 'server-hot'], bg(
-  os.type() == 'Windows_NT' ? '.\\node_modules\\.bin\\nodemon.cmd' : './node_modules/.bin/nodemon', './src/server'));
+  os.type() === 'Windows_NT' ? '.\\node_modules\\.bin\\nodemon.cmd' : './node_modules/.bin/nodemon', './src/server'));
 
 gulp.task('server-hot-only', ['set-dev-environment', 'server-hot']);
 
