@@ -46,7 +46,7 @@ coupled with [Loopback](http://loopback.io/) to deal with web backend, models et
 * Node.js' NPM, Webpack & Bower
 * [Marked] - a super fast port of Markdown to JavaScript
 
-Developers, please, follow [[README-DEVS.md]] for in-depth information about Este stack, setup and development
+Developers, please, follow [README-DEVS.md](/README-DEVS.md) for in-depth information about Este stack, setup and development
 
 ### Installation
 
