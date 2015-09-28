@@ -22,10 +22,10 @@ import AppSideNav from './components/app-left-nav';
 export default class App extends Component {
 
   static propTypes = {
-    children: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
-    msg: PropTypes.object.isRequired,
-    users: PropTypes.object.isRequired
+    children: PropTypes.any,
+    //location: PropTypes.object.isRequired,
+    //msg: PropTypes.object.isRequired,
+    //users: PropTypes.object.isRequired
   }
 
   static childContextTypes = {
@@ -82,10 +82,12 @@ export default class App extends Component {
   }
 
   render() {
-
     // Use location pathname to ensure header is rerendered on url change, so
     // links update their active className.
+    const {children, ...props} = this.props;
+    props.io = this.io;
     const {location: {pathname}, msg, users: {viewer}} = this.props;
+
 
     // todo: looks like we may remove `onLeftIconButtonTouchTap` event
     return (
@@ -101,7 +103,7 @@ export default class App extends Component {
         <AppSideNav ref="leftNav" {...this.props} />
         <div className="page">
           <Header msg={msg.app.header} {...{viewer, pathname}} />
-          {React.cloneElement(this.props.children, this.props)}
+          {React.cloneElement(children, props)}
           <Footer msg={msg.app.footer} />
         </div>
       </mui.AppCanvas>
