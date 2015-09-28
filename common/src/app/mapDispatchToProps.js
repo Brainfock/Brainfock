@@ -2,6 +2,7 @@ import * as authActions from '../auth/actions';
 import * as todosActions from '../todos/actions';
 import * as wikiActions from '../wiki/actions';
 import * as topicActions from '../topics/actions';
+import * as commentsActions from '../comments/actions';
 
 import {Map} from 'immutable';
 import {bindActionCreators} from 'redux';
@@ -9,7 +10,8 @@ import {bindActionCreators} from 'redux';
 const actions = [
   authActions,
   todosActions,
-  wikiActions
+  wikiActions,
+  commentsActions,
 ];
 
 const topic_actions = [

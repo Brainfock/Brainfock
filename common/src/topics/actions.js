@@ -22,6 +22,14 @@
 export const FIND = 'TOPIC_FIND';
 export const FIND_ERROR = 'TOPIC_FIND_ERROR';
 export const FIND_SUCCESS = 'TOPIC_FIND_SUCCESS';
+export const FIND_ONE = 'TOPIC_FIND_ONE';
+export const FIND_ONE_ERROR = 'TOPIC_FIND_ERROR_ONE';
+export const FIND_ONE_SUCCESS = 'TOPIC_FIND_SUCCESS_ONE';
+
+export const LOAD_TOPIC = 'LOAD_TOPIC';
+export const LOAD_TOPIC_ERROR = 'LOAD_TOPIC_ERROR';
+export const LOAD_TOPIC_SUCCESS = 'LOAD_TOPIC_SUCCESS';
+
 export const SAVE = 'TOPIC_SAVE';
 export const SAVE_ERROR = 'TOPIC_SAVE_ERROR';
 export const SAVE_SUCCESS = 'TOPIC_SAVE_SUCCESS';
@@ -53,6 +61,43 @@ export function find(type, query, contextTopicId) {
       FIND,
       FIND_SUCCESS,
       FIND_ERROR
+    ],
+    payload: {
+      promise:  getApi(fetch, endpoint)
+        .catch(response => {
+          throw response;
+        })
+    }
+  });
+}
+
+export function loadCurrent(id) {
+
+  let endpoint = 'topics/'+id ;
+
+  return ({fetch, validate}) => ({
+    types: [
+      FIND_ONE,
+      FIND_ONE_SUCCESS,
+      FIND_ONE_ERROR
+    ],
+    payload: {
+      promise:  getApi(fetch, endpoint)
+        .catch(response => {
+          throw response;
+        })
+    }
+  });
+}
+export function loadTopic(id) {
+
+  let endpoint = 'topics/'+id+'?filter[include][type]' ;
+
+  return ({fetch, validate}) => ({
+    types: [
+      LOAD_TOPIC,
+      LOAD_TOPIC_SUCCESS,
+      LOAD_TOPIC_ERROR
     ],
     payload: {
       promise:  getApi(fetch, endpoint)

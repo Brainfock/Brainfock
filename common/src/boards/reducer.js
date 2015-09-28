@@ -20,7 +20,9 @@
  */
 
 import * as actions from '../topics/actions';
+import * as commentsActions from '../comments/actions';
 import Todo from './board';
+import Comment from '../comments/comment';
 import getRandomString from '../lib/getRandomString';
 import {List, Range, Record} from 'immutable';
 
@@ -28,8 +30,8 @@ const InitialState = Record({
   list: List(),
   newTodo: new Todo,
   viewPage: new Todo,
-  parentBoard: null,
-  currentTopic: null,
+  board: new Todo,
+  viewTopic: new Todo,
   meta:{
     loading: true
   }
@@ -42,8 +44,8 @@ const revive = (state) => initialState.merge({
   list: state.list.map(todo => new Todo(todo)),
   newTodo: new Todo(state.newTodo),
   viewPage: new Todo(state.viewPage || {}),
-  parentBoard:  new Todo(),
-  currentTopic: new Todo(),
+  board:  new Todo(),
+  viewTopic: new Todo({loading: false}),
   meta:{
     loading: true
   }
@@ -56,24 +58,61 @@ export default function boardsReducer(state = initialState, action) {
 
     case actions.FIND:
       return state
-        .set('meta',{loading: true})
+        .set('meta', {loading: true})
         .update('list', list => list.clear());
 
     case actions.FIND_ERROR:
-      return state.set('meta',{loading: false})
+      return state.set('meta', {loading: false})
 
-    case actions.FIND_SUCCESS: {
-
+    case actions.FIND_SUCCESS:
+    {
       const newlist = action.payload.data.map((item) => {
-        console.log('item',item)
+
         item.cid = getRandomString();
         return new Todo(item);
       });
       return state
         .update('list', list => list.clear())
         .update('list', list => list.push(...newlist))
-        .set('meta',{loading: false});
+        .set('meta', {loading: false});
     }
+
+    case actions.FIND_ONE:
+      return state
+        .set('board', {'loading': true});
+
+    case actions.FIND_ONE_SUCCESS:
+      return state
+        .set('board', new Todo(action.payload))
+        .setIn(['board', 'loading'], false);
+
+    case actions.LOAD_TOPIC:
+      return state
+        .set('viewTopic', {'loading': true});
+
+    case actions.LOAD_TOPIC_SUCCESS:
+      return state
+        .set('viewTopic', new Todo(action.payload))
+        .setIn(['viewTopic', 'loading'], false);
+
+    // load all comments
+    case commentsActions.LOAD_COMMENTS_SUCCESS:
+    {
+
+      const newlist = action.payload.map((item) => {
+        console.log('item', item)
+        item.cid = getRandomString();
+        return new Comment(item);
+      });
+      return state
+        .updateIn(['viewTopic', 'comments'], list => list.clear())
+        .updateIn(['viewTopic', 'comments'], list => list.push(...newlist));
+    }
+
+    // post or catch new comment via sockets:
+    case commentsActions.ADD_ONE_COMMENT:
+      return state
+        .updateIn(['viewTopic','comments'], comments => comments.push(Comment(action.payload)))
   }
 
   return state;

@@ -18,21 +18,32 @@
  * @link http://www.brainfock.com/
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
+import Component from 'react-pure-render/component';
+import React from 'react';
+import Todo from './board.topic.react';
+//import Todo from './todo.react';
 
-import {Record, List, Map} from 'immutable';
+export default class List extends Component {
 
-export default Record({
-  cid: '',
-  id: '',
-  summary: '',
-  text: '',
-  entityId:'',
+  static propTypes = {
+    //actions: React.PropTypes.object.isRequired,
+    list: React.PropTypes.object.isRequired,
+    //msg: React.PropTypes.object.isRequired
+  }
 
-  // included via relations
-  type: {},
-  comments: List(),
+  render() {
+    const {actions, list, msg} = this.props;
 
-  // state fields
-  loading:true,
-});
+    if (!list.size) return (
+      <p>{msg.emptyList}</p>
+    );
 
+    return (
+      <ol className="todos">
+        {list.map(todo =>
+            <Todo actions={actions} key={todo.id} todo={todo} parent={this.props.parentBoard} />
+        )}
+      </ol>
+    );
+  }
+}

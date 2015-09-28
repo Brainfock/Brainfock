@@ -49,7 +49,6 @@ export function loadEntityComments(entity_id) {
 }
 
 export function catchComment(data) {
-  console.log('catch comment');
   return {
     type: ADD_ONE_COMMENT,
     payload: data
