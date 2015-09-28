@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## 28 Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.18.0:
++ Basic boards module, topics component
++ Topic/entity comments (with sockets)
++ Client API service helper
+
+* fix infinite loop bug
+
 ## 26 Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.17.0:
 + Update to new Este dev stack, adding new react-router (1.0.x), React 0.14 (beta), React Redux, better hot reload for Webpack
 + Port wiki module to 0.17.0
