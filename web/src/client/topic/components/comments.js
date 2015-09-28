@@ -186,7 +186,7 @@ var TopicComments = React.createClass({
      */
 
     // TODO: extract all users in this conversation + add all users who user can mention 
-    $(this.refs.commentbox.getDOMNode()).atwho({
+    $(this.refs.commentbox).atwho({
       at: "@",
       data: users,
       tpl: "<li data-value='@${name}'>${name} <img src='${userpic}'/></li>",
@@ -200,7 +200,7 @@ var TopicComments = React.createClass({
   handleCommentSubmit: function(e)
   {
     e.preventDefault();
-    var comment = $(this.refs.commentbox.getDOMNode()).val();
+    var comment = this.refs.commentbox.value;
     this.props.actions.postComment(this.props.topic.entityId,{text:comment});
   },
 
