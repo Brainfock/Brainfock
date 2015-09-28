@@ -1,9 +1,6 @@
-var React = require('react'),
-    Router = require('react-router'),
-    { Navigation, RouteHandler } = Router,
-    bs = require('react-bootstrap'),
-    { ButtonToolbar, ButtonGroup, Button, Glyphicon } = bs;
-
+import Component from 'react-pure-render/component';
+import React, {PropTypes} from 'react';
+import Router from 'react-router';
 
 var AppContentCanvas = require('../../components/layout/AppContentCanvas');
 var ListActions =  require('../../components/UIListActions');
@@ -15,9 +12,6 @@ var EmptyComponent =  React.createClass({
     </div>
   }
 });
-
-//let TopicActions = require('project/board/Actions'),
-//    TopicStore = require('project/board/Store');
 
 let ListComponent = require('../boards.react');
 
@@ -35,35 +29,54 @@ let ListComponent = require('../boards.react');
  *
  * @todo: pull from server (by group key [projects]: routeName, formSettings, listSettings, ListColumns
  */
-module.exports = React.createClass({
 
-  mixins: [Router.State, Navigation],
+export default class Boards extends Component {
 
-  getDefaultProps: function() {
-    return {
-    }
-  },
-
-  getInitialState: function() {
-    return {
-      //Store: TopicStore,
-      //searchQuery: this.getQuery().query,
-      //FilterStore: FilterStore,
-    };
-  },
+  static propTypes = {
+    topicType: PropTypes.string.isRequired,
+    //topicType: PropTypes.object.isRequired,
+    //viewer: PropTypes.object
+  }
 
   /**
    * initialize data
    */
-  componentWillMount: function() {
+  componentWillMount() {
     // pull all topics (projects) from server - this list is filtered by client
     //console.log(this.props.actions)
     if(process.env.IS_BROWSER==true) {
-      this.props.topic_actions.find('board', {}/*, this.props.parentModel*/);
+      this.props.topic_actions.find(this.props.topicType, {}/*, this.props.parentModel*/);
     }
-  },
+  }
 
-  //PcomponentDidMount: function()
+  render() {
+    const {msg, viewer} = this.props;
+
+    // TODO: header title must be provided from group settings, localized
+    let header = <div>
+      <h4>Boards</h4>
+    </div>;
+
+    if(this.props.meta.loading==true) {
+      return <h3>Loading...</h3>
+    }
+
+    return (
+      <AppContentCanvas header={header}>
+        <div className="col-md-7 col-md-offset-2">
+          <h5 style={{textTransform:'uppercase'}}>Categories</h5>
+          <ListComponent
+            list={this.props.list}
+            actions={this.props.topic_actions}
+            msg={this.props.msg.todos}
+            history={this.props.history}
+            />
+        </div>
+      </AppContentCanvas>
+    )
+  }
+
+  //componentDidMount: function()
   //{
   //  if(process.env.IS_BROWSER)
   //  setTimeout(function(){
@@ -74,36 +87,4 @@ module.exports = React.createClass({
   //    $(elt).caret('pos', queryLen);
   //  }.bind(this), 1);
   //},
-
-  timer:null,
-
-  /**
-   * @returns {XML}
-   */
-  render: function()
-  {
-    // TODO: header title must be provided from group settings, localized
-    let header = <div>
-      <h4>Boards</h4>
-    </div>;
-
-    if(this.props.boards.meta.loading==true) {
-      return <h3>Loading...</h3>
-    }
-    //let UIListView = require('project/components/UIListView');
-
-    return <AppContentCanvas header={header}>
-      <div className="col-md-7 col-md-offset-2">
-        <h5 style={{textTransform:'uppercase'}}>Categories</h5>
-        <ListComponent
-          list={this.props.boards.list}
-          actions={this.props.topic_actions}
-          msg={this.props.msg.todos}
-          history={this.props.history}
-          />
-      </div>
-    </AppContentCanvas>
-  },
-
-
-});
+}

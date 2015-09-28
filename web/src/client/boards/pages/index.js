@@ -49,8 +49,17 @@ module.exports = React.createClass({
     if(this.props.params.board_id)
       return <div>{React.cloneElement(this.props.children, this.props)}</div>;
     // show all boards
-    else
-      return <List {...this.props} />
+    else {
+      const {boards:{list}, topic_actions, msg, history} = this.props;
+      return <List
+              topicType='board'
+              list={list}
+              topic_actions={topic_actions}
+              msg={msg}
+              history={history}
+              meta={this.props.boards.meta}
+        />
+    }
 
   },
 });
