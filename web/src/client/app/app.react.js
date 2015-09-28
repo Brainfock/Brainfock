@@ -1,6 +1,5 @@
-import './app.styl';
+//import './app.styl';
 import Component from 'react-pure-render/component';
-import Footer from './footer.react';
 import Header from './header.react';
 import React, {PropTypes} from 'react';
 import {mapDispatchToProps, mapStateToProps} from '@este/common';
@@ -104,7 +103,6 @@ export default class App extends Component {
         <div className="page">
           <Header msg={msg.app.header} {...{viewer, pathname}} />
           {React.cloneElement(children, props)}
-          <Footer msg={msg.app.footer} />
         </div>
       </mui.AppCanvas>
     );
