@@ -13,7 +13,7 @@ app.use(compression());
 // app.use(favicon('_assets/img/favicon.ico'));
 
 // Serve the static assets. We can cache them as they include hashes.
-app.use('/assets', loopback.static('assets', {maxAge: '200d'}));
+app.use('/assets', loopback.static('src/assets', {maxAge: '200d'}));
 app.use('/_assets', loopback.static('build', {maxAge: '200d'}));
 
 // Intl.
