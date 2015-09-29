@@ -32,7 +32,7 @@ var Layout = React.createClass({
       // load info about CURRENT BOARD
       this.props.topic_actions.loadCurrent(this.props.params.board_id);
       // load TOPIC of this BOARD
-      this.props.topic_actions.find(this.props.groupKey || 'board_topic', {},this.props.params.board_id);
+     // this.props.topic_actions.find(this.props.groupKey || 'board_topic', {},this.props.params.board_id);
     }
   },
 

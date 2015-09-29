@@ -36,7 +36,7 @@ var menuItems = [
     // actual router route:
     route: '/projects',
     params:{},
-    text: 'Projects'
+    text: 'Projects',
   },
   { route: '/issues', params:{}, text: 'Issues' },
   { route: '/boards', params:{}, text: 'Boards' },
