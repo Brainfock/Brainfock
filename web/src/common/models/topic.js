@@ -32,8 +32,9 @@ module.exports = function(Topic) {
        */
       if(filter.where.id) {
 
-        if(!Number.isInteger(filter.where.id))
+        if(isNaN(filter.where.id))
         {
+          console.log('whaaat');
           let parts = filter.where.id.split('-');
           let last = parts.pop();
 
@@ -66,15 +67,7 @@ module.exports = function(Topic) {
       }
 
       // go on with regular `findOne` method
-      override.apply(this, [filter, function(err, modelInstance) {
-        if(modelInstance) {
-          callback(null, modelInstance)
-        } else {
-          callback(err,null);
-        }
-      }]);
-
-      return callback.promise;
+      return override.apply(this, [filter, options, callback])
     }
   });
 
