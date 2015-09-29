@@ -1,4 +1,4 @@
-//import './app.styl';
+import './app.styl';
 import Component from 'react-pure-render/component';
 import Header from './header.react';
 import React, {PropTypes} from 'react';
@@ -101,7 +101,7 @@ export default class App extends Component {
           />
         <AppSideNav ref="leftNav" {...this.props} />
         <div className="page">
-          <Header msg={msg.app.header} {...{viewer, pathname}} />
+          { /*<Header msg={msg.app.header} {...{viewer, pathname}} /> */ }
           {React.cloneElement(children, props)}
         </div>
       </mui.AppCanvas>
