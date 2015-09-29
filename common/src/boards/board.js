@@ -27,9 +27,11 @@ export default Record({
   summary: '',
   text: '',
   entityId:'',
+  contextTopicKey:'',
 
   // included via relations
   type: {},
+  group: {},
   comments: List(),
 
   // state fields

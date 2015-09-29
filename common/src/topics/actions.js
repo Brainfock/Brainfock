@@ -30,6 +30,10 @@ export const LOAD_TOPIC = 'LOAD_TOPIC';
 export const LOAD_TOPIC_ERROR = 'LOAD_TOPIC_ERROR';
 export const LOAD_TOPIC_SUCCESS = 'LOAD_TOPIC_SUCCESS';
 
+export const LOAD_TOPIC_GROUP = 'LOAD_TOPIC_GROUP';
+export const LOAD_TOPIC_GROUP_ERROR = 'LOAD_TOPIC_GROUP_ERROR';
+export const LOAD_TOPIC_GROUP_SUCCESS = 'LOAD_TOPIC_GROUP_SUCCESS';
+
 export const SAVE = 'TOPIC_SAVE';
 export const SAVE_ERROR = 'TOPIC_SAVE_ERROR';
 export const SAVE_SUCCESS = 'TOPIC_SAVE_SUCCESS';
@@ -98,6 +102,25 @@ export function loadTopic(id) {
       LOAD_TOPIC,
       LOAD_TOPIC_SUCCESS,
       LOAD_TOPIC_ERROR
+    ],
+    payload: {
+      promise:  getApi(fetch, endpoint)
+        .catch(response => {
+          throw response;
+        })
+    }
+  });
+}
+
+export function loadTopicGroup(name) {
+
+  let endpoint = `topicGroups/findOne?filter[where][group_key]=${name}` ;
+
+  return ({fetch, validate}) => ({
+    types: [
+      LOAD_TOPIC_GROUP,
+      LOAD_TOPIC_GROUP_SUCCESS,
+      LOAD_TOPIC_GROUP_ERROR
     ],
     payload: {
       promise:  getApi(fetch, endpoint)
