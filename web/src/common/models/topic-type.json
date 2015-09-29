@@ -117,6 +117,20 @@
       "principalId": "$everyone",
       "permission": "DENY"
     }
+  , {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "findOne"
+    }
+  , {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "findById"
+    }
   ],
   "methods": {}
 }
