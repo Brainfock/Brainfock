@@ -6,7 +6,8 @@ export default class List extends Component {
 
   static propTypes = {
     //actions: React.PropTypes.object.isRequired,
-    list: React.PropTypes.object.isRequired,
+    list: React.PropTypes.isRequired,
+    group: React.PropTypes.isRequired,
     itemComponent: React.PropTypes.element,
     //msg: React.PropTypes.object.isRequired
   }
@@ -16,7 +17,7 @@ export default class List extends Component {
   };
 
   render() {
-    const {actions, list, msg} = this.props;
+    const {actions, list, msg, group, board} = this.props;
 
     if (!list.size) return (
       <p>{msg.emptyList}</p>
@@ -27,7 +28,7 @@ export default class List extends Component {
     return (
       <ol className="todos">
         {list.map(todo =>
-          <Item actions={actions} key={todo.id} todo={todo} history={this.props.history} params={this.props.params} />
+          <Item actions={actions} group={group} board={board} key={todo.id} todo={todo} history={this.props.history} params={this.props.params} />
         )}
       </ol>
     );

@@ -30,7 +30,7 @@ var Issues = React.createClass({
       // load info about CURRENT BOARD
       this.props.topic_actions.loadCurrent(this.props.params.board_id);
       // load TOPIC of this BOARD
-      this.props.topic_actions.find('board_topic', {},this.props.params.board_id);
+      this.props.topic_actions.find(this.props.groupKey || 'board_topic', {},this.props.params.board_id);
     }
   },
 
@@ -44,13 +44,10 @@ var Issues = React.createClass({
    */
   render: function()
   {
-      //return <AppContentCanvas header={
+    //return <AppContentCanvas header={
       //  <h4 className="pull-left"><Loader />...</h4>
       //}/>
     //
-
-
-
 
     //let TopicActions = require('client/boards/_topic/Actions'),
     //    TopicStore = require('client/boards/_topic/Store'),

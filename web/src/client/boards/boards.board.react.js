@@ -6,6 +6,7 @@ var mui = require('material-ui-io');
 export default class Todo extends Component {
 
   static propTypes = {
+    group: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
     todo: PropTypes.object.isRequired
   }
@@ -55,7 +56,16 @@ export default class Todo extends Component {
   }
 
   _onClick() {
-    this.props.history.pushState(null, `/board/${this.props.todo.id}`);
+    let link = this.props.group.permalink;
+    console.log('LINK: '+link);
+    const topic_key = this.props.todo.contextTopicKey;
+    let replaced = link.replace(/:topic_key/g, topic_key);
+    replaced = replaced.replace(/:id/g, this.props.todo.id);
+    replaced = replaced.replace(/:board_key/g, this.props.board.contextTopicKey);
+
+
+    //this.props.history.pushState(null, link);
+    this.props.history.pushState(null, replaced);
   }
 
 }

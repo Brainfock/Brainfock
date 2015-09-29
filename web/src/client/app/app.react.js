@@ -100,10 +100,8 @@ export default class App extends Component {
          /*iconElementRight={iconElementRight} */
           />
         <AppSideNav ref="leftNav" {...this.props} />
-        <div className="page">
-          { /*<Header msg={msg.app.header} {...{viewer, pathname}} /> */ }
-          {React.cloneElement(children, props)}
-        </div>
+        { /*<Header msg={msg.app.header} {...{viewer, pathname}} /> */ }
+        {React.cloneElement(children, props)}
       </mui.AppCanvas>
     );
   }

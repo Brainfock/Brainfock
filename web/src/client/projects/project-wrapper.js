@@ -46,7 +46,6 @@ var Layout = React.createClass({
 
     return (
       <div>
-        <h1>{this.props.boards.board.summary}</h1>
         <PageWithNav  menuItems={this.menuItems()} {...this.props} />
       </div>
     );
@@ -58,7 +57,19 @@ var Layout = React.createClass({
    */
   menuItems:function() {
     return [
-      { route: `/project/${this.props.boards.board.id}`, text: 'Dashboard'},
+      { route: `/project/${this.props.boards.board.id}`,
+        text: (
+          <div style={{
+            background:"rgb(245, 245, 245)",
+            margin:"0 -24px",
+            padding:"10px 24px",
+            fontSize:14,
+            lineHeight:'16px',
+            }}>
+            {this.props.boards.board.summary}</div>
+        )
+      },
+      //{ route: `/project/${this.props.boards.board.id}`, text: 'Dashboard'},
       { route: `/project/${this.props.boards.board.id}/issues`, text: 'Issues'},
       { route: `/project/${this.props.boards.board.id}/users`, text: 'Users'}
     ];

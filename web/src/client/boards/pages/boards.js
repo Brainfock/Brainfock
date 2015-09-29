@@ -33,9 +33,8 @@ let ListComponent = require('../boards.react');
 export default class Boards extends Component {
 
   static propTypes = {
-    topicType: PropTypes.string.isRequired,
-    //topicType: PropTypes.object.isRequired,
-    //viewer: PropTypes.object
+   // topicType: PropTypes.string.isRequired,
+    group: PropTypes.object.isRequired,
   }
 
   /**
@@ -43,18 +42,15 @@ export default class Boards extends Component {
    */
   componentWillMount() {
     // pull all topics (projects) from server - this list is filtered by client
-    //console.log(this.props.actions)
     if(process.env.IS_BROWSER==true) {
-      this.props.topic_actions.find(this.props.topicType, {}/*, this.props.parentModel*/);
+      this.props.topic_actions.find(this.props.group.groupKey, {}/*, this.props.parentModel*/);
     }
   }
 
   render() {
-    const {msg, viewer} = this.props;
-
-    // TODO: header title must be provided from group settings, localized
     let header = <div>
-      <h4>Boards</h4>
+      {this.props.board.group && <h4>{this.props.board.group.name}</h4>}
+      {!this.props.board.group && <h4>Loading...</h4>}
     </div>;
 
     if(this.props.meta.loading==true) {
@@ -64,19 +60,22 @@ export default class Boards extends Component {
     return (
       <AppContentCanvas header={header}>
         <div className="col-md-7 col-md-offset-2">
-          <h5 style={{textTransform:'uppercase'}}>Categories</h5>
+          { /*<h5 style={{textTransform:'uppercase'}}>Categories</h5> */ }
           <ListComponent
             list={this.props.list}
             actions={this.props.topic_actions}
             msg={this.props.msg.todos}
             history={this.props.history}
+            group={this.props.group}
+            board={this.props.board}
             />
         </div>
       </AppContentCanvas>
     )
   }
 
-  //componentDidMount: function()
+  // TODO: add
+  //componentDidMount()
   //{
   //  if(process.env.IS_BROWSER)
   //  setTimeout(function(){
@@ -86,5 +85,5 @@ export default class Boards extends Component {
   //    // available via Caret.js
   //    $(elt).caret('pos', queryLen);
   //  }.bind(this), 1);
-  //},
+  //}
 }

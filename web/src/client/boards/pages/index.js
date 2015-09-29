@@ -19,18 +19,16 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 
-var React = require('react');
-var Router = require('react-router'),
-    { RouteHandler } = Router;
+import React from 'react';
+import Router from 'react-router';
 
-let List = require('./boards');
+import List from './boards';
 
-
-//let Store = require('../ProjectModel');
+let ListComponent = require('../boards.react');
 
 module.exports = React.createClass({
   /**
-   * This component user-friendly name for breadcrumbs
+   * This component's user-friendly name for breadcrumbs
    * @param bcComponent
    * @returns {string}
    */
@@ -39,27 +37,36 @@ module.exports = React.createClass({
     return 'Boards'
   },
 
+  componentWillMount() {
+    if(process.env.IS_BROWSER==true) {
+      this.props.topic_actions.loadTopicGroup('board', {}/*, this.props.parentModel*/);
+    }
+  },
+
   render: function()
   {
-    console.log('[__PROPS__]:',this.props)
-    //let props = {...this.props};
-  //  props.board_id = this.props.params.board_id;
+    const {boards:{list, board, group}, topic_actions, msg, history} = this.props;
+
+    if(!group || !group.groupKey) {
+      return <h4>Loading...2</h4>
+    }
 
     // forward to board or topic view
     if(this.props.params.board_id)
       return <div>{React.cloneElement(this.props.children, this.props)}</div>;
+
     // show all boards
     else {
-      const {boards:{list}, topic_actions, msg, history} = this.props;
       return <List
-              topicType='board'
-              list={list}
-              topic_actions={topic_actions}
-              msg={msg}
-              history={history}
-              meta={this.props.boards.meta}
+        itemComponent={ListComponent}
+        board={board}
+        group={group}
+        list={list}
+        topic_actions={topic_actions}
+        msg={msg}
+        history={history}
+        meta={this.props.boards.meta}
         />
     }
-
   },
 });
