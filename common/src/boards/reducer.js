@@ -22,6 +22,7 @@
 import * as actions from '../topics/actions';
 import * as commentsActions from '../comments/actions';
 import Todo from './board';
+import TopicGroup from './topic-group';
 import Comment from '../comments/comment';
 import getRandomString from '../lib/getRandomString';
 import {List, Range, Record} from 'immutable';
@@ -32,6 +33,7 @@ const InitialState = Record({
   viewPage: new Todo,
   board: new Todo,
   viewTopic: new Todo,
+  group: new TopicGroup,
   meta:{
     loading: true
   }
@@ -46,6 +48,7 @@ const revive = (state) => initialState.merge({
   viewPage: new Todo(state.viewPage || {}),
   board:  new Todo(),
   viewTopic: new Todo({loading: false}),
+  group: new TopicGroup,
   meta:{
     loading: true
   }
@@ -113,6 +116,16 @@ export default function boardsReducer(state = initialState, action) {
     case commentsActions.ADD_ONE_COMMENT:
       return state
         .updateIn(['viewTopic','comments'], comments => comments.push(Comment(action.payload)))
+
+    case actions.LOAD_TOPIC_GROUP:
+      return state
+        //.setIn(['board', 'group'],new TopicGroup())
+        .set('group', new TopicGroup());
+
+    case actions.LOAD_TOPIC_GROUP_SUCCESS:
+      return state
+        //.setIn(['board', 'group'], new TopicGroup(action.payload))
+        .set('group', new TopicGroup(action.payload));
   }
 
   return state;
