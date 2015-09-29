@@ -1,6 +1,83 @@
 var app = require("../../server/main");
 
+import {mergeQuery} from 'loopback-datasource-juggler/lib/utils';
+
 module.exports = function(Topic) {
+
+  Topic.on('attached', function() {
+    var override = Topic.findOne;
+    Topic.findOneCore = override;
+    Topic.findOne = function(filter, options, callback) {
+
+      // from dao.js:
+      if (options === undefined && callback === undefined) {
+        if (typeof filter === 'function') {
+          callback = filter;
+          filter = {};
+        }
+      } else if (callback === undefined) {
+        if (typeof options === 'function') {
+          callback = options;
+          options = {};
+        }
+      }
+
+      callback = callback || {};
+      filter = filter || {};
+      options = options || {};
+      // END [from dao.js]
+
+      /**
+       * allow users to find topics by their contextTopicKey, eg. /api/topics/BF
+       */
+      if(filter.where.id) {
+
+        if(!Number.isInteger(filter.where.id))
+        {
+          let parts = filter.where.id.split('-');
+          let last = parts.pop();
+
+          let _filter={key:null,id:null};
+
+          if(!Number.isInteger(last)) {
+            _filter.key=null;
+            _filter.id=filter.where.id;
+          }
+          else if (parts.length==0) {
+            _filter.key=null;
+            _filter.id=last;
+          }
+          else {
+            _filter.key=parts.implode('-');
+            _filter.id=last;
+          }
+
+          if(!_filter.key && _filter.id)
+          {
+            delete filter.where.id;
+            filter = mergeQuery(filter, {where: {
+              and: [
+                {or: [{contextTopicId: "0", "contextTopicId": null}]},
+                {contextTopicKey: _filter.id}
+              ]
+            }});
+          }
+        }
+      }
+
+      // go on with regular `findOne` method
+      override.apply(this, [filter, function(err, modelInstance) {
+        if(modelInstance) {
+          callback(null, modelInstance)
+        } else {
+          callback(err,null);
+        }
+      }]);
+
+      return callback.promise;
+    }
+  });
+
   /*Topic.on('attached', function() {
     var override = Topic.find;
     Topic.findCore = override;
@@ -53,7 +130,6 @@ module.exports = function(Topic) {
     }
   });*/
 
-  // before the static .find methods
   Topic.afterRemote('find', function(ctx, car, next) {
 
     if(ctx.result) {
