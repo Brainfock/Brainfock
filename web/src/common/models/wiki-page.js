@@ -32,6 +32,12 @@ module.exports = function(WikiPage)
 {
   WikiPage.observe('before save', function updateTimestamp(ctx, next) {
 
+    let pageUid = ctx.instance.pageUid.split(':');
+    if(pageUid.length>1) {
+      ctx.instance.namespace = pageUid.shift();
+      ctx.instance.pageUid = pageUid.join('');
+    }
+
     if (ctx.isNewInstance) {
       WikiPage.app.models.Entity.create({
         name: ctx.instance.pageUid,
