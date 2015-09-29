@@ -85,6 +85,7 @@ module.exports = function(app) {
 
     // TODO: currently, even if user does not have access to entity, he will be able to fetch EMPTY comments list like /api/entities/1699/comments
     if(context.remotingContext.method.name == 'find'
+      || context.remotingContext.method.name == 'count'
       || context.remotingContext.method.name == '__get__comments'
     ) {
 

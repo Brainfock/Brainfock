@@ -483,6 +483,13 @@
       "principalId": "topicEntityAccess",
       "permission": "ALLOW",
       "property": "findById"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "topicEntityAccess",
+      "permission": "ALLOW",
+      "property": "count"
     }
   ],
   "methods": {}
