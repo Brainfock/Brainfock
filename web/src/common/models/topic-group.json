@@ -90,10 +90,42 @@
         "nullable": "Y"
       },
       "_selectable": true
+    },
+    "routerPath": {
+      "type": "String",
+      "required": false,
+      "length": 100,
+      "precision": null,
+      "scale": null,
+      "mysql": {
+        "columnName": "router_path",
+        "dataType": "varchar",
+        "dataLength": 100,
+        "dataPrecision": null,
+        "dataScale": null,
+        "nullable": "Y"
+      },
+      "_selectable": true
+    },
+    "permalink": {
+      "type": "String",
+      "required": false,
+      "length": 100,
+      "precision": null,
+      "scale": null,
+      "mysql": {
+        "columnName": "permalink",
+        "dataType": "varchar",
+        "dataLength": 100,
+        "dataPrecision": null,
+        "dataScale": null,
+        "nullable": "Y"
+      },
+      "_selectable": true
     }
   },
   "validations": [],
-  "relations": {
+  "disabled_relations": {
     "topics": {
       "type": "hasMany",
       "model": "Topic",
@@ -106,20 +138,34 @@
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "DENY"
-    },
-    {
+    }
+  ,    {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "groupTopicEntityAccess",
       "permission": "ALLOW",
-      "property": "find"
-    },
-    {
+      "property": "DISABLED_find"
+    }
+  , {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "groupTopicEntityAccess",
+      "permission": "ALLOW",
+      "property": "DIABLED_findOne"
+    }
+  , {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
       "permission": "ALLOW",
       "property": "findOne"
+    }
+  , {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "findById"
     }
   ],
   "methods": {}
