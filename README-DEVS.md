@@ -68,6 +68,16 @@ cd este-app
 npm install
 ```
 
+### Production setup
+
+Brainfock uses Loopback and is ready for environment-specific configurations out-of-the-box. To complete Brainfock app
+setup for production, you need to set `NODE_ENV=production` and (optionally) set any of the following properties:
+
+* DB_HOST - database host address
+* DB_PORT - database port
+* DB_USER - database user
+* DB_PASSWORD - database password
+
 ## Start Development
 
 - run `npm run web-start-dev`
