@@ -1,22 +1,25 @@
-# Brainfock
+[![Brainfock](https://brainfock.files.wordpress.com/2014/11/logo_greenhex_trans.png?w=250)](http://brainfock.org)
+
 #### Topic management solution / CMF
-Copyright (C) 2013-2015 Sergii Gamaiunov, hello@webkadabra.com
+Copyright (C) 2013-2015 Sergii Gamaiunov, <hello@webkadabra.com>
 
-Brainfock is a modern web-based CMF started out as task & project management tool and ended up as something that angels might have crafted. It  will help you manage projects, project's tasks, deals, contacts, run community (discussion borads), manage documents like Wiki & much more. 
+> Brainfock is a modern web-based CMF started out as task & project management tool and ended up as something that angels might have crafted. It  will help you manage projects, project's tasks, deals, contacts, run community (discussion borads), manage documents like Wiki & much more.
 
-**RELEASE DATE**: August-September, 2015, follow Brainfock on [GitHub](https://github.com/Brainfock/Brainfock), [Twitter](https://twitter.com/brainfockapp) or [Facebook](https://www.facebook.com/Brainfock) for updates.
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
+Follow Brainfock on [GitHub](https://github.com/Brainfock/Brainfock), [Twitter](https://twitter.com/brainfockapp) or [Facebook](https://www.facebook.com/Brainfock) for updates.
 
 ### Features
+
 - Robust React.js-powered Web-client
-- Basic setup requires only **PHP** & **database server** (like MySql)
-- WebSockets (optional)
-- Workspaces, Projects, Planning & Milestones, Tickets
+- Server-side rendering of React components
+- WebSockets
+- Projects, Planning & Milestones, Tickets
 - Discussion boards (per project or any other object)
 - Wiki module - each object can have it's own Wiki; Special pages, Pages Index etc.
-- Customizable data scheme (projects, boards, issues are available out-of-the-box, everything is configurable) 
+- Customizable data scheme (projects, boards, issues are available out-of-the-box, everything is configurable)
 - Customizable issue types
 - Access control per container (e.g. project, discussion board) and items (e.g. issue, board topic)
-- Customizable workflows per container & issue group/type
 - User notificaitons
 - Activity stream per object (project, issue etc.)
 - I18n & L10n
@@ -25,28 +28,30 @@ Brainfock is a modern web-based CMF started out as task & project management too
 
 Code:
 - frontend is done fully on React.js
-- Yii Framework at backend
-- requires PHP5.3+, MySql 5+; 
-- requires command line access for advanced setup
-- for advanced features, ZMQ is required
+- Node.js / Loopback (Express) in the back
 
 
-### Version
-v0.16.0 - currently in develoment. Public code release is planned on August-September 2015 with version v1.0 Please, stay tuned for updates.
+### Status
+
+Currently in develoment (porting PHP/Backbone code to Node/React). Public code release is planned with version v1.0
+Please, stay tuned for updates!
 
 ### Tech summary
-Brainfock uses a number of open source projects to work properly:
 
-* React.js/FLUX for client
-* Google Material Design (utilizing powerful <http://material-ui.com>) 
+Brainfock uses a number of Open Source libraries to work properly. We used great [Este.js](https://github.com/este/este) stack
+coupled with [Loopback](http://loopback.io/) to deal with web backend, models etc. For more tech info, please, see README-TECH
+
+* React.js
+* Google's Material Design guildelines (utilizing powerful <http://material-ui.com>)
 * Node.js' NPM, Webpack & Bower
 * [Marked] - a super fast port of Markdown to JavaScript
-* [Twitter Bootstrap] - great UI boilerplate for modern web apps
-* jQuery, Underscore, Lodash, Backbone.js, [Cortex.js](https://github.com/mquan/cortex)
+
+Developers, please, follow [README-DEVS.md](/README-DEVS.md) for in-depth information about Este stack, setup and development
 
 ### Installation
+
 ```
-Please, see SETUP.md for details
+Please, see README-DEVS.md for details
 ```
 
 ### Contibution & support
@@ -56,22 +61,32 @@ Want to contribute? Great! I'll be very happy to get help. More info is coming c
 Developer - Sergii Gamaiunov <hello@webkadabra.com>
 
 ### Todo
+- Customizable workflows per container & issue group/type
+- Workspaces
 - Web installer
 - Private messages
 - Uploads module
 - Plugin system (backend) & modules system for web-client
-- Mobile App
-- Node.js for backend (optional)
+- Mobile native apps for Android & iOS
 - Tests coverage
-- Server-side rendering
-- VCS integration for software development 
+- VCS integration for software development
 - Admin interface
 - More predefined data schemes (Sales management etc.)
 
 License
 ---
 
-(Currently being worked on, but you can be sure it'll be GPL)
+AGPL v3
+
+## Notes
+
+- Works on OSX, Linux, and Windows. Feel free to report any issue.
+- As a rule of thumb, Brainfock supports all evergreen browsers plus last two pieces of IE.
+- You can support Brainfock development with donations
+
+## Credit
+
+Sergii Gamaiunov, [twitter.com/Webkadabra](https://twitter.com/Webkadabra)
 
 ** Authors **
 
