@@ -1,3 +1,4 @@
 {
-  "publicHost": 555
+  "publicHost": 555,
+  "host": "brainfock.org"
 }
