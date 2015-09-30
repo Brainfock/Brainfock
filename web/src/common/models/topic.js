@@ -34,7 +34,6 @@ module.exports = function(Topic) {
 
         if(isNaN(filter.where.id))
         {
-          console.log('whaaat');
           let parts = filter.where.id.split('-');
           let last = parts.pop();
 
@@ -123,25 +122,25 @@ module.exports = function(Topic) {
     }
   });*/
 
-  Topic.afterRemote('find', function(ctx, car, next) {
-
-    if(ctx.result) {
-      var result = ctx.result;
-      ctx.result = {
-        data: result,
-        meta: {
-          limit: 20,
-          next: ctx.req.baseUrl,
-          offset: 0,
-          previous: '',
-        }
-      };
-      if(Array.isArray(ctx.result.data)) {
-        ctx.result.meta.count = ctx.result.data.length;
-      }
-    }
-    next();
-  });
+  //Topic.afterRemote('find', function(ctx, car, next) {
+  //
+  //  if(ctx.result) {
+  //    var result = ctx.result;
+  //    ctx.result = {
+  //      data: result,
+  //      meta: {
+  //        limit: 20,
+  //        next: ctx.req.baseUrl,
+  //        offset: 0,
+  //        previous: '',
+  //      }
+  //    };
+  //    if(Array.isArray(ctx.result.data)) {
+  //      ctx.result.meta.count = ctx.result.data.length;
+  //    }
+  //  }
+  //  next();
+  //});
   ///
 
   /*Topic.beforeRemote( 'find', function( context, data, next) {
@@ -233,4 +232,71 @@ module.exports = function(Topic) {
       return next();
     }
   });
+
+  /**
+   * in progress
+   * @param id
+   * @param cb
+   */
+  Topic.loadFilters = function(id, groupKey, cb) {
+    Topic.findOne( {where:{id:id}}, function (err, instance) {
+
+      if(err) throw err;
+
+      if(!instance)
+        return cb(null, [])
+
+      // Find DEFAULT topic type scheme
+      // TODO: allow to define different topic_type_scheme per root (so, project can have own)
+      Topic.app.models.TopicTypeScheme.findOne({},function(typeErr,typeInstance){
+
+        if(typeErr) throw typeErr;
+
+        if(!typeInstance)
+          return cb(null, [])
+
+        Topic.app.models.TopicGroup.findOne({where:{groupKey:groupKey}},function(groupErr,groupInstance){
+
+          if(groupErr) throw groupErr;
+
+          if(!groupInstance)
+            return cb(null, [])
+
+          let response = [
+            {
+              id: 'type',
+              defaultValue:1,
+              optionsRest:'/api/topics?filter[where][groupKey]=topic'
+            },
+            {
+              id: 'contextEntityId',
+              defaultValue:id,
+              defaultLabel:instance.summary,
+              optionsRest:'/api/topics?filter[where][groupKey]=project'
+            },
+          ];
+
+          cb(null, response);
+        })
+      })
+
+
+    });
+  };
+
+  /**
+   * REST API endpoint `api/topics/123/filters`
+   */
+  Topic.remoteMethod(
+    'loadFilters',
+    {
+      accepts: [
+        {arg: 'id', type: 'any', http: { source: 'path' }, required: true },
+        {arg: 'groupKey', type: 'string', http: { source: 'path' }, required: true },
+      ],
+      http: {verb: 'get', path: '/:id/filters/:groupKey'},
+      returns: {arg: 'filters', type: 'Array'}
+    }
+  );
+
 };

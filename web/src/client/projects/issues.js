@@ -23,51 +23,76 @@ import Loader from '../components/Loader';
 
 export default class ProjectIssues extends React.Component{
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading:true,
+      filters:[],
+      count:0,
+      filtersOpen:false,
+      searchQuery:props.location.query.query
+    };
+  }
+
   componentDidMount() {
     // pull all topics (projects) from server - this list is filtered by client
     if(process.env.IS_BROWSER==true) {
       // load TOPICS of this BOARD
       this.props.topic_actions.find('issue', {},this.props.params.board_id);
+      this.props.topic_actions.count('issue', {},this.props.params.board_id);
     }
   }
 
   render()
   {
-    console.log("__PROPS__>",this.props)
-    const {boards:{board}} = this.props;
-    //if(!this.props.topic)
-    //{
-    //  return <div className="row">
-    //    <div style={{marginTop:'5%'}} className="col-md-4 col-md-offset-4">
-    //      <h1><Loader />...</h1>
-    //    </div>
-    //  </div>
-    //}
+    const {boards:{board, list, meta}} = this.props;
+    if(meta.loading==true)
+    {
+      return <div className="row">
+        <div style={{marginTop:'5%'}} className="col-md-4 col-md-offset-4">
+          <h1><Loader />...</h1>
+        </div>
+      </div>
+    }
 
     let ListView = require('../boards/boards.react');
     let ListViewItem = require('../boards/board.topic.js');
 
-    return <ListView
+    let Filters = require('../components/UISimpleFilters');
 
-      list={this.props.boards.list}
-      actions={this.props.topic_actions}
-      msg={this.props.msg.todos}
-      history={this.props.history}
-      itemComponent={ListViewItem}
-      params={this.props.params}
+    return (
+      <div>
+        total: {meta.count}
+        <Filters ref="filters"
+                 containerStore={board}
+                 filters={this.state.filters}
+                 onApply={this.onApplyFilters}
+                 preselected={this.props.location.query}
+                 style={{}}
+          />
+        <ListView
 
-      /* who's team do we want to see
-      containerStore={this.props.topic}
-      /!* message if list is empty /
-      EmptyComponent={EmptyComponent}
+        list={this.props.boards.list}
+        actions={this.props.topic_actions}
+        msg={this.props.msg.todos}
+        history={this.props.history}
+        itemComponent={ListViewItem}
+        params={this.props.params}
 
-      ListComponent={ListComponent}
-      ListItemComponent={ListItemComponent}
+        /* who's team do we want to see
+        containerStore={this.props.topic}
+        /!* message if list is empty /
+        EmptyComponent={EmptyComponent}
 
-      Actions={TopicActions}
-      Store={TopicStore}
-      CursorStore={TopicCursorStore}*/
-      />
+        ListComponent={ListComponent}
+        ListItemComponent={ListItemComponent}
+
+        Actions={TopicActions}
+        Store={TopicStore}
+        CursorStore={TopicCursorStore}*/
+        />
+      </div>
+    )
 
     return (
       <div className="wiki-wrapper">

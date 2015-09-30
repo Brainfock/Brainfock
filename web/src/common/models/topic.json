@@ -490,6 +490,13 @@
       "principalId": "topicEntityAccess",
       "permission": "ALLOW",
       "property": "count"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "loadFilters"
     }
   ],
   "methods": {}
