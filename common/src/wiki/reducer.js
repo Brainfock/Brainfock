@@ -57,11 +57,17 @@ export default function todosReducer(state = initialState, action) {
         .setIn(['viewPage', 'loading'], true);
     }
     case actions.SAVE_ERROR:
-    case actions.SAVE_SUCCESS: {
       return state
         // enable form buttons from being pressed while page is being loaded
         .setIn(['viewPage', 'loading'], false);
+
+    case actions.SAVE_SUCCESS: {
+      return state
+        // ensure we'll have page `id` after save for correct REST API calls
+        .set('viewPage', new Todo(action.payload))
+        .setIn(['viewPage', 'loading'], false);
     }
+
     case actions.FIND: {
       return state
         // disable form buttons from being pressed while page is being loaded
