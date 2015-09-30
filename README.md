@@ -76,7 +76,7 @@ Developer - Sergii Gamaiunov <hello@webkadabra.com>
 License
 ---
 
-(Currently being worked on, but you can be sure it'll be GPL)
+AGPL v3
 
 ## Notes
 
