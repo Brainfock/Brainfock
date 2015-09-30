@@ -4,10 +4,10 @@
     "port": 0,
     "url": "http://localhost",
     "database": "brainfock_node",
-    "password": "",
+    "password": "password",
     "name": "db",
     "connector": "mysql",
-    "user": "root",
+    "user": "brainfock",
     "debug":false
   }
 }
