@@ -43,7 +43,7 @@ export default class App extends Component {
     // socket connection must be created during willMount, so io is available when rendering
     if(process.env.IS_BROWSER && !this.io)
     {
-      const host = this.props.app.baseUrl || 'localhost:3000';
+      const host = this.props.app.baseUrl;
 
       if(!this.props.app.baseUrl) {
         console.warn('[BFK] missing `baseUrl` config value, check your `server/config.json` and environment settings.');
