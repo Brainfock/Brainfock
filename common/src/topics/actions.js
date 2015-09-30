@@ -20,25 +20,29 @@
  */
 
 export const FIND = 'TOPIC_FIND';
-export const FIND_ERROR = 'TOPIC_FIND_ERROR';
 export const FIND_SUCCESS = 'TOPIC_FIND_SUCCESS';
+export const FIND_ERROR = 'TOPIC_FIND_ERROR';
+
 export const FIND_ONE = 'TOPIC_FIND_ONE';
-export const FIND_ONE_ERROR = 'TOPIC_FIND_ERROR_ONE';
 export const FIND_ONE_SUCCESS = 'TOPIC_FIND_SUCCESS_ONE';
+export const FIND_ONE_ERROR = 'TOPIC_FIND_ERROR_ONE';
 
 export const LOAD_TOPIC = 'LOAD_TOPIC';
-export const LOAD_TOPIC_ERROR = 'LOAD_TOPIC_ERROR';
 export const LOAD_TOPIC_SUCCESS = 'LOAD_TOPIC_SUCCESS';
+export const LOAD_TOPIC_ERROR = 'LOAD_TOPIC_ERROR';
 
 export const LOAD_TOPIC_GROUP = 'LOAD_TOPIC_GROUP';
-export const LOAD_TOPIC_GROUP_ERROR = 'LOAD_TOPIC_GROUP_ERROR';
 export const LOAD_TOPIC_GROUP_SUCCESS = 'LOAD_TOPIC_GROUP_SUCCESS';
+export const LOAD_TOPIC_GROUP_ERROR = 'LOAD_TOPIC_GROUP_ERROR';
 
+export const SET_EDIT_FIELD = 'TOPIC_SET_EDIT_FIELD';
 export const SAVE = 'TOPIC_SAVE';
 export const SAVE_ERROR = 'TOPIC_SAVE_ERROR';
 export const SAVE_SUCCESS = 'TOPIC_SAVE_SUCCESS';
-export const SET_EDIT_FIELD = 'TOPIC_SET_EDIT_FIELD';
 
+export const COUNT = 'TOPIC_COUNT';
+export const COUNT_SUCCESS = 'TOPIC_COUNT_SUCCESS';
+export const COUNT_ERROR = 'TOPIC_COUNT_ERROR';
 
 const getApi = (fetch, endpoint) =>
   fetch(`/api/${endpoint}`, {
@@ -65,6 +69,28 @@ export function find(type, query, contextTopicId) {
       FIND,
       FIND_SUCCESS,
       FIND_ERROR
+    ],
+    payload: {
+      promise:  getApi(fetch, endpoint)
+        .catch(response => {
+          throw response;
+        })
+    }
+  });
+}
+
+export function count(type, query, contextTopicId) {
+
+  let endpoint = 'topics/count?where[groupKey]='+type ;
+  if(contextTopicId > 0) {
+    endpoint += '&where[contextTopicId]='+contextTopicId;
+  }
+
+  return ({fetch, validate}) => ({
+    types: [
+      COUNT,
+      COUNT_SUCCESS,
+      COUNT_ERROR
     ],
     payload: {
       promise:  getApi(fetch, endpoint)

@@ -35,7 +35,8 @@ const InitialState = Record({
   viewTopic: new Todo,
   group: new TopicGroup,
   meta:{
-    loading: true
+    loading: true,
+    count: 0,
   }
 });
 
@@ -50,7 +51,8 @@ const revive = (state) => initialState.merge({
   viewTopic: new Todo({loading: false}),
   group: new TopicGroup,
   meta:{
-    loading: true
+    loading: true,
+    count:0,
   }
 });
 
@@ -69,7 +71,7 @@ export default function boardsReducer(state = initialState, action) {
 
     case actions.FIND_SUCCESS:
     {
-      const newlist = action.payload.data.map((item) => {
+      const newlist = action.payload.map((item) => {
 
         item.cid = getRandomString();
         return new Todo(item);
@@ -126,6 +128,10 @@ export default function boardsReducer(state = initialState, action) {
       return state
         //.setIn(['board', 'group'], new TopicGroup(action.payload))
         .set('group', new TopicGroup(action.payload));
+
+    case actions.COUNT_SUCCESS:
+      return state
+        .set('meta', {count: action.payload.count});
   }
 
   return state;
