@@ -61,7 +61,7 @@ var PageWithNav = React.createClass({
       content: {
         boxSizing: 'border-box',
         padding: Spacing.desktopGutter + 'px',
-        maxWidth: (Spacing.desktopKeylineIncrement * 14) + 'px'
+        maxWidth: (Spacing.desktopKeylineIncrement * 20) + 'px'
       },
       secondaryNavWhenMedium: {
         borderTop: 'none',
@@ -113,8 +113,6 @@ var PageWithNav = React.createClass({
   render: function () {
 
     const {children, ...passProps} = this.props;
-    console.log("__PROPS 1__>",passProps)
-    console.log("__PROPS childer__>",children)
 
     let styles = this.getStyles();
     return (

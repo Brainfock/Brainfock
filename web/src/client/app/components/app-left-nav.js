@@ -111,6 +111,9 @@ var AppLeftNav = React.createClass({
    */
   _getSelectedIndex: function()
   {
+    // turn this off until we can make it so clicking active link still does the navigation
+    return;
+
     var currentItem;
     for (var i = menuItems.length - 1; i >= 0; i--) {
       currentItem = menuItems[i];

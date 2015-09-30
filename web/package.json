@@ -101,6 +101,7 @@
     "react-redux": "^2.1.2",
     "react-resolver": "^2.0.5",
     "react-router": "^1.0.0-rc1",
+    "react-select": "^0.6.11",
     "react-textarea-autosize": "^2.3.1",
     "react-transform-catch-errors": "^0.2.0",
     "react-transform-hmr": "^0.1.6",
