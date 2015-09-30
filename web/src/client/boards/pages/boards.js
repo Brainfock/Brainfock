@@ -6,9 +6,10 @@ var AppContentCanvas = require('../../components/layout/AppContentCanvas');
 var ListActions =  require('../../components/UIListActions');
 
 var EmptyComponent =  React.createClass({
+  // TODO: i18n
   render: function() {
     return <div className="alert alert-info">
-      <p><Entity entity="Projects_ListEmpty" /></p>
+      <p>Projects_ListEmpty</p>
     </div>
   }
 });
