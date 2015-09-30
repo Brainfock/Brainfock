@@ -22,9 +22,10 @@ export default class App extends Component {
 
   static propTypes = {
     children: PropTypes.any,
-    //location: PropTypes.object.isRequired,
-    //msg: PropTypes.object.isRequired,
-    //users: PropTypes.object.isRequired
+    location: PropTypes.object.isRequired,
+    msg: PropTypes.object.isRequired,
+    users: PropTypes.object.isRequired,
+    app: PropTypes.object.isRequired
   }
 
   static childContextTypes = {
@@ -39,11 +40,18 @@ export default class App extends Component {
 
   componentWillMount()
   {
+    // socket connection must be created during willMount, so io is available when rendering
     if(process.env.IS_BROWSER && !this.io)
     {
-      // appActions.setupIo((this.props.users.viewer && this.props.users.viewer.authToken) ? this.props.users.viewer.authToken : null);
-      // important: create socket connection during willMount
-      this.io = io('http://localhost:3000', this.props.users.viewer ? {
+      const host = this.props.app.baseUrl || 'localhost:3000';
+
+      if(!this.props.app.baseUrl) {
+        console.warn('[BFK] missing `baseUrl` config value, check your `server/config.json` and environment settings.');
+      }
+
+      // TODO: move to actions e.g. appActions.setupIo((this.props.users.viewer && this.props.users.viewer.authToken) ? this.props.users.viewer.authToken : null);
+      // TODO: SSL option
+      this.io = io(`http://${host}`, this.props.users.viewer ? {
         query: "auth_token=" + this.props.users.viewer.authToken,
         forceNew: true,
         'force new connection': true,

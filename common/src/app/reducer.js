@@ -8,8 +8,10 @@ import todos from '../todos/reducer';
 import users from '../users/reducer';
 import wiki from '../wiki/reducer';
 import boards from '../boards/reducer';
+import app from './app-reducer';
 
 const appReducer = combineReducers({
+  app,
   auth,
   device,
   intl,

@@ -49,8 +49,7 @@ var $ = require('jquery');
       query.push('access_token='+props.users.viewer.authToken)
     }
 
-    // TODO: allow to provide via config e.g. `const host = FULLHOST || 'localhost:3000';`
-    const host = 'localhost:3000';
+    const host = props.app.baseUrl;
 
     return promisingagent.get(`http://${host}/api/wikiPages/findOne?` + query.join('&'))
       .then((response) => {

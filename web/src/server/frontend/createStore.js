@@ -5,6 +5,7 @@ import {configureStore} from '@este/common';
 import {fromJS} from 'immutable';
 import {mapDispatchToProps} from '@este/common';
 import loopback from 'loopback';
+import app from '../main';
 
 export default function createStore(req) {
   return new Promise((resolve, reject) => {
@@ -30,6 +31,7 @@ export default function createStore(req) {
     const {actions} = mapDispatchToProps(store.dispatch);
 
     actions.addTodo(new Todo({title: 'relax'}));
+    actions.setAppBaseUrl(app.get('baseUrl'));
     resolve(store);
   });
 }
