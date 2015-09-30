@@ -1,9 +1,6 @@
 var React = require('react'),
-
-    l20n = require('common/l20n/l20n.jsx'),
-    {Entity} = l20n,
-
     Router = require('react-router'),
+    Loader = require('../../components/Loader'),
     Link = Router.Link,
     Navigation = Router.Navigation,
 
@@ -26,9 +23,7 @@ module.exports = React.createClass({
   render: function() {
 
     if(!this.props.model.id === 0) {
-      return <p>
-        <Entity entity='loadingResults' />
-      </p>
+      return <Loader />
     }
     return this.renderComment();
     if(1==1 /*OR this.props.model.type=='comment'*/) {
