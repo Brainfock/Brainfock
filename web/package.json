@@ -93,7 +93,7 @@
     "react-addons-test-utils": "^0.14.0-rc1",
     "react-addons-transition-group": "^0.14.0-rc1",
     "react-addons-update": "^0.14.0-rc1",
-    "react-bootstrap": "^0.25.2",
+    "react-bootstrap": "^0.25.100-react-pre.1",
     "react-document-title": "^2.0.0",
     "react-dom": "^0.14.0-rc1",
     "react-intl": "^2.0.0-pr-1",
