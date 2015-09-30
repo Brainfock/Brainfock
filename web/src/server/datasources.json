@@ -1,6 +1,6 @@
 {
   "db": {
-    "host": "178.62.249.90",
+    "host": "127.0.0.1",
     "port": 0,
     "url": "http://localhost",
     "database": "brainfock_node",
