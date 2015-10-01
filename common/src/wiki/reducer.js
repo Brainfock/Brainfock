@@ -28,9 +28,9 @@ const InitialState = Record({
   list: List(),
   newTodo: new Todo,
   viewPage: new Todo,
-  meta:{
-    loading: true
-  }
+  meta: new (Record({
+    loading: true,
+  }))
 });
 const initialState = new InitialState;
 

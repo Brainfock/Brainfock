@@ -34,10 +34,10 @@ const InitialState = Record({
   board: new Todo,
   viewTopic: new Todo,
   group: new TopicGroup,
-  meta:{
+  meta: new (Record({
     loading: true,
-    count: 0,
-  }
+    count:0,
+  }))
 });
 
 const initialState = new InitialState;
@@ -50,10 +50,10 @@ const revive = (state) => initialState.merge({
   board:  new Todo(),
   viewTopic: new Todo({loading: false}),
   group: new TopicGroup,
-  meta:{
+  meta: new (Record({
     loading: true,
     count:0,
-  }
+  }))
 });
 
 export default function boardsReducer(state = initialState, action) {
@@ -63,11 +63,11 @@ export default function boardsReducer(state = initialState, action) {
 
     case actions.FIND:
       return state
-        .set('meta', {loading: true})
+        .setIn(['meta','loading'], true)
         .update('list', list => list.clear());
 
     case actions.FIND_ERROR:
-      return state.set('meta', {loading: false})
+      return state.setIn(['meta','loading'], false)
 
     case actions.FIND_SUCCESS:
     {
@@ -79,7 +79,8 @@ export default function boardsReducer(state = initialState, action) {
       return state
         .update('list', list => list.clear())
         .update('list', list => list.push(...newlist))
-        .set('meta', {loading: false});
+        .setIn(['meta','loading'], false)
+        ;
     }
 
     case actions.FIND_ONE:
@@ -131,7 +132,7 @@ export default function boardsReducer(state = initialState, action) {
 
     case actions.COUNT_SUCCESS:
       return state
-        .set('meta', {count: action.payload.count});
+        .setIn(['meta','count'], action.payload.count);
   }
 
   return state;
