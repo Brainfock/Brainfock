@@ -32,7 +32,6 @@ export default class Todo extends Component {
   }
 
   render() {
-    console.log('__PROPS__', this.props)
     const {actions, todo} = this.props;
 
     return <mui.ListItem

@@ -45,8 +45,9 @@ export default class ProjectIssues extends React.Component{
 
   render()
   {
-    const {boards:{board, list, meta}} = this.props;
-    if(meta.loading==true)
+    const {board, list, meta} = this.props.boards;
+
+    if(this.props.boards.meta.loading==true)
     {
       return <div className="row">
         <div style={{marginTop:'5%'}} className="col-md-4 col-md-offset-4">
