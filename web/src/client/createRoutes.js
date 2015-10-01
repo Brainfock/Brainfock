@@ -58,6 +58,15 @@ export default function createRoutes(getState) {
         */}
       </Route>
 
+
+        <Route component={require('./projects/project-wrapper')}  >
+          <Route component={require('./projects/dashboard')} path="/:board_id"  />
+          <Route component={require('./projects/issues')} path="/:board_id/issues" />
+          <Route component={require('./projects/users')} path="/:board_id/users" />
+        </Route>
+
+
+
       <Route component={Wiki} path="wiki/:uid" />
       <Route component={WikiEdit} path="wiki/:uid/edit" />
 

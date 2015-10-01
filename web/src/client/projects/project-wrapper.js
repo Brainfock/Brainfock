@@ -70,7 +70,8 @@ var Layout = React.createClass({
         )
       },
       //{ route: `/project/${this.props.boards.board.id}`, text: 'Dashboard'},
-      { route: `/project/${this.props.boards.board.id}/issues`, text: 'Issues'},
+      { route: `/${this.props.boards.board.contextTopicKey}/issues`, text: 'Issues'},
+     // { route: `/project/${this.props.boards.board.id}/issues`, text: 'Issues'},
       { route: `/project/${this.props.boards.board.id}/users`, text: 'Users'}
     ];
   }
