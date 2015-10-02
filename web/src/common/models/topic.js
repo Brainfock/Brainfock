@@ -1,6 +1,7 @@
 var app = require("../../server/main");
 
 import {mergeQuery} from 'loopback-datasource-juggler/lib/utils';
+import FieldTypes from '../components/topicFields';
 
 module.exports = function(Topic) {
 
@@ -58,7 +59,7 @@ module.exports = function(Topic) {
             delete filter.where.id;
             filter = mergeQuery(filter, {where: {
               and: [
-                {or: [{contextTopicId: "0", "contextTopicId": null}]},
+                {or: [{contextTopicId: "0"}, {"contextTopicId": null}]},
                 {contextTopicKey: _filter.id}
               ]
             }});
@@ -126,25 +127,26 @@ module.exports = function(Topic) {
   });
 
   /**
-   * in progress
+   *
    * @param id
+   * @param groupKey
    * @param cb
    */
   Topic.loadFilters = function(id, groupKey, cb) {
-    Topic.findOne( {where:{id:id}}, function (err, instance) {
+    Topic.findOne( {where:{id:id}}, function (err, contextTopic) {
 
       if(err) throw err;
 
-      if(!instance)
+      if(!contextTopic)
         return cb(null, [])
 
       // Find DEFAULT topic type scheme
       // TODO: allow to define different topic_type_scheme per root (so, project can have own)
-      Topic.app.models.TopicTypeScheme.findOne({},function(typeErr,typeInstance){
+      Topic.app.models.TopicTypeScheme.findOne({},function(typeErr,typeSchemeInstance){
 
         if(typeErr) throw typeErr;
 
-        if(!typeInstance)
+        if(!typeSchemeInstance)
           return cb(null, [])
 
         Topic.app.models.TopicGroup.findOne({where:{groupKey:groupKey}},function(groupErr,groupInstance){
@@ -154,18 +156,50 @@ module.exports = function(Topic) {
           if(!groupInstance)
             return cb(null, [])
 
+          // contextTopic - root topic, e.g. `project`
+          // groupInstance - group instance (e.g. `issues`)
+          // typeSchemeInstance
+
+          // filter by:
+          // - topic type (`issue`, `epic` etc.)
+          // - workflow stage (stage_id)
+          // - summary text (or any text e.g. fulltext)
+          // - additional fields:
+          //    -- component (relational field, relation to topic of group "component" that has `contextTopic` as parent
+          //       API endpoint: `api/topics/:namespace/:topicKey/topics/?where[groupKey]=component
+          //    -- priority
+          //    -- assignee
+          //    -- reported_by
+
+          // we must get all available fields (filterable) for this `groupInstance`
+    console.log('FieldTypes.typeSelect',FieldTypes.typeSelect);
           let response = [
             {
               id: 'type',
+              label:'Type',
               defaultValue:1,
-              optionsRest:'/api/topics?filter[where][groupKey]=topic'
+              endpoint:'/api/topics?filter[where][groupKey]=issue',
+              type:FieldTypes.select
             },
-            {
-              id: 'contextEntityId',
-              defaultValue:id,
-              defaultLabel:instance.summary,
-              optionsRest:'/api/topics?filter[where][groupKey]=project'
-            },
+            //{
+            //  id: 'contextTopicId',
+            //  defaultValue:id,
+            //  defaultOptions: [
+            //    {id:id, label:contextTopic.summary}
+            //  ],
+            //  endpoint:`/api/topics/${id}/?filter[where][groupKey]=project`
+            //},
+            //{
+            //  id: 'field.milestone',
+            //  label:"Milestone",
+            //  endpoint:`/api/topics/${id}/?filter[where][groupKey]=milestone`
+            //},
+            //{
+            //  id: 'field.assignee_user_id',
+            //  label:"Assignee",
+            //  endpoint:`/api/topics/${id}/users`,
+            //  type:FieldTypes.select,
+            //},
           ];
 
           cb(null, response);
@@ -177,7 +211,7 @@ module.exports = function(Topic) {
   };
 
   /**
-   * REST API endpoint `api/topics/123/filters`
+   * REST API endpoint `api/topics/:contextTopicKey/filters`
    */
   Topic.remoteMethod(
     'loadFilters',
