@@ -39,9 +39,12 @@ export default function createRoutes(getState) {
       <Route component={Me} onEnter={requireAuth} path="me" />
       <Route component={Todos} path="todos" />
 
-      <Route component={require('./boards/pages/index.js')} name="boards" path="boards"/>
-      <Route component={require('./boards/pages/board.js')} name="board" path="/board/:board_id/*">
-        <Route component={require('./boards/pages/topic.js')} name="board_topic" path="topic/:id" />
+      <Route component={require('./boards/pages/index.js')} path="boards"/>
+      <Route component={require('./boards/pages/board.js')} path="/board/:board_id">
+        <Route component={require('./boards/pages/topic.js')} path="/board/:board_id/topic/:id" />
+      </Route>
+      <Route component={require('./boards/pages/board.js')} path="/board/:board_id/:key">
+        <Route component={require('./boards/pages/topic.js')} path="/board/:board_id/topic/:id" />
       </Route>
 
       <Route path="/projects" component={require('./projects/index')}>
@@ -60,9 +63,11 @@ export default function createRoutes(getState) {
 
 
         <Route component={require('./projects/project-wrapper')}  >
-          <Route component={require('./projects/dashboard')} path="/:board_id"  />
-          <Route component={require('./projects/issues')} path="/:board_id/issues" />
-          <Route component={require('./projects/users')} path="/:board_id/users" />
+          <Route component={require('./projects/dashboard')} path="/:namespace/:board_id"  />
+          <Route component={require('./projects/issues')} path="/:namespace/:board_id/issues" />
+          <Route component={require('./projects/issues')} path="/:namespace/:board_id/milestones" />
+          <Route component={require('./projects/issues')} path="/:namespace/:board_id/deals" />
+          <Route component={require('./projects/users')} path="/:namespace/:board_id/users" />
         </Route>
 
 
