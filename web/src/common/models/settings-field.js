@@ -61,14 +61,4 @@ module.exports = function(SettingsField) {
       return next();
     }
   });
-
-  /**
-   * Replaces wiki-links in a text provided
-   *
-   * @param string $text
-   * @return string
-   */
-  SettingsField.prototype.someThing = function () {
-    return 'TEST';
-  }
 };
