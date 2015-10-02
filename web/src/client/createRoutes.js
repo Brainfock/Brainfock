@@ -43,6 +43,7 @@ export default function createRoutes(getState) {
       <Route component={require('./boards/pages/board.js')} path="/board/:board_id">
         <Route component={require('./boards/pages/topic.js')} path="/board/:board_id/topic/:id" />
       </Route>
+
       <Route component={require('./boards/pages/board.js')} path="/board/:board_id/:key">
         <Route component={require('./boards/pages/topic.js')} path="/board/:board_id/topic/:id" />
       </Route>
@@ -50,6 +51,7 @@ export default function createRoutes(getState) {
       <Route component={Wiki} path="wiki/:uid" />
       <Route component={WikiEdit} path="wiki/:uid/edit" />
 
+      <Route component={require('./projects/index')} path="projects"/>
       <Route component={require('./projects/project-wrapper')}  >
         <Route component={require('./projects/dashboard')} path="/:namespace/:board_id"  />
         <Route component={require('./projects/issues')} path="/:namespace/:board_id/issues" />
