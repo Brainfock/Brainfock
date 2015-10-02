@@ -1,22 +1,17 @@
 var marked = require('marked');
-var enable_debug=false;
+
 module.exports = function(Entity) {
 
   /**
    * @url http://localhost:3000/api/entities/1699
    */
-  Entity.afterRemote( '**', function( ctx, data, next) {
-      console.log(ctx.methodString, 'was invoked remotely1');
-    next();
-  });
+  //Entity.afterRemote( '**', function( ctx, data, next) {
+  //  console.log(ctx.methodString, 'was invoked remotely1');
+  //  next();
+  //});
 
 
   Entity.afterRemote( '*.__get__comments', function( ctx, data, next) {
-    if(enable_debug) {
-      console.log(ctx.methodString, 'was invoked remotely');
-      console.log('ctx.result:',ctx.result)
-      console.log('ctx.methodString:',ctx.methodString)
-    }
     if(ctx.result && ctx.result.length>0) {
       function populateValue($modelInstance, callback) {
 
