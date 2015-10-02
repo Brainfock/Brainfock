@@ -33,6 +33,22 @@
       },
       "_selectable": false
     },
+    "workspaceId": {
+      "type": "Number",
+      "required": true,
+      "length": null,
+      "precision": 11,
+      "scale": 0,
+      "mysql": {
+        "columnName": "workspace_id",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 11,
+        "dataScale": 0,
+        "nullable": "Y"
+      },
+      "_selectable": true
+    },
     "entityId": {
       "type": "Number",
       "required": false,
@@ -93,6 +109,22 @@
         "dataLength": null,
         "dataPrecision": 10,
         "dataScale": 0,
+        "nullable": "Y"
+      },
+      "_selectable": true
+    },
+    "namespace": {
+      "type": "String",
+      "required": false,
+      "length": 100,
+      "precision": null,
+      "scale": null,
+      "mysql": {
+        "columnName": "namespace",
+        "dataType": "varchar",
+        "dataLength": 100,
+        "dataPrecision": null,
+        "dataScale": null,
         "nullable": "Y"
       },
       "_selectable": true

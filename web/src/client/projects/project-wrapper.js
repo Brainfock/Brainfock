@@ -57,7 +57,7 @@ var Layout = React.createClass({
    */
   menuItems:function() {
     return [
-      { route: `/project/${this.props.boards.board.id}`,
+      { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}`,
         text: (
           <div
             /*onMouseOver={function(e){e.target.style.background}}*/
@@ -73,9 +73,9 @@ var Layout = React.createClass({
         )
       },
       //{ route: `/project/${this.props.boards.board.id}`, text: 'Dashboard'},
-      { route: `/${this.props.boards.board.contextTopicKey}/issues`, text: 'Issues'},
+      { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}/issues`, text: 'Issues'},
      // { route: `/project/${this.props.boards.board.id}/issues`, text: 'Issues'},
-      { route: `/project/${this.props.boards.board.id}/users`, text: 'Users'}
+      { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}/users`, text: 'Users'}
     ];
   }
 });
