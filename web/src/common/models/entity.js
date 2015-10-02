@@ -125,36 +125,4 @@ module.exports = function(Entity) {
         return cb(null, true);
       });
   }
-
-  /**
-   * example to create new newsted remote method:
-   * @param entityId
-   * @param cb
-   * @returns {*}
-   */
-  Entity.entityName = function(entityId, cb) {
-    return cb(null, 'r');;
-    Entity.findById( entityId, function (err, instance) {
-      response = "Name of entity is " + instance.name;
-      cb(null, response);
-      // then load comments or whatever
-    });
-  }
-
-  /**
-   * uncomment to expose new rest route /{$api}/entities/{$id}/getName
-   *!/
-  Entity.remoteMethod (
-    'entityName',
-    {
-      http: {path: '/getName', verb: 'get'},
-      accepts: [
-        {arg: 'id', type: 'number', http: { source: 'query' }, required: true },
-        {arg: 'page', type: 'Number', http: {source: 'query'}}
-      ],
-      returns: {arg: 'name', type: 'string'}
-      // exmaple if we return list:
-      //returns: {arg: 'data', type: 'object'},
-    }
-  );*/
 };
