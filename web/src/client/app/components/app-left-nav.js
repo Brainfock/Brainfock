@@ -51,17 +51,17 @@ var menuItems = [
 
   // Link to Brainfock website & version, don't remove
   { type: mui.MenuItem.Types.LINK,
-    payload: 'http://brainfock.com',
+    payload: 'http://brainfock.org',
     text: <div style={{
       position: 'absolute',
       bottom: 0,
-      marginLeft: '-20px',
-      fontSize:'88%'
+      marginLeft: '-24px',
+      fontSize:'11px'
     }}>
       <img src="/assets/img/logo_white_bg.png"
            style={{
                   height:"50px",
-                  textAlign: "center"
+                  marginBottom: '-21px'
                }}
            alt={VERSION_FULL}
            title={VERSION_FULL}
