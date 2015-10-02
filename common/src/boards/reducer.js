@@ -1,6 +1,6 @@
 /**
  * Brainfock - community & issue management software
- * Copyright (c) 2015, Sergii Gamaiunov (“Webkadabra”)  All rights reserved.
+ * Copyright (c) 2015, Sergii Gamaiunov (ï¿½Webkadabraï¿½)  All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -29,6 +29,7 @@ import {List, Range, Record} from 'immutable';
 
 const InitialState = Record({
   list: List(),
+  listFilters: List(),
   newTodo: new Todo,
   viewPage: new Todo,
   board: new Todo,
@@ -45,6 +46,7 @@ const initialState = new InitialState;
 // Note how JSON from server is revived to immutable record.
 const revive = (state) => initialState.merge({
   list: state.list.map(todo => new Todo(todo)),
+  listFilters: state.listFilters.map(todo => (new Record(todo))),
   newTodo: new Todo(state.newTodo),
   viewPage: new Todo(state.viewPage || {}),
   board:  new Todo(),
@@ -72,7 +74,6 @@ export default function boardsReducer(state = initialState, action) {
     case actions.FIND_SUCCESS:
     {
       const newlist = action.payload.map((item) => {
-
         item.cid = getRandomString();
         return new Todo(item);
       });
@@ -133,6 +134,18 @@ export default function boardsReducer(state = initialState, action) {
     case actions.COUNT_SUCCESS:
       return state
         .setIn(['meta','count'], action.payload.count);
+
+    case actions.LOAD_FILTERS_SUCCESS:
+    {
+      const newlist = action.payload.filters.map((item) => {
+        item.cid = getRandomString();
+        return new (Record(item));
+      });
+      return state
+        .update('listFilters', list => list.clear())
+        .update('listFilters', list => list.push(...newlist))
+        ;
+    }
   }
 
   return state;
