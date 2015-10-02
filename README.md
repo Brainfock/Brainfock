@@ -1,6 +1,8 @@
 [![Brainfock](https://brainfock.files.wordpress.com/2014/11/logo_greenhex_trans.png?w=250)](http://brainfock.org)
 
 #### Topic management solution / CMF
+
+[![Join the chat at https://gitter.im/Brainfock/Brainfock](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Brainfock/Brainfock?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Copyright (C) 2013-2015 Sergii Gamaiunov, <hello@webkadabra.com>
 
 > Brainfock is a modern web-based CMF started out as task & project management tool and ended up as something that angels might have crafted. It  will help you manage projects, project's tasks, deals, contacts, run community (discussion borads), manage documents like Wiki & much more.
