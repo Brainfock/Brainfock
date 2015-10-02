@@ -493,6 +493,11 @@
       "type": "belongsTo",
       "model": "TopicType",
       "foreignKey": "typeId"
+    },
+    "topics": {
+      "type": "hasMany",
+      "model": "Topic",
+      "foreignKey": "contextTopicId"
     }
   },
   "acls": [
@@ -529,6 +534,27 @@
       "principalId": "$everyone",
       "permission": "ALLOW",
       "property": "loadFilters"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "topics"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "topicEntityAccess",
+      "permission": "ALLOW",
+      "property": "__get__topics"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "topicEntityAccess",
+      "permission": "ALLOW",
+      "property": "__count__topics"
     }
   ],
   "methods": {}

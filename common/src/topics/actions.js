@@ -57,12 +57,12 @@ const getApi = (fetch, endpoint) =>
 
 
 export function find(type, query, contextTopicId) {
-
-  let endpoint = 'topics/?filter[where][groupKey]='+type ;
-  if(contextTopicId > 0) {
-    endpoint += '&filter[where][contextTopicId]='+contextTopicId;
+  let endpoint;
+  if(contextTopicId) {
+    endpoint = `topics/${contextTopicId}/topics/?filter[where][groupKey]=${type}` ;
+  } else {
+    endpoint = 'topics/?filter[where][groupKey]='+type ;
   }
-
 
   return ({fetch, validate}) => ({
     types: [
@@ -81,10 +81,13 @@ export function find(type, query, contextTopicId) {
 
 export function count(type, query, contextTopicId) {
 
-  let endpoint = 'topics/count?where[groupKey]='+type ;
-  if(contextTopicId > 0) {
-    endpoint += '&where[contextTopicId]='+contextTopicId;
+  let endpoint;
+  if(contextTopicId) {
+    endpoint = `topics/${contextTopicId}/topics/count?where[groupKey]=${type}` ;
+  } else {
+    endpoint = 'topics/count?where[groupKey]='+type ;
   }
+
 
   return ({fetch, validate}) => ({
     types: [
