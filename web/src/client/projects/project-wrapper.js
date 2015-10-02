@@ -59,12 +59,15 @@ var Layout = React.createClass({
     return [
       { route: `/project/${this.props.boards.board.id}`,
         text: (
-          <div style={{
-            background:"rgb(245, 245, 245)",
-            margin:"0 -24px",
-            padding:"10px 24px",
-            fontSize:14,
-            lineHeight:'16px',
+          <div
+            /*onMouseOver={function(e){e.target.style.background}}*/
+            style={{
+            //background:"rgb(245, 245, 245)",
+              margin:"0 -24px",
+              padding:"10px 24px",
+              fontSize:14,
+              color:"#000",
+              lineHeight:'16px',
             }}>
             {this.props.boards.board.summary}</div>
         )
