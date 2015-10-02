@@ -47,33 +47,16 @@ export default function createRoutes(getState) {
         <Route component={require('./boards/pages/topic.js')} path="/board/:board_id/topic/:id" />
       </Route>
 
-      <Route path="/projects" component={require('./projects/index')}>
-        <Route component={require('./projects/project-wrapper')}  >
-          <Route component={require('./projects/dashboard')} path="/project/:board_id"  />
-          <Route component={require('./projects/issues')} path="/project/:board_id/issues" />
-          <Route component={require('./projects/users')} path="/project/:board_id/users" />
-        </Route>
-
-        {/*
-         <Route component={require('./boards/pages/board.js')} path="/project/:board_id" />
-         <Route component={require('./boards/pages/topic.js')} path="issues" />
-         <Route component={require('./boards/pages/topic.js')} path="boards" />
-        */}
-      </Route>
-
-
-        <Route component={require('./projects/project-wrapper')}  >
-          <Route component={require('./projects/dashboard')} path="/:namespace/:board_id"  />
-          <Route component={require('./projects/issues')} path="/:namespace/:board_id/issues" />
-          <Route component={require('./projects/issues')} path="/:namespace/:board_id/milestones" />
-          <Route component={require('./projects/issues')} path="/:namespace/:board_id/deals" />
-          <Route component={require('./projects/users')} path="/:namespace/:board_id/users" />
-        </Route>
-
-
-
       <Route component={Wiki} path="wiki/:uid" />
       <Route component={WikiEdit} path="wiki/:uid/edit" />
+
+      <Route component={require('./projects/project-wrapper')}  >
+        <Route component={require('./projects/dashboard')} path="/:namespace/:board_id"  />
+        <Route component={require('./projects/issues')} path="/:namespace/:board_id/issues" />
+        <Route component={require('./projects/issues')} path="/:namespace/:board_id/milestones" />
+        <Route component={require('./projects/issues')} path="/:namespace/:board_id/deals" />
+        <Route component={require('./projects/users')} path="/:namespace/:board_id/users" />
+      </Route>
 
       <Route component={NotFound} path="*" />
     </Route>
