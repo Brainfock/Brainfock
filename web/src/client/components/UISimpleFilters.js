@@ -22,8 +22,12 @@ var React = require('react'),
     bs = require('react-bootstrap'),
     {Button} = bs;
 
-let Select = require('react-select');
+import Select from 'react-select';
+import RemoteSelectField from './form/RemoteSelectField';
+var mui = require('material-ui-io');
+
 require('react-select/less/select.less');
+
 
 /**
  * Renders filters based on props.filters configuration
@@ -41,24 +45,11 @@ var UISimpleFilters = React.createClass({
 
   getDefaultProps: function()
   {
-    let errorMessage=function(id) {
-      alert('UISimpleFilters.props.'+id+' is not defined! Please, config components correctly');
-    }
     return {
-      Store:null,
       filters: [
-        //{
-        //  label: 'Example',
-        //  type:  'select',
-        //  options:[
-        //    {id:1,value:'Option 1'},
-        //    {id:2,value:'Option 2'},
-        //  ]
-        //}
       ],
       preselected:{},
       onApply: function(selectedFilters) {
-
       },
     }
   },
@@ -93,10 +84,15 @@ var UISimpleFilters = React.createClass({
    */
   render: function()
   {
-    let output = [];
-    for (let i = 0; i < this.props.filters.length; i++) {
-      output.push(this.renderItem(this.props.filters[i]));
-    }
+    const {filters, actions} = this.props;
+    console.log(':filters:',filters)
+    return (
+      <div className="todos">
+        {filters.map(filter =>
+          this.renderItem(filter)
+        )}
+      </div>
+    );
 
     let styles = this.props.style || {};
     return <div style={styles} className="clearfix">
@@ -121,11 +117,21 @@ var UISimpleFilters = React.createClass({
 
       if(this.props.preselected && this.props.preselected[item.id])
         props.value = this.props.preselected[item.id];
-
-      var Filter = <Select
+      let Filter;
+      if(item.endpoint) {
+        Filter = <RemoteSelectField
+          {...props}
+          endpoint={item.endpoint}
+          onChange={this.onFilterChange}
+          />;
+      }
+      else {
+        Filter = <Select
           {...props}
           onChange={this.onFilterChange}
           />;
+      }
+
       return <div className="pull-left" style={{
         'min-width':'150px',
         'max-width':'390px',

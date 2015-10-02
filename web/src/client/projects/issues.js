@@ -1,6 +1,6 @@
 /**
  * Brainfock - community & issue management software
- * Copyright (c) 2015, Sergii Gamaiunov (“Webkadabra”)  All rights reserved.
+ * Copyright (c) 2015, Sergii Gamaiunov (ï¿½Webkadabraï¿½)  All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -40,13 +40,15 @@ export default class ProjectIssues extends React.Component{
       // load TOPICS of this BOARD
       this.props.topic_actions.find('issue', {},this.props.params.board_id);
       this.props.topic_actions.count('issue', {},this.props.params.board_id);
+      this.props.topic_actions.loadFilters('issue', {},this.props.params.board_id);
     }
   }
 
   render()
   {
-    const {board, list, meta} = this.props.boards;
-
+    const {board, list, meta, listFilters} = this.props.boards;
+    //console.log("__listFilters:",this.props.boards.listFilters);
+    //console.log("__list:",this.props.boards.list);
     if(this.props.boards.meta.loading==true)
     {
       return <div className="row">
@@ -66,19 +68,20 @@ export default class ProjectIssues extends React.Component{
         total: {meta.count}
         <Filters ref="filters"
                  containerStore={board}
-                 filters={this.state.filters}
+                 filters={listFilters}
+                 actions={this.props.topic_actions}
                  onApply={this.onApplyFilters}
                  preselected={this.props.location.query}
                  style={{}}
           />
-        <ListView
 
-        list={this.props.boards.list}
-        actions={this.props.topic_actions}
-        msg={this.props.msg.todos}
-        history={this.props.history}
-        itemComponent={ListViewItem}
-        params={this.props.params}
+        <ListView
+          list={this.props.boards.list}
+          actions={this.props.topic_actions}
+          msg={this.props.msg.todos}
+          history={this.props.history}
+          itemComponent={ListViewItem}
+          params={this.props.params}
 
         /* who's team do we want to see
         containerStore={this.props.topic}
