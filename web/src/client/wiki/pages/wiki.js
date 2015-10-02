@@ -1,6 +1,6 @@
 /**
  * Brainfock - community & issue management software
- * Copyright (c) 2015, Sergii Gamaiunov (ìWebkadabraî)  All rights reserved.
+ * Copyright (c) 2015, Sergii Gamaiunov (‚ÄúWebkadabra‚Äù)  All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,6 +20,7 @@
  */
 
 import { resolve } from "react-resolver";
+import DocumentTitle from 'react-document-title';
 var promisingagent = require('promisingagent');
 
 var React = require('react'),
@@ -65,6 +66,7 @@ class Page extends React.Component{
   {
     if(this.props.page) {
       return (
+        <DocumentTitle title={this.props.page.pageUid + " ‚Äî Wiki"}>
         <div className="wiki-wrapper">
           <div className="wiki-page">
             <div className="container-fluid">
@@ -83,6 +85,7 @@ class Page extends React.Component{
             <Link to="wiki_page" params={{uid: 'Special:Index'}}>This Wiki Index</Link>
           </div>
         </div>
+        </DocumentTitle>
       );
 
 
