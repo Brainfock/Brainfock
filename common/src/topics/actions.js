@@ -92,6 +92,7 @@ export function count(group, query, contextTopicId) {
     endpoint = 'topics/count?where[groupKey]='+group ;
   }
 
+
   return ({fetch, validate}) => ({
     types: [
       COUNT,
