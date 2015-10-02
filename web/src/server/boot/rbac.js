@@ -19,6 +19,11 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 
+/**
+ * Role-Based Access Control of Brianfock
+ *
+ * @todo clean up code
+ */
 import {mergeQuery} from 'loopback-datasource-juggler/lib/utils';
 
 module.exports = function(app) {
