@@ -109,7 +109,9 @@ export default class App extends Component {
           />
         <AppSideNav ref="leftNav" {...this.props} />
         { /*<Header msg={msg.app.header} {...{viewer, pathname}} /> */ }
+        <div style={{paddingTop:40}}>
         {React.cloneElement(children, props)}
+        </div>
       </mui.AppCanvas>
     );
   }

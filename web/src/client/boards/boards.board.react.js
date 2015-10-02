@@ -61,8 +61,7 @@ export default class Todo extends Component {
     const topic_key = this.props.todo.contextTopicKey;
     let replaced = link.replace(/:topic_key/g, topic_key);
     replaced = replaced.replace(/:id/g, this.props.todo.id);
-    replaced = replaced.replace(/:board_key/g, this.props.board.contextTopicKey);
-
+    replaced = replaced.replace(/:board_key/g, this.props.todo.contextTopicKey);
 
     //this.props.history.pushState(null, link);
     this.props.history.pushState(null, replaced);
