@@ -1,6 +1,6 @@
 /**
  * Brainfock - community & issue management software
- * Copyright (c) 2015, Sergii Gamaiunov (“Webkadabra”)  All rights reserved.
+ * Copyright (c) 2015, Sergii Gamaiunov (ï¿½Webkadabraï¿½)  All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -49,9 +49,6 @@ export function findContextPage(context_id, uid) {
     payload: {
       promise:  getApi(fetch, 'wikiPages/findOne?filter[where][contextEntityId]='+context_id+'&filter[where][pageUid]='+uid)
         .catch(response => {
-          // We can handle different password/username server errors here.
-          //if (response.status === 401)
-          //  throw validate.wrongPassword('password');
           throw response;
         })
     }
@@ -61,7 +58,7 @@ export function findContextPage(context_id, uid) {
 export function findWikiSuccess(data) {
   return {
     type: FIND_SUCCESS,
-    payload: {data}
+    payload: data
   };
 }
 

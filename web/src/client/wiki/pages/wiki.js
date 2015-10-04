@@ -35,13 +35,34 @@ var Loader = require('../../components/Loader');
 var $ = require('jquery');
 
 
-@resolve("page",
-  /**
-   * @options {Object} [props] Properties of app
-   * @property {Object|Array} params Query params passed from react-router
-   * @property {String|Object|Array} initialState Applicaiton's initial state, including `actions`, `intl`, `msg` and others
-   */
-  function(props)
+//@resolve("page",
+//  /**
+//   * @options {Object} [props] Properties of app
+//   * @property {Object|Array} params Query params passed from react-router
+//   * @property {String|Object|Array} initialState Applicaiton's initial state, including `actions`, `intl`, `msg` and others
+//   */
+//  function(props)
+//  {
+//    var query = [];
+//    query.push('filter[where][contextEntityId]=0');
+//    query.push('filter[where][pageUid]='+props.params.uid);
+//    if(props.users && props.users.viewer) {
+//      query.push('access_token='+props.users.viewer.authToken)
+//    }
+//
+//    const host = props.app.baseUrl;
+//
+//    return promisingagent.get(`http://${host}/api/wikiPages/findOne?` + query.join('&'))
+//      .then((response) => {
+//        // TODO: review, as this creates infinite loop with redux stuff, turned off for now
+//        //if(process.env.IS_BROWSER)
+//        //  props.actions.findWikiSuccess(response.body);
+//        return response.body
+//      });
+//  })
+class Page extends React.Component{
+
+  resolveData(props, dispatch)
   {
     var query = [];
     query.push('filter[where][contextEntityId]=0');
@@ -54,30 +75,34 @@ var $ = require('jquery');
 
     return promisingagent.get(`http://${host}/api/wikiPages/findOne?` + query.join('&'))
       .then((response) => {
-        // TODO: review, as this creates infinite loop with redux stuff, turned off for now
-        //if(process.env.IS_BROWSER)
-        //  props.actions.findWikiSuccess(response.body);
+        //let data = {
+        //  type: 'WIKI_FIND_SUCCESS',
+        //  payload: response.body
+        //};
+        //dispatch(data);
+        props.actions.findWikiSuccess(response.body);
         return response.body
       });
-  })
-class Page extends React.Component{
+  }
 
   render()
   {
-    if(this.props.page) {
+    const page = this.props.page || this.props.wiki.viewPage;
+
+    if(page) {
       return (
-        <DocumentTitle title={this.props.page.pageUid + " — Wiki"}>
+        <DocumentTitle title={page.pageUid + " — Wiki"}>
         <div className="wiki-wrapper">
           <div className="wiki-page">
             <div className="container-fluid">
               <div className="row">
-                <h3>{this.props.page.pageUid }
+                <h3>{page.pageUid }
                   <div className="pull-right">
                     { /*<mui.RaisedButton label="Edit" primary={true}  onClick={this.gotoEdit.bind(this)} /> */ }
                     <button primary={true}  onClick={this.gotoEdit.bind(this)}>Edit</button>
                   </div>
                 </h3>
-                <div dangerouslySetInnerHTML={{__html: this.props.page.contentRendered}} />
+                <div dangerouslySetInnerHTML={{__html: page.contentRendered}} />
               </div>
             </div>
           </div>
@@ -125,7 +150,7 @@ class Page extends React.Component{
   }
 
   gotoEdit() {
-    this.props.history.pushState(null, `/wiki/${this.props.page.pageUid}/edit`);
+    this.props.history.pushState(null, `/wiki/${this.props.wiki.viewPage.pageUid}/edit`);
   }
   _handleWikiLinks(e)
   {

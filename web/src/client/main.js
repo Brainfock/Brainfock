@@ -14,24 +14,24 @@ const initialState = window.__INITIAL_STATE__;
 const store = configureStore(initialState);
 const routes = createRoutes(() => store.getState());
 
-//ReactDOM.render(
-//  <Provider store={store}>
-//    <IntlProvider>
-//      <Router history={createBrowserHistory()}>
-//        {routes}
-//      </Router>
-//    </IntlProvider>
-//  </Provider>,
-//  app
-//);
-
-Resolver.render(
-  () => <Provider store={store}>
+ReactDOM.render(
+  <Provider store={store}>
     <IntlProvider>
       <Router history={createBrowserHistory()}>
         {routes}
       </Router>
     </IntlProvider>
   </Provider>,
-  document.getElementById("app")
+  app
 );
+
+//Resolver.render(
+//  () => <Provider store={store}>
+//    <IntlProvider>
+//      <Router history={createBrowserHistory()}>
+//        {routes}
+//      </Router>
+//    </IntlProvider>
+//  </Provider>,
+//  document.getElementById("app")
+//);
