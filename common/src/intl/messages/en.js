@@ -1,7 +1,7 @@
 export default {
   app: {
     footer: {
-      madeByHtml: `made by <a href="https://twitter.com/steida">steida</a>`
+      madeByHtml: `made by <a href="https://twitter.com/webkadabra">Webkadabra</a>`
     },
     header: {
       h1: `Home`,
@@ -41,8 +41,8 @@ export default {
     }
   },
   home: {
-    infoHtml: `<a href="https://github.com/este/este">Este.js</a> dev stack.`,
-    title: 'Este.js App',
+    infoHtml: `<a href="https://github.com/Brainfock/Brainfock">Brainfock</a> Project Management & Team Collaboration.`,
+    title: 'Brainfock App',
     toCheck: {
       andMuchMore: '... and much more.',
       header: 'Things to Check',
