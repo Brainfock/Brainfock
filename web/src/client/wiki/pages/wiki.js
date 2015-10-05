@@ -57,6 +57,14 @@ class Page extends Component{
       });
   }
 
+  componentWillMount(props)  {
+    if(this.props.params.uid
+      && (!this.props.wiki.viewPage.pageUid || this.props.wiki.viewPage.pageUid !== this.props.params.uid))
+    {
+      this.props.actions.findContextPage(0, this.props.params.uid);
+    }
+  }
+
   componentWillReceiveProps(newProps,b)  {
     if(newProps.params.uid && (this.props.params !== newProps.params))
     {
