@@ -30,10 +30,15 @@ var React = require('react'),
 
 var Loader = require('../../components/Loader');
 
-var $ = require('jquery');
-
 class Page extends Component{
 
+  /**
+   * resolve component data, for server-side render *only*
+   *
+   * @param props
+   * @param dispatch
+   * @returns {*|{get}}
+   */
   resolveData(props, dispatch)
   {
     var query = [];
@@ -59,20 +64,29 @@ class Page extends Component{
     }
   }
 
-  handleClick(a,b,e){
-    //;/
-    //e.preventDefault();
-
+  /**
+   * handle clicks on elements in page's text & navigate internal links with app router
+   * @param a
+   */
+  handleClick(a){
     if(a.target.nodeName === 'A' && a.target.className.indexOf("WkikLink") == 0) {
       a.preventDefault();
       this.props.history.pushState(null, a.target.getAttribute('href'));
-
-      console.log(a.target.getAttribute('href'));
     }
   }
+
   render()
   {
     const page = this.props.page || this.props.wiki.viewPage;
+
+    //if(!this.state.Page || this.state.Page.loading==true) {
+    //  return <div className="app-content-canvas bfk-browse bfk-projects">
+    //    <div className="page-header clearfix">
+    //      <h2 className="pull-left"><Loader />...</h2>
+    //    </div>
+    //
+    //  </div>;
+    //}
 
     if(page) {
       return (
@@ -104,52 +118,10 @@ class Page extends Component{
         Empty!
       </div>
     }
-    if(!this.state.Page || this.state.Page.loading==true) {
-      return <div className="app-content-canvas bfk-browse bfk-projects">
-        <div className="page-header clearfix">
-          <h2 className="pull-left"><Loader />...</h2>
-        </div>
-
-      </div>;
-    }
-    return (
-        <div className="wiki-wrapper">
-          <div className="wiki-page">
-            <div className="container-fluid">
-              <div className="row">
-                <h3>{this.state.Page.get('pageUid') }
-                  <div className="pull-right">
-                    <mui.RaisedButton label="eDIT" primary={true}  onClick={this.gotoEdit.bind(this)} />
-                  </div>
-                </h3>
-                <div dangerouslySetInnerHTML={{__html: this.state.Page.get('contentRendered')}} />
-              </div>
-            </div>
-          </div>
-          <div className="footer">
-            <Link to="wiki_page" params={{uid: 'Special:Index'}}>This Wiki Index</Link>
-          </div>
-        </div>
-    );
   }
 
   gotoEdit() {
     this.props.history.pushState(null, `/wiki/${this.props.wiki.viewPage.pageUid}/edit`);
-  }
-  _handleWikiLinks(e)
-  {
-    e.preventDefault();
-    var _link = $(e.target);
-    //if(_link.attr('link')) {
-    // var linkOptions = $.parseJSON(_link.attr('link'));
-    this.transitionTo(_link.attr('href'))
-    //if(linkOptions.to) {
-    //  this.transitionTo(linkOptions.to,
-    //      (linkOptions.params ? linkOptions.params : {}),
-    //      (linkOptions.query ? linkOptions.query : {}))
-    //}
-
-    //}
   }
 };
 
