@@ -34,7 +34,6 @@ export default function createStore(req) {
     const store = configureStore(requestState.toJS());
     const {actions} = mapDispatchToProps(store.dispatch);
 
-    actions.addTodo(new Todo({title: 'relax'}));
     actions.setAppBaseUrl(app.get('baseUrl'));
 
     const routes = createRoutes(() => store.getState());
@@ -64,6 +63,31 @@ export default function createStore(req) {
         resolveProps.actions = actions;
 
         let resolvingComponent = new renderProps.routes[1].component;
+
+        /**
+         * Component has to have `resolveData` method, example:
+         *
+         * ```
+         * class Page extends React.Component{
+         * // ...
+         * resolveData(props, dispatch)
+         * {
+         *   return promisingagent.get(`http://${host}/api/endpoint/findOne?` + props.params.SomeParamFromRouter)
+         *     .then((response) => {
+         *       let data = {
+         *         type: 'ACTION_TYPE',
+         *         payload: response.body
+         *       };
+         *       dispatch(data);
+         *
+         *       // OR simply:
+         *
+         *       props.actions.findWikiSuccess(response.body);
+         *       return response.body
+         *     });
+         * }
+         * ```
+         */
         if(resolvingComponent.resolveData) {
           resolvingComponent.resolveData(resolveProps, store.dispatch)
           .then(function(resolved){
@@ -77,7 +101,3 @@ export default function createStore(req) {
     });
   });
 }
-
-
-
-
