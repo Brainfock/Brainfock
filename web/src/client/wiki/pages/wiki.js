@@ -18,8 +18,7 @@
  * @link http://www.brainfock.com/
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
-
-import { resolve } from "react-resolver";
+import Component from 'react-pure-render/component';
 import DocumentTitle from 'react-document-title';
 var promisingagent = require('promisingagent');
 
@@ -31,36 +30,9 @@ var React = require('react'),
 
 var Loader = require('../../components/Loader');
 
-
 var $ = require('jquery');
 
-
-//@resolve("page",
-//  /**
-//   * @options {Object} [props] Properties of app
-//   * @property {Object|Array} params Query params passed from react-router
-//   * @property {String|Object|Array} initialState Applicaiton's initial state, including `actions`, `intl`, `msg` and others
-//   */
-//  function(props)
-//  {
-//    var query = [];
-//    query.push('filter[where][contextEntityId]=0');
-//    query.push('filter[where][pageUid]='+props.params.uid);
-//    if(props.users && props.users.viewer) {
-//      query.push('access_token='+props.users.viewer.authToken)
-//    }
-//
-//    const host = props.app.baseUrl;
-//
-//    return promisingagent.get(`http://${host}/api/wikiPages/findOne?` + query.join('&'))
-//      .then((response) => {
-//        // TODO: review, as this creates infinite loop with redux stuff, turned off for now
-//        //if(process.env.IS_BROWSER)
-//        //  props.actions.findWikiSuccess(response.body);
-//        return response.body
-//      });
-//  })
-class Page extends React.Component{
+class Page extends Component{
 
   resolveData(props, dispatch)
   {
@@ -75,16 +47,29 @@ class Page extends React.Component{
 
     return promisingagent.get(`http://${host}/api/wikiPages/findOne?` + query.join('&'))
       .then((response) => {
-        //let data = {
-        //  type: 'WIKI_FIND_SUCCESS',
-        //  payload: response.body
-        //};
-        //dispatch(data);
         props.actions.findWikiSuccess(response.body);
         return response.body
       });
   }
 
+  componentWillReceiveProps(newProps,b)  {
+    if(newProps.params.uid && (this.props.params !== newProps.params))
+    {
+      this.props.actions.findContextPage(0, newProps.params.uid);
+    }
+  }
+
+  handleClick(a,b,e){
+    //;/
+    //e.preventDefault();
+
+    if(a.target.nodeName === 'A' && a.target.className.indexOf("WkikLink") == 0) {
+      a.preventDefault();
+      this.props.history.pushState(null, a.target.getAttribute('href'));
+
+      console.log(a.target.getAttribute('href'));
+    }
+  }
   render()
   {
     const page = this.props.page || this.props.wiki.viewPage;
@@ -98,11 +83,10 @@ class Page extends React.Component{
               <div className="row">
                 <h3>{page.pageUid }
                   <div className="pull-right">
-                    { /*<mui.RaisedButton label="Edit" primary={true}  onClick={this.gotoEdit.bind(this)} /> */ }
-                    <button primary={true}  onClick={this.gotoEdit.bind(this)}>Edit</button>
+                    <mui.RaisedButton label="Edit" primary={true}  onClick={this.gotoEdit.bind(this)} />
                   </div>
                 </h3>
-                <div dangerouslySetInnerHTML={{__html: page.contentRendered}} />
+                <div onClick={this.handleClick.bind(this)} dangerouslySetInnerHTML={{__html: page.contentRendered}} />
               </div>
             </div>
           </div>

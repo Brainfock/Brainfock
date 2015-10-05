@@ -315,12 +315,12 @@ console.log('ctx',ctx);
           }
           if (!foundPage || foundPage === []) {
             // page is not found, but it's not a fatal error
-            text = text.replace($fullMath, '<a class="non-existing" href="/wiki/'+$pageData. wiki_uid+'">'+$pageData. title+'</a>');
+            text = text.replace($fullMath, '<a class="non-existing WkikLink" href="/wiki/'+$pageData. wiki_uid+'">'+$pageData. title+'</a>');
             return callback();
           }
           else {
             //let matcher = escapeReg($fullMath);
-            text = text.replace($fullMath, '<a href="/wiki/'+$pageData. wiki_uid+'">'+$pageData. title+'</a>');
+            text = text.replace($fullMath, '<a class="WkikLink" href="/wiki/'+$pageData. wiki_uid+'">'+$pageData. title+'</a>');
             return callback();
           }
         });
