@@ -27,14 +27,14 @@
       },
       "_selectable": false
     },
-    "view": {
+    "key": {
       "type": "String",
       "required": false,
       "length": 250,
       "precision": null,
       "scale": null,
       "mysql": {
-        "columnName": "view",
+        "columnName": "key",
         "dataType": "varchar",
         "dataLength": 250,
         "dataPrecision": null,
@@ -61,7 +61,16 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "screenFields": {
+      "type": "hasMany",
+      "model": "ScreenField",
+      "foreignKey": "screenId",
+      "scope": {
+        "order": "sortWeight DESC"
+      }
+    }
+  },
   "acls": [
     {
       "accessType": "*",
