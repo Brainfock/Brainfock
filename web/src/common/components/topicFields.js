@@ -21,6 +21,7 @@
 
 var FieldTypes = {
   select:'select',
+  multiselect:'multiselect',
 };
 
 module.exports=FieldTypes;
