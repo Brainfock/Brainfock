@@ -61,8 +61,8 @@
     },
     "modelPk": {
       "type": "Number",
-      "_comment":"We do not require modelPK to be present at creation of entity because entity is created before target object",
       "required": false,
+      "_comment": "We do not require modelPK to be present at creation of entity because entity is created before target object",
       "length": null,
       "precision": 20,
       "scale": 0,

@@ -6,7 +6,11 @@
   "googleAnalyticsId": "UA-XXXXXXX-X",
   "parse": {
     "body-parser#json": {},
-    "body-parser#urlencoded": {"params": { "extended": true }}
+    "body-parser#urlencoded": {
+      "params": {
+        "extended": true
+      }
+    }
   },
   "remoting": {
     "context": {

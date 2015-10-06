@@ -8,6 +8,6 @@
     "name": "db",
     "connector": "mysql",
     "user": "root",
-    "debug":false
+    "debug": false
   }
 }
