@@ -64,6 +64,10 @@
     "dataSource": "db",
     "public": true
   },
+  "TopicTypeSchemeTopicTypeMap": {
+    "dataSource": "db",
+    "public": false
+  },
   "SettingsField": {
     "dataSource": "db",
     "public": true
@@ -81,6 +85,22 @@
     "public": false
   },
   "Comment": {
+    "dataSource": "db",
+    "public": true
+  },
+  "Screen": {
+    "dataSource": "db",
+    "public": true
+  },
+  "ScreenScheme": {
+    "dataSource": "db",
+    "public": true
+  },
+  "ScreenScheme_TopicTypeScreen_Map": {
+    "dataSource": "db",
+    "public": false
+  },
+  "ScreenField": {
     "dataSource": "db",
     "public": true
   }
