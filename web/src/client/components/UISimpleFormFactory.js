@@ -18,9 +18,21 @@
  * @link http://www.brainfock.com/
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
-var React = require('react');
-var l20n = require('common/l20n/l20n.jsx'), {Entity} = l20n;
-var Loader = require('./Loader');
+/**
+ * Simple factory to build basic forms' UIs;
+ *
+ * Supports text inputs, selects and multiselects with (optional) feature to load options asynchronously (autocomplete);
+ *
+ * @todo i18n
+ * @todo complete `datetime` type support
+ * @todo improve documentation
+ * @author sergii gamaiunov <hello@webkadabra.com>
+ * @type {*|exports|module.exports}
+ */
+import React from 'react';
+import Loader from './Loader';
+import mui from 'material-ui-io';
+import RemoteSelectField from './form/RemoteSelectField';
 
 var Page = React.createClass({
 
@@ -32,11 +44,7 @@ var Page = React.createClass({
   },
 
   render: function() {
-    return (
-        <div>
-          {this.renderForm()}
-        </div>
-    );
+    return this.renderForm();
   },
 
   /**
@@ -44,14 +52,14 @@ var Page = React.createClass({
    * @todo move out to a "Form Factory" component
    * @returns {XML}
    */
-   renderForm() {
+  renderForm() {
     if(!this.props.formScheme) {
       return <div>Empty Form!</div>;
     }
     return <div className="clearfix">
       {this.props.formScheme.map(this.renderItem)}
 
-      <mui.RaisedButton primary={true} onClick={this.handleSubmit} label={<Entity entity="Save" />} />
+      <mui.RaisedButton primary={true} onClick={this.handleSubmit} label="Save" />
     </div>
   },
 
@@ -94,12 +102,16 @@ var Page = React.createClass({
       if(this.props.preselected && this.props.preselected[item.id])
         props.value = this.props.preselected[item.id];
 
-      let Filter = <Select
-          {...props}
-          onChange={this.onFilterChange}
-          />;
-      return <div  style={{'width':'100%'}}>
-        {Filter}</div>;
+      let FilterComponent = Select;
+      if(item.endpoint) {
+        props.endpoint = item.endpoint;
+        FilterComponent = RemoteSelectField;
+      }
+      return (
+        <div  style={{'width':'100%'}}>
+          <FilterComponent {...props} onChange={this.onFilterChange}/>
+        </div>
+      );
     }
 
     // text input
@@ -153,6 +165,39 @@ var Page = React.createClass({
           />;
       return <div  style={{'width':'100%'}}>
         {Filter}</div>;
+    }
+    // datetime picker
+    else if('datetime'==item.type)
+    {
+      let props = {
+        name:item.id,
+        hintText:item.description,
+        floatingLabelText:item.label + ':',
+
+        style:{
+          width:'100%'
+        },
+      };
+      if('textarea' == item.type) {
+        props.multiLine=true;
+      }
+      // preselected
+      if(item.value) {
+        props.defaultValue = item.value;
+      }
+
+      props.ref = item.id;
+      this.filters.push(props.ref);
+
+      let Datepicker = <mui.DatePicker
+        {...props}
+        />;
+      // todo: add timepicker
+      //let Timepicker = <mui.DatePicker
+      //  {...props}
+      //  />;
+      return <div  style={{'width':'100%'}}>
+        {Datepicker}</div>;
     }
     return <span className="badge">{item.label}</span>
   },
