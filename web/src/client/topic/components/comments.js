@@ -63,9 +63,7 @@ var TopicComments = React.createClass({
 
     if(process.env.IS_BROWSER) {
       this.props.io.emit('sub-comments',{entity_id:this.props.topic.entityId});
-      this.props.io.on('new-comment',function(data) {
-        this.props.actions.catchComment(data.data);
-      }.bind(this))
+
     }
 
       //this.props.io.emit('join',{'entity-comments':this.props.topic.entityId});

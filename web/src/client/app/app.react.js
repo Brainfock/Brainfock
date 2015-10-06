@@ -1,4 +1,5 @@
 import './app.styl';
+
 import Component from 'react-pure-render/component';
 import Header from './header.react';
 import React, {PropTypes} from 'react';
@@ -59,7 +60,11 @@ export default class App extends Component {
 
       this.io.on('connect', function(){
         console.log('[BFK] sockets connection established');
-        this.setState({'socket':this.socket});
+
+        this.io.on('new-comment',function(data) {
+          this.props.actions.catchComment(data.data);
+        }.bind(this))
+
       }.bind(this));
 
       this.io.on('authenticated', function() {
