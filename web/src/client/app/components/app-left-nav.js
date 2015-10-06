@@ -60,8 +60,7 @@ var menuItems = [
     }}>
       <img src="/assets/img/logo_white_bg.png"
            style={{
-                  height:"50px",
-                  marginBottom: '-21px'
+                  height:"50px"
                }}
            alt={VERSION_FULL}
            title={VERSION_FULL}
