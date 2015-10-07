@@ -30,7 +30,11 @@ import {List, Range, Record} from 'immutable';
 const InitialState = Record({
   list: List(),
   listFilters: List(),
-  newTodo: new Todo,
+  formFields: new (Record({
+    loading: true,
+    fields:List(),
+  })),
+  newTopic: new Todo,
   viewPage: new Todo,
   board: new Todo,
   viewTopic: new Todo,
@@ -47,7 +51,7 @@ const initialState = new InitialState;
 const revive = (state) => initialState.merge({
   list: state.list.map(todo => new Todo(todo)),
   listFilters: state.listFilters.map(todo => (new Record(todo))),
-  newTodo: new Todo(state.newTodo),
+  newTopic: new Todo(state.newTopic),
   viewPage: new Todo(state.viewPage || {}),
   board:  new Todo(),
   viewTopic: new Todo({loading: false}),
@@ -144,6 +148,18 @@ export default function boardsReducer(state = initialState, action) {
       return state
         .update('listFilters', list => list.clear())
         .update('listFilters', list => list.push(...newlist))
+        ;
+    }
+    case actions.LOAD_FORM_FIELDS_SUCCESS:
+    {
+      const newlist = action.payload.filters.map((item) => {
+        item.cid = getRandomString();
+        return new (Record(item));
+      });
+      return state
+        .updateIn(['formFields','fields'], list => list.clear())
+        .updateIn(['formFields','fields'], list => list.push(...newlist))
+        .setIn(['formFields','loading'],false)
         ;
     }
   }
