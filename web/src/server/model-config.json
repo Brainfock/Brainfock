@@ -103,5 +103,9 @@
   "ScreenField": {
     "dataSource": "db",
     "public": true
+  },
+  "Field": {
+    "dataSource": "db",
+    "public": false
   }
 }
