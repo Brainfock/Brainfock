@@ -1,6 +1,6 @@
 /**
  * Brainfock - community & issue management software
- * Copyright (c) 2015, Sergii Gamaiunov (“Webkadabra”)  All rights reserved.
+ * Copyright (c) 2015, Sergii Gamaiunov (ï¿½Webkadabraï¿½)  All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -48,6 +48,10 @@ export const LOAD_FILTERS = 'TOPIC_LOAD_FILTERS';
 export const LOAD_FILTERS_SUCCESS = 'TOPIC_LOAD_FILTERS_SUCCESS';
 export const LOAD_FILTERS_ERROR = 'TOPIC_LOAD_FILTERS_ERROR';
 
+export const LOAD_FORM_FIELDS = 'TOPIC_LOAD_FORM_FIELDS';
+export const LOAD_FORM_FIELDS_SUCCESS = 'TOPIC_LOAD_FORM_FIELDS_SUCCESS';
+export const LOAD_FORM_FIELDS_ERROR = 'TOPIC_LOAD_FORM_FIELDS_ERROR';
+
 const getApi = (fetch, endpoint) =>
   fetch(`/api/${endpoint}`, {
     headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
@@ -67,6 +71,9 @@ export function find(type, query, contextTopicId) {
   } else {
     endpoint = 'topics/?filter[where][groupKey]='+type ;
   }
+
+  // include some additional info
+  endpoint += '&filter[include][type]';
 
   return ({fetch, validate}) => ({
     types: [
@@ -178,6 +185,29 @@ export function loadFilters(group, query, contextTopicId) {
       LOAD_FILTERS,
       LOAD_FILTERS_SUCCESS,
       LOAD_FILTERS_ERROR
+    ],
+    payload: {
+      promise:  getApi(fetch, endpoint)
+        .catch(response => {
+          throw response;
+        })
+    }
+  });
+}
+export function loadFormFields(group, contextTopicId) {
+
+  let endpoint;
+  if(contextTopicId) {
+    endpoint = `topics/${contextTopicId}/formFields/${group}` ;
+  } else {
+    console.log('contextTopic must be provided for `formFields`')
+  }
+
+  return ({fetch, validate}) => ({
+    types: [
+      LOAD_FORM_FIELDS,
+      LOAD_FORM_FIELDS_SUCCESS,
+      LOAD_FORM_FIELDS_ERROR
     ],
     payload: {
       promise:  getApi(fetch, endpoint)
