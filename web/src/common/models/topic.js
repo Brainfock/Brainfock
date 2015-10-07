@@ -2,6 +2,7 @@ var app = require("../../server/main");
 
 import {mergeQuery} from 'loopback-datasource-juggler/lib/utils';
 import FieldTypes from '../components/topicFields';
+import FieldsHandler from '../components/topicFieldsHandler.js';
 
 module.exports = function(Topic) {
 
@@ -160,8 +161,10 @@ module.exports = function(Topic) {
           // groupInstance - group instance (e.g. `issues`)
           // typeSchemeInstance
 
+          // basically, we need to get filters for all columns available in a view
+
           // filter by:
-          // - topic type (`issue`, `epic` etc.)
+          // - topic type (`issue`, `epic` etc.) - get all available types for this group
           // - workflow stage (stage_id)
           // - summary text (or any text e.g. fulltext)
           // - additional fields:
@@ -172,37 +175,180 @@ module.exports = function(Topic) {
           //    -- reported_by
 
           // we must get all available fields (filterable) for this `groupInstance`
-    console.log('FieldTypes.typeSelect',FieldTypes.typeSelect);
-          let response = [
-            {
-              id: 'type',
-              label:'Type',
-              defaultValue:1,
-              endpoint:'/api/topics?filter[where][groupKey]=issue',
-              type:FieldTypes.select
-            },
-            //{
-            //  id: 'contextTopicId',
-            //  defaultValue:id,
-            //  defaultOptions: [
-            //    {id:id, label:contextTopic.summary}
-            //  ],
-            //  endpoint:`/api/topics/${id}/?filter[where][groupKey]=project`
-            //},
-            //{
-            //  id: 'field.milestone',
-            //  label:"Milestone",
-            //  endpoint:`/api/topics/${id}/?filter[where][groupKey]=milestone`
-            //},
-            //{
-            //  id: 'field.assignee_user_id',
-            //  label:"Assignee",
-            //  endpoint:`/api/topics/${id}/users`,
-            //  type:FieldTypes.select,
-            //},
-          ];
+          groupInstance.types({}, function(err, types) {
 
-          cb(null, response);
+            let TypeOptions = types.map(item => { return {
+              value: item.id,
+              label: item.name,
+            }});
+
+            let response = [
+              {
+                id: 'type',
+                label:'Type',
+                options:TypeOptions,
+                type:FieldTypes.multiselect,
+              },{
+                // draft example
+                id: 'affectsVersion',
+                label:'Affects Version',
+                endpoint:`/api/topics/${id}/topics/?filter[where][groupKey]=version`,
+                type:FieldTypes.select,
+                options:[],
+              },{
+                // draft example
+                id: 'linledIssue',
+                label:'Linked Issue',
+                endpoint:'/api/topics?filter[where][groupKey]=issue',
+                type:FieldTypes.select,
+                options:[],
+              },
+              //{
+              //  id: 'contextTopicId',
+              //  defaultValue:id,
+              //  defaultOptions: [
+              //    {id:id, label:contextTopic.summary}
+              //  ],
+              //  endpoint:`/api/topics/${id}/?filter[where][groupKey]=project`
+              //},
+              //{
+              //  id: 'field.milestone',
+              //  label:"Milestone",
+              //  endpoint:`/api/topics/${id}/?filter[where][groupKey]=milestone`
+              //},
+              //{
+              //  id: 'field.assignee_user_id',
+              //  label:"Assignee",
+              //  endpoint:`/api/topics/${id}/users`,
+              //  type:FieldTypes.select,
+              //},
+            ];
+
+            cb(null, response);
+          });
+        })
+      })
+    });
+  };
+
+
+  /**
+   * load form fields for topic screen. Currently, supports default (create) screen only
+   *
+   * @param id
+   * @param groupKey
+   * @param cb
+   */
+  Topic.loadFormFields = function(id, groupKey, cb) {
+    Topic.findOne( {where:{id:id}}, function (err, contextTopic) {
+
+      if(err) throw err;
+      if(!contextTopic)
+        return cb(null, [])
+
+      Topic.app.models.TopicGroup.findOne({
+        where:{
+          groupKey:groupKey
+        },
+        include: ['parentGroup']
+      },function(groupErr,groupInstance){
+
+        if(groupErr) throw groupErr;
+        if(!groupInstance)
+          return cb(null, [])
+
+        // Find DEFAULT topic type scheme for this group
+        // TODO: allow to define different topic_type_scheme per parent context (so, project can have own)
+        Topic.app.models.TopicTypeScheme.findOne({where:{topicGroupId:groupInstance.id}},function(typeErr,typeSchemeInstance){
+
+          if(typeErr) throw typeErr;
+
+          if(!typeSchemeInstance)
+            return cb(null, [])
+
+          /** @property contextTopic object - root topic, e.g. `project` */
+          /** @property groupInstance - group instance (e.g. `issues`) */
+          /** @property typeSchemeInstance */
+
+          Topic.app.models.TopicTypeSchemeTopicTypeMap.find({
+            where:{
+              topicTypeSchemeId:typeSchemeInstance.id
+            },
+            order:'sortWeight DESC',
+            include: [
+              'topicType'
+            ]
+
+          },function(typeSchemeTypeMapErr,types){
+
+            if(typeSchemeTypeMapErr) throw typeSchemeTypeMapErr;
+
+            if(!types)
+              return cb(null, [])
+
+            let TypeOptions = types.map(item => {
+              let topicType = item.topicType();
+              return {
+              value: topicType.id,
+              label: topicType.name,
+            }});
+
+            const DefaultType = types[0].topicType();
+            if(!DefaultType) {
+              console.log('No default type found');
+              return cb(null, [])
+            }
+            // Find DEFAULT screen scheme
+            Topic.app.models.ScreenScheme.findOne({
+              // TODO: allow to provide non-default scheme
+              //where:{...}
+            },function(ScreenSchemeErr,ScreenScheme) {
+
+              if (ScreenSchemeErr) throw ScreenSchemeErr;
+
+              if (!ScreenScheme)
+                return cb(null, [])
+
+              // Find what screen is configured for `DefaultType` type in `ScreenScheme` scheme
+              Topic.app.models.ScreenScheme_TopicTypeScreen_Map.findOne({
+                where: {
+                  screenSchemeId: ScreenScheme.id,
+                  topicTypeId: DefaultType.id
+                },
+                include: [
+                  'screen'
+                ]
+              },function(ScreenScheme_TopicTypeScreen_MapErr,ScreenScheme_TopicTypeScreen_Map) {
+
+                if (ScreenScheme_TopicTypeScreen_MapErr) throw ScreenScheme_TopicTypeScreen_MapErr;
+
+                if (!ScreenScheme_TopicTypeScreen_Map)
+                  return cb(null, [])
+
+                const Screen = ScreenScheme_TopicTypeScreen_Map.screen()
+
+                Screen.screenFields(function(screenFieldsErr,screenFields){
+                  if (screenFieldsErr) throw screenFieldsErr;
+
+                  if (!screenFields)
+                    return cb(null, [])
+
+                  let _screenFields = screenFields.map(field => {
+                    return {
+                      group: groupInstance,
+                      contextTopic: contextTopic,
+                      ...field.__data
+                    }
+                  })
+                  Promise
+                    .all(_screenFields.map(FieldsHandler.populateFormField))
+                    .then(function(dataDone){
+                      return cb(null, dataDone);
+                    });
+                })
+              })
+            })
+          })
         })
       })
 
@@ -221,6 +367,21 @@ module.exports = function(Topic) {
         {arg: 'groupKey', type: 'string', http: { source: 'path' }, required: true },
       ],
       http: {verb: 'get', path: '/:id/filters/:groupKey'},
+      returns: {arg: 'filters', type: 'Array'}
+    }
+  );
+
+  /**
+   * REST API endpoint `api/topics/:contextTopicKey/formFields`
+   */
+  Topic.remoteMethod(
+    'loadFormFields',
+    {
+      accepts: [
+        {arg: 'id', type: 'any', http: { source: 'path' }, required: true },
+        {arg: 'groupKey', type: 'string', http: { source: 'path' }, required: true },
+      ],
+      http: {verb: 'get', path: '/:id/formFields/:groupKey'},
       returns: {arg: 'filters', type: 'Array'}
     }
   );
