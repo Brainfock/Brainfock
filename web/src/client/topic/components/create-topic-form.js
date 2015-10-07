@@ -78,7 +78,11 @@ module.exports = React.createClass({
       return <Loader />;
     }
     return <div className="clearfix">
-      <SimpleFormFactory formScheme={this.props.formFields.fields}  />
+      <SimpleFormFactory
+        formScheme={this.props.formFields.fields}
+        onChange={this.props.actions.setNewTopicField}
+        modelValues={this.props.newTopic}
+        />
     </div>
   },
 
