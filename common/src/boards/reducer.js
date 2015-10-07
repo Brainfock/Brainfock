@@ -150,6 +150,7 @@ export default function boardsReducer(state = initialState, action) {
         .update('listFilters', list => list.push(...newlist))
         ;
     }
+
     case actions.LOAD_FORM_FIELDS_SUCCESS:
     {
       const newlist = action.payload.filters.map((item) => {
@@ -161,6 +162,11 @@ export default function boardsReducer(state = initialState, action) {
         .updateIn(['formFields','fields'], list => list.push(...newlist))
         .setIn(['formFields','loading'],false)
         ;
+    }
+
+    case actions.SET_NEW_TOPIC_FIELD: {
+      const {name, value} = action.payload;
+      return state.setIn(['newTopic', name], value);
     }
   }
 

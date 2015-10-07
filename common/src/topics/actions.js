@@ -52,6 +52,8 @@ export const LOAD_FORM_FIELDS = 'TOPIC_LOAD_FORM_FIELDS';
 export const LOAD_FORM_FIELDS_SUCCESS = 'TOPIC_LOAD_FORM_FIELDS_SUCCESS';
 export const LOAD_FORM_FIELDS_ERROR = 'TOPIC_LOAD_FORM_FIELDS_ERROR';
 
+export const SET_NEW_TOPIC_FIELD = 'SET_NEW_TOPIC_FIELD';
+
 const getApi = (fetch, endpoint) =>
   fetch(`/api/${endpoint}`, {
     headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
@@ -216,4 +218,11 @@ export function loadFormFields(group, contextTopicId) {
         })
     }
   });
+}
+
+export function setNewTopicField({target: {name, value}}) {
+  return {
+    type: SET_NEW_TOPIC_FIELD,
+    payload: {name, value}
+  };
 }
