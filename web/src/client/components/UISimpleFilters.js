@@ -85,16 +85,16 @@ var UISimpleFilters = React.createClass({
   render: function()
   {
     const {filters, actions} = this.props;
-    console.log(':filters:',filters)
+    let styles = this.props.style || {};
     return (
-      <div className="todos">
+      <div style={styles} className="clearfix">
         {filters.map(filter =>
           this.renderItem(filter)
         )}
       </div>
     );
 
-    let styles = this.props.style || {};
+
     return <div style={styles} className="clearfix">
       {this.props.filters.map(this.renderItem)}
        <Button onClick={this.applyFilters}>Apply</Button>
@@ -117,6 +117,7 @@ var UISimpleFilters = React.createClass({
 
       if(this.props.preselected && this.props.preselected[item.id])
         props.value = this.props.preselected[item.id];
+
       let Filter;
       if(item.endpoint) {
         Filter = <RemoteSelectField
