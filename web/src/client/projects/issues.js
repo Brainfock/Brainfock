@@ -19,7 +19,11 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import React from 'react';
+import mui from 'material-ui-io';
+
 import Loader from '../components/Loader';
+import ListActions from '../components/UIListActions';
+import Form from '../topic/components/create-topic-form';
 
 export default class ProjectIssues extends React.Component{
 
@@ -46,9 +50,7 @@ export default class ProjectIssues extends React.Component{
 
   render()
   {
-    const {board, list, meta, listFilters} = this.props.boards;
-    //console.log("__listFilters:",this.props.boards.listFilters);
-    //console.log("__list:",this.props.boards.list);
+    const {board, list, meta, listFilters, newTopic, formFields} = this.props.boards;
     if(this.props.boards.meta.loading==true)
     {
       return <div className="row">
@@ -58,23 +60,60 @@ export default class ProjectIssues extends React.Component{
       </div>
     }
 
+    let filterToggleButton = <mui.IconButton iconClassName="fa fa-filter fa-lg" tooltip="Filter" onClick={this.toggleFilters.bind(this)} />
+    let filterStyles = {
+      margin: '0 -15px',
+      padding: '10px 15px'
+    };
+    if(this.state.filtersOpen==false) {
+      filterStyles.display='none';
+    }
+
+    const ListActionsRendered = <div className="pull-right">
+      <ListActions
+        FormComponent={Form}
+        newTopic={newTopic}
+        formFields={formFields}
+        actions={this.props.topic_actions}
+        containerStore={board}
+        //FormStore={TopicFormStore}
+        /* where will we be adding this item to */
+       // Actions={TopicActions}
+        TITLE='issues_createForm_TITLE'
+        BUTTON_ACTION_LABEL='Add New'
+        />
+      {meta.count} item(s)
+    </div>
+
     let ListView = require('../boards/boards.react');
-    let ListViewItem = require('../boards/board.topic.js');
+    let ListViewItem = require('./components/issues-list-item');
 
     let Filters = require('../components/UISimpleFilters');
 
     return (
-      <div>
-        total: {meta.count}
-        <Filters ref="filters"
-                 containerStore={board}
-                 filters={listFilters}
-                 actions={this.props.topic_actions}
-                 onApply={this.onApplyFilters}
-                 preselected={this.props.location.query}
-                 style={{}}
-          />
+      <div className="bfk-browse">
+        <div className="page-header clearfix">
+          {ListActionsRendered}
 
+          <mui.TextField
+            ref="searchbox"
+            hintText={this.state.searchQuery ? null: 'Search in text'}
+            defaultValue={this.state.searchQuery}
+            onChange={this.searchQueryChanged}
+            />
+
+          {filterToggleButton}
+
+         <Filters ref="filters"
+                   containerStore={board}
+                   filters={listFilters}
+                   actions={this.props.topic_actions}
+                   onApply={this.onApplyFilters}
+                   preselected={this.props.location.query}
+                   style={filterStyles}
+            />
+        </div>
+        <div className="clearfix">
         <ListView
           list={this.props.boards.list}
           actions={this.props.topic_actions}
@@ -95,6 +134,7 @@ export default class ProjectIssues extends React.Component{
         Store={TopicStore}
         CursorStore={TopicCursorStore}*/
         />
+          </div>
       </div>
     )
 
@@ -110,5 +150,10 @@ export default class ProjectIssues extends React.Component{
 
       </div>
     );
+  }
+
+  toggleFilters() {
+    let setVisibility = !this.state.filtersOpen;
+    this.setState({filtersOpen: setVisibility})
   }
 };
