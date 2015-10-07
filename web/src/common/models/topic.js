@@ -1,6 +1,26 @@
-var app = require("../../server/main");
-
+/**
+ * Brainfock - community & issue management software
+ * Copyright (c) 2015, Sergii Gamaiunov (“Webkadabra”)  All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @link http://www.brainfock.com/
+ * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
+ */
 import {mergeQuery} from 'loopback-datasource-juggler/lib/utils';
+
+import app from "../../server/main";
 import FieldTypes from '../components/topicFields';
 import FieldsHandler from '../components/topicFieldsHandler.js';
 
@@ -295,9 +315,9 @@ module.exports = function(Topic) {
 
             const DefaultType = types[0].topicType();
             if(!DefaultType) {
-              console.log('No default type found');
               return cb(null, [])
             }
+
             // Find DEFAULT screen scheme
             Topic.app.models.ScreenScheme.findOne({
               // TODO: allow to provide non-default scheme
@@ -327,19 +347,24 @@ module.exports = function(Topic) {
 
                 const Screen = ScreenScheme_TopicTypeScreen_Map.screen()
 
-                Screen.screenFields(function(screenFieldsErr,screenFields){
+                Screen.screenFields({
+                  // provides values to be available at `field.field()`
+                  include:['field']
+                },function(screenFieldsErr,screenFields){
                   if (screenFieldsErr) throw screenFieldsErr;
 
                   if (!screenFields)
                     return cb(null, [])
 
                   let _screenFields = screenFields.map(field => {
+                    let fieldConfig = field.field().__data;
                     return {
                       group: groupInstance,
                       contextTopic: contextTopic,
-                      ...field.__data
+                      ...fieldConfig
                     }
-                  })
+                  });
+
                   Promise
                     .all(_screenFields.map(FieldsHandler.populateFormField))
                     .then(function(dataDone){
@@ -351,8 +376,6 @@ module.exports = function(Topic) {
           })
         })
       })
-
-
     });
   };
 
