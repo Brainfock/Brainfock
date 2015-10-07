@@ -30,8 +30,10 @@
  * @type {*|exports|module.exports}
  */
 import React from 'react';
-import Loader from './Loader';
 import mui from 'material-ui-io';
+import Select from 'react-select';
+
+import Loader from './Loader';
 import RemoteSelectField from './form/RemoteSelectField';
 
 var Page = React.createClass({
@@ -41,6 +43,8 @@ var Page = React.createClass({
     // are all optional.
     formScheme: React.PropTypes.any.isRequired,
     handleSubmit: React.PropTypes.func,
+    onChange: React.PropTypes.func.isRequired,
+    modelValues: React.PropTypes.object,
   },
 
   render: function() {
@@ -65,6 +69,14 @@ var Page = React.createClass({
 
   filters:[],
 
+  onReactSelectChange:function(newValue, attName) {
+    this.props.onChange({
+      target: {
+        name:attName,
+        value:newValue
+      }
+    })
+  },
   /**
    * simple form factory
    * todo: move out to a reusable component
@@ -73,13 +85,10 @@ var Page = React.createClass({
    */
   renderItem:function(item)
   {
-    /** @link https://github.com/JedWatson/react-select */
-    let Select = require('react-select');
-
     if(item.type == 'select' || item.type == 'multiselect')
     {
       let props = {
-        name:item.id,
+        name:item.name,
         placeholder:item.label,
         options:item.options,
         style:{
@@ -96,11 +105,11 @@ var Page = React.createClass({
         props.value = item.value;
       }
 
-      props.ref = item.id;
+      props.ref = item.name;
       this.filters.push(props.ref);
 
-      if(this.props.preselected && this.props.preselected[item.id])
-        props.value = this.props.preselected[item.id];
+      if(this.props.preselected && this.props.preselected[item.name])
+        props.value = this.props.preselected[item.name];
 
       let FilterComponent = Select;
       if(item.endpoint) {
@@ -109,7 +118,7 @@ var Page = React.createClass({
       }
       return (
         <div  style={{'width':'100%'}}>
-          <FilterComponent {...props} onChange={this.onFilterChange}/>
+          <FilterComponent {...props} onChange={function(newValue){this.onReactSelectChange(newValue, item.name)}.bind(this)}/>
         </div>
       );
     }
@@ -118,7 +127,7 @@ var Page = React.createClass({
     else if('text'==item.type || 'textarea' == item.type)
     {
       let props = {
-        name:item.id,
+        name:item.name,
         hintText:item.description,
         floatingLabelText:item.label + ':',
 
@@ -129,17 +138,25 @@ var Page = React.createClass({
       if('textarea' == item.type) {
         props.multiLine=true;
       }
-      // preselected
-      if(item.value) {
-        props.defaultValue = item.value;
+
+      if(this.props.modelValues && this.props.modelValues[item.name]){
+        props.value = this.props.modelValues[item.name];
+      } else {
+        // preselected
+        if(item.value) {
+          props.value = item.value;
+        }
       }
 
-      props.ref = item.id;
+      props.ref = item.name;
       this.filters.push(props.ref);
 
-      let Filter = <mui.TextField
+      let Filter = (
+        <mui.TextField
           {...props}
-          />;
+          onChange={this.props.onChange}
+          />
+      );
       return <div  style={{'width':'100%'}}>
         {Filter}</div>;
     }
@@ -147,7 +164,7 @@ var Page = React.createClass({
     else if('checkbox'==item.type)
     {
       let props = {
-        name:item.id,
+        name:item.name,
         label:item.label,
 
       };
@@ -157,20 +174,23 @@ var Page = React.createClass({
         props.defaultChecked = true;
       }
 
-      props.ref = item.id;
+      props.ref = item.name;
       this.filters.push(props.ref);
 
-      let Filter = <mui.Checkbox
-          {...props}
-          />;
-      return <div  style={{'width':'100%'}}>
-        {Filter}</div>;
+      return (
+        <div  style={{'width':'100%'}}>
+          <mui.Checkbox
+            {...props}
+            onChange={this.props.onChange}
+            />
+        </div>
+      );
     }
     // datetime picker
     else if('datetime'==item.type)
     {
       let props = {
-        name:item.id,
+        name:item.name,
         hintText:item.description,
         floatingLabelText:item.label + ':',
 
@@ -186,14 +206,15 @@ var Page = React.createClass({
         props.defaultValue = item.value;
       }
 
-      props.ref = item.id;
+      props.ref = item.name;
       this.filters.push(props.ref);
 
       let Datepicker = <mui.DatePicker
         {...props}
+        onChange={this.props.onChange}
         />;
       // todo: add timepicker
-      //let Timepicker = <mui.DatePicker
+      //let Timepicker = <mui.TimePicker
       //  {...props}
       //  />;
       return <div  style={{'width':'100%'}}>
