@@ -18,6 +18,7 @@
  * @link http://www.brainfock.com/
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
+import {apiGet, apiPost} from '../lib/services';
 
 export const FIND = 'TOPIC_FIND';
 export const FIND_SUCCESS = 'TOPIC_FIND_SUCCESS';
@@ -225,4 +226,31 @@ export function setNewTopicField({target: {name, value}}) {
     type: SET_NEW_TOPIC_FIELD,
     payload: {name, value}
   };
+}
+
+export const CREATE = 'TOPIC_CREATE';
+export const CREATE_SUCCESS = 'TOPIC_CREATE_SUCCESS';
+export const CREATE_ERROR = 'TOPIC_CREATE_ERROR';
+export function create(data) {
+  const endpoint = 'topics';
+
+  return ({fetch, validate}) => ({
+    types: [
+      CREATE,
+      CREATE_SUCCESS,
+      CREATE_ERROR
+    ],
+    payload: {
+      promise: apiPost(fetch, endpoint, data)
+        .catch(response => {
+          throw response;
+        })
+      // TODO: add validation
+      //promise: validateForm(validate, fields)
+      //  .then(() => post(fetch, endpoint, fields))
+      //  .catch(response => {
+      //    throw response;
+      //  })
+    }
+  });
 }
