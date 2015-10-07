@@ -31,8 +31,6 @@ export default class FieldsHandler {
 
           let propName = item.key+'FieldProps';
           if (item.key+'FieldProps' in FieldsHandler) {
-
-            console.log('typeof FieldsHandler[propName]',typeof FieldsHandler[propName]);
             FieldsHandler[propName](item).then(function(res){
               resolve(res);
             })
@@ -97,7 +95,6 @@ export default class FieldsHandler {
     )
   }
 
-
   static assigneeFieldProps(data) {
     return new Promise(
       function (resolve, reject) {
@@ -128,7 +125,7 @@ export default class FieldsHandler {
     )
   }
 
-  static due_dateFieldProps(data) {
+  static dueDateFieldProps(data) {
     return new Promise(
       function (resolve, reject) {
         resolve({
@@ -139,7 +136,6 @@ export default class FieldsHandler {
       }
     )
   }
-
 
   static labelsFieldProps(data) {
     return new Promise(
@@ -170,6 +166,5 @@ export default class FieldsHandler {
       }
     )
   }
-
 
 };
