@@ -41,10 +41,32 @@
         "nullable": "N"
       },
       "_selectable": false
+    },
+    "sortWeight": {
+      "type": "Number",
+      "required": false,
+      "length": null,
+      "precision": 5,
+      "scale": 0,
+      "mysql": {
+        "columnName": "sort_weight",
+        "dataType": "smallint",
+        "dataLength": null,
+        "dataPrecision": 5,
+        "dataScale": 0,
+        "nullable": "N"
+      },
+      "_selectable": false
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "topicType": {
+      "type": "belongsTo",
+      "model": "TopicType",
+      "foreignKey": "topicTypeId"
+    }
+  },
   "acls": [
     {
       "accessType": "*",
