@@ -36,11 +36,11 @@ import RemoteSelectField from './form/RemoteSelectField';
 
 var Page = React.createClass({
 
-  getDefaultProps() {
-    return {
-      formScheme:null,
-      handleSubmit:function(){}
-    }
+  propTypes: {
+    // You can declare that a prop is a specific JS primitive. By default, these
+    // are all optional.
+    formScheme: React.PropTypes.any.isRequired,
+    handleSubmit: React.PropTypes.func,
   },
 
   render: function() {
