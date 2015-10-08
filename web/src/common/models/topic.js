@@ -367,9 +367,21 @@ module.exports = function(Topic) {
 
                   Promise
                     .all(_screenFields.map(FieldsHandler.populateFormField))
-                    .then(function(dataDone){
-                      return cb(null, dataDone);
-                    });
+                    .then(function(dataDone)
+                    {
+                      // manually add "group" and "type" select fields, re-using already populated data
+                      FieldsHandler.typeIdFieldProps({
+                        group: groupInstance,
+                        contextTopic: contextTopic,
+                        key: 'typeId',
+                        options:TypeOptions,
+                      })
+                      .then(function(moreData){
+                          dataDone.unshift(moreData)
+                          return cb(null, dataDone);
+                        })
+                    })
+                  ;
                 })
               })
             })
