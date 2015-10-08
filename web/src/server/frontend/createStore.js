@@ -59,8 +59,6 @@ export default function createStore(req) {
       if(renderProps.routes[1] && renderProps.routes[1]){
 
         let resolveProps = store.getState();
-        resolveProps.params = renderProps.params;
-        resolveProps.actions = actions;
 
         let resolvingComponent = new renderProps.routes[1].component;
 
@@ -70,9 +68,9 @@ export default function createStore(req) {
          * ```
          * class Page extends React.Component{
          * // ...
-         * resolveData(props, dispatch)
+         * resolveData(props, {params, actions}, dispatch)
          * {
-         *   return promisingagent.get(`http://${host}/api/endpoint/findOne?` + props.params.SomeParamFromRouter)
+         *   return promisingagent.get(`http://${host}/api/endpoint/findOne?` + params.SomeParamFromRouter)
          *     .then((response) => {
          *       let data = {
          *         type: 'ACTION_TYPE',
@@ -82,14 +80,14 @@ export default function createStore(req) {
          *
          *       // OR simply:
          *
-         *       props.actions.findWikiSuccess(response.body);
+         *       actions.findWikiSuccess(response.body);
          *       return response.body
          *     });
          * }
          * ```
          */
         if(resolvingComponent.resolveData) {
-          resolvingComponent.resolveData(resolveProps, store.dispatch)
+          resolvingComponent.resolveData(resolveProps, {params: renderProps.params, actions: actions}, store.dispatch)
           .then(function(resolved){
               resolve(store);
             })
