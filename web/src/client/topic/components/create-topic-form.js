@@ -58,12 +58,13 @@ module.exports = React.createClass({
    */
   render: function()
   {
-    return <form ref="frm" onSubmit={this.handleSubmit} className="form-horizontal">
+    return <form ref="frm" onSubmit={this.onFormSubmit} className="form-horizontal">
       {this.renderForm()}
       <br />
       <mui.Checkbox
         name="access_private_yn" ref="accessSettings" value="1"
         label='createForm_LABEL_access_private_yn' />
+      <mui.RaisedButton onClick={this.onFormSubmit}>Create</mui.RaisedButton>
     </form>
 
   },
@@ -79,13 +80,29 @@ module.exports = React.createClass({
     }
     return <div className="clearfix">
       <SimpleFormFactory
-        formScheme={this.props.formFields.fields}
+        formScheme={this.props.formFields.fields.toJS()}
         onChange={this.props.actions.setNewTopicField}
-        modelValues={this.props.newTopic}
+        modelValues={this.props.newTopic.toJS()}
         />
     </div>
   },
 
+
+  onFormSubmit:function(e) {
+    e.preventDefault();
+    const {actions, newTopic} = this.props;
+    actions.create(newTopic)
+      .then(({error, payload}) => {
+        if (error) {
+
+          alert('Error! Check console');
+          console.log(error);
+          //focusInvalidField(this, payload);
+        } else
+        alert("Success")
+          //this.redirectAfterLogin();
+      });
+  },
 
   handleSubmit: function(e)
   {
