@@ -57,7 +57,7 @@ export default class FieldsHandler {
    *
    * @returns {Promise}
    */
-  static contextFieldProps(data) {
+  static contextTopicIdFieldProps(data) {
     return new Promise(
       function (resolve, reject) {
         data.group.parentGroup(function(err,parentGroup){
@@ -79,6 +79,20 @@ export default class FieldsHandler {
           resolve(null);
         }
       })
+      }
+    );
+  }
+
+  static typeIdFieldProps(data) {
+    return new Promise(
+      function (resolve, reject) {
+        resolve({
+          label: 'Type',
+          // `name` is used for form inputs to identify model's attribute
+          name: data.key,
+          type: 'select', // todo: hasOne rather
+          options:data.options || [],
+        });
       }
     );
   }
