@@ -54,6 +54,9 @@ export const LOAD_FORM_FIELDS_SUCCESS = 'TOPIC_LOAD_FORM_FIELDS_SUCCESS';
 export const LOAD_FORM_FIELDS_ERROR = 'TOPIC_LOAD_FORM_FIELDS_ERROR';
 
 export const SET_NEW_TOPIC_FIELD = 'SET_NEW_TOPIC_FIELD';
+export const CREATE = 'TOPIC_CREATE';
+export const CREATE_SUCCESS = 'TOPIC_CREATE_SUCCESS';
+export const CREATE_ERROR = 'TOPIC_CREATE_ERROR';
 
 const getApi = (fetch, endpoint) =>
   fetch(`/api/${endpoint}`, {
@@ -102,7 +105,6 @@ export function count(group, query, contextTopicId) {
     endpoint = 'topics/count?where[groupKey]='+group ;
   }
 
-
   return ({fetch, validate}) => ({
     types: [
       COUNT,
@@ -110,7 +112,7 @@ export function count(group, query, contextTopicId) {
       COUNT_ERROR
     ],
     payload: {
-      promise:  getApi(fetch, endpoint)
+      promise: getApi(fetch, endpoint)
         .catch(response => {
           throw response;
         })
@@ -228,10 +230,8 @@ export function setNewTopicField({target: {name, value}}) {
   };
 }
 
-export const CREATE = 'TOPIC_CREATE';
-export const CREATE_SUCCESS = 'TOPIC_CREATE_SUCCESS';
-export const CREATE_ERROR = 'TOPIC_CREATE_ERROR';
 export function create(data) {
+
   const endpoint = 'topics';
 
   return ({fetch, validate}) => ({
