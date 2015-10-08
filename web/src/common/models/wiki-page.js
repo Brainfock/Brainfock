@@ -31,28 +31,26 @@ var promiseWhile = function(condition, action) {
 module.exports = function(WikiPage)
 {
   WikiPage.observe('before save', function updateTimestamp(ctx, next) {
-console.log('ctx',ctx);
-    if(ctx.data && ctx.data.pageUid) {
-      console.log('DATA AVAILABLE:',ctx.data);
+
+    if(ctx.data && ctx.data.pageUid)
+    {
       let pageUid = ctx.data.pageUid.split(':');
       if(pageUid.length>1) {
         ctx.data.namespace = pageUid.shift();
         ctx.data.pageUid = pageUid.join('');
       }
     }
-    else if(ctx.instance && ctx.instance.pageUid) {
-      console.log('INSTANCE AVAILABLE:',ctx.instance);
+    else if(ctx.instance && ctx.instance.pageUid)
+    {
       let pageUid = ctx.instance.pageUid.split(':');
       if(pageUid.length>1) {
         ctx.instance.namespace = pageUid.shift();
         ctx.instance.pageUid = pageUid.join('');
       }
     }
-    if (ctx.currentInstance) {
-      console.log('CURRENT ISNTANCE AVAILABLE')
-    }
-    if (ctx.isNewInstance) {
-      console.log('INSTANSE IN [NEW]')
+
+    if (ctx.isNewInstance)
+    {
       WikiPage.app.models.Entity.create({
         name: ctx.instance.pageUid,
         accessPrivateYn: ctx.instance.accessPrivateYn,
