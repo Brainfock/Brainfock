@@ -1,6 +1,6 @@
 /**
  * Brainfock - community & issue management software
- * Copyright (c) 2015, Sergii Gamaiunov (“Webkadabra”)  All rights reserved.
+ * Copyright (c) 2015, Sergii Gamaiunov (ï¿½Webkadabraï¿½)  All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -836,5 +836,61 @@ module.exports = function(app) {
     });
 
 
+  });
+
+  /**
+   * Check if user is allowed to post new topic
+   *
+   * @todo review; add validation of a workspace; make work together with other roles
+   */
+  Role.registerResolver('createTopicAccess', function(role, context, cb) {
+
+    console.log('[RBAC] Validate access to  operation `'+context.remotingContext.method.name+'` of model `'+context.modelName)
+
+    function reject() {
+      process.nextTick(function() {
+        cb(null, false);
+      });
+    }
+
+    if (context.modelName !== 'Topic') {
+      return reject();
+    }
+
+    // TODO: check namespace access
+
+    // check access to entity
+    var userId = context.accessToken.userId;
+
+    app.models.Topic.findOne({where:{
+        id:context.remotingContext.args.data.contextTopicId,
+      }},
+      function(err,ContextTopic)
+      {
+        // TODO: support for root topics
+        if (err || !ContextTopic) {
+          return reject();
+        }
+
+        if(ContextTopic.accessPrivateYn !== 1
+          || ContextTopic.ownerUserId == userId)
+          return cb(null, true);
+
+        // if access is private, check user permissions:
+        app.models.EntityAccessAssign.findOne({where:{
+            auth_type:0,
+            auth_id:userId,
+            entity_id:ContextTopic.entityId,
+          }},
+          function(errEa,dataEa)
+          {
+            if (errEa || !dataEa) {
+              return cb(null, false);
+            }
+
+            // user has access to context entity:
+            return cb(null, true);
+          });
+      });
   });
 }
