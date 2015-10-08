@@ -39,11 +39,11 @@ class Page extends Component{
    * @param dispatch
    * @returns {*|{get}}
    */
-  resolveData(props, dispatch)
+  resolveData(props, {params, actions}, dispatch)
   {
     var query = [];
     query.push('filter[where][contextEntityId]=0');
-    query.push('filter[where][pageUid]='+props.params.uid);
+    query.push('filter[where][pageUid]='+params.uid);
     if(props.users && props.users.viewer) {
       query.push('access_token='+props.users.viewer.authToken)
     }
@@ -52,7 +52,7 @@ class Page extends Component{
 
     return promisingagent.get(`http://${host}/api/wikiPages/findOne?` + query.join('&'))
       .then((response) => {
-        props.actions.findWikiSuccess(response.body);
+        actions.findWikiSuccess(response.body);
         return response.body
       });
   }
