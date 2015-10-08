@@ -18,6 +18,14 @@
  * @link http://www.brainfock.com/
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
+import React from 'react';
+import Component from 'react-pure-render/component';
+import mui from 'material-ui-io';
+import Select from 'react-select';
+
+import Loader from './Loader';
+import RemoteSelectField from './form/RemoteSelectField';
+
 /**
  * Simple factory to build basic forms' UIs;
  *
@@ -29,68 +37,81 @@
  * @author sergii gamaiunov <hello@webkadabra.com>
  * @type {*|exports|module.exports}
  */
-import React from 'react';
-import mui from 'material-ui-io';
-import Select from 'react-select';
+class Page extends Component{
 
-import Loader from './Loader';
-import RemoteSelectField from './form/RemoteSelectField';
-
-var Page = React.createClass({
-
-  propTypes: {
+  static propTypes = {
     // You can declare that a prop is a specific JS primitive. By default, these
     // are all optional.
     formScheme: React.PropTypes.any.isRequired,
     handleSubmit: React.PropTypes.func,
     onChange: React.PropTypes.func.isRequired,
     modelValues: React.PropTypes.object,
-  },
+  }
 
-  render: function() {
+  render() {
     return this.renderForm();
-  },
+  }
 
   /**
    * generates form based on state
-   * @todo move out to a "Form Factory" component
    * @returns {XML}
    */
   renderForm() {
     if(!this.props.formScheme) {
-      return <div>Empty Form!</div>;
+      return <div></div>;
     }
     return <div className="clearfix">
-      {this.props.formScheme.map(this.renderItem)}
-
-      <mui.RaisedButton primary={true} onClick={this.handleSubmit} label="Save" />
+      {this.props.formScheme.map(this.renderItem.bind(this))}
+      { /*<mui.RaisedButton primary={true} onClick={this.handleSubmit} label="Save" />*/ }
     </div>
-  },
+  }
 
-  filters:[],
-
-  onReactSelectChange:function(newValue, attName) {
+  /**
+   * handle change event coming from `react-select` component - provide standard-like object for change event
+   *
+   * @param {number} newValue
+   * @param {Array} newValues
+   * @param {string} fieldName Field name
+   */
+  onReactSelectChange(newValue, newValues, fieldName) {
     this.props.onChange({
       target: {
-        name:attName,
-        value:newValue
+        name:fieldName,
+        value:newValues
       }
     })
-  },
+  }
+
   /**
-   * simple form factory
-   * todo: move out to a reusable component
-   * @param item - each item is represented by ListFieldItem.php in backend
+   * handle change event coming from `material-ui` `DatePicker` component - provide standard-like object for change event
+   *
+   * @param {string} newDate
+   * @param {string} fieldName Field name
+   */
+  onDatepickerChange(newDate, fieldName) {
+    this.props.onChange({
+      target: {
+        name:fieldName,
+        value:newDate
+      }
+    })
+  }
+
+  /**
+   * Render single form field
+   *
+   * @param {Object} item
    * @returns {XML}
    */
-  renderItem:function(item)
+  renderItem(item)
   {
     if(item.type == 'select' || item.type == 'multiselect')
     {
+
       let props = {
         name:item.name,
         placeholder:item.label,
-        options:item.options,
+        //options:item.options,
         style:{
           width:'100%'
         },
@@ -100,25 +121,29 @@ var Page = React.createClass({
         props.multi = true;
       }
 
-      // preselected
-      if(item.value) {
-        props.value = item.value;
+      if(this.props.modelValues && this.props.modelValues[item.name]){
+        props.value = this.props.modelValues[item.name];
+      } else {
+        if(item.value) {
+          props.value = item.value;
+        }
       }
 
-      props.ref = item.name;
-      this.filters.push(props.ref);
-
-      if(this.props.preselected && this.props.preselected[item.name])
-        props.value = this.props.preselected[item.name];
+      //if(this.props.preselected && this.props.preselected[item.name])
+      //  props.value = this.props.preselected[item.name];
 
       let FilterComponent = Select;
       if(item.endpoint) {
         props.endpoint = item.endpoint;
         FilterComponent = RemoteSelectField;
       }
+
       return (
         <div  style={{'width':'100%'}}>
-          <FilterComponent {...props} onChange={function(newValue){this.onReactSelectChange(newValue, item.name)}.bind(this)}/>
+          <FilterComponent {...props}
+            //onBlur={this.onReactSelectChange.bind(this)}
+            onChange={(function(newValue, newValues){this.onReactSelectChange(newValue, newValues, item.name)}).bind(this)}
+            />
         </div>
       );
     }
@@ -148,9 +173,6 @@ var Page = React.createClass({
         }
       }
 
-      props.ref = item.name;
-      this.filters.push(props.ref);
-
       let Filter = (
         <mui.TextField
           {...props}
@@ -173,9 +195,6 @@ var Page = React.createClass({
       if(item.value==true) {
         props.defaultChecked = true;
       }
-
-      props.ref = item.name;
-      this.filters.push(props.ref);
 
       return (
         <div  style={{'width':'100%'}}>
@@ -206,56 +225,18 @@ var Page = React.createClass({
         props.defaultValue = item.value;
       }
 
-      props.ref = item.name;
-      this.filters.push(props.ref);
-
       let Datepicker = <mui.DatePicker
         {...props}
-        onChange={this.props.onChange}
+        onChange={(function(nill, newDate){this.onDatepickerChange(newDate, item.name)}).bind(this)}
         />;
-      // todo: add timepicker
-      //let Timepicker = <mui.TimePicker
-      //  {...props}
-      //  />;
+
+      // TODO: Add timepicker
+      //let Timepicker = <mui.TimePicker  {...props}  />;
       return <div  style={{'width':'100%'}}>
         {Datepicker}</div>;
     }
     return <span className="badge">{item.label}</span>
-  },
-
-  handleSubmit: function(e)
-  {
-    e.preventDefault();
-
-    let send = {};
-
-    for(let i =0;i<this.filters.length;i++) {
-      let filterId = this.filters[i];
-      if(this.refs[filterId]) {
-        if('function' === typeof this.refs[filterId].isChecked) {
-          send[filterId] = this.refs[filterId].isChecked()
-        }
-        else if('function' === typeof this.refs[filterId].getValue) {
-          send[filterId] = this.refs[filterId].getValue()
-        }
-        else if(this.refs[filterId].state.value) {
-          send[filterId] = this.refs[filterId].state.value;
-        }
-        else if(this.refs[filterId].state.values) {
-          send[filterId] = this.refs[filterId].state.values;
-        }
-      }
-      else {
-        send[filterId] = null;
-      }
-    }
-
-    // Hardcoded fields (available to any topic):
-    //send.access_private_yn = this.refs.accessSettings.isChecked() == true ? 1 : 0;
-
-    this.props.handleSubmit(send);
-  },
-
-});
+  }
+};
 
 module.exports = Page;
