@@ -11,6 +11,7 @@ import {HOT_RELOAD_PORT} from '../../../webpack/constants';
 import {IntlProvider} from 'react-intl';
 import {Provider} from 'react-redux';
 import {RoutingContext, match} from 'react-router';
+import app from '../main';
 
 export default function render(req, res, next) {
   createStore(req)
@@ -84,7 +85,7 @@ function getPageHtml(appHtml, clientState, hostname, ua) {
     <Html
       appCssHash={config.assetsHashes.appCss}
       bodyHtml={`<div id="app">${appHtml}</div>` + scriptHtml}
-      googleAnalyticsId={config.googleAnalyticsId}
+      googleAnalyticsId={app.get('googleAnalyticsId')}
       isProduction={config.isProduction}
       title={title}
     />
