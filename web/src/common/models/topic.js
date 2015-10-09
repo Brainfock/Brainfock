@@ -23,8 +23,45 @@ import {mergeQuery} from 'loopback-datasource-juggler/lib/utils';
 import app from "../../server/main";
 import FieldTypes from '../components/topicFields';
 import FieldsHandler from '../components/topicFieldsHandler.js';
-
+import loopback from 'loopback';
 module.exports = function(Topic) {
+
+  Topic.observe('before save', function normalizeUserInput(ctx, next)
+  {
+    if(ctx.instance && ctx.instance.namespace && !ctx.instance.workspaceId)
+    {
+      // make sure workspace exists
+      Topic.app.models.Workspace.findOne({where:{namespace:ctx.instance.namespace}},function(wspcErr,wspcInstance) {
+
+        if (wspcErr) throw wspcErr;
+
+        if (!wspcInstance)
+          return next({
+            name: 'error',
+            status: 404,
+            message: `Can not find workspace "${ctx.instance.namespace}"`
+          });
+
+        const currentUser = loopback.getCurrentContext().get('currentUser');
+
+        if(wspcInstance.accessPrivateYn === 0 || currentUser && wspcInstance.ownerUserId == currentUser.id) {
+          ctx.instance.workspaceId = wspcInstance.id;
+          ctx.instance.namespace = wspcInstance.namespace;
+          next();
+        }
+        // TODO: allow users to be invited and granted permission to access private workspaces
+        else {
+          return next({
+            name: 'error',
+            status: 403,
+            message: 'Authorization Required'
+          });
+        }
+      });
+    } else {
+      next();
+    }
+  });
 
   Topic.on('attached', function() {
     var override = Topic.findOne;
