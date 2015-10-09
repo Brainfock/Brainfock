@@ -1,6 +1,6 @@
 /**
  * Brainfock - community & issue management software
- * Copyright (c) 2015, Sergii Gamaiunov (“Webkadabra”)  All rights reserved.
+ * Copyright (c) 2015, Sergii Gamaiunov (ï¿½Webkadabraï¿½)  All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,23 +20,24 @@
  */
 
 import React from 'react';
+import Component from 'react-pure-render/component';
 
 let PageWithNav = require('../components/layout/page-with-nav');
 let Loader = require('../components/Loader');
 let AppContentCanvas = require('../components/layout/AppContentCanvas');
 
-var Layout = React.createClass({
+class Layout extends Component{
 
-  componentDidMount: function() {
+  componentDidMount() {
     if(process.env.IS_BROWSER==true) {
       // load info about CURRENT BOARD
       this.props.topic_actions.loadCurrent(this.props.params.board_id);
       // load TOPIC of this BOARD
      // this.props.topic_actions.find(this.props.groupKey || 'board_topic', {},this.props.params.board_id);
     }
-  },
+  }
 
-  render: function () {
+  render () {
 
     if(!this.props.boards.board || this.props.boards.board.loading == true) {
       return <AppContentCanvas header={
@@ -49,13 +50,13 @@ var Layout = React.createClass({
         <PageWithNav  menuItems={this.menuItems()} {...this.props} />
       </div>
     );
-  },
+  }
 
   /**
    * @todo i18n
    * @returns {*[]}
    */
-  menuItems:function() {
+  menuItems() {
     return [
       { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}`,
         text: (
@@ -72,12 +73,10 @@ var Layout = React.createClass({
             {this.props.boards.board.summary}</div>
         )
       },
-      //{ route: `/project/${this.props.boards.board.id}`, text: 'Dashboard'},
       { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}/issues`, text: 'Issues'},
-     // { route: `/project/${this.props.boards.board.id}/issues`, text: 'Issues'},
       { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}/users`, text: 'Users'}
     ];
   }
-});
+};
 
 export default Layout;
