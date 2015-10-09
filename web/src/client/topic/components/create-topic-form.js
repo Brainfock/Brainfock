@@ -19,6 +19,8 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import React from 'react';
+import Component from 'react-pure-render/component';
+
 import mui from 'material-ui-io';
 import Loader from '../../components/Loader';
 import SimpleFormFactory from '../../components/UISimpleFormFactory';
@@ -28,12 +30,36 @@ import SimpleFormFactory from '../../components/UISimpleFormFactory';
  *
  * @todo define propTypes
  */
-module.exports = React.createClass({
+export default class CreateTopicForm extends Component{
 
-  componentWillMount: function() {
+  //
+  static propTypes = {
+    containerStore: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object.isRequired,
+    formFields: React.PropTypes.object,
+    actions: React.PropTypes.any.isRequired,
+  };
+
+  componentWillMount() {
     if(!this.props.formFields || (this.props.formFields && this.props.formFields.fields.size==0))
       this.props.actions.loadFormFields('issue', this.props.containerStore.id);
-  },
+  }
+
+  componentDidMount() {
+    // set default values based on current route (workspace namespace) and container topic (e.g. project topic)
+    this.props.actions.setNewTopicField({target:{
+      name: 'namespace',
+      value: this.props.params.namespace,
+    }});
+
+    this.props.actions.setNewTopicField({target:{
+      name: 'contextTopicId',
+      value: [
+        // for `react-select` we must provide {Array} with {Object}s
+        {label:this.props.containerStore.summary,value:this.props.containerStore.id}
+      ]
+    }})
+  }
 
   //componentDidMount: function() {
   //  // focus on input:
@@ -53,58 +79,72 @@ module.exports = React.createClass({
    * form workflow:
    *
    * 1) user selects a project.
-   * 2) system loads available issue types for this project and updates "Issue Type" dropdown
-   * 3) after issue type is selected, system fetches form schema for this issue type & project
+   * 2) system loads available issue types for this project and updates "Topic Type" dropdown
+   * 3) after issue type is selected, system fetches form schema for this project & topic type
    */
-  render: function()
+  render()
   {
-    return <form ref="frm" onSubmit={this.onFormSubmit} className="form-horizontal">
+    return <form ref="frm" onSubmit={this.onFormSubmit.bind(this)} className="form-horizontal">
       {this.renderForm()}
       <br />
+
       <mui.Checkbox
-        name="access_private_yn" ref="accessSettings" value="1"
-        label='createForm_LABEL_access_private_yn' />
-      <mui.RaisedButton onClick={this.onFormSubmit}>Create</mui.RaisedButton>
+        name="accessPrivateYn" ref="accessSettings" value="1"
+        label='createForm_LABEL_access_private_yn'
+        onCheck={this.props.actions.setNewTopicField} />
+
+      <mui.RaisedButton onClick={this.onFormSubmit.bind(this)}>Create</mui.RaisedButton>
     </form>
 
-  },
+  }
 
   /**
    * generates form based on state
    * @todo move out to a "Form Factory" component
    * @returns {XML}
    */
-  renderForm: function() {
+  renderForm() {
     if(!this.props.formFields.fields) {
       return <Loader />;
     }
     return <div className="clearfix">
       <SimpleFormFactory
-        formScheme={this.props.formFields.fields.toJS()}
+        formScheme={this.props.formFields.fields}
         onChange={this.props.actions.setNewTopicField}
-        modelValues={this.props.newTopic.toJS()}
+        modelValues={this.props.newTopic}
         />
     </div>
-  },
+  }
 
-
-  onFormSubmit:function(e) {
-    e.preventDefault();
+  onFormSubmit(e)
+  {
     const {actions, newTopic} = this.props;
-    actions.create(newTopic)
+
+    // normalize inputs from forms elements
+    let data = newTopic.toJS();
+
+    ['contextTopicId','typeId'].forEach(propName => data[propName] = data[propName][0].value)
+
+    console.log('newTopic data:',data)
+    actions.create({
+      summary: data.summary,
+      typeId: data.typeId,
+      contextTopicId: data.contextTopicId,
+      workspaceId: data.workspaceId,
+      namespace: data.namespace,
+    })
       .then(({error, payload}) => {
         if (error) {
-
           alert('Error! Check console');
           console.log(error);
           //focusInvalidField(this, payload);
-        } else
-        alert("Success")
-          //this.redirectAfterLogin();
+        } else {
+          // item added successfully
+        }
       });
-  },
+  }
 
-  handleSubmit: function(e)
+  handleSubmit(e)
   {
     e.preventDefault();
 
@@ -132,5 +172,5 @@ module.exports = React.createClass({
     send.access_private_yn = this.refs.accessSettings.isChecked() == true ? 1 : 0;
 
     this.props.Actions.create(send);
-  },
-});
+  }
+}
