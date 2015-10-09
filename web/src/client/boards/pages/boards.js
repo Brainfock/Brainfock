@@ -36,6 +36,7 @@ export default class Boards extends Component {
   static propTypes = {
    // topicType: PropTypes.string.isRequired,
     group: PropTypes.object.isRequired,
+    params: PropTypes.object.isRequired,
   }
 
   /**
@@ -69,6 +70,7 @@ export default class Boards extends Component {
             history={this.props.history}
             group={this.props.group}
             board={this.props.board}
+            params={this.props.params}
             />
         </div>
       </AppContentCanvas>
