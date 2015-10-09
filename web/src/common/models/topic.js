@@ -63,6 +63,18 @@ module.exports = function(Topic) {
     }
   });
 
+  /**
+   * populate topic `type` after remote create
+   */
+  Topic.afterRemote( 'create', function( ctx, modelInstance, next) {
+    modelInstance.type(function(err, type) {
+      if (err) return next(err);
+      // we can not modify properties of relations directly via `modelInstance.user=[Object]`:
+      modelInstance.__data.type = type;
+      next(err);
+    });
+  })
+
   Topic.on('attached', function() {
     var override = Topic.findOne;
     Topic.findOneCore = override;
