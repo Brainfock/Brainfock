@@ -30,11 +30,13 @@ var RemoteSelectField = React.createClass({
     hint: React.PropTypes.string,
     label: React.PropTypes.string,
     endpoint:React.PropTypes.string,
+    options:React.PropTypes.array
   },
   loadOptions (input, callback) {
+
     if (!input.length) {
       return callback(null, {
-        options: [],
+        options: this.props.options || [],
         complete:false
         });
     }
