@@ -1,6 +1,6 @@
 /**
  * Brainfock - community & issue management software
- * Copyright (c) 2015, Sergii Gamaiunov (“Webkadabra”)  All rights reserved.
+ * Copyright (c) 2015, Sergii Gamaiunov (ï¿½Webkadabraï¿½)  All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -29,13 +29,18 @@ export default Record({
   text: '',
   entityId:'',
   contextTopicKey:'',
+  contextTopicId:'',
+  typeId:'',
+  groupId:'',
+  dueDate:'',
+  accessPrivateYn:'',
 
   // included via relations
   type: {},
   group: {},
   comments: List(),
 
-  // state fields
+  // ui state fields
   loading:true,
 });
 
