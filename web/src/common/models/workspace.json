@@ -27,38 +27,6 @@
       },
       "_selectable": false
     },
-    "entityId": {
-      "type": "Number",
-      "required": false,
-      "length": null,
-      "precision": 20,
-      "scale": 0,
-      "mysql": {
-        "columnName": "entity_id",
-        "dataType": "bigint",
-        "dataLength": null,
-        "dataPrecision": 20,
-        "dataScale": 0,
-        "nullable": "Y"
-      },
-      "_selectable": true
-    },
-    "accountId": {
-      "type": "Number",
-      "required": true,
-      "length": null,
-      "precision": 10,
-      "scale": 0,
-      "mysql": {
-        "columnName": "account_id",
-        "dataType": "int",
-        "dataLength": null,
-        "dataPrecision": 10,
-        "dataScale": 0,
-        "nullable": "N"
-      },
-      "_selectable": false
-    },
     "name": {
       "type": "String",
       "required": false,
@@ -75,66 +43,18 @@
       },
       "_selectable": true
     },
-    "createdOn": {
-      "type": "Date",
+    "namespace": {
+      "type": "String",
       "required": false,
-      "length": null,
+      "length": 255,
       "precision": null,
       "scale": null,
       "mysql": {
-        "columnName": "created_on",
-        "dataType": "datetime",
-        "dataLength": null,
+        "columnName": "namespace",
+        "dataType": "varchar",
+        "dataLength": 255,
         "dataPrecision": null,
         "dataScale": null,
-        "nullable": "Y"
-      },
-      "_selectable": true
-    },
-    "updatedOn": {
-      "type": "Date",
-      "required": false,
-      "length": null,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "updated_on",
-        "dataType": "datetime",
-        "dataLength": null,
-        "dataPrecision": null,
-        "dataScale": null,
-        "nullable": "Y"
-      },
-      "_selectable": true
-    },
-    "createdByUserId": {
-      "type": "Number",
-      "required": false,
-      "length": null,
-      "precision": 10,
-      "scale": 0,
-      "mysql": {
-        "columnName": "created_by_user_id",
-        "dataType": "int",
-        "dataLength": null,
-        "dataPrecision": 10,
-        "dataScale": 0,
-        "nullable": "Y"
-      },
-      "_selectable": true
-    },
-    "updatedByUserId": {
-      "type": "Number",
-      "required": false,
-      "length": null,
-      "precision": 10,
-      "scale": 0,
-      "mysql": {
-        "columnName": "updated_by_user_id",
-        "dataType": "int",
-        "dataLength": null,
-        "dataPrecision": 10,
-        "dataScale": 0,
         "nullable": "Y"
       },
       "_selectable": true
@@ -163,7 +83,7 @@
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",
-      "permission": "DENY"
+      "permission": "ALLOW"
     }
   ],
   "methods": {}
