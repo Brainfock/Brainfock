@@ -168,9 +168,19 @@ export default function boardsReducer(state = initialState, action) {
       const {name, value} = action.payload;
       return state.setIn(['newTopic', name], value);
     }
+    case actions.CREATE: {
+      return state
+        // lockform submit buttons etc.
+        .setIn(['formFields','loading'],true)
+    }
     case actions.CREATE_SUCCESS: {
       return state
         .update('list', list => list.unshift(Todo(action.payload)))
+        .setIn(['formFields','loading'],false)
+    }
+    case actions.CREATE_ERROR: {
+      return state
+        .setIn(['formFields','loading'],false)
     }
   }
 
