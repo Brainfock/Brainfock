@@ -50,8 +50,7 @@ module.exports = function(Entity) {
   })
 
   /**
-   * format comment text
-   * include `user` relation data
+   * format comment text & include `user` relation data
    */
   Entity.afterRemote( '*.__create__comments', function( ctx, modelInstance, next) {
 
@@ -88,8 +87,8 @@ module.exports = function(Entity) {
    * check if user has access to entity
    *
    * TODO: check if global guest access is allowed
-   * @param userId
-   * @param cb
+   * @param {number} userId
+   * @param {function} cb
    * @returns {*}
    */
   Entity.prototype.checkUserAccess=function(userId, cb) {
