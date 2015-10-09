@@ -10,7 +10,7 @@
     "table": "v_topic"
   },
   "scope": {
-    "limit": 100,
+    "limit": 200,
     "where": {
       "deletedYn": "0"
     }
