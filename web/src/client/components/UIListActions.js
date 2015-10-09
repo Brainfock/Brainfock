@@ -95,6 +95,7 @@ var ListActions =  React.createClass({
           newTopic={this.props.newTopic}
           formFields={this.props.formFields}
           actions={this.props.actions}
+          params={this.props.params}
           />
     </mui.Dialog>
   },

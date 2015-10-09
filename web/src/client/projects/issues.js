@@ -20,12 +20,13 @@
  */
 import React from 'react';
 import mui from 'material-ui-io';
+import Component from 'react-pure-render/component';
 
 import Loader from '../components/Loader';
 import ListActions from '../components/UIListActions';
 import Form from '../topic/components/create-topic-form';
 
-export default class ProjectIssues extends React.Component{
+export default class ProjectIssues extends Component{
 
   constructor(props) {
     super(props);
@@ -75,15 +76,22 @@ export default class ProjectIssues extends React.Component{
         newTopic={newTopic}
         formFields={formFields}
         actions={this.props.topic_actions}
+        params={this.props.params}
         containerStore={board}
-        //FormStore={TopicFormStore}
-        /* where will we be adding this item to */
-       // Actions={TopicActions}
         TITLE='issues_createForm_TITLE'
         BUTTON_ACTION_LABEL='Add New'
         />
       {meta.count} item(s)
     </div>
+
+    //const ListActionsRendered = <div className="pull-right">
+    //  <Form
+    //    containerStore={board}
+    //    formFields={formFields}
+    //    actions={this.props.topic_actions}
+    //    />
+    //  {meta.count} item(s)
+    //</div>
 
     let ListView = require('../boards/boards.react');
     let ListViewItem = require('./components/issues-list-item');
