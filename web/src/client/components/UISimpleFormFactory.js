@@ -107,11 +107,10 @@ class Page extends Component{
   {
     if(item.type == 'select' || item.type == 'multiselect')
     {
-
       let props = {
         name:item.name,
         placeholder:item.label,
-        //options:item.options,
+        options:item.options || [],
         style:{
           width:'100%'
         },
@@ -121,6 +120,10 @@ class Page extends Component{
         props.multi = true;
       }
 
+      props.onChange=(function(newValue, newValues){
+        // in case of multiselect, pass `newValues` - form data has to be normalized before POSTing, see actions
+        this.onReactSelectChange(newValue, newValues, item.name)}).bind(this);
+
       if(this.props.modelValues && this.props.modelValues[item.name]){
         props.value = this.props.modelValues[item.name];
       } else {
@@ -128,9 +131,6 @@ class Page extends Component{
           props.value = item.value;
         }
       }
-
-      //if(this.props.preselected && this.props.preselected[item.name])
-      //  props.value = this.props.preselected[item.name];
 
       let FilterComponent = Select;
       if(item.endpoint) {
@@ -140,10 +140,7 @@ class Page extends Component{
 
       return (
         <div  style={{'width':'100%'}}>
-          <FilterComponent {...props}
-            //onBlur={this.onReactSelectChange.bind(this)}
-            onChange={(function(newValue, newValues){this.onReactSelectChange(newValue, newValues, item.name)}).bind(this)}
-            />
+          <FilterComponent {...props} />
         </div>
       );
     }
