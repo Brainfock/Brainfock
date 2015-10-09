@@ -49,6 +49,22 @@
       },
       "_selectable": true
     },
+    "namespace": {
+      "type": "String",
+      "required": false,
+      "length": 100,
+      "precision": null,
+      "scale": null,
+      "mysql": {
+        "columnName": "owner_namespace",
+        "dataType": "varchar",
+        "dataLength": 100,
+        "dataPrecision": null,
+        "dataScale": null,
+        "nullable": "Y"
+      },
+      "_selectable": true
+    },
     "entityId": {
       "type": "Number",
       "required": false,
@@ -99,7 +115,7 @@
     },
     "typeId": {
       "type": "Number",
-      "required": false,
+      "required": true,
       "length": null,
       "precision": 10,
       "scale": 0,
@@ -109,22 +125,6 @@
         "dataLength": null,
         "dataPrecision": 10,
         "dataScale": 0,
-        "nullable": "Y"
-      },
-      "_selectable": true
-    },
-    "namespace": {
-      "type": "String",
-      "required": false,
-      "length": 100,
-      "precision": null,
-      "scale": null,
-      "mysql": {
-        "columnName": "namespace",
-        "dataType": "varchar",
-        "dataLength": 100,
-        "dataPrecision": null,
-        "dataScale": null,
         "nullable": "Y"
       },
       "_selectable": true
@@ -498,6 +498,11 @@
       "type": "hasMany",
       "model": "Topic",
       "foreignKey": "contextTopicId"
+    },
+    "workspace": {
+      "type": "belongsTo",
+      "model": "Workspace",
+      "foreignKey": "workspaceId"
     }
   },
   "acls": [
@@ -562,6 +567,20 @@
       "principalId": "topicEntityAccess",
       "permission": "ALLOW",
       "property": "__count__topics"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "createTopicAccess",
+      "permission": "ALLOW",
+      "property": "create"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "createTopicAccess",
+      "permission": "ALLOW",
+      "property": "upsert"
     }
   ],
   "methods": {}
