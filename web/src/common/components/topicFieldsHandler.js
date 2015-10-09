@@ -70,8 +70,12 @@ export default class FieldsHandler {
             // `name` is used for form inputs to identify model's attribute
             name: data.key,
             type: 'select', // todo: hasOne rather
-            // todo: pre-load options (not full list, tops 100); this has to take into account topic access, of course
-            options:[],
+            // pre-populate default option
+            // TODO: preload more options? options loaded should be somewhat predicted to be actual for user to select
+            options:[{
+              value: data.contextTopic.id,
+              label: data.contextTopic.summary
+            }],
             // use REST to get options (handles access control):
             endpoint: '/api/topics/?filter[where][groupKey]='+parentGroup.groupKey,
           });
