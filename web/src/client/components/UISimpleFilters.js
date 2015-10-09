@@ -134,8 +134,8 @@ var UISimpleFilters = React.createClass({
       }
 
       return <div className="pull-left" style={{
-        'min-width':'150px',
-        'max-width':'390px',
+        minWidth:'150px',
+        maxWidth:'390px',
         }}>
         {Filter}</div>;
     }
