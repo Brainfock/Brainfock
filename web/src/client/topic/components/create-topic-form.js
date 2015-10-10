@@ -92,8 +92,6 @@ export default class CreateTopicForm extends Component{
         name="accessPrivateYn" ref="accessSettings" value="1"
         label='createForm_LABEL_access_private_yn'
         onCheck={this.props.actions.setNewTopicField} />
-
-      <mui.RaisedButton onClick={this.onFormSubmit.bind(this)}>Create</mui.RaisedButton>
     </form>
 
   }
@@ -120,18 +118,19 @@ export default class CreateTopicForm extends Component{
   {
     const {actions, newTopic} = this.props;
 
-    // normalize inputs from forms elements
+    // we need to call `.toJS()` ince `newTopic` is immutable
     let data = newTopic.toJS();
 
+    // normalize inputs from forms elements
     ['contextTopicId','typeId'].forEach(propName => data[propName] = data[propName][0].value)
 
-    console.log('newTopic data:',data)
     actions.create({
       summary: data.summary,
       typeId: data.typeId,
       contextTopicId: data.contextTopicId,
       workspaceId: data.workspaceId,
       namespace: data.namespace,
+      accessPrivateYn: data.accessPrivateYn,
     })
       .then(({error, payload}) => {
         if (error) {
@@ -142,35 +141,5 @@ export default class CreateTopicForm extends Component{
           // item added successfully
         }
       });
-  }
-
-  handleSubmit(e)
-  {
-    e.preventDefault();
-
-    let send = {};
-
-    for(let i =0;i<this.filters.length;i++) {
-      let filterId = this.filters[i];
-      if(this.refs[filterId]) {
-        if('function' === typeof this.refs[filterId].getValue) {
-          send[filterId] = this.refs[filterId].getValue()
-        }
-        else if(this.refs[filterId].state.value) {
-          send[filterId] = this.refs[filterId].state.value;
-        }
-        else if(this.refs[filterId].state.values) {
-          send[filterId] = this.refs[filterId].state.values;
-        }
-      }
-      else {
-        send[filterId] = null;
-      }
-    }
-
-    // Hardcoded fields (available to any topic):
-    send.access_private_yn = this.refs.accessSettings.isChecked() == true ? 1 : 0;
-
-    this.props.Actions.create(send);
   }
 }

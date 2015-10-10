@@ -28,6 +28,15 @@ module.exports = function(Topic) {
 
   Topic.observe('before save', function normalizeUserInput(ctx, next)
   {
+    const currentUser = loopback.getCurrentContext().get('currentUser');
+
+    if (ctx.instance) {
+      if (ctx.isNewInstance==true) {
+        if(currentUser) {
+          ctx.instance.ownerUserId = currentUser.id;
+        }
+      }
+    }
     if(ctx.instance && ctx.instance.namespace && !ctx.instance.workspaceId)
     {
       // make sure workspace exists
@@ -42,7 +51,7 @@ module.exports = function(Topic) {
             message: `Can not find workspace "${ctx.instance.namespace}"`
           });
 
-        const currentUser = loopback.getCurrentContext().get('currentUser');
+
 
         if(wspcInstance.accessPrivateYn === 0 || currentUser && wspcInstance.ownerUserId == currentUser.id) {
           ctx.instance.workspaceId = wspcInstance.id;
