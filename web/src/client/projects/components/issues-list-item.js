@@ -33,11 +33,18 @@ export default class Todo extends Component {
   render() {
     const {actions, todo} = this.props;
 
+    let icon;
+    if(todo.accessPrivateYn==1) {
+      icon = (<i className="fa fa-eye-slash"></i>);
+    }
+    else {
+      icon='test';
+    }
     return <mui.ListItem
       primaryText={
           <div>
             <span className="stats" style={{marginRight:5}}><span className="prop">{todo.contextTopicNum}</span></span>
-            {todo.summary}
+            {icon} {todo.summary}
             <span className="label label-info pull-right">{todo.type && todo.type.name}</span>
           </div>}
       secondaryTextLines={2}
