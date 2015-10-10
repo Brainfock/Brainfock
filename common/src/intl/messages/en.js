@@ -86,6 +86,11 @@ export default {
       addNew: {
         button: 'Add New',
       },
+      countItems: `{countItems, plural,
+  =0 {}
+  one {# item}
+  other {# items}
+}`
     },
     form: {
       create: {
