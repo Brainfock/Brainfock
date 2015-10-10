@@ -26,15 +26,16 @@ import FieldsHandler from '../components/topicFieldsHandler.js';
 import loopback from 'loopback';
 module.exports = function(Topic) {
 
+  /**
+   * validate workspace/namespace existance and access
+   * set owner flags
+   */
   Topic.observe('before save', function normalizeUserInput(ctx, next)
   {
     const currentUser = loopback.getCurrentContext().get('currentUser');
-
     if (ctx.instance) {
       if (ctx.isNewInstance==true) {
-        if(currentUser) {
-          ctx.instance.ownerUserId = currentUser.id;
-        }
+        ctx.instance.ownerUserId = currentUser.id;
       }
     }
     if(ctx.instance && ctx.instance.namespace && !ctx.instance.workspaceId)
@@ -51,8 +52,6 @@ module.exports = function(Topic) {
             message: `Can not find workspace "${ctx.instance.namespace}"`
           });
 
-
-
         if(wspcInstance.accessPrivateYn === 0 || currentUser && wspcInstance.ownerUserId == currentUser.id) {
           ctx.instance.workspaceId = wspcInstance.id;
           ctx.instance.namespace = wspcInstance.namespace;
@@ -66,6 +65,51 @@ module.exports = function(Topic) {
             message: 'Authorization Required'
           });
         }
+      });
+    } else {
+      next();
+    }
+  });
+
+  /**
+   * get entityId
+   */
+  Topic.observe('before save', function normalizeUserInput(ctx, next)
+  {
+    if (ctx.instance) {
+      if (ctx.isNewInstance==true) {
+        Topic.app.models.Entity.create({
+          name: ctx.instance.summary,
+          accessPrivateYn: ctx.instance.accessPrivateYn,
+          owerUserId: ctx.instance.owerUserId,
+          modelClassName: 'Topic',
+          modelPk: null,
+        }, function (err, entityInstance) {
+          if(err) {
+            throw err;
+          }
+          ctx.instance.entityId =  entityInstance.id;
+          ctx.instance.entity_id =  entityInstance.id;
+          next();
+        });
+      }
+    }
+  });
+
+  /**
+   * update `entity` relation to link back after new `topic` is created and PK is obtained
+   */
+  Topic.observe('after save', function updateTimestamp(ctx, next)
+  {
+    // after model has been saved, we have to pass model's ID back to entity registry:
+    if (ctx.isNewInstance && ctx.instance.entityId) {
+      Topic.app.models.Entity.findById(ctx.instance.entityId, function (err, entityInstance) {
+        entityInstance.updateAttributes({modelPk:ctx.instance.id}, function(errE,instance){
+          if(errE) {
+            throw errE;
+          }
+          next();
+        });
       });
     } else {
       next();
