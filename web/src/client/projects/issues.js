@@ -73,10 +73,10 @@ export default class ProjectIssues extends Component{
       filterStyles.display='none';
     }
 
-    // adjust heading to match materia-ui design
-    // TODO: use variables form theme, don't hadrcode styles in here
     let titleMsg = (
       <h3 style={{
+      // adjust heading to match materia-ui design
+      // TODO: use variables form theme, don't hadrcode styles in here
         margin: 0,
         padding: '24px 24px 0px',
         color: 'rgba(0, 0, 0, 0.870588)',
@@ -102,7 +102,7 @@ export default class ProjectIssues extends Component{
         params={this.props.params}
         containerStore={board}
         TITLE={titleMsg}
-        BUTTON_ACTION_LABEL='Add New'
+        BUTTON_ACTION_LABEL={msg.list.addNew.button}
         />
       {meta.count} item(s)
     </div>

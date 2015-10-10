@@ -82,6 +82,11 @@ export default {
     title: 'Todos'
   },
   topics: {
+    list:{
+      addNew: {
+        button: 'Add New',
+      },
+    },
     form: {
       create: {
         title: 'Create New {type}',
