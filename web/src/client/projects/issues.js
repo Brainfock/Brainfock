@@ -21,6 +21,7 @@
 import React from 'react';
 import mui from 'material-ui-io';
 import Component from 'react-pure-render/component';
+import {FormattedMessage} from 'react-intl';
 
 import Loader from '../components/Loader';
 import ListActions from '../components/UIListActions';
@@ -46,12 +47,14 @@ export default class ProjectIssues extends Component{
       this.props.topic_actions.find('issue', {},this.props.params.board_id);
       this.props.topic_actions.count('issue', {},this.props.params.board_id);
       this.props.topic_actions.loadFilters('issue', {},this.props.params.board_id);
+      this.props.topic_actions.loadTopicGroup('issue', {}/*, this.props.parentModel*/);
     }
   }
 
   render()
   {
     const {board, list, meta, listFilters, newTopic, formFields} = this.props.boards;
+    const msg = this.props.msg.topics;
     if(this.props.boards.meta.loading==true)
     {
       return <div className="row">
@@ -70,15 +73,35 @@ export default class ProjectIssues extends Component{
       filterStyles.display='none';
     }
 
+    // adjust heading to match materia-ui design
+    // TODO: use variables form theme, don't hadrcode styles in here
+    let titleMsg = (
+      <h3 style={{
+        margin: 0,
+        padding: '24px 24px 0px',
+        color: 'rgba(0, 0, 0, 0.870588)',
+        fontSize: '24px',
+        lineHeight: '32px',
+        fontWeight: 400
+      }}>
+        <FormattedMessage
+          defaultMessage={msg.form.create.title}
+          id={'msg.form.create.title'}
+          values={{type:this.props.boards.group.name}}
+        />
+      </h3>
+    );
+
     const ListActionsRendered = <div className="pull-right">
       <ListActions
         FormComponent={Form}
         newTopic={newTopic}
         formFields={formFields}
         actions={this.props.topic_actions}
+        msg={msg}
         params={this.props.params}
         containerStore={board}
-        TITLE='issues_createForm_TITLE'
+        TITLE={titleMsg}
         BUTTON_ACTION_LABEL='Add New'
         />
       {meta.count} item(s)
