@@ -11,6 +11,7 @@
   },
   "scope": {
     "limit": 200,
+    "order": "updatedOn DESC",
     "where": {
       "deletedYn": "0"
     }
