@@ -80,5 +80,16 @@ export default {
     emptyList: 'Nothing. Go outside and enjoy world.',
     newTodoPlaceholder: 'What needs to be done?',
     title: 'Todos'
-  }
+  },
+  topics: {
+    form: {
+      create: {
+        title: 'Create New {type}',
+      },
+      button: {
+        create: 'Create',
+        cancel: 'Cancel',
+      }
+    }
+  },
 };
