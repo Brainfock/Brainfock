@@ -104,7 +104,10 @@ export default class ProjectIssues extends Component{
         TITLE={titleMsg}
         BUTTON_ACTION_LABEL={msg.list.addNew.button}
         />
-      {meta.count} item(s)
+      <FormattedMessage
+        defaultMessage={msg.list.countItems}
+        values={{countItems:meta.count}}
+        />
     </div>
 
     //const ListActionsRendered = <div className="pull-right">
