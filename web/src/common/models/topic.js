@@ -33,6 +33,7 @@ module.exports = function(Topic) {
   Topic.observe('before save', function normalizeUserInput(ctx, next)
   {
     const currentUser = loopback.getCurrentContext().get('currentUser');
+
     if (ctx.instance) {
       if (ctx.isNewInstance==true) {
         ctx.instance.ownerUserId = currentUser.id;
@@ -84,7 +85,7 @@ module.exports = function(Topic) {
         Topic.app.models.Entity.create({
           name: ctx.instance.summary,
           accessPrivateYn: ctx.instance.accessPrivateYn,
-          owerUserId: ctx.instance.ownerUserId,
+          ownerUserId: ctx.instance.ownerUserId,
           modelClassName: 'Topic',
           modelPk: null,
         }, function (err, entityInstance) {
