@@ -1,4 +1,5 @@
 import './app.styl';
+import '../../less/main.less';
 
 import Component from 'react-pure-render/component';
 import Header from './header.react';
@@ -6,15 +7,16 @@ import React, {PropTypes} from 'react';
 import {mapDispatchToProps, mapStateToProps} from '@este/common';
 import {connect} from 'react-redux';
 
-var io = require('socket.io-client');
+let io = require('socket.io-client');
 
-var mui = require('material-ui-io'),
+let mui = require('material-ui-io'),
   {MenuItem, LeftNav, AppCanvas, AppBar, IconButton, Menu} = mui,
   Icon = mui.FontIcon;
 
-var Colors = mui.Styles.Colors;
-var Typography = mui.Styles.Typography;
-var ThemeManager = new mui.Styles.ThemeManager();
+let Colors = mui.Styles.Colors;
+let Typography = mui.Styles.Typography;
+let ThemeManager = new mui.Styles.ThemeManager();
+let Spacing = require('material-ui/lib/styles/spacing');
 
 import AppSideNav from './components/app-left-nav';
 
@@ -82,24 +84,39 @@ export default class App extends Component {
     }
 
     // Overriding Theme Variables, see http://material-ui.com/#/customization/themes
+    ThemeManager.setSpacing({
+      desktopKeylineIncrement: 58,
+    });
     ThemeManager.setComponentThemes({
       appBar: {
-        color: "#444444",
-        height: 40
+        color: "#FBFBFB",
+        textColor: "#3E3E3E",
+        height: 58,
       },
       raisedButton: {
         primaryColor: '#4b8cf7',
       },
     });
+
   }
 
   render() {
+
+    const currentTheme = ThemeManager.getCurrentTheme();
+
     // Use location pathname to ensure header is rerendered on url change, so
     // links update their active className.
     const {children, ...props} = this.props;
     props.io = this.io;
     const {location: {pathname}, msg, users: {viewer}} = this.props;
 
+
+    let rightElement;
+
+    if(viewer && viewer.username) {
+      // TODO: use avatar instead when available
+      rightElement = <mui.Avatar>{viewer.username.charAt(0)}</mui.Avatar>
+    }
 
     // todo: looks like we may remove `onLeftIconButtonTouchTap` event
     return (
@@ -110,11 +127,16 @@ export default class App extends Component {
           zDepth={0}
           onLeftIconButtonTouchTap={this._onLeftIconButtonTouchTap.bind(this)}
           onLeftIconButtonClick={this._onLeftIconButtonTouchTap.bind(this)}
-         /*iconElementRight={iconElementRight} */
+          iconElementRight={rightElement}
+          style={{
+            borderBottom:'1px solid #E0E0E0'
+          }}
           />
         <AppSideNav ref="leftNav" {...this.props} />
         { /*<Header msg={msg.app.header} {...{viewer, pathname}} /> */ }
-        <div style={{paddingTop:40}}>
+        <div style={{
+          paddingTop:currentTheme.spacing.desktopKeylineIncrement
+          }}>
         {React.cloneElement(children, props)}
         </div>
       </mui.AppCanvas>
