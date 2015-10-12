@@ -66,23 +66,23 @@ var ListActions =  React.createClass({
     }
 
     var dialogActions = [
-      { text: 'BTN_CANCEL', onClick: this._onDialogCancel  },
-      { text: this.props.BUTTON_SUBMIT_LABEL, onClick: this.handleSubmit }
+      { text: this.props.msg.form.button.cancel, onClick: this._onDialogCancel  },
+      { text: this.props.msg.form.button.create, onClick: this.onFormSubmit }
     ];
 
     if(this.props.formFields.loading==true) {
-      //Custom Actions
+      // disable all buttons while form is being processed
       dialogActions = [
         <mui.FlatButton
-            label='BTN_CANCEL'
+            label={this.props.msg.form.button.cancel}
             secondary={true}
-            disabled={false}
+            disabled={true}
             onTouchTap={this._onDialogCancel} />,
         <mui.FlatButton
-            label='BTN_LOADING'
+            label={this.props.msg.form.button.create}
             primary={true}
             disabled={true}
-            onTouchTap={this.handleSubmit} />
+            onTouchTap={this.onFormSubmit} />
       ];
     }
 
@@ -100,21 +100,16 @@ var ListActions =  React.createClass({
     </mui.Dialog>
   },
 
-  /**
-   * new project form submitted
-   */
-  handleSubmit: function(e)
-  {
-    e.preventDefault();
-    this.refs.formView.handleSubmit(e);
-  },
-
   showModelForm: function() {
     this.refs.modelForm.show();
   },
 
   _onDialogCancel:function() {
     this.refs.modelForm.dismiss();
+  },
+
+  onFormSubmit:function(e) {
+    this.refs.formView.onFormSubmit(e)
   }
 });
 
