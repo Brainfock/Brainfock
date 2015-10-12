@@ -66,6 +66,38 @@
       },
       "_selectable": true
     },
+    "logoBackground": {
+      "type": "String",
+      "required": false,
+      "length": 50,
+      "precision": null,
+      "scale": null,
+      "mysql": {
+        "columnName": "logo_background",
+        "dataType": "varchar",
+        "dataLength": 50,
+        "dataPrecision": null,
+        "dataScale": null,
+        "nullable": "Y"
+      },
+      "_selectable": true
+    },
+    "logoIcon": {
+      "type": "String",
+      "required": false,
+      "length": 50,
+      "precision": null,
+      "scale": null,
+      "mysql": {
+        "columnName": "logo_icon",
+        "dataType": "varchar",
+        "dataLength": 50,
+        "dataPrecision": null,
+        "dataScale": null,
+        "nullable": "Y"
+      },
+      "_selectable": true
+    },
     "entityId": {
       "type": "Number",
       "required": false,
@@ -244,7 +276,7 @@
     },
     "contextTopicId": {
       "type": "Number",
-      "required": true,
+      "required": false,
       "length": null,
       "precision": 20,
       "scale": 0,
@@ -582,6 +614,13 @@
       "principalId": "createTopicAccess",
       "permission": "ALLOW",
       "property": "upsert"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "createTopicAccess",
+      "permission": "ALLOW",
+      "property": "updateAttributes"
     }
   ],
   "methods": {}
