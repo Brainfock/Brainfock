@@ -70,7 +70,7 @@ module.exports = function(app) {
   Role.registerResolver('topicEntityAccess', function(role, context, cb) {
 
     var userId = context.accessToken.userId;
-    console.log('[RBAC] Validate access to  operation `'+context.remotingContext.method.name+'` of model `'+context.modelName+'`, user:'+userId)
+    console.log('[RBAC topicEntityAccess] Validate access to  operation `'+context.remotingContext.method.name+'` of model `'+context.modelName+'`, user:'+userId)
     function reject() {
       process.nextTick(function() {
         cb(null, false);
@@ -414,7 +414,7 @@ module.exports = function(app) {
   });
 
   Role.registerResolver('createWikiPage', function(role, context, cb) {
-    console.log('[RBAC] Validate access to  operation `'+context.remotingContext.method.name+'` of model `'+context.modelName+'`')
+    console.log('[RBAC createWikiPage] Validate access to  operation `'+context.remotingContext.method.name+'` of model `'+context.modelName+'`')
     var userId = context.accessToken.userId;
 
     function reject() {
@@ -567,7 +567,7 @@ module.exports = function(app) {
   });
 
   Role.registerResolver('commentEntityAccess', function(role, context, cb) {
-    console.log('[RBAC] Validate access to  operation `'+context.remotingContext.method.name+'` of model `'+context.modelName)
+    console.log('[RBAC commentEntityAccess] Validate access to  operation `'+context.remotingContext.method.name+'` of model `'+context.modelName)
     var userId = context.accessToken.userId;
     //console.log('[topicEntityAccess]: userId='+userId)
     //console.log('context.result',context.remotingContext.result);
@@ -845,11 +845,16 @@ module.exports = function(app) {
    */
   Role.registerResolver('createTopicAccess', function(role, context, cb) {
 
-    console.log('[RBAC] Validate access to  operation `'+context.remotingContext.method.name+'` of model `'+context.modelName)
+
 
     function reject() {
       process.nextTick(function() {
         cb(null, false);
+      });
+    }
+    function accept() {
+      process.nextTick(function() {
+        cb(null, true);
       });
     }
 
@@ -862,8 +867,16 @@ module.exports = function(app) {
     // check access to entity
     var userId = context.accessToken.userId;
 
+    const ownerContainerId = context.remotingContext.args.data.contextTopicId > 0
+      // post/update topic of some other topic (e.g. update `issue` of some `project`)
+      ? context.remotingContext.args.data.contextTopicId
+      // post/update root topic, e.g. update `project` topic
+      : context.remotingContext.args.data.id;
+
+    console.log('[RBAC createTopicAccess] Validate access to  operation `'+context.remotingContext.method.name+'` of model `'+context.modelName+'`:'+ownerContainerId)
+
     app.models.Topic.findOne({where:{
-        id:context.remotingContext.args.data.contextTopicId,
+        id:ownerContainerId,
       }},
       function(err,ContextTopic)
       {
@@ -871,10 +884,11 @@ module.exports = function(app) {
         if (err || !ContextTopic) {
           return reject();
         }
-
         if(ContextTopic.accessPrivateYn !== 1
-          || ContextTopic.ownerUserId == userId)
-          return cb(null, true);
+          || ContextTopic.ownerUserId == userId) {
+          return accept();
+        }
+        else {
 
         // if access is private, check user permissions:
         app.models.EntityAccessAssign.findOne({where:{
@@ -885,12 +899,12 @@ module.exports = function(app) {
           function(errEa,dataEa)
           {
             if (errEa || !dataEa) {
-              return cb(null, false);
+              return reject();
             }
-
             // user has access to context entity:
-            return cb(null, true);
+            return accept();
           });
+        }
       });
   });
 }
