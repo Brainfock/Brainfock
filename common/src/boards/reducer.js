@@ -164,6 +164,9 @@ export default function boardsReducer(state = initialState, action) {
         ;
     }
 
+    case actions.SET_NEW_TOPIC: {
+      return state.set('newTopic', action.payload);
+    }
     case actions.SET_NEW_TOPIC_FIELD: {
       const {name, value} = action.payload;
       return state.setIn(['newTopic', name], value);
@@ -181,6 +184,20 @@ export default function boardsReducer(state = initialState, action) {
     case actions.CREATE_ERROR: {
       return state
         .setIn(['formFields','loading'],false)
+    }
+
+    case actions.SAVE: {
+      return state
+        .setIn(['newTopic','loading'],true)
+    }
+    case actions.SAVE_SUCCESS: {
+      return state
+        .setIn(['newTopic','loading'],false)
+    }
+    case actions.CREATE_ERROR:
+    case actions.SAVE_ERROR: {
+      return state
+        .setIn(['newTopic','loading'],false)
     }
   }
 

@@ -18,7 +18,7 @@
  * @link http://www.brainfock.com/
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
-import {apiGet, apiPost} from '../lib/services';
+import {apiGet, apiPost, apiPut} from '../lib/services';
 
 export const FIND = 'TOPIC_FIND';
 export const FIND_SUCCESS = 'TOPIC_FIND_SUCCESS';
@@ -53,6 +53,7 @@ export const LOAD_FORM_FIELDS = 'TOPIC_LOAD_FORM_FIELDS';
 export const LOAD_FORM_FIELDS_SUCCESS = 'TOPIC_LOAD_FORM_FIELDS_SUCCESS';
 export const LOAD_FORM_FIELDS_ERROR = 'TOPIC_LOAD_FORM_FIELDS_ERROR';
 
+export const SET_NEW_TOPIC = 'SET_NEW_TOPIC';
 export const SET_NEW_TOPIC_FIELD = 'SET_NEW_TOPIC_FIELD';
 export const CREATE = 'TOPIC_CREATE';
 export const CREATE_SUCCESS = 'TOPIC_CREATE_SUCCESS';
@@ -230,6 +231,13 @@ export function setNewTopicField({target: {name, value}}) {
   };
 }
 
+export function setNewTopic(data) {
+  return {
+    type: SET_NEW_TOPIC,
+    payload: data
+  };
+}
+
 export function create(data) {
 
   const endpoint = 'topics';
@@ -241,7 +249,32 @@ export function create(data) {
       CREATE_ERROR
     ],
     payload: {
-      promise: apiPost(fetch, endpoint, data)
+      promise: apiPut(fetch, endpoint, data)
+        .catch(response => {
+          throw response;
+        })
+      // TODO: add validation
+      //promise: validateForm(validate, fields)
+      //  .then(() => post(fetch, endpoint, fields))
+      //  .catch(response => {
+      //    throw response;
+      //  })
+    }
+  });
+}
+
+export function save(id, data) {
+
+  const endpoint = 'topics/'+id;
+
+  return ({fetch, validate}) => ({
+    types: [
+      SAVE,
+      SAVE_SUCCESS,
+      SAVE_ERROR
+    ],
+    payload: {
+      promise: apiPut(fetch, endpoint, data)
         .catch(response => {
           throw response;
         })
