@@ -55,12 +55,12 @@ var PageWithNav = React.createClass({
         position: 'relative'
       },
       secondaryNav: {
-        borderTop: 'solid 1px ' + Colors.grey300,
+        borderBottom: 'solid 1px ' + Colors.grey300,
         overflow: 'hidden'
       },
       content: {
         boxSizing: 'border-box',
-        padding: Spacing.desktopGutter + 'px',
+        //padding: Spacing.desktopGutter + 'px',
         maxWidth: (Spacing.desktopKeylineIncrement * 20) + 'px'
       },
       secondaryNavWhenMedium: {
@@ -118,17 +118,18 @@ var PageWithNav = React.createClass({
     let styles = this.getStyles();
     return (
         <div style={styles.root}>
+          <div style={styles.secondaryNav}>
+            <mui.Menu
+              ref="menuItems"
+              zDepth={0}
+              menuItems={this.props.menuItems}
+              selectedIndex={this._getSelectedIndex()}
+              onItemTap={this._onMenuItemClick} />
+          </div>
           <div style={styles.content}>
             {React.cloneElement(children, passProps)}
           </div>
-          <div style={styles.secondaryNav}>
-            <mui.Menu
-                ref="menuItems"
-                zDepth={0}
-                menuItems={this.props.menuItems}
-                selectedIndex={this._getSelectedIndex()}
-                onItemTap={this._onMenuItemClick} />
-          </div>
+
         </div>
     );
   }
