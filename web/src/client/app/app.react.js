@@ -110,7 +110,6 @@ export default class App extends Component {
     props.io = this.io;
     const {location: {pathname}, msg, users: {viewer}} = this.props;
 
-
     let rightElement;
 
     if(viewer && viewer.username) {
@@ -143,7 +142,7 @@ export default class App extends Component {
     );
   }
 
-  _onLeftIconButtonTouchTap (test,two) {
+  _onLeftIconButtonTouchTap () {
     if(this.refs.leftNav)
       this.refs.leftNav.toggle();
   }

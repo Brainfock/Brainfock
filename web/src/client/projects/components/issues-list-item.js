@@ -37,9 +37,6 @@ export default class Todo extends Component {
     if(todo.accessPrivateYn==1) {
       icon = (<i className="fa fa-eye-slash"></i>);
     }
-    else {
-      icon='test';
-    }
     return <mui.ListItem
       primaryText={
           <div>
