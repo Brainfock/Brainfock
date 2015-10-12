@@ -38,6 +38,7 @@ module.exports = function(Topic) {
         ctx.instance.ownerUserId = currentUser.id;
       }
     }
+
     if(ctx.instance && ctx.instance.namespace && !ctx.instance.workspaceId)
     {
       // make sure workspace exists
@@ -76,12 +77,14 @@ module.exports = function(Topic) {
    */
   Topic.observe('before save', function normalizeUserInput(ctx, next)
   {
-    if (ctx.instance) {
-      if (ctx.isNewInstance==true) {
+    if (ctx.instance)
+    {
+      if (ctx.isNewInstance==true)
+      {
         Topic.app.models.Entity.create({
           name: ctx.instance.summary,
           accessPrivateYn: ctx.instance.accessPrivateYn,
-          owerUserId: ctx.instance.owerUserId,
+          owerUserId: ctx.instance.ownerUserId,
           modelClassName: 'Topic',
           modelPk: null,
         }, function (err, entityInstance) {
@@ -93,6 +96,11 @@ module.exports = function(Topic) {
           next();
         });
       }
+      else {
+        next();
+      }
+    }else {
+      next();
     }
   });
 
