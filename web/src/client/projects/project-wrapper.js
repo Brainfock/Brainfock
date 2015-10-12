@@ -74,7 +74,8 @@ class Layout extends Component{
         )
       },
       { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}/issues`, text: 'Issues'},
-      { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}/users`, text: 'Users'}
+      { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}/users`, text: 'Users'},
+      { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}/settings`, text: 'Settings'},
     ];
   }
 };

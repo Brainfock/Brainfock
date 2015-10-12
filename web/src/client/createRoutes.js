@@ -19,10 +19,10 @@ export default function createRoutes(getState) {
     }
   }
 
- /* <Route path=“/boards”>
-  <Route path=“/“> render list </Route>
-    <Route path=“/:id”> render id </Route>
-      <Route path=“/:id/todos”>.. </Route>
+ /* <Route path=ï¿½/boardsï¿½>
+  <Route path=ï¿½/ï¿½> render list </Route>
+    <Route path=ï¿½/:idï¿½> render id </Route>
+      <Route path=ï¿½/:id/todosï¿½>.. </Route>
       </Route>*/
 
   /*
@@ -58,6 +58,7 @@ export default function createRoutes(getState) {
         <Route component={require('./projects/issues')} path="/:namespace/:board_id/milestones" />
         <Route component={require('./projects/issues')} path="/:namespace/:board_id/deals" />
         <Route component={require('./projects/users')} path="/:namespace/:board_id/users" />
+        <Route component={require('./projects/settings')} path="/:namespace/:board_id/settings" />
       </Route>
 
       <Route component={NotFound} path="*" />
