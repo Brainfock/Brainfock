@@ -34,6 +34,8 @@ export default Record({
   groupId:'',
   dueDate:'',
   accessPrivateYn:'',
+  logoIcon:'',
+  logoBackground:'',
 
   // included via relations
   type: {},
