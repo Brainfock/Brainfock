@@ -99,7 +99,38 @@ export default {
       button: {
         create: 'Create',
         cancel: 'Cancel',
+        save: 'Save',
+      },
+      label: {
+        accessPrivate: 'Available to invited users only',
+        summary: 'Summary (name)',
+        text: 'Project description',
+        logoIcon: 'Project icon',
+        logoBackground: 'Project background color',
+      },
+      hint: {
+        summary: 'Try to keep it short',
+        text: 'Markdown markup supported',
+        logoIcon: 'Font Awesome icon name',
+        logoBackground: 'Logo Background',
+      },
+      section: {
+        main: 'Settings',
+        general: 'Project details',
+        access: 'Access settings',
+        danger: 'Danger zone',
+      },
+      deleteItem: {
+         button: 'Delete this project',
       }
+      //summary: {
+      //  label: 'Available to invited users only',
+      //  hint: 'Summary (name)',
+      //},
+      //accessPrivate: {
+      //  label: 'Available to invited users only',
+      //  hint: 'Summary (name)',
+      //},
     }
   },
 };
