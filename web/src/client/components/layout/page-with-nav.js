@@ -28,6 +28,7 @@ let { Spacing, Colors } = Styles;
 let { StyleResizable, StylePropable } = Mixins;
 
 import * as mui from 'material-ui-io';
+//const Events = mui.Utils.Events;
 
 /**
  * Page With Navigation, based on material-ui's PageWithNav
@@ -45,6 +46,25 @@ var PageWithNav = React.createClass({
       menuItems:[]
     }
   },
+
+  //componentDidMount() {
+  //  this._updateDeviceWith();
+  //  if (!this.manuallyBindResize) this._bindResizeWidth();
+  //},
+  //componentWillUnmount() {
+  //  this._unbindResizeWidth();
+  //},
+  //_updateDeviceWith() {
+  //  let width = window.innerWidth;
+  //  this.setState({deviceWidth: width});
+  //},
+  //_bindResizeWidth() {
+  //  Events.on(window, 'resize', this._updateDeviceWidth);
+  //},
+  //_unbindResizeWidth() {
+  //  Events.off(window, 'resize', this._updateDeviceWidth);
+  //},
+
   getStyles(){
     let subNavWidth = Spacing.desktopKeylineIncrement * 3 + 'px';
     let styles = {
@@ -61,7 +81,8 @@ var PageWithNav = React.createClass({
       content: {
         boxSizing: 'border-box',
         //padding: Spacing.desktopGutter + 'px',
-        maxWidth: (Spacing.desktopKeylineIncrement * 20) + 'px'
+        // removed maxWidth - this component is used as full-width container with side nav
+        //maxWidth: (Spacing.desktopKeylineIncrement * 20) + 'px'
       },
       secondaryNavWhenMedium: {
         borderTop: 'none',
