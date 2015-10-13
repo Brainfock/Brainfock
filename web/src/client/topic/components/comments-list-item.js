@@ -4,7 +4,7 @@ var React = require('react'),
     Link = Router.Link,
     Navigation = Router.Navigation,
 
-    mui = require('material-ui');
+    mui = require('material-ui-io');
 
 var bs = require('react-bootstrap'),
     {ButtonToolbar, ButtonGroup, Button, Glyphicon} = bs;
@@ -42,9 +42,7 @@ module.exports = React.createClass({
       <div className="pull-left" style={{width: '70px'}}>
         <div className="pull-right">
 
-          <img src={this.props.model.user.userpic} />
-
-
+          <mui.Avatar>{this.props.model.user.username.charAt(0)}</mui.Avatar>
 
         </div>
 
