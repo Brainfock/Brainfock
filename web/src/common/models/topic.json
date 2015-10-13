@@ -66,6 +66,22 @@
       },
       "_selectable": true
     },
+    "wfStage": {
+      "type": "String",
+      "required": false,
+      "length": 0,
+      "precision": null,
+      "scale": null,
+      "mysql": {
+        "columnName": "wf_stage",
+        "dataType": "varchar",
+        "dataLength": 0,
+        "dataPrecision": null,
+        "dataScale": null,
+        "nullable": "Y"
+      },
+      "_selectable": true
+    },
     "logoBackground": {
       "type": "String",
       "required": false,
