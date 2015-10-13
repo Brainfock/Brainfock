@@ -28,7 +28,7 @@ var Issues = React.createClass({
     // pull all topics (projects) from server - this list is filtered by client
     if(process.env.IS_BROWSER==true) {
       // load info about current group
-      this.props.topic_actions.loadTopicGroup('board', {}/*, this.props.parentModel*/);
+      this.props.topic_actions.loadTopicGroup(this.props.groupKey || 'board', {}/*, this.props.parentModel*/);
       // load info about CURRENT BOARD
       this.props.topic_actions.loadCurrent(this.props.params.board_id);
       // load TOPICS of this BOARD
