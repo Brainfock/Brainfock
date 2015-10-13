@@ -31,6 +31,9 @@ var Issues = React.createClass({
     return bcComponent.props.model.attributes.summary
   },
 
+  contextTypes: {
+    muiTheme: React.PropTypes.object,
+  },
 
 
   //getInitialState: function() {
@@ -115,14 +118,16 @@ var Issues = React.createClass({
      />*/
     return (
       <div>
-      <mui.Card>
-        {this.props.boards.viewTopic && <mui.CardTitle title={this.props.boards.viewTopic.summary}/>}
-        <mui.CardText>
-        {this.props.boards.viewTopic.text}
-        </mui.CardText>
+        <mui.Card>
+          {this.props.boards.viewTopic && <mui.CardTitle title={this.props.boards.viewTopic.summary}/>}
+          <mui.CardText>
+          {this.props.boards.viewTopic.text}
+          </mui.CardText>
 
-      </mui.Card>
-        {this.comments()}
+        </mui.Card>
+        <div style={{paddingTop:this.context.muiTheme.spacing.desktopGutter}} className="">
+          {this.comments()}
+        </div>
       </div>
     );
 /*
