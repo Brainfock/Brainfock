@@ -26,11 +26,11 @@ export default class List extends Component {
     let Item = this.props.itemComponent;
 
     return (
-      <ol className="todos">
+      <div>
         {list.map(todo =>
           <Item actions={actions} group={group} board={board} key={todo.id} todo={todo} history={this.props.history} params={this.props.params} />
         )}
-      </ol>
+      </div>
     );
   }
 
