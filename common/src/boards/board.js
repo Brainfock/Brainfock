@@ -28,6 +28,7 @@ export default Record({
   summary: '',
   text: '',
   entityId:'',
+  contextTopicNum:'',
   contextTopicKey:'',
   contextTopicId:'',
   typeId:'',
