@@ -33,7 +33,7 @@ export default class ProjectIssues extends Component{
     super(props);
     this.state = {
       loading:true,
-      filters:[],
+      filters:props.location.query.filter || null,
       count:0,
       filtersOpen:false,
       searchQuery:props.location.query.query
@@ -44,10 +44,19 @@ export default class ProjectIssues extends Component{
     // pull all topics (projects) from server - this list is filtered by client
     if(process.env.IS_BROWSER==true) {
       // load TOPICS of this BOARD
-      this.props.topic_actions.find('issue', {},this.props.params.board_id);
-      this.props.topic_actions.count('issue', {},this.props.params.board_id);
+      this.props.topic_actions.find('issue', this.state.filters, this.props.params.board_id);
+      this.props.topic_actions.count('issue', this.state.filters, this.props.params.board_id);
       this.props.topic_actions.loadFilters('issue', {},this.props.params.board_id);
       this.props.topic_actions.loadTopicGroup('issue', {}/*, this.props.parentModel*/);
+    }
+  }
+
+  componentWillUpdate(newProps) {
+    if(process.env.IS_BROWSER==true) {
+      if(newProps.location.query !== this.props.location.query) {
+        this.props.topic_actions.find('issue', (newProps.location.query.filter || null), this.props.params.board_id);
+        this.props.topic_actions.count('issue', (newProps.location.query.filter || null), this.props.params.board_id);
+      }
     }
   }
 
@@ -55,14 +64,6 @@ export default class ProjectIssues extends Component{
   {
     const {board, list, meta, listFilters, newTopic, formFields} = this.props.boards;
     const msg = this.props.msg.topics;
-    if(this.props.boards.meta.loading==true)
-    {
-      return <div className="row">
-        <div style={{marginTop:'5%'}} className="col-md-4 col-md-offset-4">
-          <h1><Loader />...</h1>
-        </div>
-      </div>
-    }
 
     let filterToggleButton = <mui.IconButton iconClassName="fa fa-filter fa-lg" tooltip="Filter" onClick={this.toggleFilters.bind(this)} />
     let filterStyles = {
@@ -110,19 +111,39 @@ export default class ProjectIssues extends Component{
         />
     </div>
 
-    //const ListActionsRendered = <div className="pull-right">
-    //  <Form
-    //    containerStore={board}
-    //    formFields={formFields}
-    //    actions={this.props.topic_actions}
-    //    />
-    //  {meta.count} item(s)
-    //</div>
-
     let ListView = require('../boards/boards.react');
     let ListViewItem = require('./components/issues-list-item');
 
     let Filters = require('../components/UISimpleFilters');
+
+    const iconButtonElement = <mui.IconButton iconClassName="fa fa-list-alt" tooltip="Filter presets"/>;
+    let MenuItem = require('material-ui-io/lib/menus/menu-item');
+
+    let content;
+    if(this.props.boards.meta.loading==true)
+    {
+      content = <div className="row">
+        <div style={{marginTop:'5%'}} className="col-md-4 col-md-offset-4">
+          <h1><Loader />...</h1>
+        </div>
+      </div>
+    } else {
+      content = (
+        <ListView
+          list={this.props.boards.list}
+          actions={this.props.topic_actions}
+          msg={this.props.msg.todos}
+          history={this.props.history}
+          itemComponent={ListViewItem}
+          params={this.props.params}
+
+          /* who's team do we want to see
+          containerStore={this.props.topic}
+          /!* message if list is empty /
+          EmptyComponent={EmptyComponent}*/
+          />
+      );
+    }
 
     return (
       <div className="bfk-browse">
@@ -139,35 +160,37 @@ export default class ProjectIssues extends Component{
           {filterToggleButton}
 
          <Filters ref="filters"
-                   containerStore={board}
-                   filters={listFilters}
-                   actions={this.props.topic_actions}
-                   onApply={this.onApplyFilters}
-                   preselected={this.props.location.query}
-                   style={filterStyles}
+           containerStore={board}
+           filters={listFilters}
+           actions={this.props.topic_actions}
+           onApply={this.onApplyFilters}
+           preselected={this.props.location.query}
+           style={filterStyles}
+           header={
+           <div className="pull-left">
+             <mui.IconMenu iconButtonElement={iconButtonElement}>
+               <MenuItem primaryText="All open" onClick={
+                function() {
+                  this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStatus][]=open`);
+                }.bind(this)
+               } />
+               <MenuItem primaryText="All closed" onClick={
+                function() {
+                  this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStatus][]=closed`);
+                }.bind(this)
+               } />
+               <MenuItem primaryText="Backlog" onClick={
+                function() {
+                  this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStage][]=Backlog`);
+                }.bind(this)
+               } />
+             </mui.IconMenu>
+             </div>
+           }
             />
         </div>
         <div className="clearfix">
-        <ListView
-          list={this.props.boards.list}
-          actions={this.props.topic_actions}
-          msg={this.props.msg.todos}
-          history={this.props.history}
-          itemComponent={ListViewItem}
-          params={this.props.params}
-
-        /* who's team do we want to see
-        containerStore={this.props.topic}
-        /!* message if list is empty /
-        EmptyComponent={EmptyComponent}
-
-        ListComponent={ListComponent}
-        ListItemComponent={ListItemComponent}
-
-        Actions={TopicActions}
-        Store={TopicStore}
-        CursorStore={TopicCursorStore}*/
-        />
+          {content}
           </div>
       </div>
     )
