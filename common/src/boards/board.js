@@ -37,6 +37,7 @@ export default Record({
   accessPrivateYn:'',
   logoIcon:'',
   logoBackground:'',
+  wfStage:'',
 
   // included via relations
   type: {},
