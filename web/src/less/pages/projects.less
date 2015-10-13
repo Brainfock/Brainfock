@@ -1,0 +1,56 @@
+.bfk-projects {
+
+  .main-container {
+    background-color: rgb(235, 235, 235);
+  }
+
+  .list-wrapper {
+
+    ul.list{
+
+    }
+
+
+    .item-wrapper {
+      line-height: 25px;
+      display: inline-block;
+      vertical-align: top;
+      text-align: left;
+      position: relative;
+
+      .item {
+        margin: 0 20px 20px 0;
+
+        /* greater-then sighn is important, or else it will break dialodgs, that may be inside of item: */
+        > .paper-item{
+          width: 250px;
+          height: 110px;
+          padding: 19px;
+
+          background-color: rgb(255, 255, 255);
+          /*border: 1px solid rgb(214, 214, 214);
+          box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+          -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+          -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05); */
+
+
+            padding: 19px;
+
+            .item-controlls{
+              opacity: 0;
+              position: absolute;
+              right: 30px;
+              top: 18px;
+
+            }
+
+        }
+      }
+
+      :hover .item-controlls{
+        opacity: 1 !important;
+      }
+    }
+
+  }
+}
