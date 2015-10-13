@@ -1,11 +1,62 @@
 Changelog
 =========
 
+Summary of changes in Brainfock project code. Changelog entries usually are split into `Features`, `Fixes` and `Style tweaks` sections.
+When makes sense, items in these section may be subdivided by application component (e.g. `Server`, `API`, `iOS Client`).
+
+## 13 Oct Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.19.0:
+
+### Features
+
+##### API
+* Add new topic REST API endpoint `api/topics/:contextTopicKey/formFields`
+
+  Load fields for topic `create` form screen. Available fields are based on topic type, group and group parent (if any), effective screen scheme (currently supports default scheme), and screen configuration (screen_fields in configured order). Currently, only system fields are available, but custom fields are in TODO.
+
+
+* Find topics by their contextTopicKey, eg. /api/topics/BF
+* REST API `GET topics/count` (filters supported via `?where[prop]=value`)
+* Allow to access related topic of a topic (`api/topics/someTopic123/topics`), respecting access control (find & count methods)
+
+##### Server
+* Introduce `Workspaces` back into Brainfock. Workspaces have namespace, owner and permission settings just like any other topic
+* Improve server rendering: fetch data based on components' `resolveData`` method (implemented for `Wiki` pages)
+* Extend `Topics` database table view to include `wfStage` & `wfStatus` values
+* Populate `Entity` for `Topic` on creation
+* Production-ready datasources config (ENV's must be set, see tech readme)
+* Wiki: add guest read access, provide document title (SEO), improve page save & update (backend)
+* API to load available filters for topics group
+* Add lacking models (TopicsGroup, Schemes etc.)
+* Store configuraiton fo topic group schemes & fields schemes in Database
+
+##### Web client
+* Project settings page
+* Project issues page
+* Add bower config
+* Add Google Analytics to environment-friendly config
+* Add simple form factory component to build basic forms' UIs (based on `api/topics/*/formFields` data)
+* Add form for creating new topic (in project/issues)
+* Wiki: recognize internal links and navigate with react-router on a client-side
+* Simple form factory for generating forms based on props
+* setup catching IO comments once per app
+
+### Fixes
+
+*  API does not return contentRendered after `updateAttributes` operation (disappearing text after saving existing `WikiPage`)
+* Fix creating record of a new wiki page when it had namespace in it
+* Fix assets path for statics
+
+### Style tweaks
+#### Web client
+* Adjust grids and lists of topics & topic issues
+* Switch top navigation bar background from black to light grey
+* Add LESS stylesheets to project (some may need a cleanup)
+* Remove unnecessary padding in `page-with-nav` component and make it full-width
+
 ## 28 Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.18.0:
 + Basic boards module, topics component
 + Topic/entity comments (with sockets)
 + Client API service helper
-
 * fix infinite loop bug
 
 ## 26 Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.17.0:
@@ -19,10 +70,13 @@ Changelog
 + `@checkAuth` decorator, see `client/components/check-auth.js`
 * bump version
 
-## Changelog for older version of Brainfock, before `PHP -> Node.js` migration.
+
+
+# Changelog for older version of Brainfock, before `PHP -> Node.js` migration.
+
 
 > Please note: Many of backend features available in versions under 0.15.* (PHP/Yii backend) may not be available in newer version of Brainfock app.
-> These entries are left here for history & todo reference. Some of features in version under 0.16 must be ported to new app.
+> These entries are left here for history and as a "todo"" reference. Some of features in version under 0.16 must be ported to new app.
 
 ## Sergii Gamaiunov <hello@webkadabra.com> v0.15.0:
 + Workflows, Workflow operations and stages (database tables, PHP backend to handle workflow transitions)
@@ -235,7 +289,7 @@ Changelog
 ## Sergii Gamaiunov <hello@webkadabra.com> v0.7.8:
 + UserEventWatch model
 * allow for bigger project description
-* improve tickets form (add visual ø³ãôä maxlength counter)
+* improve tickets form (add visual ï¿½ï¿½ï¿½ï¿½ï¿½ maxlength counter)
 * improve dock form l10n
 * do not render details panel on model sync - it interrupts inline editing flow
 * css/ui cleanup & custom TODC bootstrap adjustment
