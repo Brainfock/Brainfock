@@ -20,7 +20,7 @@
  */
 
 let React = require('react');
-import StylePropable from 'material-ui';
+import StylePropable from 'material-ui-io';
 
 /**
  * AppContentCanvas is an attempt to keep code in KISS

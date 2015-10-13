@@ -22,7 +22,7 @@
 var React = require('react'),
     Router = require('react-router'),
     RouteHandler = Router.RouteHandler,
-    mui = require('material-ui'),
+    mui = require('material-ui-io'),
     Menu = mui.Menu,
     Loader = require('../../components/Loader');
 
