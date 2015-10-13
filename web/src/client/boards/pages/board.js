@@ -1,7 +1,7 @@
 var React = require('react');
 
 var Router = require('react-router'),
-    { Navigation, RouteHandler } = Router,
+    { Navigation, RouteHandler, Link } = Router,
     mui = require('material-ui-io');
 
 
@@ -29,13 +29,14 @@ var Issues = React.createClass({
     if(process.env.IS_BROWSER==true) {
       // load info about CURRENT BOARD
       this.props.topic_actions.loadCurrent(this.props.params.board_id);
-      // load TOPIC of this BOARD
+      // load TOPICS of this BOARD
       this.props.topic_actions.find(this.props.groupKey || 'board_topic', {},this.props.params.board_id);
     }
   },
 
   propTypes : {
-      children: React.PropTypes.any
+    children: React.PropTypes.any,
+    boards: React.PropTypes.isRequired,
   },
 
 
@@ -44,6 +45,8 @@ var Issues = React.createClass({
    */
   render: function()
   {
+    const {boards:{group}} = this.props;
+
     //return <AppContentCanvas header={
       //  <h4 className="pull-left"><Loader />...</h4>
       //}/>
@@ -85,13 +88,17 @@ var Issues = React.createClass({
 
 
     const board_title = this.props.boards.board
-      ? (this.props.boards.board.loading === true ? <h2>Loading...</h2> : <h3>{this.props.boards.board.summary}</h3>)
+      ? (
+          this.props.boards.board.loading === true
+            ? <h3>Loading...</h3>
+            : <h4><Link to={`/boards`}>{group.name}</Link> > {this.props.boards.board.summary}</h4>
+        )
       : <h1>Loading...</h1>;
 
     return  <AppContentCanvas>
-
-      {board_title}
-
+      <div className="col-lg-8 col-lg-offset-2 col-md-9 col-md-offset-1 clearfix">
+        {board_title}
+      </div>
       {this.content()}
     </AppContentCanvas>
   },
@@ -106,33 +113,32 @@ var Issues = React.createClass({
     if(this.props.params.id){
 
       const {children, ...passProps} = this.props;
-      return <div>{React.cloneElement(children, passProps)}</div>
-
+      return (
+        <div className="col-lg-8 col-lg-offset-2 col-md-9 col-md-offset-1">
+          {React.cloneElement(children, passProps)}
+        </div>
+      )
       //return <Topic {...this.props} />
       //return <div>{React.cloneElement(this.props.children, this.props)}</div>
     }
     else {
-      return <ListView
+      return (
+        <div className="col-lg-8 col-lg-offset-2 col-md-9 col-md-offset-1">
+        <ListView
+          list={this.props.boards.list}
+          actions={this.props.topic_actions}
+          msg={this.props.msg.todos}
+          history={this.props.history}
+          itemComponent={ListViewItem}
+          params={this.props.params}
 
-        list={this.props.boards.list}
-        actions={this.props.topic_actions}
-        msg={this.props.msg.todos}
-        history={this.props.history}
-        itemComponent={ListViewItem}
-        params={this.props.params}
-
-        /* who's team do we want to see
-        containerStore={this.props.topic}
-        /!* message if list is empty /
-        EmptyComponent={EmptyComponent}
-
-        ListComponent={ListComponent}
-        ListItemComponent={ListItemComponent}
-
-        Actions={TopicActions}
-        Store={TopicStore}
-        CursorStore={TopicCursorStore}*/
-        />
+          /* who's team do we want to see
+          containerStore={this.props.topic}
+          /!* message if list is empty /
+          EmptyComponent={EmptyComponent} */
+          />
+        </div>
+      )
     }
   }
 
