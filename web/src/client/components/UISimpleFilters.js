@@ -51,6 +51,7 @@ var UISimpleFilters = React.createClass({
       preselected:{},
       onApply: function(selectedFilters) {
       },
+      header:null,
     }
   },
 
@@ -88,6 +89,7 @@ var UISimpleFilters = React.createClass({
     let styles = this.props.style || {};
     return (
       <div style={styles} className="clearfix">
+        {this.props.header}
         {filters.map(filter =>
           this.renderItem(filter)
         )}
