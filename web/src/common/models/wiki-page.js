@@ -148,6 +148,14 @@ module.exports = function(WikiPage)
     }
   });
 
+  WikiPage.afterRemote( '*.updateAttributes', function( ctx, modelInstance, next) {
+    if(modelInstance) {
+      modelInstance.applyContentParsers(next)
+    } else {
+      next();
+    }
+  });
+
   /*WikiPage.observe('loaded', function (ctx, next)
   {
       ctx.instance.contentRendered = 'TEST';
@@ -212,6 +220,39 @@ module.exports = function(WikiPage)
       return callback.promise;
     }
   });
+
+  WikiPage.prototype.applyContentParsers = function (next)
+  {
+    const modelInstance = this;
+
+    if(modelInstance.namespace)
+      modelInstance.pageUid = modelInstance.namespace+':'+modelInstance.pageUid;
+
+    // This does work:
+    marked(modelInstance.content, {
+      renderer: new marked.Renderer(),
+      gfm: true,
+      tables: true,
+      breaks: false,
+      pedantic: false,
+      sanitize: true,
+      smartLists: true,
+      smartypants: false
+    }, function(err, content) {
+      if (err) throw err;
+
+      modelInstance.contentRendered = content;
+
+      // get links
+      modelInstance.getWikiLinks(content, function(links) {
+        modelInstance.replaceWikiLinks(content, links, function(processedContent) {
+          modelInstance.contentRendered =  processedContent;
+          return next();
+        });
+
+      });
+    });
+  }
 
   /**
    * Gets info about all wiki-links found in text
