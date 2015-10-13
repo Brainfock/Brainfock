@@ -1,0 +1,188 @@
+@import "dirty.less";
+/* Bootstrap 3: */
+//@import "~bootstrap/less/mixins.less";
+//@import "bootstrap.less";
+//@import "~todc-bootstrap/less/todc-bootstrap.less";
+
+//@import "~bootstrap/less/mixins.less";
+@import "~bootstrap/less/bootstrap.less";
+//@import "todc-bootstrap.less";
+
+/* font-awesome: */
+@import "~font-awesome/less/font-awesome.less";
+
+/* Bootstrap 3 Material: */
+//@import "~bootstrap-material-design/less/material.less";
+
+
+@import "./mixins.less";
+
+/* material-ui */
+
+//@import "~material-ui/src/less/components.less";
+//
+//
+///* hightlight.js for syntax highlighting */
+////@import (less) "monokai_sublime.css";
+@import (less) "github.css";
+@import (less) "custom-variables.less";
+
+/*
+@import "color-palette.less";
+@import "component-info.less";
+
+@import "pages/home-contribute.less";
+@import "pages/home-features.less";
+@import "pages/home-page-hero.less";
+@import "pages/home-purpose.less";
+@import "pages/page-with-nav.less";
+@import "pages/components/buttons.less";
+@import "pages/components/icon.less";
+@import "pages/components/paper.less";
+*/
+
+//@import "footer.less";
+//@import "layout/full-width-section.less";
+//@import "pages/get-started-page.less";
+
+// Brainfock
+@import "pages/data-browse.less";
+@import "pages/wiki.less";
+@import "components/notifications.less";
+//@import "components/dropdown.less";
+
+
+
+h1,h2,h3,h4,h5 {
+  font-family: "Segoe UI Light","Helvetica Neue","Segoe UI","Segoe WP",sans-serif;
+  text-rendering: optimizelegibility;
+}
+
+a {
+  color: @accent-1-color;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* App Specific Styles */
+.mui-app-canvas {
+
+  height: 100%;
+
+  .mui-app-bar {
+    .github-icon-button {
+      float: right;
+      margin-right: -16px;
+    }
+  }
+
+  .mui-app-bar {
+
+    .user-dropdown-menu.mui-drop-down-menu:not(.mui-open):not(:hover):not(:focus) {
+     color: white
+    }
+
+    .wkd-dropdown-icon:not(.mui-open) {
+       color: white
+    }
+    .wkd-dropdown-icon{
+       float:right;
+      margin-top: 22px;
+
+    }
+
+    .notifications-dropdown .mui-menu-item {
+      width: 400px
+    }
+    .user-panel-icon-button.mui-icon {
+      color: #fff;
+    }
+    .mui-drop-down-menu.mui-open
+    .mui-menu-label .user-panel-icon-button.mui-icon {
+      color: #000;
+    }
+
+    .user-dropdown-menu.mui-drop-down-menu {
+      float: right;
+      margin-top: 8px;
+      font-size: 18px;
+    }
+  }
+}
+
+.logo {
+  cursor: pointer;
+
+  letter-spacing: 0;
+  font-size: 24px;
+  font-weight: 400;
+  color:#fff;
+
+  line-height: @app-bar-height;
+
+  background-color: @primary-1-color;
+  padding-left: @desktop-gutter;
+  padding-top: 0;
+  margin-bottom: @desktop-gutter-mini;
+  margin-bottom: 5px;
+
+  background-image: url(/assets/img/logo-small-black.png);
+  background-position: 10% 53%;
+  background-repeat: no-repeat;
+  padding-left: 59px;
+}
+
+.baseline-grid {
+  //background-image: url('build/images/baseline-20px-grid.gif');
+}
+
+.code-example {
+  background-color: @white;
+  margin-bottom: 32px;
+
+  .example-label {
+
+    display: inline-block;
+    text-transform: uppercase;
+
+  }
+
+  .example-block,
+  .code-block {
+    padding: 20px;
+  }
+
+  .code-block {
+    border-top: solid 1px #ccc;
+    border-radius:0 0 2px 2px;
+  }
+}
+
+.example-menu {
+  width: (64px * 4);
+}
+
+.example-menu-nested {
+  width: (64px * 3);
+}
+
+.ui-alert-link, li.ui-alert-link>a {
+  color: #ff6e39 !important;
+}
+@import "pages/components/event-feed.less";
+
+// TODO: move out to separate file
+.stats {
+  text-align: center;
+  .prop{
+    display: inline-block;
+    border: 1px solid #E5E5E5;
+    font-family: monospace;
+    font-size: 75%;
+    vertical-align: baseline;
+    padding: .1em .3em .2em;
+  }
+}

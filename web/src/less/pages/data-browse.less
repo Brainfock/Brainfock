@@ -1,0 +1,206 @@
+/**
+ * Styles for browsing list of projects/items etc.
+ *
+ * @author sergii gamaiunov <hello@webkadabra.com>
+ * @copyright Brainfock
+ */
+
+.app-content-canvas {
+  //padding-top: @app-bar-height;
+
+  .app-sidebar {
+    width: 189px;
+    position: fixed;
+    top: 47px;
+    bottom: 0;
+    background: #FAFAFA;
+    left: 0;
+    z-index: 5;
+
+    padding: 10px 0 0 10px;
+
+    .nav-tabs>li.active>a {
+      border:none;
+    }
+
+    .section-name {
+      //margin-top: 0;
+
+    }
+  }
+
+  .app-content {
+    width: 100%;
+    .app-content-inner {
+      left: auto;
+      padding-left: 189px;
+      position: relative;
+      right: auto;
+      bottom: auto;
+      top: 0;
+      border-left: none;
+      height: 100%;
+    }
+  }
+}
+
+.bfk-browse {
+  .page-header {
+    padding: 15px;
+    background-color: #FDFDFD;
+    
+    // Bootstra 3 adds margins by default:
+    margin:0;
+    
+    h2 {
+      padding: 0;
+      margin: 0;
+      font-size: 32px;
+      line-height: 30px;
+    }
+    .clearfix();
+  }
+  // looking for a balance?
+  .page-header.center,
+  .center {
+    text-align: center;
+  }
+
+  .list-wrapper {
+    ul.list{}
+    .item-wrapper {
+      .item {
+
+        position: relative;
+        .controls {
+          position: absolute;
+          top: 10px;
+          right: 20px;
+        }
+      }
+    }
+  }
+
+  /** Select 2 look */
+  // make filters apart from each other
+  .Select {
+    margin-right: 5px;
+  }
+  .Select-placeholder {
+    padding-left:0;
+  }
+  .Select-control {
+    padding: 8px 52px 4px 0;
+
+    // Same as other Material-ui elements
+    font-size: 16px;
+  }
+  .Select.is-multi .Select-control {
+    padding: 0 52px 0 0;
+    margin-right: 5px;
+  }
+
+  .Select-control {
+    background-color: #ffffff;
+    background-color: transparent;
+    border-color: #E0E0E0;
+    border-color: #BFBFBF;
+    border-width: 0 0 1px 0;
+    border-radius: 0;
+  }
+  .Select-item-label {
+   background-color: #DAE4F6;
+    border-color: #DAE4F6;
+    padding: 1px 0 1px 5px;
+  }
+  .Select-item {
+    background-color: #DAE4F6;
+    border: 1px solid #DAE4F6;
+    color: #222;
+    font-size: 1em;
+    margin: 2px 2px 2px 0;
+  }
+  .Select-item-icon {
+    padding: 2px 6px 1px 6px;
+    float: right;
+    border: none;
+  }
+  .Select-option.is-focused {
+    background-color: #EEE;
+    color: #333333;
+  }
+}
+
+@import "project.less";
+@import "projects.less";
+
+
+.bfk-issues {
+  
+  .detailSticky {
+    position: fixed;
+    right: 0;
+    left:59%; // roughly matches grid size
+    top:64px;
+  }
+  
+  .list-wrapper {
+    ul.list{
+      padding: 0;
+      list-style:none;
+    }
+
+    .item-wrapper {
+      line-height: 25px;
+      vertical-align: top;
+      text-align: left;
+      position: relative;
+      
+      .item {
+         margin: 0;
+  
+        .issue-row.active{
+          background: rgb(61, 138, 213);
+          /*border-left-width: 5px;*/
+          /* color: #fff;*/
+        
+          h5 {
+            color:#fff;
+          }
+        }
+  
+        .issue-row{
+          padding: 5px 10px;
+          
+          background-color: rgb(255, 255, 255);
+          border-bottom: 1px solid #E5E5E5;
+          
+          h5 {
+            font-weight:normal;
+          }
+          
+          .prop {
+              display: inline-block;
+              border: 1px solid #E5E5E5;
+              padding: 2px 4px 1px;
+              font-family: monospace;
+          }
+        }
+  
+      
+
+      
+
+       
+      }
+    }
+
+  }
+}
+
+.pull-left {
+  float: left;
+}
+.pull-right {
+  float: right;
+}
