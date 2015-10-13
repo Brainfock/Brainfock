@@ -40,7 +40,7 @@ export default class Todo extends Component {
     return <mui.ListItem
       primaryText={
           <div>
-            <span className="stats" style={{marginRight:5}}><span className="prop">{todo.contextTopicKey}</span></span>
+            <span className="stats" style={{marginRight:5}}><span className="prop">{todo.contextTopicKey || todo.contextTopicNum}</span></span>
             {icon} {todo.summary}
             <span className="label label-info pull-right">{todo.type && todo.type.name}</span>
           </div>}
