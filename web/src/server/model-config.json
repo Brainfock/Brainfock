@@ -111,5 +111,29 @@
   "Workspace": {
     "dataSource": "db",
     "public": true
+  },
+  "Workflow": {
+    "dataSource": "db",
+    "public": true
+  },
+  "WorkflowScheme": {
+    "dataSource": "db",
+    "public": true
+  },
+  "WorkflowOperation": {
+    "dataSource": "db",
+    "public": false
+  },
+  "WorkflowSchemeIssueTypeWorkflow": {
+    "dataSource": "db",
+    "public": false
+  },
+  "WorkflowStage": {
+    "dataSource": "db",
+    "public": false
+  },
+  "WorkflowStageOperationMap": {
+    "dataSource": "db",
+    "public": false
   }
 }
