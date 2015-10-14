@@ -21,8 +21,8 @@ export default function usersReducer(state = initialState, action) {
   switch (action.type) {
 
     case authActions.LOGIN_SUCCESS: {
-      const {email} = action.payload;
-      return state.set('viewer', new CurrentUser({email}));
+      let setUser = {...action.payload.user, authToken:action.payload.id};
+      return state.set('viewer', new CurrentUser(setUser));
     }
     case authActions.LOGOUT_SUCCESS: {
       return state.set('viewer',null);
