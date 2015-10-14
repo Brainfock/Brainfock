@@ -34,7 +34,9 @@ module.exports = function(Topic) {
   {
     const currentUser = loopback.getCurrentContext().get('currentUser');
 
-    if (ctx.instance) {
+    if (ctx.instance)
+    {
+      // make author an owner of this item
       if (ctx.isNewInstance==true) {
         ctx.instance.ownerUserId = currentUser.id;
       }
@@ -128,13 +130,20 @@ module.exports = function(Topic) {
   /**
    * populate topic `type` after remote create
    */
-  Topic.afterRemote( 'create', function( ctx, modelInstance, next) {
-    modelInstance.type(function(err, type) {
-      if (err) return next(err);
-      // we can not modify properties of relations directly via `modelInstance.user=[Object]`:
-      modelInstance.__data.type = type;
-      next(err);
-    });
+  Topic.afterRemote( 'upsert', function( ctx, modelInstance, next)
+  {
+    // reload topic to get updated values on columns that are managed by sql triggers (contextTopicNum etc.)
+    modelInstance.reload(function(errReload, instance)
+    {
+      modelInstance.__data = instance.__data;
+      // load extended type info
+      modelInstance.type(function(err, type) {
+        if (err) return next(err);
+        // we can not modify properties of relations directly via `modelInstance.user=[Object]`:
+        modelInstance.__data.type = type;
+        next(err, modelInstance);
+      });
+    })
   })
 
   Topic.on('attached', function() {
