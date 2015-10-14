@@ -43,6 +43,22 @@
       },
       "_selectable": false
     },
+    "isInitial": {
+      "type": "Number",
+      "required": true,
+      "length": null,
+      "precision": 1,
+      "scale": 0,
+      "mysql": {
+        "columnName": "is_initial",
+        "dataType": "tinyint",
+        "dataLength": null,
+        "dataPrecision": 1,
+        "dataScale": 0,
+        "nullable": "N"
+      },
+      "_selectable": false
+    },
     "bizStatus": {
       "type": "String",
       "required": true,

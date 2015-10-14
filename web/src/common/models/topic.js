@@ -76,6 +76,46 @@ module.exports = function(Topic) {
   });
 
   /**
+   * apply initial workflow stage for topic
+   * currently, each topic has to have related workflow stage, or else it is not available in topic database view table
+   */
+  Topic.observe('before save', function applyInitialWorkflowStage(ctx, next)
+  {
+    if (ctx.instance)
+    {
+      // set initial workflow stage
+      if(!ctx.instance.workflowStageId) {
+        ctx.instance.getWorkflowScheme(function(err, wfScheme) {
+          if(err) return next(err);
+
+          if(wfScheme===null) {
+            return next({
+              message: 'Could not find Workflow Scheme'
+            });
+          }
+
+          wfScheme.getDefaultStage(function(err, wfStage) {
+            if(err) return next(err);
+
+            if(wfStage===null) {
+              return next({
+                message: 'Could not find initial Workflow Stage of '+(wfScheme.name || wfScheme.id) + ' scheme'
+              });
+            }
+            else {
+              ctx.instance.workflowStageId = wfStage.id;
+              next();
+            }
+          })
+        });
+      }
+    }
+    else {
+      next();
+    }
+  });
+
+  /**
    * get entityId
    */
   Topic.observe('before save', function normalizeUserInput(ctx, next)
@@ -266,6 +306,24 @@ module.exports = function(Topic) {
       return next();
     }
   });
+
+  /**
+   * return (any) workflow scheme
+   * @todo: should be based on context topic settings; there would be different schemes for `projects` and `issues` groups
+   */
+  Topic.prototype.getWorkflowScheme = function(next) {
+    Topic.app.models.WorkflowScheme.findOne({where: {
+      // TODO: allow to switch workflow schemes
+    }}, function(err, wfScheme) {
+
+      if(err) throw err;
+
+      if(!wfScheme)
+        next(null, null)
+      else
+        next(null, wfScheme)
+    })
+  }
 
   /**
    *
