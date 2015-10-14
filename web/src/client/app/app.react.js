@@ -183,7 +183,13 @@ export default class App extends Component {
     //  </mui.IconMenu>
     }
     else {
-      rightElement = <Link to="/login"><i className="fa fa-lg fa-sign-in"></i> Sign in</Link>
+      rightElement = (
+        <div style={{
+          margin:'12px 10px 0 0'
+        }}>
+          <Link to="/login"><i className="fa fa-lg fa-sign-in"></i> Sign in</Link>
+        </div>
+      )
     }
 
     // todo: looks like we may remove `onLeftIconButtonTouchTap` event
