@@ -91,7 +91,15 @@ export default class CreateTopicForm extends Component{
       <mui.Checkbox
         name="accessPrivateYn" ref="accessSettings" value="1"
         label='createForm_LABEL_access_private_yn'
-        onCheck={this.props.actions.setNewTopicField} />
+        onCheck={(function(event, isChecked){
+              this.props.actions.setNewTopicField({
+                target:{
+                  name: event.target.name,
+                  value: isChecked
+                }
+              })
+             }).bind(this)}
+        />
     </form>
 
   }

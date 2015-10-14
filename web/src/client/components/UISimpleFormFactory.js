@@ -197,7 +197,14 @@ class Page extends Component{
         <div  style={{'width':'100%'}}>
           <mui.Checkbox
             {...props}
-            onChange={this.props.onChange}
+            onCheck={(function(event, isChecked){
+              this.props.onChange({
+                target:{
+                  name: event.target.name,
+                  value: isChecked
+                }
+              })
+             }).bind(this)}
             />
         </div>
       );

@@ -81,10 +81,18 @@ export default class Dashboard extends React.Component{
 
           <mui.Checkbox
             name="accessPrivateYn"
-            onCheck={this.props.actions.setNewTopicField}
+            onCheck={(function(event, isChecked){
+              this.props.actions.setNewTopicField({
+                target:{
+                  name: event.target.name,
+                  value: isChecked
+                }
+              })
+             }).bind(this)}
             value="1"
             label={msg.form.label.accessPrivate}
-            defaultChecked={this.props.topic.get('accessPrivateYn')==1} />
+            checked={this.props.topic.get('accessPrivateYn')==1}
+            />
 
           <mui.RaisedButton label={msg.form.button.save} primary={true} onClick={this.trySave.bind(this)}
                             disabled={isLoading} />
