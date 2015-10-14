@@ -1,6 +1,9 @@
 export const LOGIN = 'LOGIN';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGOUT = 'LOGOUT';
+export const LOGOUT_ERROR = 'LOGOUT_ERROR';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const SET_FORM_FIELD = 'SET_FORM_FIELD';
 
 const FORM_FIELD_MAX_LENGTH = 100;
@@ -46,6 +49,23 @@ export function login(fields) {
             throw validate.wrongPassword('password');
           throw response;
         })
+    }
+  });
+}
+
+export function logout(token) {
+  return ({fetch, validate}) => ({
+    types: [
+      LOGOUT,
+      LOGOUT_SUCCESS,
+      LOGOUT_ERROR
+    ],
+    payload: {
+      promise: fetch(`/api/users/logout?access_token=${token}`, {
+        method: 'post',
+        credentials: 'include'
+      })
+
     }
   });
 }

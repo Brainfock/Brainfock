@@ -24,6 +24,9 @@ export default function usersReducer(state = initialState, action) {
       const {email} = action.payload;
       return state.set('viewer', new CurrentUser({email}));
     }
+    case authActions.LOGOUT_SUCCESS: {
+      return state.set('viewer',null);
+    }
 
   }
 
