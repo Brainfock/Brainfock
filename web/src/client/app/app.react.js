@@ -14,6 +14,8 @@ let mui = require('material-ui-io'),
   {MenuItem, LeftNav, AppCanvas, AppBar, IconButton, Menu} = mui,
   Icon = mui.FontIcon;
 
+import {ButtonToolbar, Overlay, Popover, Grid, Row, Col} from 'react-bootstrap';
+
 let Colors = mui.Styles.Colors;
 let Typography = mui.Styles.Typography;
 let ThemeManager = new mui.Styles.ThemeManager();
@@ -40,6 +42,11 @@ export default class App extends Component {
     return {
       muiTheme: ThemeManager.getCurrentTheme()
     }
+  }
+
+  constructor(...args) {
+    super(...args);
+    this.state = { showUserMenu: false };
   }
 
   componentWillMount()
@@ -115,7 +122,65 @@ export default class App extends Component {
 
     if(viewer && viewer.username) {
       // TODO: use avatar instead when available
-      rightElement = <mui.Avatar>{viewer.username.charAt(0)}</mui.Avatar>
+      rightElement = (
+
+      <ButtonToolbar style={{marginRight:10}}>
+        <mui.Avatar
+          onClick={e => this.setState({ target: e.target, showUserMenu: !this.state.showUserMenu })}
+          >
+            {viewer.username.charAt(0)}
+        </mui.Avatar>
+
+        <Overlay
+          show={this.state.showUserMenu}
+          target={()=> React.findDOMNode(this.state.target)}
+          placement="bottom"
+          container={this}
+          containerPadding={20}
+          >
+          <Popover _title={<span>Logged in as <strong>{viewer.username}</strong></span>} >
+
+            <Grid fluid={true}>
+              <Row className="show-grid">
+                <Col xs={12} md={3}>
+                  <mui.Avatar>
+                    {viewer.username.charAt(0)}
+                  </mui.Avatar>
+                </Col>
+                <Col xs={6} md={9}>
+                  <span>Logged in as <strong>{viewer.username}</strong> ({viewer.email})</span>
+                </Col>
+              </Row>
+              </Grid>
+            <hr />
+            <mui.RaisedButton
+              label="Sign out"
+              style={{marginRight:10}}
+              onClick={e => this.props.actions.logout(viewer.authToken)}
+              />
+            <mui.RaisedButton
+              primary={true}
+              label="My account"
+              onClick={e => this.props.history.pushState(null, `/me/`)}
+              />
+          </Popover>
+        </Overlay>
+      </ButtonToolbar>
+
+
+        )
+    //    <mui.IconMenu
+    //  iconButtonElement={<mui.Avatar>{viewer.username.charAt(0)}</mui.Avatar>}
+    //closeOnItemTouchTap={false}
+    //openDirection='bottom-left'
+    //  >
+    //  <MenuItem>Logged in as <strong>{viewer.username}</strong></MenuItem>
+    //  <MenuItem primaryText="Refresh" />
+    //  <MenuItem>
+    //    <mui.RaisedButton label="Sign out" className="pull-left" />
+    //    <mui.RaisedButton label="My account"  className="pull-right"  />
+    //  </MenuItem>
+    //  </mui.IconMenu>
     }
     else {
       rightElement = <Link to="/login"><i className="fa fa-lg fa-sign-in"></i> Sign in</Link>
