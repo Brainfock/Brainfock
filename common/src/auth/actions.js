@@ -42,7 +42,7 @@ export function login(fields) {
     ],
     payload: {
       promise: validateForm(validate, fields)
-        .then(() => post(fetch, 'users/login', fields))
+        .then(() => post(fetch, 'users/login?include=user', fields))
         .catch(response => {
           // We can handle different password/username server errors here.
           if (response.status === 401)
