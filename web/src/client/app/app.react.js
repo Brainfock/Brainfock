@@ -6,6 +6,7 @@ import Header from './header.react';
 import React, {PropTypes} from 'react';
 import {mapDispatchToProps, mapStateToProps} from '@este/common';
 import {connect} from 'react-redux';
+import {Link} from 'react-router';
 
 let io = require('socket.io-client');
 
@@ -115,6 +116,9 @@ export default class App extends Component {
     if(viewer && viewer.username) {
       // TODO: use avatar instead when available
       rightElement = <mui.Avatar>{viewer.username.charAt(0)}</mui.Avatar>
+    }
+    else {
+      rightElement = <Link to="/login"><i className="fa fa-lg fa-sign-in"></i> Sign in</Link>
     }
 
     // todo: looks like we may remove `onLeftIconButtonTouchTap` event
