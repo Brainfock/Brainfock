@@ -17,18 +17,19 @@ export default class List extends Component {
   };
 
   render() {
-    const {actions, list, msg, group, board} = this.props;
+    //const {actions, list, msg, group, board} = this.props;
+    const {children, ...passProps} = this.props;
 
-    if (!list.size) return (
-      <p>{msg.emptyList}</p>
+    if (!this.props.list.size) return (
+      <p>{this.props.msg.emptyList}</p>
     );
 
     let Item = this.props.itemComponent;
 
     return (
       <div>
-        {list.map(todo =>
-          <Item actions={actions} group={group} board={board} key={todo.id} todo={todo} history={this.props.history} params={this.props.params} />
+        {this.props.list.map(todo =>
+          <Item key={todo.id} todo={todo} {...passProps} />
         )}
       </div>
     );
