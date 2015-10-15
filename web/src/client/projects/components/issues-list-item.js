@@ -30,10 +30,8 @@ export default class Todo extends Component {
     todo: PropTypes.object.isRequired
   }
 
-  getDefaultProps() {
-    return {
-      followItemOnClick: true,
-    }
+  static defaultProps = {
+    followItemOnClick: true
   }
   render() {
     const {actions, todo} = this.props;
