@@ -124,7 +124,7 @@
     "dataSource": "db",
     "public": false
   },
-  "WorkflowSchemeIssueTypeWorkflow": {
+  "WorkflowSchemeTopicTypeWorkflow": {
     "dataSource": "db",
     "public": false
   },
