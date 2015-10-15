@@ -32,17 +32,18 @@ import SimpleFormFactory from '../../components/UISimpleFormFactory';
  */
 export default class CreateTopicForm extends Component{
 
-  //
   static propTypes = {
     containerStore: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired,
     formFields: React.PropTypes.object,
     actions: React.PropTypes.any.isRequired,
+    // topic group to load form for, e.g. `issue` if we want to greate topic in group `issue`
+    topicGroup: React.PropTypes.string.isRequired,
   };
 
   componentWillMount() {
     if(!this.props.formFields || (this.props.formFields && this.props.formFields.fields.size==0))
-      this.props.actions.loadFormFields('issue', this.props.containerStore.id);
+      this.props.actions.loadFormFields(this.props.topicGroup, this.props.containerStore.id);
   }
 
   componentDidMount() {
