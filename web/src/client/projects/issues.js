@@ -102,6 +102,18 @@ export default class ProjectIssues extends Component{
 
     const detailsToggleIconClass = this.state.showDetails ? 'fa-info-circle fa-lg fa' : 'fa-info fa-lg fa';
 
+    const addItemForm = (
+      <Form
+        ref="formView"
+        topicGroup="issue"
+        containerStore={board}
+        newTopic={newTopic}
+        formFields={formFields}
+        actions={this.props.topic_actions}
+        params={this.props.params}
+        />
+    );
+
     const ListActionsRendered = <div className="pull-right">
 
 
@@ -117,15 +129,10 @@ export default class ProjectIssues extends Component{
         style={{height:38,width:38,padding:9}}
         />
 
-
       <ListActions
-        FormComponent={Form}
-        newTopic={newTopic}
+        addItemForm={addItemForm}
         formFields={formFields}
-        actions={this.props.topic_actions}
         msg={msg}
-        params={this.props.params}
-        containerStore={board}
         TITLE={titleMsg}
         BUTTON_ACTION_LABEL={msg.list.addNew.button}
         />

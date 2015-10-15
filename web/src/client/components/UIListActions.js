@@ -20,36 +20,17 @@
  */
 var React = require('react');
 var mui = require('material-ui-io');
+import cloneWithProps from 'react-addons-clone-with-props';
 
 var ListActions =  React.createClass({
 
   getDefaultProps: function() {
     return {
-      containerStore: null,
-      FormStore: null,
-      Actions: null,
-      FormComponent: null,
+      actions: null,
       BUTTON_ACTION_LABEL: 'INVITE PEOPLE',
       BUTTON_SUBMIT_LABEL: 'BTN_CREATE',
       TITLE: 'Add New'
     };
-  },
-
-  componentDidMount: function()
-  {
-    // form submission (loading state)
-    if(this.props.FormStore)
-    {
-      this.props.FormStore.on('change', function() {
-        this.forceUpdate();
-      }, this);
-    }
-  },
-
-  componentWillUnmount: function() {
-    if(this.props.FormStore) {
-      this.props.FormStore.off(null, null, this);
-    }
   },
 
   render: function() {
@@ -61,10 +42,6 @@ var ListActions =  React.createClass({
 
   renderModelForm: function()
   {
-    if(!this.props.FormComponent) {
-      return null;
-    }
-
     var dialogActions = [
       { text: this.props.msg.form.button.cancel, onClick: this._onDialogCancel  },
       { text: this.props.msg.form.button.create, onClick: this.onFormSubmit }
@@ -86,17 +63,11 @@ var ListActions =  React.createClass({
       ];
     }
 
-    let Form = this.props.FormComponent;
-
+    const addItemForm = React.cloneElement(this.props.addItemForm, {
+      ref: 'formView'
+    })
     return <mui.Dialog title={this.props.TITLE} ref="modelForm" actions={dialogActions}>
-      <Form
-          ref="formView"
-          containerStore={this.props.containerStore}
-          newTopic={this.props.newTopic}
-          formFields={this.props.formFields}
-          actions={this.props.actions}
-          params={this.props.params}
-          />
+      {addItemForm}
     </mui.Dialog>
   },
 
