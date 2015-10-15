@@ -136,11 +136,6 @@ export default class ProjectIssues extends Component{
           history={this.props.history}
           itemComponent={ListViewItem}
           params={this.props.params}
-
-          /* who's team do we want to see
-          containerStore={this.props.topic}
-          /!* message if list is empty /
-          EmptyComponent={EmptyComponent}*/
           />
       );
     }
@@ -194,19 +189,6 @@ export default class ProjectIssues extends Component{
           </div>
       </div>
     )
-
-    return (
-      <div className="wiki-wrapper">
-        <div className="wiki-page">
-          <div className="container-fluid">
-            <div className="row">
-              ISSUES
-            </div>
-          </div>
-        </div>
-
-      </div>
-    );
   }
 
   toggleFilters() {
