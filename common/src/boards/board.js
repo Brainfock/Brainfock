@@ -44,6 +44,9 @@ export default Record({
   group: {},
   comments: List(),
 
+  // included via `extra` filters
+  operations: List(),
+
   // ui state fields
   loading:true,
 });
