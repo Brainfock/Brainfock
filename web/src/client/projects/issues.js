@@ -232,6 +232,7 @@ export default class ProjectIssues extends Component{
         // whether list should follow link when list item is clicked or just load u details
         followItemOnClick={!this.state.showDetails}
         params={this.props.params}
+        viewTopic={this.props.boards.viewTopic}
         />
     );
   }
@@ -244,9 +245,21 @@ export default class ProjectIssues extends Component{
         </div>
       )
     }
+    if(!this.props.boards.viewTopic.id) {
+      return (
+        <mui.Paper>
+          <div style={{padding:'5px 15px 15px 15px'}}>
+            <h3>Select item in list to see details.</h3>
+            <p>You can hide this panel by clicking `i` button.</p>
+          </div>
+        </mui.Paper>
+      )
+    }
     return (
       <mui.Paper>
-        <h1>{this.props.boards.viewTopic.summary}</h1>
+        <div style={{padding:'1px 15px 15px 15px'}}>
+          <h1>{this.props.boards.viewTopic.summary}</h1>
+        </div>
       </mui.Paper>
     );
   }

@@ -42,7 +42,13 @@ export default class Todo extends Component {
     if(todo.accessPrivateYn==1) {
       icon = (<i className="fa fa-eye-slash"></i>);
     }
-    return <mui.ListItem
+
+    let style={};
+    if(this.props.viewTopic && this.props.viewTopic.id == todo.id) {
+      style={background:'rgb(243, 243, 243)'};
+    }
+    return  <div style={style}>
+      <mui.ListItem
       primaryText={
           <div>
             <div className="pull-left" style={{marginRight:5}}>
@@ -69,6 +75,7 @@ export default class Todo extends Component {
 
       > {this.confirmDialog()}
     </mui.ListItem>
+      </div>
 
     return (
       <li className="todo">
@@ -102,6 +109,7 @@ export default class Todo extends Component {
     if(this.props.followItemOnClick) {
       this.props.history.pushState(null, `/board/${this.props.params.board_id}/topic/${this.props.todo.id}`);
     } else {
+      this.props.actions.setCurrentTopicMarker(this.props.todo.id);
       this.props.actions.loadTopic(this.props.todo.id);
     }
       //this.props.actions.topic.query('board_topic', {}, this.props.board_id);
