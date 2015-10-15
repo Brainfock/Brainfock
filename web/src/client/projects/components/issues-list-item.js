@@ -30,6 +30,11 @@ export default class Todo extends Component {
     todo: PropTypes.object.isRequired
   }
 
+  getDefaultProps() {
+    return {
+      followItemOnClick: true,
+    }
+  }
   render() {
     const {actions, todo} = this.props;
 
@@ -60,6 +65,7 @@ export default class Todo extends Component {
           }
 
       onClick={this._onClick.bind(this)}
+      onDoubleClick={this._onDblClick.bind(this)}
 
       > {this.confirmDialog()}
     </mui.ListItem>
@@ -93,6 +99,17 @@ export default class Todo extends Component {
   }
 
   _onClick() {
+    if(this.props.followItemOnClick) {
+      this.props.history.pushState(null, `/board/${this.props.params.board_id}/topic/${this.props.todo.id}`);
+    } else {
+      this.props.actions.loadTopic(this.props.todo.id);
+    }
+      //this.props.actions.topic.query('board_topic', {}, this.props.board_id);
+
+    //this.props.actions.pushState(null, `/board/${this.props.params.board_id}/topic/${this.props.todo.id}`);
+   // this.props.history.pushState(null, `/board/${this.props.params.board_id}/topic/${this.props.todo.id}`);
+  }
+  _onDblClick() {
     this.props.history.pushState(null, `/board/${this.props.params.board_id}/topic/${this.props.todo.id}`);
   }
 

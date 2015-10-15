@@ -22,10 +22,16 @@ import React from 'react';
 import mui from 'material-ui-io';
 import Component from 'react-pure-render/component';
 import {FormattedMessage} from 'react-intl';
+import {ButtonToolbar, Overlay, Popover, Grid, Row, Col} from 'react-bootstrap';
 
 import Loader from '../components/Loader';
 import ListActions from '../components/UIListActions';
 import Form from '../topic/components/create-topic-form';
+
+import ListView from '../boards/boards.react';
+import ListViewItem from './components/issues-list-item';
+import MenuItem from 'material-ui-io/lib/menus/menu-item';
+import Filters from '../components/UISimpleFilters';
 
 export default class ProjectIssues extends Component{
 
@@ -36,7 +42,8 @@ export default class ProjectIssues extends Component{
       filters:props.location.query.filter || null,
       count:0,
       filtersOpen:false,
-      searchQuery:props.location.query.query
+      searchQuery:props.location.query.query,
+      showDetails: true
     };
   }
 
@@ -93,7 +100,16 @@ export default class ProjectIssues extends Component{
       </h3>
     );
 
+    const detailsToggleIconClass = this.state.showDetails ? 'fa-info-circle fa-lg fa' : 'fa-info fa-lg fa';
+
     const ListActionsRendered = <div className="pull-right">
+
+      <mui.IconButton
+        iconClassName={detailsToggleIconClass}
+        tooltip="Toggle Details"
+        onClick={e => this.setState({ target: e.target, showDetails: !this.state.showDetails })}
+        />
+
       <ListActions
         FormComponent={Form}
         newTopic={newTopic}
@@ -105,19 +121,14 @@ export default class ProjectIssues extends Component{
         TITLE={titleMsg}
         BUTTON_ACTION_LABEL={msg.list.addNew.button}
         />
+
       <FormattedMessage
         defaultMessage={msg.list.countItems}
         values={{countItems:meta.count}}
         />
     </div>
 
-    let ListView = require('../boards/boards.react');
-    let ListViewItem = require('./components/issues-list-item');
-
-    let Filters = require('../components/UISimpleFilters');
-
     const iconButtonElement = <mui.IconButton iconClassName="fa fa-list-alt" tooltip="Filter presets"/>;
-    let MenuItem = require('material-ui-io/lib/menus/menu-item');
 
     let content;
     if(this.props.boards.meta.loading==true)
@@ -128,16 +139,7 @@ export default class ProjectIssues extends Component{
         </div>
       </div>
     } else {
-      content = (
-        <ListView
-          list={this.props.boards.list}
-          actions={this.props.topic_actions}
-          msg={this.props.msg.todos}
-          history={this.props.history}
-          itemComponent={ListViewItem}
-          params={this.props.params}
-          />
-      );
+      content = this.renderListContent()
     }
 
     return (
@@ -194,5 +196,58 @@ export default class ProjectIssues extends Component{
   toggleFilters() {
     let setVisibility = !this.state.filtersOpen;
     this.setState({filtersOpen: setVisibility})
+  }
+
+  renderListContent() {
+
+    let rowWidth = this.state.showDetails ? 8 : 12;
+    let detialStyle = this.state.showDetails ? {display:false} : {};
+
+    return (
+      <Grid fluid={true} style={{
+        paddingLeft:0,
+      }}>
+        <Row>
+          <Col md={rowWidth}>
+            {this.renderList()}
+          </Col>
+
+          <Col style={detialStyle} md={4}>
+            {this.renderDetails()}
+          </Col>
+
+        </Row>
+      </Grid>
+    )
+  }
+
+  renderList() {
+    return (
+      <ListView
+        list={this.props.boards.list}
+        actions={this.props.topic_actions}
+        msg={this.props.msg.todos}
+        history={this.props.history}
+        itemComponent={ListViewItem}
+        // whether list should follow link when list item is clicked or just load u details
+        followItemOnClick={!this.state.showDetails}
+        params={this.props.params}
+        />
+    );
+  }
+
+  renderDetails() {
+    if(this.props.boards.viewTopic.loading) {
+      return (
+        <div style={{width:'100%',textAlign:'center'}}>
+          <h1><Loader /></h1>
+        </div>
+      )
+    }
+    return (
+      <mui.Paper>
+        <h1>{this.props.boards.viewTopic.summary}</h1>
+      </mui.Paper>
+    );
   }
 };
