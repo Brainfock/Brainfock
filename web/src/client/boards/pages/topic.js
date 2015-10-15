@@ -137,17 +137,19 @@ var Issues = React.createClass({
 
     return (
       <div>
+
+        <DropdownButton className="pull-right" eventKey={3} title="">
+        {operaitons}
+      </DropdownButton>
+        {this.props.boards.viewTopic && <h2 style={{fontWeight:800}}>{this.props.boards.viewTopic.summary}</h2>}
         <mui.Card>
-          <DropdownButton className="_pull-right" eventKey={3} title="">
-            {operaitons}
-          </DropdownButton>
-          {this.props.boards.viewTopic && <mui.CardTitle title={this.props.boards.viewTopic.summary}/>}
+          <mui.CardHeader
+            title={viewTopic.author && <b>{viewTopic.author.username}</b>}
+            subtitle= {viewTopic.createdOn}
+            avatar={viewTopic.author.username && <mui.Avatar>{viewTopic.author.username.charAt(0)}</mui.Avatar>}/>
 
-
-          <mui.CardText>
-            {this.props.boards.viewTopic.text}
-          </mui.CardText>
-
+            {this.props.boards.viewTopic.text
+              && <mui.CardText>{this.props.boards.viewTopic.text}</mui.CardText>}
         </mui.Card>
         <div style={{paddingTop:this.context.muiTheme.spacing.desktopGutter}} className="">
           {this.comments()}
