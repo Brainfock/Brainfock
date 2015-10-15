@@ -22,7 +22,7 @@ import React from 'react';
 import mui from 'material-ui-io';
 import Component from 'react-pure-render/component';
 import {FormattedMessage} from 'react-intl';
-import {ButtonToolbar, Overlay, Popover, Grid, Row, Col} from 'react-bootstrap';
+import {ButtonToolbar, Overlay, Popover, Grid, Row, Col, Affix} from 'react-bootstrap';
 
 import Loader from '../components/Loader';
 import ListActions from '../components/UIListActions';
@@ -217,7 +217,13 @@ export default class ProjectIssues extends Component{
           </Col>
 
           <Col style={detialStyle} md={4}>
+            <Affix
+              className="bs-docs-sidebar hidden-print"
+              role="complementary"
+              offsetTop={64}
+              offsetBottom={64}>
             {this.renderDetails()}
+              </Affix>
           </Col>
 
         </Row>
@@ -263,6 +269,7 @@ export default class ProjectIssues extends Component{
       <mui.Paper>
         <div style={{padding:'1px 15px 15px 15px'}}>
           <h1>{this.props.boards.viewTopic.summary}</h1>
+          {this.props.boards.viewTopic.text}
         </div>
       </mui.Paper>
     );
