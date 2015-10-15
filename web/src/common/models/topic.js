@@ -36,9 +36,11 @@ module.exports = function(Topic) {
 
     if (ctx.instance)
     {
-      // make author an owner of this item
       if (ctx.isNewInstance==true) {
+        // make author an owner of this item
         ctx.instance.ownerUserId = currentUser.id;
+        // theoretically, owner can be switched - save submitter as a separate value
+        ctx.instance.submittedUserId = currentUser.id;
       }
     }
 
