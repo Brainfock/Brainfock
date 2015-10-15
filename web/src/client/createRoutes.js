@@ -55,6 +55,7 @@ export default function createRoutes(getState) {
       <Route component={require('./projects/project-wrapper')}  >
         <Route component={require('./projects/dashboard')} path="/:namespace/:board_id"  />
         <Route component={require('./projects/issues')} path="/:namespace/:board_id/issues" />
+        <Route component={require('./projects/boards')} path="/:namespace/:board_id/boards" />
         <Route component={require('./projects/issues')} path="/:namespace/:board_id/milestones" />
         <Route component={require('./projects/issues')} path="/:namespace/:board_id/deals" />
         <Route component={require('./projects/users')} path="/:namespace/:board_id/users" />

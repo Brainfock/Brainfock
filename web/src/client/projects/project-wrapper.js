@@ -74,6 +74,9 @@ class Layout extends Component{
         )
       },
       { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}/issues`, text: 'Issues'},
+      { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}/boards`, text: 'Discussions'},
+      // what about other menuss & modules?
+      // Like agile or scrum boards, custom reports?
       { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}/users`, text: 'Users'},
       { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}/settings`, text: 'Settings'},
     ];
