@@ -113,6 +113,18 @@ export default class FieldsHandler {
     )
   }
 
+  static textFieldProps(data) {
+    return new Promise(
+      function (resolve, reject) {
+        resolve({
+          label: 'Details',
+          name: data.key,
+          type: 'textarea',
+        });
+      }
+    )
+  }
+
   static assigneeFieldProps(data) {
     return new Promise(
       function (resolve, reject) {
