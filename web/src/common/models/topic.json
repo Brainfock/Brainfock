@@ -450,14 +450,14 @@
       },
       "_selectable": true
     },
-    "submittedByUserId": {
+    "submittedUserId": {
       "type": "Number",
       "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
       "mysql": {
-        "columnName": "submitted_by_user_id",
+        "columnName": "submitted_user_id",
         "dataType": "int",
         "dataLength": null,
         "dataPrecision": 10,
@@ -568,6 +568,16 @@
       "type": "belongsTo",
       "model": "Workspace",
       "foreignKey": "workspaceId"
+    },
+    "author": {
+      "type": "belongsTo",
+      "model": "User",
+      "foreignKey": "submittedUserId"
+    },
+    "owner": {
+      "type": "belongsTo",
+      "model": "User",
+      "foreignKey": "ownerUserId"
     }
   },
   "acls": [
