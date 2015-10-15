@@ -2,6 +2,8 @@ var React = require('react');
 var Router = require('react-router'),
   { Navigation, RouteHandler } = Router,
   mui = require('material-ui-io');
+var bs = require('react-bootstrap'),
+  {Nav, NavItem, ButtonToolbar, ButtonGroup, Button, Glyphicon,  TabbedArea, TabPane, DropdownButton, MenuItem} = bs;
 
 var Loader = require('../../components/Loader');
 var AppContentCanvas = require('../../components/layout/AppContentCanvas');
@@ -116,12 +118,34 @@ var Issues = React.createClass({
      msg={this.props.msg.boards}
      actions={this.props.actions.topic}
      />*/
+
+    const viewTopic = this.props.boards.viewTopic;
+    let operaitons = [];
+    let i = 0;
+    if(viewTopic.operations) {
+      viewTopic.operations.forEach(function(op){
+        i++;
+        var _style={};
+        var active=false;
+        if(viewTopic.workflowStageId==op.id) {
+          _style['font-weight']=800;
+          active=true;
+        }
+        operaitons.push(<MenuItem onClick={self.applyOperation} data-operation-id={op.id} eventKey={i} active={active}>{op.name}</MenuItem>);
+      })
+    }
+
     return (
       <div>
         <mui.Card>
+          <DropdownButton className="_pull-right" eventKey={3} title="">
+            {operaitons}
+          </DropdownButton>
           {this.props.boards.viewTopic && <mui.CardTitle title={this.props.boards.viewTopic.summary}/>}
+
+
           <mui.CardText>
-          {this.props.boards.viewTopic.text}
+            {this.props.boards.viewTopic.text}
           </mui.CardText>
 
         </mui.Card>
