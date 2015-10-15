@@ -211,7 +211,7 @@ export function loadCurrent(id) {
 
 export function loadTopic(id) {
 
-  let endpoint = 'topics/'+id+'?filter[include][type]' ;
+  let endpoint = 'topics/'+id+'?filter[include][type]&filter[extra][operations]' ;
 
   return ({fetch, validate}) => ({
     types: [
