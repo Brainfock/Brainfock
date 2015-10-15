@@ -307,14 +307,25 @@ module.exports = function(Topic) {
     }
   });
 
+  /**
+   * Populate `operations` property with all available operations (if requested)
+   * To add `operations` in server response, provide `extra.operations` filter, e.g.:
+   * <code>
+   *  api/topics/1234?filter[extra][operations]
+   * </code>
+   */
   Topic.afterRemote( 'findById', function( ctx, modelInstance, next)
   {
     if (modelInstance)
     {
-      if(ctx.args.filter && ctx.args.filter.add && ctx.args.filter.add.hasOwnProperty('operations'))
+      if(ctx.args.filter && ctx.args.filter.extra && ctx.args.filter.extra.hasOwnProperty('operations'))
       {
         // lookup operations based && next()
-        return next();
+        modelInstance.getOperations(function(err, operations) {
+          if(err) return next(err);
+          modelInstance.operations=operations;
+          return next();
+        })
       }
       else
       {
@@ -324,6 +335,55 @@ module.exports = function(Topic) {
       return next();
     }
   });
+
+  Topic.prototype.getOperations = function(next) {
+    let self=this;
+    self.getWorkflowTopicConfig(function(err, effectiveWorkflow) {
+      if(err) return next(err);
+
+      if(effectiveWorkflow===null) {
+        return next({
+          message: 'Could not find Workflow'
+        });
+      }
+
+      Topic.app.models.WorkflowStageOperationMap.find({
+        where: {
+          workflowId: effectiveWorkflow.id,
+          workflowStageId: self.workflowStageId,
+        },
+        include: ['operation']
+      }, function(err,data){
+
+        let operations = [];
+        data.forEach(function(opMap){
+          opMap.operation(function(err, operation){
+            operations.push({
+              id:operation.id,
+              name:operation.name,
+              summary:operation.summary
+            })
+          })
+        })
+
+        return next(null,operations);
+      })
+
+      //effectiveWorkflow.getDefaultStage(function(err, wfStage) {
+      //  if(err) return next(err);
+      //
+      //  if(wfStage===null) {
+      //    return next({
+      //      message: 'Could not find initial Workflow Stage of '+(effectiveWorkflow.name || effectiveWorkflow.id) + ' workflow'
+      //    });
+      //  }
+      //  else {
+      //    ctx.instance.workflowStageId = wfStage.id;
+      //    next();
+      //  }
+      //})
+    });
+  }
 
   /**
    * return (any) workflow scheme
@@ -348,7 +408,7 @@ module.exports = function(Topic) {
    */
   Topic.prototype.getWorkflowTopicConfig = function(next)
   {
-    const self=this;
+    let self=this;
     this.getWorkflowScheme(function(err,wfScheme)
     {
       if(err) return next(err);
