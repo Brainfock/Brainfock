@@ -76,8 +76,8 @@ module.exports = function(Topic) {
   });
 
   /**
-   * apply initial workflow stage for topic
-   * currently, each topic has to have related workflow stage, or else it is not available in topic database view table
+   * Apply initial workflow stage for topic on creation
+   * Stage is resolved based on workflow for topic type in effective scheme
    */
   Topic.observe('before save', function applyInitialWorkflowStage(ctx, next)
   {
@@ -85,21 +85,21 @@ module.exports = function(Topic) {
     {
       // set initial workflow stage
       if(!ctx.instance.workflowStageId) {
-        ctx.instance.getWorkflowScheme(function(err, wfScheme) {
+        ctx.instance.getWorkflowTopicConfig(function(err, effectiveWorkflow) {
           if(err) return next(err);
 
-          if(wfScheme===null) {
+          if(effectiveWorkflow===null) {
             return next({
-              message: 'Could not find Workflow Scheme'
+              message: 'Could not find Workflow'
             });
           }
 
-          wfScheme.getDefaultStage(function(err, wfStage) {
+          effectiveWorkflow.getDefaultStage(function(err, wfStage) {
             if(err) return next(err);
 
             if(wfStage===null) {
               return next({
-                message: 'Could not find initial Workflow Stage of '+(wfScheme.name || wfScheme.id) + ' scheme'
+                message: 'Could not find initial Workflow Stage of '+(effectiveWorkflow.name || effectiveWorkflow.id) + ' workflow'
               });
             }
             else {
@@ -307,6 +307,24 @@ module.exports = function(Topic) {
     }
   });
 
+  Topic.afterRemote( 'findById', function( ctx, modelInstance, next)
+  {
+    if (modelInstance)
+    {
+      if(ctx.args.filter && ctx.args.filter.add && ctx.args.filter.add.hasOwnProperty('operations'))
+      {
+        // lookup operations based && next()
+        return next();
+      }
+      else
+      {
+        return next();
+      }
+    } else {
+      return next();
+    }
+  });
+
   /**
    * return (any) workflow scheme
    * @todo: should be based on context topic settings; there would be different schemes for `projects` and `issues` groups
@@ -322,6 +340,68 @@ module.exports = function(Topic) {
         next(null, null)
       else
         next(null, wfScheme)
+    })
+  }
+
+  /**
+   * @return Workflow|null - active workflow for current topic type in active scheme
+   */
+  Topic.prototype.getWorkflowTopicConfig = function(next)
+  {
+    const self=this;
+    this.getWorkflowScheme(function(err,wfScheme)
+    {
+      if(err) return next(err);
+
+      if(wfScheme===null) {
+        return next({
+          message: 'Could not find Workflow Scheme'
+        });
+      }
+
+      Topic.app.models.WorkflowSchemeTopicTypeWorkflow.findOne({
+        where:{
+          workflowSchemeId:wfScheme.id,
+          topicTypeId:self.typeId
+        },
+        include:['workflow']
+      }, function(err, WorkflowSchemeTopicTypeWorkflow)
+      {
+        if(err) return next(err);
+
+        // if there is no custom workflow for topic type, select default workflow in this scheme
+        if(WorkflowSchemeTopicTypeWorkflow===null)
+        {
+          wfScheme.defaultWorkflow(
+            function(err,workflow)
+            {
+              if(err) return next(err);
+              if(workflow===null) {
+                return next({
+                  message: 'Could not find Workflow'
+                });
+              }
+              return next(null, workflow);
+            }
+          )
+
+        }
+        else
+        {
+          WorkflowSchemeTopicTypeWorkflow.workflow(
+            function(err,workflow)
+            {
+              if(err) return next(err);
+              if(workflow===null) {
+                return next({
+                  message: 'Could not find Workflow'
+                });
+              }
+              return next(null, workflow);
+            }
+          )
+        }
+      })
     })
   }
 
