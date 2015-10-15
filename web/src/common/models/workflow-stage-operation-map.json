@@ -77,7 +77,13 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "operation": {
+      "type": "belongsTo",
+      "model": "WorkflowOperation",
+      "foreignKey": "workflowOperationId"
+    }
+  },
   "acls": [
     {
       "accessType": "*",
