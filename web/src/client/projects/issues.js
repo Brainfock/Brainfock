@@ -104,11 +104,19 @@ export default class ProjectIssues extends Component{
 
     const ListActionsRendered = <div className="pull-right">
 
+
+      <FormattedMessage
+        defaultMessage={msg.list.countItems}
+        values={{countItems:meta.count}}
+        />
+
       <mui.IconButton
         iconClassName={detailsToggleIconClass}
         tooltip="Toggle Details"
         onClick={e => this.setState({ target: e.target, showDetails: !this.state.showDetails })}
+        style={{height:38,width:38,padding:9}}
         />
+
 
       <ListActions
         FormComponent={Form}
@@ -122,10 +130,6 @@ export default class ProjectIssues extends Component{
         BUTTON_ACTION_LABEL={msg.list.addNew.button}
         />
 
-      <FormattedMessage
-        defaultMessage={msg.list.countItems}
-        values={{countItems:meta.count}}
-        />
     </div>
 
     const iconButtonElement = <mui.IconButton iconClassName="fa fa-list-alt" tooltip="Filter presets"/>;
