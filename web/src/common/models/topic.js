@@ -599,7 +599,11 @@ module.exports = function(Topic) {
 
         // Find DEFAULT topic type scheme for this group
         // TODO: allow to define different topic_type_scheme per parent context (so, project can have own)
-        Topic.app.models.TopicTypeScheme.findOne({where:{topicGroupId:groupInstance.id}},function(typeErr,typeSchemeInstance){
+        Topic.app.models.TopicTypeScheme.findOne({
+          where:{
+            topicGroupId: groupInstance.id
+          }
+        },function(typeErr,typeSchemeInstance){
 
           if(typeErr) throw typeErr;
 
@@ -623,8 +627,8 @@ module.exports = function(Topic) {
 
             if(typeSchemeTypeMapErr) throw typeSchemeTypeMapErr;
 
-            if(!types)
-              return cb(null, [])
+            if(!types || types.length==0)
+              return cb(new Error('No topic types defined for scheme '+typeSchemeInstance.id), [])
 
             let TypeOptions = types.map(item => {
               let topicType = item.topicType();
@@ -634,14 +638,19 @@ module.exports = function(Topic) {
             }});
 
             const DefaultType = types[0].topicType();
+
             if(!DefaultType) {
               return cb(null, [])
             }
 
+            console.log('DefaultType',DefaultType);
+
             // Find DEFAULT screen scheme
             Topic.app.models.ScreenScheme.findOne({
               // TODO: allow to provide non-default scheme
-              //where:{...}
+              where:{
+                groupId: groupInstance.id
+              }
             },function(ScreenSchemeErr,ScreenScheme) {
 
               if (ScreenSchemeErr) throw ScreenSchemeErr;
