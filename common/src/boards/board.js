@@ -38,10 +38,14 @@ export default Record({
   logoIcon:'',
   logoBackground:'',
   wfStage:'',
+  updatedOn:'',
+  createdOn:'',
 
   // included via relations
   type: {},
   group: {},
+  owner: {},
+  author: {},
   comments: List(),
 
   // included via `extra` filters
