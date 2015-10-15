@@ -205,7 +205,7 @@ export default class ProjectIssues extends Component{
   renderListContent() {
 
     let rowWidth = this.state.showDetails ? 8 : 12;
-    let detialStyle = this.state.showDetails ? {display:false} : {};
+    let detialStyle = !this.state.showDetails ? {display:'none'} : {};
 
     return (
       <Grid fluid={true} style={{
