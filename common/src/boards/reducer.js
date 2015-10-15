@@ -101,6 +101,11 @@ export default function boardsReducer(state = initialState, action) {
       return state
         .set('viewTopic', {'loading': true});
 
+    case actions.SET_CURRENT_TOPIC: {
+      return state
+        .setIn(['viewTopic', 'id'], action.payload);
+    }
+
     case actions.LOAD_TOPIC_SUCCESS:
       return state
         .set('viewTopic', new Todo(action.payload))

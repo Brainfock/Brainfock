@@ -58,6 +58,7 @@ export const SET_NEW_TOPIC_FIELD = 'SET_NEW_TOPIC_FIELD';
 export const CREATE = 'TOPIC_CREATE';
 export const CREATE_SUCCESS = 'TOPIC_CREATE_SUCCESS';
 export const CREATE_ERROR = 'TOPIC_CREATE_ERROR';
+export const SET_CURRENT_TOPIC = 'TOPIC_SET_CURRENT_TOPIC';
 
 const getApi = (fetch, endpoint) =>
   fetch(`/api/${endpoint}`, {
@@ -207,6 +208,7 @@ export function loadCurrent(id) {
     }
   });
 }
+
 export function loadTopic(id) {
 
   let endpoint = 'topics/'+id+'?filter[include][type]' ;
@@ -224,6 +226,18 @@ export function loadTopic(id) {
         })
     }
   });
+}
+
+/**
+ * Set current topic marker - describes which item in list is clicked on (e.g. to preload details)
+ * @param {number} id
+ * @returns {{type: string, payload: number}}
+ */
+export function setCurrentTopicMarker(id) {
+  return {
+    type: SET_CURRENT_TOPIC,
+    payload: id
+  };
 }
 
 export function loadTopicGroup(name) {
