@@ -132,14 +132,15 @@ export default class CreateTopicForm extends Component{
     // normalize inputs from forms elements
     ['contextTopicId','typeId'].forEach(propName => data[propName] = data[propName][0].value)
 
-    actions.create({
-      summary: data.summary,
-      typeId: data.typeId,
-      contextTopicId: data.contextTopicId,
-      workspaceId: data.workspaceId,
-      namespace: data.namespace,
-      accessPrivateYn: data.accessPrivateYn,
+    let postData={};
+    this.props.formFields.fields.forEach(function(field){
+      postData[field.name] = data[field.name]
     })
+
+    postData.namespace = data.namespace;
+    postData.accessPrivateYn = data.accessPrivateYn;
+
+    actions.create(postData)
       .then(({error, payload}) => {
         if (error) {
           alert('Error! Check console');
