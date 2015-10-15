@@ -1,5 +1,5 @@
 {
-  "name": "WorkflowSchemeIssueTypeWorkflow",
+  "name": "WorkflowSchemeTopicTypeWorkflow",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {
@@ -7,7 +7,7 @@
   },
   "mysql": {
     "schema": "brainfock_node",
-    "table": "workflow_scheme_issue_type_workflow"
+    "table": "workflow_scheme_topic_type_workflow_map"
   },
   "properties": {
     "id": {
@@ -43,14 +43,14 @@
       },
       "_selectable": true
     },
-    "issueTypeId": {
+    "topicTypeId": {
       "type": "Number",
       "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
       "mysql": {
-        "columnName": "issue_type_id",
+        "columnName": "topic_type_id",
         "dataType": "int",
         "dataLength": null,
         "dataPrecision": 10,
@@ -77,7 +77,23 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "workflow": {
+      "type": "belongsTo",
+      "model": "Workflow",
+      "foreignKey": "workflowId"
+    },
+    "workflowScheme": {
+      "type": "belongsTo",
+      "model": "WorkflowScheme",
+      "foreignKey": "workflowSchemeId"
+    },
+    "topicType": {
+      "type": "belongsTo",
+      "model": "TopicType",
+      "foreignKey": "topicTypeId"
+    }
+  },
   "acls": [
     {
       "accessType": "*",
