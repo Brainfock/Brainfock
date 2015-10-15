@@ -1,6 +1,6 @@
 /**
  * Brainfock - community & issue management software
- * Copyright (c) 2015, Sergii Gamaiunov (“Webkadabra”)  All rights reserved.
+ * Copyright (c) 2015, Sergii Gamaiunov (ï¿½Webkadabraï¿½)  All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -55,7 +55,7 @@ export function catchComment(data) {
   };
 }
 export function postComment(entity_id, data) {
-  const endpoint = 'entities/'+entity_id+'/comments';
+  const endpoint = 'entities/'+entity_id+'/comments?include=user';
 
   return ({fetch, validate}) => ({
     types: [
