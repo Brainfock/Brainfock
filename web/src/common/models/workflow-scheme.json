@@ -58,10 +58,32 @@
         "nullable": "Y"
       },
       "_selectable": true
+    },
+    "defaultWorkflowId": {
+      "type": "Number",
+      "required": false,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
+      "mysql": {
+        "columnName": "default_workflow_id",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
+        "nullable": "Y"
+      },
+      "_selectable": true
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "defaultWorkflow": {
+      "type": "belongsTo",
+      "model": "Workflow",
+      "foreignKey": "defaultWorkflowId"
+    }
+  },
   "acls": [
     {
       "accessType": "*",
