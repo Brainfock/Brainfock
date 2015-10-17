@@ -27,6 +27,22 @@
       },
       "_selectable": false
     },
+    "isDefault": {
+      "type": "Number",
+      "required": true,
+      "length": null,
+      "precision": 1,
+      "scale": 0,
+      "mysql": {
+        "columnName": "is_default",
+        "dataType": "tinyint",
+        "dataLength": null,
+        "dataPrecision": 1,
+        "dataScale": 0,
+        "nullable": "N"
+      },
+      "_selectable": false
+    },
     "name": {
       "type": "String",
       "required": false,
