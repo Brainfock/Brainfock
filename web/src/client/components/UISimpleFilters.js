@@ -117,8 +117,8 @@ var UISimpleFilters = React.createClass({
       props.ref = item.id;
       this.filters.push(props.ref);
 
-      if(this.props.preselected && this.props.preselected[item.id])
-        props.value = this.props.preselected[item.id];
+      // this is a must - `react-select` assumes this property to be at least empty string
+      props.value='';
 
       let Filter;
       if(item.endpoint) {
