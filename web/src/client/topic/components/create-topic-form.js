@@ -28,9 +28,13 @@ import SimpleFormFactory from '../../components/UISimpleFormFactory';
 /**
  * Create topic form component
  *
- * @todo define propTypes
+ * @author sergii gamaiunov <Hello@webkadabra.com>
  */
 export default class CreateTopicForm extends Component{
+
+  static defaultProps = {
+    sysFields: ['namespace','accessPrivateYn','createGroup']
+  };
 
   static propTypes = {
     containerStore: React.PropTypes.object.isRequired,
@@ -51,6 +55,10 @@ export default class CreateTopicForm extends Component{
     this.props.actions.setNewTopicField({target:{
       name: 'namespace',
       value: this.props.params.namespace,
+    }});
+    this.props.actions.setNewTopicField({target:{
+      name: 'createGroup',
+      value: this.props.topicGroup,
     }});
 
     this.props.actions.setNewTopicField({target:{
@@ -136,10 +144,13 @@ export default class CreateTopicForm extends Component{
     let postData={};
     this.props.formFields.fields.forEach(function(field){
       postData[field.name] = data[field.name]
-    })
+    });
 
-    postData.namespace = data.namespace;
-    postData.accessPrivateYn = data.accessPrivateYn;
+    this.props.sysFields.forEach(function(field){
+      if(field && typeof field !== undefined) {
+        postData[field] = data[field]
+      }
+    });
 
     actions.create(postData)
       .then(({error, payload}) => {
