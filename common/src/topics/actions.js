@@ -228,6 +228,60 @@ export function loadTopic(id) {
   });
 }
 
+export function loadNamespaceTopic(namespace,topicKey) {
+
+  let endpoint = `topics/findOne?filter[include][1][type]&filter[include][2][author]&filter[extra][operations]` ;
+  endpoint += `&filter[where][namespace]=${namespace}` ;
+  endpoint += `&filter[where][contextTopicKey]=${topicKey}` ;
+
+  return ({fetch, validate}) => ({
+    types: [
+      LOAD_TOPIC,
+      LOAD_TOPIC_SUCCESS,
+      LOAD_TOPIC_ERROR
+    ],
+    payload: {
+      promise:  getApi(fetch, endpoint)
+        .catch(response => {
+          throw response;
+        })
+    }
+  });
+}
+
+/**
+ * Load single topic in a `namespace` by `groupKey` and `contextTopicNum` or `contextTopicKey`
+ * @param namespace
+ * @param groupKey
+ * @param topicNum
+ * @returns {Function}
+ */
+export function loadNamespaceGroupTopicByNum(namespace, groupKey, topicNum) {
+
+  let endpoint = `topics/findOne?filter[include][1][type]&filter[include][2][author]&filter[extra][operations]` ;
+  endpoint += `&filter[where][namespace]=${namespace}` ;
+  endpoint += `&filter[where][groupKey]=${groupKey}` ;
+
+  if(isNaN(topicNum))
+    endpoint += `&filter[where][contextTopicKey]=${topicNum}` ;
+  else
+    endpoint += `&filter[where][contextTopicNum]=${topicNum}` ;
+
+  return ({fetch, validate}) => ({
+    types: [
+      LOAD_TOPIC,
+      LOAD_TOPIC_SUCCESS,
+      LOAD_TOPIC_ERROR
+    ],
+    payload: {
+      promise:  getApi(fetch, endpoint)
+        .catch(response => {
+          throw response;
+        })
+    }
+  });
+}
+
 /**
  * Set current topic marker - describes which item in list is clicked on (e.g. to preload details)
  * @param {number} id
