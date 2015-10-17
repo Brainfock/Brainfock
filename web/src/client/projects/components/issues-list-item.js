@@ -26,6 +26,7 @@ var mui = require('material-ui-io');
 export default class Todo extends Component {
 
   static propTypes = {
+    topicGroupKey: PropTypes.string.isRequired,
     actions: PropTypes.object.isRequired,
     todo: PropTypes.object.isRequired
   }
@@ -105,18 +106,14 @@ export default class Todo extends Component {
 
   _onClick() {
     if(this.props.followItemOnClick) {
-      this.props.history.pushState(null, `/board/${this.props.params.board_id}/topic/${this.props.todo.id}`);
+      this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/${this.props.topicGroupKey}/${this.props.todo.contextTopicNum}`);
     } else {
       this.props.actions.setCurrentTopicMarker(this.props.todo.id);
       this.props.actions.loadTopic(this.props.todo.id);
     }
-      //this.props.actions.topic.query('board_topic', {}, this.props.board_id);
-
-    //this.props.actions.pushState(null, `/board/${this.props.params.board_id}/topic/${this.props.todo.id}`);
-   // this.props.history.pushState(null, `/board/${this.props.params.board_id}/topic/${this.props.todo.id}`);
   }
+
   _onDblClick() {
-    this.props.history.pushState(null, `/board/${this.props.params.board_id}/topic/${this.props.todo.id}`);
+    this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/${this.props.topicGroupKey}/${this.props.todo.contextTopicNum}`);
   }
-
 }
