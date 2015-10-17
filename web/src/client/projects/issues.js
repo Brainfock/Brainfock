@@ -119,7 +119,7 @@ export default class ProjectIssues extends Component{
 
       <FormattedMessage
         defaultMessage={msg.list.countItems}
-        values={{countItems:meta.count}}
+        values={{countItems:meta.count || 0}}
         />
 
       <mui.IconButton
@@ -250,6 +250,7 @@ export default class ProjectIssues extends Component{
         followItemOnClick={!this.state.showDetails}
         params={this.props.params}
         viewTopic={this.props.boards.viewTopic}
+        topicGroupKey='issue'
         />
     );
   }

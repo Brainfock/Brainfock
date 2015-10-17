@@ -249,6 +249,7 @@ export default class ProjectIssues extends Component{
         followItemOnClick={!this.state.showDetails}
         params={this.props.params}
         viewTopic={this.props.boards.viewTopic}
+        topicGroupKey='board'
         />
     );
   }
