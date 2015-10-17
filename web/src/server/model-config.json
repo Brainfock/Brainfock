@@ -68,6 +68,14 @@
     "dataSource": "db",
     "public": false
   },
+  "TopicGroupScheme": {
+    "dataSource": "db",
+    "public": false
+  },
+  "TopicGroupSchemeTypeScheme": {
+    "dataSource": "db",
+    "public": false
+  },
   "SettingsField": {
     "dataSource": "db",
     "public": true
