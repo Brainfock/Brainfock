@@ -2,7 +2,7 @@
   "name": "brainfock-app",
   "description": "Brainfock - community & issue management software.",
   "author": "Sergii Gamaiunov <hello@webkadabra.com>",
-  "version": "0.19.0",
+  "version": "0.20.1-dev",
   "private": true,
   "scripts": {
     "preinstall": "(cd web && npm link ../common) && (cd native && npm link ../common)",
