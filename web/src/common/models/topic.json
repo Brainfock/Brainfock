@@ -164,7 +164,7 @@
     },
     "groupId": {
       "type": "Number",
-      "required": false,
+      "required": true,
       "length": null,
       "precision": 10,
       "scale": 0,
@@ -600,6 +600,13 @@
       "principalId": "topicEntityAccess",
       "permission": "ALLOW",
       "property": "findById"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "topicEntityAccess",
+      "permission": "ALLOW",
+      "property": "findOne"
     },
     {
       "accessType": "EXECUTE",
