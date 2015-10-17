@@ -53,13 +53,20 @@ export default function createRoutes(getState) {
 
       <Route component={require('./projects/index')} path="projects"/>
       <Route component={require('./projects/project-wrapper')}  >
+        { /*  <Route component={require('./projects/topic.js')} path="/:namespace/:board_id-:id" />*/ }
         <Route component={require('./projects/dashboard')} path="/:namespace/:board_id"  />
         <Route component={require('./projects/issues')} path="/:namespace/:board_id/issues" />
+        {/* View topic in a group by topic num (ordered) */}
+        <Route component={require('./projects/topic.js')} path="/:namespace/:board_id/:group_key/:id" />
         <Route component={require('./projects/boards')} path="/:namespace/:board_id/boards" />
         <Route component={require('./projects/issues')} path="/:namespace/:board_id/milestones" />
         <Route component={require('./projects/issues')} path="/:namespace/:board_id/deals" />
         <Route component={require('./projects/users')} path="/:namespace/:board_id/users" />
         <Route component={require('./projects/settings')} path="/:namespace/:board_id/settings" />
+        {/* e.g. 'version', 'component', 'milestone' */}
+        <Route component={require('./projects/settings')} path="/:namespace/:board_id/settings/g/:group" />
+        {/* <Route component={require('./projects/menuItem')} path="/:namespace/:root_board_id/g/:group_key" /> */}
+        {/* <Route component={require('./projects/menuItem')} path="/:namespace/:root_board_id/g/:group_key/i/:item_id" /> */}
       </Route>
 
       <Route component={NotFound} path="*" />
