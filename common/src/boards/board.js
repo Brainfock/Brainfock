@@ -51,6 +51,9 @@ export default Record({
   // included via `extra` filters
   operations: List(),
 
+  // for POST only (not a model field)
+  createGroup:'',
+
   // ui state fields
   loading:true,
 });
