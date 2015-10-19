@@ -27,7 +27,7 @@ export const apiGet = (fetch, endpoint) =>
   })
     .then(response => {
       if (response.status === 200) return response.json();
-      throw response;
+      return response.json();
     });
 
 export const apiPost = (fetch, endpoint, body) =>
