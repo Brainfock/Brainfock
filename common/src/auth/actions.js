@@ -22,7 +22,7 @@ const post = (fetch, endpoint, body) =>
   })
   .then(response => {
     if (response.status === 200) return response.json();
-    throw response;
+    return response.json();
   });
 
 export function setFormField({target: {name, value}}) {
@@ -43,8 +43,16 @@ export function login(fields) {
     payload: {
       promise: validateForm(validate, fields)
         .then(() => post(fetch, 'users/login?include=user', fields))
+        .then(function(value) {
+          if (value.error) {
+            throw value.error;
+          }
+          else
+            return value;
+        }, function(reason) {
+          // rejection
+        })
         .catch(response => {
-          // We can handle different password/username server errors here.
           if (response.status === 401)
             throw validate.wrongPassword('password');
           throw response;
