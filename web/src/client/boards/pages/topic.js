@@ -151,7 +151,7 @@ var Issues = React.createClass({
             {this.props.boards.viewTopic.text
               && <mui.CardText>{this.props.boards.viewTopic.text}</mui.CardText>}
         </mui.Card>
-        <div style={{paddingTop:this.context.muiTheme.rawTheme.spacing.desktopGutter}} className="">
+        <div style={{paddingTop:this.context.muiTheme.rawTheme.spacing.desktopGutter}} >
           {this.comments()}
         </div>
       </div>
