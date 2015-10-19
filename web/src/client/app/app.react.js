@@ -26,6 +26,7 @@ export default class App extends Component {
   static propTypes = {
     app: PropTypes.object.isRequired,
     children: PropTypes.any,
+    history: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     msg: PropTypes.object.isRequired,
     users: PropTypes.object.isRequired,
@@ -55,8 +56,7 @@ export default class App extends Component {
   //     muiTheme: newMuiTheme,});
   // }
 
-  componentWillMount()
-  {
+  componentWillMount() {
     // socket connection must be created during willMount, so io is available when rendering
     if(process.env.IS_BROWSER && !this.io)
     {
@@ -139,15 +139,15 @@ export default class App extends Component {
         </Avatar>
 
         <Overlay
-          show={this.state.showUserMenu}
-          target={()=> React.findDOMNode(this.state.target)}
-          placement="bottom"
           container={this}
           containerPadding={20}
+          placement="bottom"
+          show={this.state.showUserMenu}
+          target={()=> React.findDOMNode(this.state.target)}
           >
-          <Popover id="signin" _title={<span>Logged in as <strong>{viewer.username}</strong></span>} >
+          <Popover id="signin">
 
-            <Grid fluid={true}>
+            <Grid fluid>
               <Row className="show-grid">
                 <Col xs={12} md={3}>
                   <Avatar>
@@ -170,13 +170,13 @@ export default class App extends Component {
               }}
               />
             <RaisedButton
-              primary
               label='My account'
               onClick={e => {
                 this.setState({showUserMenu: !this.state.showUserMenu });
                 this.props.history.pushState(null, '/me/');
                 }
               }
+              primary
               />
           </Popover>
         </Overlay>

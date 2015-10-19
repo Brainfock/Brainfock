@@ -24,6 +24,8 @@ export default function usersReducer(state = initialState, action) {
       let setUser = {...action.payload.user, authToken:action.payload.id};
       return state.set('viewer', new CurrentUser(setUser));
     }
+    // TODO: remove 'LOGOUT' action from list when logout fetch is fixed
+    case authActions.LOGOUT:
     case authActions.LOGOUT_SUCCESS: {
       return state.set('viewer',null);
     }
