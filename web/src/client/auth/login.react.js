@@ -2,6 +2,8 @@ import './login.styl';
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import focusInvalidField from '../lib/focusInvalidField';
+import {Grid, Row, Col} from 'react-bootstrap';
+import mui from 'material-ui-io';
 
 export default class Login extends Component {
 
@@ -38,36 +40,42 @@ export default class Login extends Component {
     const {actions, auth: {form}, msg: {auth: {form: msg}}} = this.props;
 
     return (
-      <div className="login">
+      <div className="login" style={{marginTop:20}}>
+      <Grid>
+    <Row className="show-grid">
+      <Col sm={8} smPush={4} xs={12}>
         <form onSubmit={::this.onFormSubmit}>
           <fieldset disabled={form.disabled}>
             <legend>{msg.legend}</legend>
-            <input
+            <mui.TextField
               autoFocus
+              hintText={msg.placeholder.email}
               name="email"
               onChange={actions.setFormField}
-              placeholder={msg.placeholder.email}
-              value={form.fields.email}
-            />
+              value={form.fields.email} />
             <br />
-            <input
+            <mui.TextField
+              hintText={msg.placeholder.password}
               name="password"
               onChange={actions.setFormField}
-              placeholder={msg.placeholder.password}
               type="password"
-              value={form.fields.password}
-            />
+              value={form.fields.password} />
             <br />
-            <button
-              children={msg.button.login}
+            <mui.RaisedButton
+              disabled={form.disabled}
+              label={msg.button.login}
+              primary
               type="submit"
             />
             {form.error &&
               <span className="error-message">{form.error.message}</span>
             }
-            <div>{msg.hint}</div>
           </fieldset>
         </form>
+        </Col>
+    </Row>
+
+  </Grid>
       </div>
     );
   }
