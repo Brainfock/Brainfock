@@ -138,7 +138,7 @@ export default class App extends Component {
           container={this}
           containerPadding={20}
           >
-          <Popover _title={<span>Logged in as <strong>{viewer.username}</strong></span>} >
+          <Popover id="signin" _title={<span>Logged in as <strong>{viewer.username}</strong></span>} >
 
             <Grid fluid={true}>
               <Row className="show-grid">
