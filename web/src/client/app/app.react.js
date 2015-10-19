@@ -163,12 +163,20 @@ export default class App extends Component {
             <RaisedButton
               label="Sign out"
               style={{marginRight:10}}
-              onClick={e => this.props.actions.logout(viewer.authToken)}
+              onClick={e => {
+                this.props.actions.logout(viewer.authToken)
+                this.setState({showUserMenu: !this.state.showUserMenu });
+                this.props.history.pushState(null, '/login/');
+              }}
               />
             <RaisedButton
-              primary={true}
-              label="My account"
-              onClick={e => this.props.history.pushState(null, `/me/`)}
+              primary
+              label='My account'
+              onClick={e => {
+                this.setState({showUserMenu: !this.state.showUserMenu });
+                this.props.history.pushState(null, '/me/');
+                }
+              }
               />
           </Popover>
         </Overlay>
