@@ -432,3 +432,36 @@ export function save(id, data) {
     }
   });
 }
+
+
+export const RUN_OPERATION = 'TOPIC_RUN_OPERATION';
+export const RUN_OPERATION_SUCCESS = 'TOPIC_RUN_OPERATION_SUCCESS';
+export const RUN_OPERATION_ERROR = 'TOPIC_RUN_OPERATION_ERROR';
+export function runOperation(topicId, operation) {
+
+  const endpoint = `topics/${topicId}/runOperation`;
+
+  return ({fetch, validate}) => ({
+    types: [
+      RUN_OPERATION,
+      RUN_OPERATION_SUCCESS,
+      RUN_OPERATION_ERROR
+    ],
+    payload: {
+      promise: apiPost(fetch, endpoint, {operation:operation})
+        .catch(response => {
+          throw response;
+        }),
+      data: {
+        topicId:topicId,
+        operation:operation
+      }
+      // TODO: add validation
+      //promise: validateForm(validate, fields)
+      //  .then(() => post(fetch, endpoint, fields))
+      //  .catch(response => {
+      //    throw response;
+      //  })
+    }
+  });
+}

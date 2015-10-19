@@ -98,6 +98,7 @@ var TopicView = React.createClass({
     const viewTopic = this.props.boards.viewTopic;
     let operaitons = [];
     let i = 0;
+    const self=this;
     if(viewTopic.operations) {
       viewTopic.operations.forEach(function(op){
         i++;
@@ -107,8 +108,15 @@ var TopicView = React.createClass({
           _style['font-weight']=800;
           active=true;
         }
-        operaitons.push(<MenuItem onClick={self.applyOperation} data-operation-id={op.id} eventKey={i} active={active}>{op.name}</MenuItem>);
-      })
+        operaitons.push(<MenuItem
+          active={active}
+          eventKey={i}
+          onSelect={
+          function() {self.applyOperation(op.id)}
+          }
+          >
+          {op.name}</MenuItem>);
+      });
     }
 
     return (
@@ -132,7 +140,18 @@ var TopicView = React.createClass({
         </div>
       </div>
     );
-  }
+  },
+
+  /**
+   * update status
+   *
+   * @param e
+   * @private
+   */
+  applyOperation:function(opName) {
+    const viewTopic = this.props.boards.viewTopic;
+    this.props.topic_actions.runOperation(viewTopic.id, opName);
+  },
 
 });
 
