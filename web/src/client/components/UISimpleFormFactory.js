@@ -20,7 +20,7 @@
  */
 import React from 'react';
 import Component from 'react-pure-render/component';
-import mui from 'material-ui-io';
+import mui from 'material-ui';
 import Select from 'react-select';
 
 import Loader from './Loader';

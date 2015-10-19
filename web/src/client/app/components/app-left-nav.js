@@ -21,7 +21,7 @@
 
 let React = require('react'),
     Router = require('react-router'),
-    mui = require('material-ui-io');
+    mui = require('material-ui');
 
 let { Route, Redirect, Link } = Router;
 

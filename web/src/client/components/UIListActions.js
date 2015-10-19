@@ -19,7 +19,7 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 var React = require('react');
-var mui = require('material-ui-io');
+var mui = require('material-ui');
 import cloneWithProps from 'react-addons-clone-with-props';
 
 var ListActions =  React.createClass({

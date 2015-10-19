@@ -19,7 +19,7 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 var React = require('react');
-var mui = require('material-ui-io');
+var mui = require('material-ui');
 var bs = require('react-bootstrap'),
   {Nav, NavItem, ButtonToolbar, ButtonGroup, Button, Glyphicon, TabbedArea, TabPane, DropdownButton, MenuItem} = bs;
 
@@ -127,7 +127,7 @@ var TopicView = React.createClass({
           {this.props.boards.viewTopic.text
           && <mui.CardText>{this.props.boards.viewTopic.text}</mui.CardText>}
         </mui.Card>
-        <div style={{paddingTop:this.context.muiTheme.spacing.desktopGutter}} className="">
+        <div style={{paddingTop:this.context.muiTheme.rawTheme.spacing.desktopGutter}} className="">
           {this.comments()}
         </div>
       </div>

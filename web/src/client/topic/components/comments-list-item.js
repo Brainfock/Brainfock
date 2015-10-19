@@ -4,7 +4,7 @@ var React = require('react'),
     Link = Router.Link,
     Navigation = Router.Navigation,
 
-    mui = require('material-ui-io');
+    mui = require('material-ui');
 
 var bs = require('react-bootstrap'),
     {ButtonToolbar, ButtonGroup, Button, Glyphicon} = bs;

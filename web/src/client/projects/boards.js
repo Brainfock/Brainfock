@@ -19,7 +19,7 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import React from 'react';
-import mui from 'material-ui-io';
+import mui from 'material-ui';
 import Component from 'react-pure-render/component';
 import {FormattedMessage} from 'react-intl';
 import {ButtonToolbar, Overlay, Popover, Grid, Row, Col, Affix} from 'react-bootstrap';
@@ -30,7 +30,7 @@ import Form from '../topic/components/create-topic-form';
 
 import ListView from '../boards/boards.react';
 import ListViewItem from './components/issues-list-item';
-import MenuItem from 'material-ui-io/lib/menus/menu-item';
+import MenuItem from 'material-ui/lib/menus/menu-item';
 import Filters from '../components/UISimpleFilters';
 
 export default class ProjectIssues extends Component{

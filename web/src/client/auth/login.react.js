@@ -3,7 +3,7 @@ import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import focusInvalidField from '../lib/focusInvalidField';
 import {Grid, Row, Col} from 'react-bootstrap';
-import mui from 'material-ui-io';
+import mui from 'material-ui';
 
 export default class Login extends Component {
 

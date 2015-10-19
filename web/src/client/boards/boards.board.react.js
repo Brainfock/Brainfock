@@ -1,7 +1,7 @@
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 
-var mui = require('material-ui-io');
+var mui = require('material-ui');
 
 export default class Todo extends Component {
 

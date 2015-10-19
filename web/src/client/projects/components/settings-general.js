@@ -19,7 +19,7 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import React from 'react';
-import mui from 'material-ui-io';
+import mui from 'material-ui';
 import {Tabs, Tab} from 'react-bootstrap';
 
 export default class Dashboard extends React.Component{

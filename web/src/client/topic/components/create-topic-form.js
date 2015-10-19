@@ -21,7 +21,7 @@
 import React from 'react';
 import Component from 'react-pure-render/component';
 
-import mui from 'material-ui-io';
+import mui from 'material-ui';
 import Loader from '../../components/Loader';
 import SimpleFormFactory from '../../components/UISimpleFormFactory';
 

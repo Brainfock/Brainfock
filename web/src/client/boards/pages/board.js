@@ -2,7 +2,7 @@ var React = require('react');
 
 var Router = require('react-router'),
     { Navigation, RouteHandler, Link } = Router,
-    mui = require('material-ui-io');
+    mui = require('material-ui');
 
 
 var Loader = require('../../components/Loader');

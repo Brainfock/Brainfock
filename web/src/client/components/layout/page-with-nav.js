@@ -22,12 +22,12 @@
 var React = require('react');
 var Loader = require('../Loader');
 
-let { Menu, Mixins, Styles } = require('material-ui-io');
+let { Menu, Mixins, Styles } = require('material-ui');
 
 let { Spacing, Colors } = Styles;
 let { StyleResizable, StylePropable } = Mixins;
 
-import * as mui from 'material-ui-io';
+import * as mui from 'material-ui';
 //const Events = mui.Utils.Events;
 
 /**

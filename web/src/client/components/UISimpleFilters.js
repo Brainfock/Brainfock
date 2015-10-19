@@ -24,7 +24,7 @@ var React = require('react'),
 
 import Select from 'react-select';
 import RemoteSelectField from './form/RemoteSelectField';
-var mui = require('material-ui-io');
+var mui = require('material-ui');
 
 require('react-select/less/select.less');
 

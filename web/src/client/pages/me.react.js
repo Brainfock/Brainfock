@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {FormattedMessage} from 'react-intl';
 import Component from 'react-pure-render/component';
 import DocumentTitle from 'react-document-title';
-import mui from 'material-ui-io';
+import mui from 'material-ui';
 import {ButtonToolbar, Overlay, Popover, Grid, Row, Col} from 'react-bootstrap';
 
 import Logout from '../auth/logout.react';

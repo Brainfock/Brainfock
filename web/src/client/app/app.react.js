@@ -10,16 +10,13 @@ import {Link} from 'react-router';
 
 let io = require('socket.io-client');
 
-let mui = require('material-ui-io'),
-  {MenuItem, LeftNav, AppCanvas, AppBar, IconButton, Menu} = mui,
-  Icon = mui.FontIcon;
-
 import {ButtonToolbar, Overlay, Popover, Grid, Row, Col} from 'react-bootstrap';
 
-let Colors = mui.Styles.Colors;
-let Typography = mui.Styles.Typography;
-let ThemeManager = new mui.Styles.ThemeManager();
-let Spacing = require('material-ui/lib/styles/spacing');
+const {MenuItem, LeftNav, AppCanvas, AppBar, IconButton, Menu, Styles, FontIcon, Avatar, RaisedButton}
+    = require('material-ui');
+const {Colors, Spacing, Typography} = Styles;
+const ThemeManager = Styles.ThemeManager;
+const DefaultRawTheme = Styles.LightRawTheme;
 
 import AppSideNav from './components/app-left-nav';
 
@@ -27,11 +24,11 @@ import AppSideNav from './components/app-left-nav';
 export default class App extends Component {
 
   static propTypes = {
+    app: PropTypes.object.isRequired,
     children: PropTypes.any,
     location: PropTypes.object.isRequired,
     msg: PropTypes.object.isRequired,
     users: PropTypes.object.isRequired,
-    app: PropTypes.object.isRequired
   }
 
   static childContextTypes = {
@@ -40,14 +37,23 @@ export default class App extends Component {
 
   getChildContext() {
     return {
-      muiTheme: ThemeManager.getCurrentTheme()
-    }
+      muiTheme: this.state.muiTheme
+    };
   }
 
   constructor(...args) {
     super(...args);
-    this.state = { showUserMenu: false };
+    this.state = {
+      showUserMenu: false,
+      muiTheme: ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
   }
+
+  // componentWillReceiveProps(nextProps, nextContext) {
+  //   let newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+  //   this.setState({
+  //     muiTheme: newMuiTheme,});
+  // }
 
   componentWillMount()
   {
@@ -92,26 +98,27 @@ export default class App extends Component {
     }
 
     // Overriding Theme Variables, see http://material-ui.com/#/customization/themes
-    ThemeManager.setSpacing({
-      desktopKeylineIncrement: 58,
-    });
-    ThemeManager.setComponentThemes({
-      appBar: {
-        color: "#FBFBFB",
-        textColor: "#3E3E3E",
-        height: 58,
-      },
-      raisedButton: {
-        primaryColor: '#4b8cf7',
-      },
+
+    let newMuiTheme = this.state.muiTheme;
+
+    newMuiTheme.appBar.color = '#FBFBFB';
+    newMuiTheme.appBar.textColor = '#3E3E3E';
+    newMuiTheme.appBar.height = 58;
+
+    newMuiTheme.raisedButton.primaryColor = '#4b8cf7';
+
+    this.setState({
+      muiTheme: newMuiTheme
     });
 
+    //newMuiTheme.appBar.textColor = Colors.deepPurpleA700;
+
+    //ThemeManager.modifyRawThemeSpacing(this.state.muiTheme, {
+    //  desktopKeylineIncrement: 58,
+    //});
   }
 
   render() {
-
-    const currentTheme = ThemeManager.getCurrentTheme();
-
     // Use location pathname to ensure header is rerendered on url change, so
     // links update their active className.
     const {children, ...props} = this.props;
@@ -125,11 +132,11 @@ export default class App extends Component {
       rightElement = (
 
       <ButtonToolbar style={{marginRight:10}}>
-        <mui.Avatar
+        <Avatar
           onClick={e => this.setState({ target: e.target, showUserMenu: !this.state.showUserMenu })}
           >
             {viewer.username.charAt(0)}
-        </mui.Avatar>
+        </Avatar>
 
         <Overlay
           show={this.state.showUserMenu}
@@ -143,9 +150,9 @@ export default class App extends Component {
             <Grid fluid={true}>
               <Row className="show-grid">
                 <Col xs={12} md={3}>
-                  <mui.Avatar>
+                  <Avatar>
                     {viewer.username.charAt(0)}
-                  </mui.Avatar>
+                  </Avatar>
                 </Col>
                 <Col xs={6} md={9}>
                   <span>Logged in as <strong>{viewer.username}</strong> ({viewer.email})</span>
@@ -153,12 +160,12 @@ export default class App extends Component {
               </Row>
               </Grid>
             <hr />
-            <mui.RaisedButton
+            <RaisedButton
               label="Sign out"
               style={{marginRight:10}}
               onClick={e => this.props.actions.logout(viewer.authToken)}
               />
-            <mui.RaisedButton
+            <RaisedButton
               primary={true}
               label="My account"
               onClick={e => this.props.history.pushState(null, `/me/`)}
@@ -169,18 +176,18 @@ export default class App extends Component {
 
 
         )
-    //    <mui.IconMenu
-    //  iconButtonElement={<mui.Avatar>{viewer.username.charAt(0)}</mui.Avatar>}
+    //    <IconMenu
+    //  iconButtonElement={<Avatar>{viewer.username.charAt(0)}</Avatar>}
     //closeOnItemTouchTap={false}
     //openDirection='bottom-left'
     //  >
     //  <MenuItem>Logged in as <strong>{viewer.username}</strong></MenuItem>
     //  <MenuItem primaryText="Refresh" />
     //  <MenuItem>
-    //    <mui.RaisedButton label="Sign out" className="pull-left" />
-    //    <mui.RaisedButton label="My account"  className="pull-right"  />
+    //    <RaisedButton label="Sign out" className="pull-left" />
+    //    <RaisedButton label="My account"  className="pull-right"  />
     //  </MenuItem>
-    //  </mui.IconMenu>
+    //  </IconMenu>
     }
     else {
       rightElement = (
@@ -194,8 +201,8 @@ export default class App extends Component {
 
     // todo: looks like we may remove `onLeftIconButtonTouchTap` event
     return (
-      <mui.AppCanvas predefinedLayout={1}>
-        <mui.AppBar
+      <AppCanvas predefinedLayout={1}>
+        <AppBar
           autoWidth={false}
           title="Brainfock"
           zDepth={0}
@@ -209,11 +216,11 @@ export default class App extends Component {
         <AppSideNav ref="leftNav" {...this.props} />
         { /*<Header msg={msg.app.header} {...{viewer, pathname}} /> */ }
         <div style={{
-          paddingTop:currentTheme.spacing.desktopKeylineIncrement
+          paddingTop:this.state.muiTheme.rawTheme.spacing.desktopKeylineIncrement
           }}>
         {React.cloneElement(children, props)}
         </div>
-      </mui.AppCanvas>
+      </AppCanvas>
     );
   }
 

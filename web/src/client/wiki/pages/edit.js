@@ -1,7 +1,7 @@
 var React = require('react'),
     Router = require('react-router'),
     {Link, Navigation} = Router,
-    mui = require('material-ui-io'),
+    mui = require('material-ui'),
     Menu = mui.Menu;
 
 var $ = require('jquery');

@@ -25,7 +25,7 @@ var promisingagent = require('promisingagent');
 var React = require('react'),
     Router = require('react-router'),
     {Link, Navigation} = Router,
-    mui = require('material-ui-io'),
+    mui = require('material-ui'),
     Menu = mui.Menu;
 
 var Loader = require('../../components/Loader');
