@@ -632,6 +632,13 @@
     {
       "accessType": "*",
       "principalType": "ROLE",
+      "principalId": "topicEntityAccess",
+      "permission": "ALLOW",
+      "property": "runOperation"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "ALLOW",
       "property": "topics"

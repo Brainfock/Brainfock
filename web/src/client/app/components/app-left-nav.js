@@ -23,7 +23,7 @@ let React = require('react'),
     Router = require('react-router'),
     mui = require('material-ui');
 
-let { Route, Redirect, Link } = Router;
+let {Route, Redirect, Link} = Router;
 
 
 // TODO: i18n

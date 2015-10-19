@@ -143,5 +143,9 @@
   "WorkflowStageOperationMap": {
     "dataSource": "db",
     "public": false
+  },
+  "EntityWorkflowOperation": {
+    "dataSource": "db",
+    "public": false
   }
 }

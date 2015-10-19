@@ -822,6 +822,116 @@ module.exports = function(Topic) {
     });
   };
 
+  Topic.runOperation = function(id, operation, cb) {
+
+    const models = Topic.app.models;
+
+    Topic.findOne({where:{id:id}}, function(err, contextTopic) {
+
+      if (err) throw err;
+      if (!contextTopic)
+        return cb(null, []);
+
+      models.WorkflowOperation.findById(operation,
+        function(err2, WorkflowOperation) {
+          if (err2) throw err2;
+          if (!WorkflowOperation)
+            return cb(null, []);
+
+          //console.log('WorkflowOperation',WorkflowOperation)
+          ///////////////////////////////
+
+          contextTopic.getWorkflowScheme(function(err3, wfScheme) {
+            if (err3) return cb(err3);
+
+            if (wfScheme === null) {
+              return cb({
+                message: 'Could not find Workflow Scheme'
+              });
+            }
+
+            models.WorkflowSchemeTopicTypeWorkflow.findOne({
+              where:{
+                workflowSchemeId:wfScheme.id,
+                topicTypeId:contextTopic.typeId
+              },
+              include:['workflow']
+            }, function(err, WorkflowSchemeTopicTypeWorkflow) {
+              if (err) return cb(err);
+
+              contextTopic.getOperations(function(err, operations) {
+                if (err) return cb(err);
+
+                if (operations.filter((e) => e.id === operation).length > 0) {
+                  // operation is allowed
+                  // TODO: add transactions
+                  let tx = null;
+                  // Topic.beginTransaction(function(err, tx) {
+                  // if (err) throw err;
+                    // Now we have a transaction (tx)
+                    models.EntityWorkflowOperation.create({
+                      workflowOperationId: WorkflowOperation.id,
+                      entityId: contextTopic.entityId,
+                      userId: 7,
+                      inStageId: contextTopic.workflowStageId,
+                      outStageId: WorkflowOperation.outgoingStageId
+                    }, {transaction_: tx}, function(err, savedRecord) {
+                      if (err) throw err;
+
+                      // update topic
+                      contextTopic.updateAttributes({
+                        workflowStageId: WorkflowOperation.outgoingStageId
+                      },
+                      {transaction_:tx}, function(err, updatedContextTopic) {
+                        if (err) return cb(err);
+                        // tx.commit(function(err) {
+                        //   if (err) throw err;
+                        return cb(null, updatedContextTopic);
+                        // });
+                      });
+                    });
+                  // });
+                } else {
+                  return cb(null, []);
+                }
+
+                // if (operations.indexOf(operation) > -1) {
+
+                // }
+              });
+              // if there is no custom workflow for topic type, select default workflow in this scheme
+              // if (WorkflowSchemeTopicTypeWorkflow === null) {
+
+              //   wfScheme.defaultWorkflow(
+              //     function(err, workflow) {
+              //       if (err) return cb(err);
+              //       if (workflow === null) {
+              //         return cb({
+              //           message: 'Could not find Workflow'
+              //         });
+              //       }
+              //       return cb(null, workflow);
+              //     }
+              //   );
+              // } else {
+
+              //   WorkflowSchemeTopicTypeWorkflow.workflow(function(err, workflow) {
+              //     if (err) return cb(err);
+              //     if (workflow === null) {
+              //       return cb({
+              //         message: 'Could not find Workflow'
+              //       });
+              //     }
+              //     return cb(null, workflow);
+              //   });
+              // }
+            });
+          });
+          ///////////////////////////////
+        });
+    });
+  };
+
   /**
    * REST API endpoint `api/topics/:contextTopicKey/filters`
    */
@@ -849,6 +959,29 @@ module.exports = function(Topic) {
       ],
       http: {verb: 'get', path: '/:id/formFields/:groupKey'},
       returns: {arg: 'filters', type: 'Array'}
+    }
+  );
+
+  /**
+   * REST API endpoint `api/topics/:contextTopicKey/runOperation`
+   */
+  Topic.remoteMethod(
+    'runOperation',
+    {
+      accepts: [
+        {arg: 'id', type: 'any', http: { source: 'path' }, required: true },
+        {
+          arg: 'custom',
+          type: 'number',
+          http: function(ctx) {
+            const req = ctx.req;
+            return +req.param('operation');
+          },
+          required: true
+        }
+      ],
+      http: {verb: 'post', path: '/:id/runOperation'},
+      returns: {arg: 'topic', type: 'Array'}
     }
   );
 
