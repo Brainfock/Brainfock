@@ -305,7 +305,16 @@ export function loadTopicGroup(name) {
       LOAD_TOPIC_GROUP_ERROR
     ],
     payload: {
-      promise:  getApi(fetch, endpoint)
+      promise: apiGet(fetch, endpoint)
+        .then(function(value) {
+          if (value.error) {
+            throw value.error;
+          }
+          else
+            return value;
+        }, function(reason) {
+          // rejection
+        })
         .catch(response => {
           throw response;
         })

@@ -20,6 +20,7 @@
  */
 
 import * as actions from './actions';
+import * as topicActions from '../topics/actions';
 import {Record} from 'immutable';
 
 const InitialState = Record({
@@ -33,6 +34,13 @@ export default function authReducer(state = initialState, action) {
   switch (action.type) {
     case actions.APP_SET_BASEURL: {
       return state.set('baseUrl', action.payload);
+    }
+    case topicActions.LOAD_TOPIC_GROUP_ERROR: {
+      const error = action.payload.message ? action.payload.message : null;
+      if (error) {
+      	alert(error);
+      }
+      //return state.set('baseUrl', action.payload);
     }
   }
 

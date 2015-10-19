@@ -140,6 +140,10 @@ export default function boardsReducer(state = initialState, action) {
         //.setIn(['board', 'group'], new TopicGroup(action.payload))
         .set('group', new TopicGroup(action.payload));
 
+    case action.LOAD_TOPIC_GROUP_ERROR: {
+      console.log('error', action.payload);
+    }
+
     case actions.COUNT_SUCCESS:
       return state
         .setIn(['meta','count'], action.payload.count);
