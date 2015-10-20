@@ -4,6 +4,48 @@ Changelog
 Summary of changes in Brainfock project code. Changelog entries usually are split into `Features`, `Fixes` and `Style tweaks` sections.
 When makes sense, items in these section may be subdivided by application component (e.g. `Server`, `API`, `iOS Client`).
 
+## 20 Oct Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.20.0:
+### Features
+* Allow to change topic status via workflow operations.
+
+##### Backend
+* Add `author` & `owner` to `topic` relations.
+* Add workflow-related models.
+* Apply initial workflow stage for topic on creation. Stage is resolved based on workflow for topic type in effective scheme.
+* Save current user as `submittedBy` value in `topic` (in addition to ownerId)
+* Topic `groupId` value is now stored in `topic` table and is required.
+
+##### Web Client
+* `/:namespace/:board_id/:group_key/:id` route to View topic in a group by topic num (ordered)
+* Add "Sign in" link for non-authenticated users
+* Add highlight of active topic in project/issues list (see `setCurrentTopicMarker` action)
+* Add material-ui elements to login page
+* Add user nav menu with "Logout" and "My account" buttons
+* Better & cleaner topic details page
+* Improve error handling - show server error message on login
+* Improve logout UX
+* Master-detail view in project issues list
+* New `Discussion Boards` module for projects, mostly to demonstrate different topic groups/types.
+* Tweak `me` page  - add header with actual username & email, placeholder for features to come and sidenote
+* Wiki Style tweak: remove unnecessary top padding
+
+
+##### API
+* New `extra.operations` filter to populate property with all available operations (if requested).
+  To add `operations` to server response, provide `extra.operations` filter:
+  `api/topics/1234?filter[extra][operations]`
+* New endpoint to execute topic workflow operation:
+  `api/topics/123/runOperation`
+* Set `groupId` when topic is saved if `createGroup` is provided in `request`  as an alias to `TopicGroup.groupKey`.
+
+### Fixes
+* Handling of checked/unchecked `mui.Checkbox` component in FormFactory, new topic form and project settings form.
+* Incomplete `CurrentUser` data in client on login.
+* `afterRemote` hooks on topic.
+* Usage of `react-select` (`value` property is required).
+* Switch back to `material-ui` and dump temporary `material-ui-io` package.
+* ... and many smaller fixes
+
 ## 13 Oct Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.19.0:
 
 ### Features
@@ -47,7 +89,7 @@ When makes sense, items in these section may be subdivided by application compon
 * Fix assets path for statics
 
 ### Style tweaks
-#### Web client
+
 * Adjust grids and lists of topics & topic issues
 * Switch top navigation bar background from black to light grey
 * Add LESS stylesheets to project (some may need a cleanup)
