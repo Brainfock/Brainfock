@@ -151,7 +151,7 @@ export default class ProjectIssues extends Component {
           padding:9
         }}
         tooltip="Toggle Details"
-        />
+      />
 
       <ListActions
         addItemForm={addItemForm}
@@ -159,7 +159,7 @@ export default class ProjectIssues extends Component {
         formFields={formFields}
         msg={msg}
         TITLE={titleMsg}
-        />
+      />
     </div>
   );
 
@@ -192,46 +192,47 @@ export default class ProjectIssues extends Component {
 
           {filterToggleButton}
 
-          <Filters ref="filters"
-           actions={this.props.topic_actions}
-           containerStore={board}
-           filters={listFilters}
-           header={
-             <div className="pull-left">
-               <mui.IconMenu iconButtonElement={iconButtonElement}>
-                 <MenuItem onClick={
-                  function() {
-                    this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStatus][]=open`);
-                  }.bind(this)
-                 } primaryText="All open"/>
-                 <MenuItem onClick={
-                  function() {
-                    this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStatus][]=closed`);
-                  }.bind(this)
-                 } primaryText="All closed"/>
-                 <MenuItem onClick={
-                  function() {
-                    this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStage][]=Backlog`);
-                  }.bind(this)
-                 } primaryText="Backlog"/>
-               </mui.IconMenu>
-             </div>
-           }
-           onApply={this.onApplyFilters}
-           preselected={this.props.location.query}
-           style={filterStyles}
+          <Filters
+             actions={this.props.topic_actions}
+             containerStore={board}
+             filters={listFilters}
+             header={
+               <div className="pull-left">
+                 <mui.IconMenu iconButtonElement={iconButtonElement}>
+                   <MenuItem onClick={
+                    function() {
+                      this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStatus][]=open`);
+                    }.bind(this)
+                   } primaryText="All open"/>
+                   <MenuItem onClick={
+                    function() {
+                      this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStatus][]=closed`);
+                    }.bind(this)
+                   } primaryText="All closed"/>
+                   <MenuItem onClick={
+                    function() {
+                      this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStage][]=Backlog`);
+                    }.bind(this)
+                   } primaryText="Backlog"/>
+                 </mui.IconMenu>
+               </div>
+             }
+             onApply={this.onApplyFilters}
+             preselected={this.props.location.query}
+             ref="filters"
+             style={filterStyles}
           />
         </div>
         <div className="clearfix">
           {content}
           </div>
       </div>
-    )
+    );
   }
 
   toggleFilters() {
     let setVisibility = !this.state.filtersOpen;
-    this.setState({filtersOpen: setVisibility})
+    this.setState({filtersOpen: setVisibility});
   }
 
   renderListContent() {
