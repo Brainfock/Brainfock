@@ -22,7 +22,7 @@ import React from 'react';
 import mui from 'material-ui';
 import Component from 'react-pure-render/component';
 import {FormattedMessage} from 'react-intl';
-import {ButtonToolbar, Overlay, Popover, Grid, Row, Col, Affix} from 'react-bootstrap';
+import {Grid, Row, Col, Affix} from 'react-bootstrap';
 
 import Loader from '../components/Loader';
 import ListActions from '../components/UIListActions';
@@ -33,15 +33,24 @@ import ListViewItem from './components/issues-list-item';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import Filters from '../components/UISimpleFilters';
 
-export default class ProjectIssues extends Component{
+export default class ProjectIssues extends Component {
+
+  static propTypes = {
+    boards: React.PropTypes.object.isRequired,
+    history: React.PropTypes.object.isRequired,
+    location: React.PropTypes.object.isRequired,
+    msg: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object.isRequired,
+    topic_actions: React.PropTypes.object.isRequired,
+  }
 
   constructor(props) {
     super(props);
     this.state = {
-      loading:true,
-      filters:props.location.query.filter || null,
       count:0,
+      filters:props.location.query.filter || null,
       filtersOpen:false,
+      loading:true,
       searchQuery:props.location.query.query,
       showDetails: true
     };
@@ -49,36 +58,42 @@ export default class ProjectIssues extends Component{
 
   componentDidMount() {
     // pull all topics (projects) from server - this list is filtered by client
-    if(process.env.IS_BROWSER==true) {
+    if (process.env.IS_BROWSER === true) {
       // load TOPICS of this BOARD
       this.props.topic_actions.find('issue', this.state.filters, this.props.params.board_id);
       this.props.topic_actions.count('issue', this.state.filters, this.props.params.board_id);
-      this.props.topic_actions.loadFilters('issue', {},this.props.params.board_id);
+      this.props.topic_actions.loadFilters('issue', {}, this.props.params.board_id);
       this.props.topic_actions.loadTopicGroup('issue', {}/*, this.props.parentModel*/);
     }
   }
 
   componentWillUpdate(newProps) {
-    if(process.env.IS_BROWSER==true) {
-      if(newProps.location.query !== this.props.location.query) {
+    if (process.env.IS_BROWSER === true) {
+      if (newProps.location.query !== this.props.location.query) {
         this.props.topic_actions.find('issue', (newProps.location.query.filter || null), this.props.params.board_id);
         this.props.topic_actions.count('issue', (newProps.location.query.filter || null), this.props.params.board_id);
       }
     }
   }
 
-  render()
-  {
-    const {board, list, meta, listFilters, newTopic, formFields} = this.props.boards;
+  render() {
+    const {board, meta, listFilters, newTopic, formFields} = this.props.boards;
     const msg = this.props.msg.topics;
 
-    let filterToggleButton = <mui.IconButton iconClassName="fa fa-filter fa-lg" tooltip="Filter" onClick={this.toggleFilters.bind(this)} />
+    let filterToggleButton = (
+      <mui.IconButton
+        iconClassName="fa fa-filter fa-lg"
+        onClick={this.toggleFilters.bind(this)}
+        tooltip="Filter"
+      />
+    );
+
     let filterStyles = {
       margin: '0 -15px',
       padding: '10px 15px'
     };
-    if(this.state.filtersOpen==false) {
-      filterStyles.display='none';
+    if (this.state.filtersOpen === false) {
+      filterStyles.display = 'none';
     }
 
     let titleMsg = (
@@ -104,53 +119,63 @@ export default class ProjectIssues extends Component{
 
     const addItemForm = (
       <Form
+        actions={this.props.topic_actions}
+        containerStore={board}
+        formFields={formFields}
+        newTopic={newTopic}
+        params={this.props.params}
         ref="formView"
         topicGroup="issue"
-        containerStore={board}
-        newTopic={newTopic}
-        formFields={formFields}
-        actions={this.props.topic_actions}
-        params={this.props.params}
         />
     );
 
-    const ListActionsRendered = <div className="pull-right">
+    const summary = meta.count > 0
+    ? <FormattedMessage
+      defaultMessage={msg.list.countItems}
+      values={{countItems:meta.count}}
+      />
+    : '';
 
-
-      <FormattedMessage
-        defaultMessage={msg.list.countItems}
-        values={{countItems:meta.count || 0}}
-        />
-
+    const ListActionsRendered = (
+      <div className="pull-right">
+      {summary}
       <mui.IconButton
         iconClassName={detailsToggleIconClass}
+        onClick={e => this.setState({
+          target: e.target,
+          showDetails: !this.state.showDetails
+        })}
+        style={{
+          height:38,
+          width:38,
+          padding:9
+        }}
         tooltip="Toggle Details"
-        onClick={e => this.setState({ target: e.target, showDetails: !this.state.showDetails })}
-        style={{height:38,width:38,padding:9}}
         />
 
       <ListActions
         addItemForm={addItemForm}
+        BUTTON_ACTION_LABEL={msg.list.addNew.button}
         formFields={formFields}
         msg={msg}
         TITLE={titleMsg}
-        BUTTON_ACTION_LABEL={msg.list.addNew.button}
         />
-
     </div>
+  );
 
     const iconButtonElement = <mui.IconButton iconClassName="fa fa-list-alt" tooltip="Filter presets"/>;
 
     let content;
-    if(this.props.boards.meta.loading==true)
-    {
-      content = <div className="row">
-        <div style={{marginTop:'5%'}} className="col-md-4 col-md-offset-4">
-          <h1><Loader />...</h1>
+    if (this.props.boards.meta.loading === true) {
+      content = (
+        <div className="row">
+          <div className="col-md-4 col-md-offset-4" style={{marginTop:'5%'}}>
+            <h1><Loader />...</h1>
+          </div>
         </div>
-      </div>
+      );
     } else {
-      content = this.renderListContent()
+      content = this.renderListContent();
     }
 
     return (
@@ -159,43 +184,43 @@ export default class ProjectIssues extends Component{
           {ListActionsRendered}
 
           <mui.TextField
-            ref="searchbox"
-            hintText={this.state.searchQuery ? null: 'Search in text'}
             defaultValue={this.state.searchQuery}
+            hintText={this.state.searchQuery ? null : 'Search in text'}
             onChange={this.searchQueryChanged}
+            ref="searchbox"
             />
 
           {filterToggleButton}
 
-         <Filters ref="filters"
+          <Filters ref="filters"
+           actions={this.props.topic_actions}
            containerStore={board}
            filters={listFilters}
-           actions={this.props.topic_actions}
+           header={
+             <div className="pull-left">
+               <mui.IconMenu iconButtonElement={iconButtonElement}>
+                 <MenuItem onClick={
+                  function() {
+                    this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStatus][]=open`);
+                  }.bind(this)
+                 } primaryText="All open"/>
+                 <MenuItem onClick={
+                  function() {
+                    this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStatus][]=closed`);
+                  }.bind(this)
+                 } primaryText="All closed"/>
+                 <MenuItem onClick={
+                  function() {
+                    this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStage][]=Backlog`);
+                  }.bind(this)
+                 } primaryText="Backlog"/>
+               </mui.IconMenu>
+             </div>
+           }
            onApply={this.onApplyFilters}
            preselected={this.props.location.query}
            style={filterStyles}
-           header={
-           <div className="pull-left">
-             <mui.IconMenu iconButtonElement={iconButtonElement}>
-               <MenuItem primaryText="All open" onClick={
-                function() {
-                  this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStatus][]=open`);
-                }.bind(this)
-               } />
-               <MenuItem primaryText="All closed" onClick={
-                function() {
-                  this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStatus][]=closed`);
-                }.bind(this)
-               } />
-               <MenuItem primaryText="Backlog" onClick={
-                function() {
-                  this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStage][]=Backlog`);
-                }.bind(this)
-               } />
-             </mui.IconMenu>
-             </div>
-           }
-            />
+          />
         </div>
         <div className="clearfix">
           {content}
@@ -215,55 +240,54 @@ export default class ProjectIssues extends Component{
     let detialStyle = !this.state.showDetails ? {display:'none'} : {};
 
     return (
-      <Grid fluid={true} style={{
+      <Grid fluid style={{
         paddingLeft:0,
       }}>
         <Row>
           <Col md={rowWidth}>
             {this.renderList()}
           </Col>
-
-          <Col style={detialStyle} md={4}>
+          <Col md={4} style={detialStyle}>
             <Affix
               className="bs-docs-sidebar hidden-print"
-              role="complementary"
+              offsetBottom={64}
               offsetTop={64}
-              offsetBottom={64}>
-            {this.renderDetails()}
-              </Affix>
+              role="complementary"
+            >
+              {this.renderDetails()}
+            </Affix>
           </Col>
-
         </Row>
       </Grid>
-    )
+    );
   }
 
   renderList() {
     return (
       <ListView
-        list={this.props.boards.list}
         actions={this.props.topic_actions}
-        msg={this.props.msg.todos}
-        history={this.props.history}
-        itemComponent={ListViewItem}
         // whether list should follow link when list item is clicked or just load u details
         followItemOnClick={!this.state.showDetails}
+        history={this.props.history}
+        itemComponent={ListViewItem}
+        list={this.props.boards.list}
+        msg={this.props.msg.todos}
         params={this.props.params}
-        viewTopic={this.props.boards.viewTopic}
         topicGroupKey='issue'
+        viewTopic={this.props.boards.viewTopic}
         />
     );
   }
 
   renderDetails() {
-    if(this.props.boards.viewTopic.loading) {
+    if (this.props.boards.viewTopic.loading) {
       return (
-        <div style={{width:'100%',textAlign:'center'}}>
+        <div style={{width:'100%', textAlign:'center'}}>
           <h1><Loader /></h1>
         </div>
-      )
+      );
     }
-    if(!this.props.boards.viewTopic.id) {
+    if (!this.props.boards.viewTopic.id) {
       return (
         <mui.Paper>
           <div style={{padding:'5px 15px 15px 15px'}}>
@@ -271,7 +295,7 @@ export default class ProjectIssues extends Component{
             <p>You can hide this panel by clicking `i` button.</p>
           </div>
         </mui.Paper>
-      )
+      );
     }
     return (
       <mui.Paper>
