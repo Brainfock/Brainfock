@@ -37,9 +37,12 @@ export default Record({
   accessPrivateYn:'',
   logoIcon:'',
   logoBackground:'',
-  wfStage:'',
   updatedOn:'',
   createdOn:'',
+
+  // read-only, available via database view
+  wfStage:'',
+  wfStatus:'',
 
   // included via relations
   type: {},
@@ -57,4 +60,3 @@ export default Record({
   // ui state fields
   loading:true,
 });
-

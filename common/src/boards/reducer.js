@@ -208,14 +208,17 @@ export default function boardsReducer(state = initialState, action) {
       return state
         .setIn(['newTopic','loading'],false)
     }
-    
+
     case actions.RUN_OPERATION: {
       return state
         .setIn(['viewTopic', 'loading'], true);
     }
     case actions.RUN_OPERATION_SUCCESS: {
       return state
-        .set('viewTopic', new Todo(action.payload.topic))
+      //  .set('viewTopic', new Todo(action.payload.topic))
+        .setIn(['viewTopic', 'wfStatus'], action.payload.topic.wfStatus)
+        .setIn(['viewTopic', 'wfStage'], action.payload.topic.wfStage)
+        .setIn(['viewTopic', 'operations'], action.payload.topic.operations)
         .setIn(['viewTopic', 'loading'], false);
     }
     case actions.RUN_OPERATION_ERROR: {
