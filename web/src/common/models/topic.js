@@ -886,7 +886,12 @@ module.exports = function(Topic) {
                           if (err) throw err;
                           updatedContextTopic.reload(function(err, updatedContextTopic) {
                             if (err) return cb(err);
-                            return cb(null, updatedContextTopic);
+
+                            updatedContextTopic.getOperations(function(err, operations) {
+                              if (err) return cb(err);
+                              updatedContextTopic.operations = operations;
+                              return cb(null, updatedContextTopic);
+                            });
                           });
                         });
                       });
