@@ -832,6 +832,8 @@ module.exports = function(Topic) {
       if (!contextTopic)
         return cb(null, []);
 
+      const currentUser = loopback.getCurrentContext().get('currentUser');
+
       models.WorkflowOperation.findById(operation,
         function(err2, WorkflowOperation) {
           if (err2) throw err2;
@@ -864,33 +866,35 @@ module.exports = function(Topic) {
 
                 if (operations.filter((e) => e.id === operation).length > 0) {
                   // operation is allowed
-                  // TODO: add transactions
-                  let tx = null;
-                  // Topic.beginTransaction(function(err, tx) {
-                  // if (err) throw err;
+                  Topic.beginTransaction('READ COMMITTED', function(err, tx) {
+                    if (err) throw err;
                     // Now we have a transaction (tx)
                     models.EntityWorkflowOperation.create({
                       workflowOperationId: WorkflowOperation.id,
                       entityId: contextTopic.entityId,
-                      userId: 7,
+                      userId: currentUser.id,
                       inStageId: contextTopic.workflowStageId,
                       outStageId: WorkflowOperation.outgoingStageId
-                    }, {transaction_: tx}, function(err, savedRecord) {
+                    }, {transaction: tx}, function(err, savedRecord) {
                       if (err) throw err;
 
                       // update topic
                       contextTopic.updateAttributes({
                         workflowStageId: WorkflowOperation.outgoingStageId
                       },
-                      {transaction_:tx}, function(err, updatedContextTopic) {
+                      {transaction:tx},
+                      function(err, updatedContextTopic) {
                         if (err) return cb(err);
-                        // tx.commit(function(err) {
-                        //   if (err) throw err;
-                        return cb(null, updatedContextTopic);
-                        // });
+                        tx.commit(function(err) {
+                          console.log('committed');
+                         if (err) throw err;
+                          updatedContextTopic.reload(function(err, updatedContextTopic) {
+                            return cb(null, updatedContextTopic);
+                          })
+                        });
                       });
                     });
-                  // });
+                  });
                 } else {
                   return cb(null, []);
                 }
