@@ -66,7 +66,13 @@ var ListActions =  React.createClass({
     const addItemForm = React.cloneElement(this.props.addItemForm, {
       ref: 'formView'
     })
-    return <mui.Dialog title={this.props.TITLE} ref="modelForm" actions={dialogActions}>
+    return <mui.Dialog
+      actions={dialogActions}
+      autoDetectWindowHeight={true}
+      autoScrollBodyContent={true}
+      ref="modelForm"
+      title={this.props.TITLE}
+      >
       {addItemForm}
     </mui.Dialog>
   },
