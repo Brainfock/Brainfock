@@ -132,6 +132,11 @@ class Page extends Component{
         }
       }
 
+      // `value` must be set - `react-select` component assumes it is at least an empty {String}
+      if(!props.value) {
+        props.value = '';
+      }
+
       let FilterComponent = Select;
       if(item.endpoint) {
         props.endpoint = item.endpoint;
