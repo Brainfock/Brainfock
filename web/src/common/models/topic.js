@@ -840,9 +840,6 @@ module.exports = function(Topic) {
           if (!WorkflowOperation)
             return cb(null, []);
 
-          //console.log('WorkflowOperation',WorkflowOperation)
-          ///////////////////////////////
-
           contextTopic.getWorkflowScheme(function(err3, wfScheme) {
             if (err3) return cb(err3);
 
@@ -886,11 +883,11 @@ module.exports = function(Topic) {
                       function(err, updatedContextTopic) {
                         if (err) return cb(err);
                         tx.commit(function(err) {
-                          console.log('committed');
-                         if (err) throw err;
+                          if (err) throw err;
                           updatedContextTopic.reload(function(err, updatedContextTopic) {
+                            if (err) return cb(err);
                             return cb(null, updatedContextTopic);
-                          })
+                          });
                         });
                       });
                     });
@@ -898,10 +895,6 @@ module.exports = function(Topic) {
                 } else {
                   return cb(null, []);
                 }
-
-                // if (operations.indexOf(operation) > -1) {
-
-                // }
               });
               // if there is no custom workflow for topic type, select default workflow in this scheme
               // if (WorkflowSchemeTopicTypeWorkflow === null) {
@@ -931,7 +924,6 @@ module.exports = function(Topic) {
               // }
             });
           });
-          ///////////////////////////////
         });
     });
   };
