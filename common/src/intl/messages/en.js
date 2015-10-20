@@ -87,7 +87,7 @@ export default {
         button: 'Add New',
       },
       countItems: `{countItems, plural,
-  =0 {}
+  =0 {No items in list}
   one {# item}
   other {# items}
 }`
