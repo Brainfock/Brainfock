@@ -228,38 +228,16 @@ export function loadTopic(id) {
   });
 }
 
-export function loadNamespaceTopic(namespace,topicKey) {
-
-  let endpoint = `topics/findOne?filter[include][1][type]&filter[include][2][author]&filter[extra][operations]` ;
-  endpoint += `&filter[where][namespace]=${namespace}` ;
-  endpoint += `&filter[where][contextTopicKey]=${topicKey}` ;
-
-  return ({fetch, validate}) => ({
-    types: [
-      LOAD_TOPIC,
-      LOAD_TOPIC_SUCCESS,
-      LOAD_TOPIC_ERROR
-    ],
-    payload: {
-      promise:  getApi(fetch, endpoint)
-        .catch(response => {
-          throw response;
-        })
-    }
-  });
-}
-
 /**
  * Load single topic in a `namespace` by `groupKey` and `contextTopicNum` or `contextTopicKey`
- * @param namespace
+ * @param contextTopicId
  * @param groupKey
  * @param topicNum
  * @returns {Function}
  */
-export function loadNamespaceGroupTopicByNum(namespace, groupKey, topicNum) {
+export function loadContextGroupTopicByNum(contextTopicId, groupKey, topicNum) {
 
-  let endpoint = `topics/findOne?filter[include][1][type]&filter[include][2][author]&filter[extra][operations]` ;
-  endpoint += `&filter[where][namespace]=${namespace}` ;
+  let endpoint = `topics/${contextTopicId}/topics/?filter[include][1][type]&filter[include][2][author]&filter[extra][operations]` ;
   endpoint += `&filter[where][groupKey]=${groupKey}` ;
 
   if(isNaN(topicNum))
@@ -456,6 +434,41 @@ export function runOperation(topicId, operation) {
         topicId:topicId,
         operation:operation
       }
+      // TODO: add validation
+      //promise: validateForm(validate, fields)
+      //  .then(() => post(fetch, endpoint, fields))
+      //  .catch(response => {
+      //    throw response;
+      //  })
+    }
+  });
+}
+
+export const DELETE_TOPIC = 'DELETE_TOPIC';
+export const DELETE_TOPIC_SUCCESS = 'DELETE_TOPIC_SUCCESS';
+export const DELETE_TOPIC_ERROR = 'DELETE_TOPIC_ERROR';
+export function deleteTopic(topicId) {
+
+  const endpoint = `rawTopics/${topicId}`;
+
+  return ({fetch, validate}) => ({
+    types: [
+      DELETE_TOPIC,
+      DELETE_TOPIC_SUCCESS,
+      DELETE_TOPIC_ERROR
+    ],
+    payload: {
+      promise: fetch(`/api/${endpoint}`, {
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+        method: 'DELETE',
+      })
+        .then(response => {
+          if (response.status === 204) return response.json();
+          throw response;
+        })
+        .catch(response => {
+          throw response;
+        }),
       // TODO: add validation
       //promise: validateForm(validate, fields)
       //  .then(() => post(fetch, endpoint, fields))

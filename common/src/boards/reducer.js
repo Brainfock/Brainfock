@@ -107,9 +107,13 @@ export default function boardsReducer(state = initialState, action) {
     }
 
     case actions.LOAD_TOPIC_SUCCESS:
+    {
+      // payload *may* be an array if we were looking for topic inside of another topic e.g. ``/api/topics/SomeTopic/topics/?filter...``
+      const data = action.payload.length && action.payload.length > 0 ? action.payload[0] : action.payload;
       return state
-        .set('viewTopic', new Todo(action.payload))
+        .set('viewTopic', new Todo(data))
         .setIn(['viewTopic', 'loading'], false);
+    }
 
     // load all comments
     case commentsActions.LOAD_COMMENTS_SUCCESS:

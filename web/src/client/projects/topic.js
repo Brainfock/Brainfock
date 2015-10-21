@@ -55,7 +55,7 @@ var TopicView = React.createClass({
     if(process.env.IS_BROWSER==true) {
       if(this.props.params.id)
       {
-        this.props.topic_actions.loadNamespaceGroupTopicByNum(this.props.params.namespace, this.props.params.group_key, this.props.params.id);
+        this.props.topic_actions.loadContextGroupTopicByNum(this.props.params.board_id, this.props.params.group_key, this.props.params.id);
       }
     }
   },
@@ -64,7 +64,7 @@ var TopicView = React.createClass({
   {
     if(newProps.params.namespace && newProps.params.group_key && newProps.params.id && (this.props.params !== newProps.params))
     {
-      this.props.topic_actions.loadNamespaceGroupTopicByNum(this.props.params.namespace, this.props.params.group_key, this.props.params.id);
+      this.props.topic_actions.loadContextGroupTopicByNum(this.props.params.group_key, this.props.params.id);
     }
   },
 
@@ -118,6 +118,15 @@ var TopicView = React.createClass({
           {op.name}</MenuItem>);
       });
     }
+    operaitons.push(<MenuItem divider/>);
+    operaitons.push(
+      <MenuItem
+        className="ui-alert-link"
+        eventKey={i++}
+        onSelect={this.showDeletePrompt}
+      >
+      Delete
+    </MenuItem>);
 
     return (
       <div className="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
@@ -128,16 +137,17 @@ var TopicView = React.createClass({
 
         <mui.Card>
           <mui.CardHeader
-            title={viewTopic.author && <b>{viewTopic.author.username}</b>}
+            avatar={viewTopic.author.username && <mui.Avatar>{viewTopic.author.username.charAt(0)}</mui.Avatar>}
             subtitle= {viewTopic.createdOn}
-            avatar={viewTopic.author.username && <mui.Avatar>{viewTopic.author.username.charAt(0)}</mui.Avatar>}/>
-
+            title={viewTopic.author && <b>{viewTopic.author.username}</b>}
+            />
           {this.props.boards.viewTopic.text
           && <mui.CardText>{this.props.boards.viewTopic.text}</mui.CardText>}
         </mui.Card>
-        <div style={{paddingTop:this.context.muiTheme.rawTheme.spacing.desktopGutter}} className="">
+        <div style={{paddingTop:this.context.muiTheme.rawTheme.spacing.desktopGutter}}>
           {this.comments()}
         </div>
+        {this.renderDeleteDialog()}
       </div>
     );
   },
@@ -153,6 +163,63 @@ var TopicView = React.createClass({
     this.props.topic_actions.runOperation(viewTopic.id, opName);
   },
 
+  renderDeleteDialog: function() {
+
+    let disabled = false;
+    if (this.props.boards.viewTopic.loading === true) {
+      disabled = true;
+    }
+    let dialogActions = [
+      <mui.FlatButton
+        label='BTN_CANCEL'
+        onClick={this.onDeleteDialogCancel}
+        onTouchTap={this.onDeleteDialogCancel}
+        ref='BTN_CANCEL'
+        secondary
+        />,
+      <mui.FlatButton
+        disabled={disabled}
+        label='BTN_DELETE'
+        onClick={this.doDelete.bind(this)}
+        primary
+        ref='BTN_DELETE'
+        />,
+    ];
+
+    // TODO: make dynamic messages per type, like l20n.ctx.getSync(this.state.model.type.name + '_deleteDialog_MESSAGE') ?
+
+    const Dialog = (
+      <mui.Dialog
+        actions={dialogActions}
+        ref='deletePrompt'
+        title='Topic_deleteDialog_TITLE'
+        >
+        <p>'Topic_deleteDialog_MESSAGE'</p>
+      </mui.Dialog>
+    );
+
+    return Dialog;
+  },
+
+  showDeletePrompt: function() {
+    this.refs.deletePrompt.show();
+    // focus on "Cancel" action by default
+    if (this.refs.BTN_CANCEL) {
+      setTimeout(function() {
+        this.refs.BTN_CANCEL.getDOMNode().focus();
+      }.bind(this), 10);
+    }
+  },
+
+  onDeleteDialogCancel:function() {
+    this.refs.deletePrompt.dismiss();
+  },
+
+  doDelete: function() {
+    // don't forget to actually pass MODEL object
+    //Actions.deleteModel(this.props.Store);
+    this.props.topic_actions.deleteTopic(this.props.boards.viewTopic.id);
+  }
 });
 
 module.exports = TopicView;
