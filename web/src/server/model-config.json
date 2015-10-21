@@ -52,6 +52,10 @@
     "dataSource": "db",
     "public": true
   },
+  "RawTopic": {
+    "dataSource": "db",
+    "public": true
+  },
   "TopicGroup": {
     "dataSource": "db",
     "public": true
