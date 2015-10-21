@@ -403,6 +403,33 @@ module.exports = function(Topic) {
     }
   });
 
+  Topic.afterRemote( '*.__get__topics', function( ctx, data, next)
+  {
+    if(ctx.args.filter && ctx.args.filter.extra && ctx.args.filter.extra.hasOwnProperty('operations') && ctx.result && data.length>0) {
+
+      function populateValue(modelInstance, callback) {
+        modelInstance.getOperations(function(err, operations) {
+          if(err) return next(err);
+          modelInstance.operations=operations;
+          return callback();
+        })
+      }
+
+      let resCount = data.length;
+      let lopRes = [];
+      ctx.result.forEach(function(/*Topic model instance*/ item){
+        populateValue(item, function(result){
+          lopRes.push(1);
+          if(lopRes.length == (resCount)) {
+            next();
+          }
+        });
+      })
+    } else {
+      return next();
+    }
+  });
+
   Topic.prototype.getOperations = function(next) {
 
     let self=this;
