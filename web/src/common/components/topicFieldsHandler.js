@@ -59,12 +59,12 @@ export default class FieldsHandler {
    */
   static contextTopicIdFieldProps(data) {
     return new Promise(
-      function (resolve, reject) {
+      function(resolve, reject) {
         data.group.parentGroup(function(err,parentGroup){
-        if(err)
+        if (err)
           throw err;
 
-        if(parentGroup) {
+        if (parentGroup) {
           resolve({
             label: parentGroup.name,
             // `name` is used for form inputs to identify model's attribute
@@ -78,24 +78,42 @@ export default class FieldsHandler {
             }],
             // use REST to get options (handles access control):
             endpoint: '/api/topics/?filter[where][groupKey]='+parentGroup.groupKey,
+            endpointQueryString: 'filter[where][summary][like]'
           });
         } else {
           resolve(null);
         }
-      })
+      });
+      }
+    );
+  }
+
+  static workspaceIdFieldProps(data) {
+    return new Promise(
+      function(resolve, reject) {
+        resolve({
+          // TODO: l10n
+          label: 'Workspace',
+          name: data.key,
+          type: 'select', // todo: hasOne rather
+          options:[],
+          // use REST to get options (handles access control):
+          endpoint: '/api/workspaces?',
+          endpointQueryString: 'filter[where][name][like]',
+        });
       }
     );
   }
 
   static typeIdFieldProps(data) {
     return new Promise(
-      function (resolve, reject) {
+      function(resolve, reject) {
         resolve({
           label: 'Type',
           // `name` is used for form inputs to identify model's attribute
           name: data.key,
           type: 'select', // todo: hasOne rather
-          options:data.options || [],
+          options:data.options || []
         });
       }
     );
@@ -107,27 +125,39 @@ export default class FieldsHandler {
         resolve({
           label: 'Summary',
           name: data.key,
-          type: 'text',
+          type: 'text'
         });
       }
-    )
+    );
   }
 
   static textFieldProps(data) {
     return new Promise(
-      function (resolve, reject) {
+      function(resolve, reject) {
         resolve({
-          label: 'Details',
+          label: data.name || 'Details',
           name: data.key,
-          type: 'textarea',
+          type: 'textarea'
         });
       }
-    )
+    );
+  }
+
+  static contextTopicKeyFieldProps(data) {
+    return new Promise(
+      function(resolve, reject) {
+        resolve({
+          label: data.name,
+          name: data.key,
+          type: 'text'
+        });
+      }
+    );
   }
 
   static assigneeFieldProps(data) {
     return new Promise(
-      function (resolve, reject) {
+      function(resolve, reject) {
         resolve({
           label: 'Assignee',
           name: data.key,
