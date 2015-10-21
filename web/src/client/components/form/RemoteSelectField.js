@@ -30,7 +30,8 @@ var RemoteSelectField = React.createClass({
     hint: React.PropTypes.string,
     label: React.PropTypes.string,
     endpoint:React.PropTypes.string,
-    options:React.PropTypes.array
+    options:React.PropTypes.array,
+    endpointQueryString:React.PropTypes.string
   },
   loadOptions (input, callback) {
 
@@ -41,12 +42,20 @@ var RemoteSelectField = React.createClass({
         });
     }
 
-    if(this.timer!==null)
+    if (this.timer !== null)
       clearTimeout(this.timer);
 
-    this.timer=setTimeout(function(){
-      fetch(this.props.endpoint+
-        ( input ? "&filter[where][summary][like]="+encodeURI('%'+input+'%') : ''), {
+    let endpoint = [this.props.endpoint];
+    if (input) {
+      if (this.props.endpointQueryString) {
+        const query = encodeURI('%' + input + '%');
+        endpoint.push(`${this.props.endpointQueryString}=${query}`);
+      }
+    }
+
+
+    this.timer=setTimeout(function() {
+      fetch(endpoint.join('&'), {
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
         method: 'get',
         credentials: 'include', // accept cookies from server, for authentication
@@ -60,7 +69,7 @@ var RemoteSelectField = React.createClass({
         .then(function(response) {
           let resp= response.map(item => { return {
             value:(item.value || item.id),
-            label:(item.label || item.summary),
+            label:(item.label || item.summary || item.name),
           }});
           return callback(null, {
             options:resp || [],

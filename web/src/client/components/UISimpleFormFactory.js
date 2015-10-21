@@ -138,8 +138,11 @@ class Page extends Component{
       }
 
       let FilterComponent = Select;
-      if(item.endpoint) {
+      if (item.endpoint) {
         props.endpoint = item.endpoint;
+        if (item.endpoint) {
+          props.endpointQueryString = item.endpointQueryString;
+        }
         FilterComponent = RemoteSelectField;
       }
 
