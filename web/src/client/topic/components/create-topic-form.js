@@ -37,7 +37,7 @@ export default class CreateTopicForm extends Component{
   };
 
   static propTypes = {
-    containerStore: React.PropTypes.object.isRequired,
+    containerStore: React.PropTypes.any.isRequired,
     params: React.PropTypes.object.isRequired,
     formFields: React.PropTypes.object,
     actions: React.PropTypes.any.isRequired,
@@ -46,28 +46,30 @@ export default class CreateTopicForm extends Component{
   };
 
   componentWillMount() {
-    if(!this.props.formFields || (this.props.formFields && this.props.formFields.fields.size==0))
-      this.props.actions.loadFormFields(this.props.topicGroup, this.props.containerStore.id);
+    if(!this.props.formFields || (this.props.formFields && this.props.formFields.fields.size === 0))
+      this.props.actions.loadFormFields(this.props.topicGroup, (this.props.containerStore ? this.props.containerStore.id : 0));
   }
 
   componentDidMount() {
     // set default values based on current route (workspace namespace) and container topic (e.g. project topic)
-    this.props.actions.setNewTopicField({target:{
-      name: 'namespace',
-      value: this.props.params.namespace,
-    }});
+    if (this.props.params.namespace)
+      this.props.actions.setNewTopicField({target:{
+        name: 'namespace',
+        value: this.props.params.namespace,
+      }});
     this.props.actions.setNewTopicField({target:{
       name: 'createGroup',
       value: this.props.topicGroup,
     }});
 
-    this.props.actions.setNewTopicField({target:{
-      name: 'contextTopicId',
-      value: [
-        // for `react-select` we must provide {Array} with {Object}s
-        {label:this.props.containerStore.summary,value:this.props.containerStore.id}
-      ]
-    }})
+    if (this.props.containerStore)
+      this.props.actions.setNewTopicField({target:{
+        name: 'contextTopicId',
+        value: [
+          // for `react-select` we must provide {Array} with {Object}s
+          {label:this.props.containerStore.summary,value:this.props.containerStore.id}
+        ]
+      }});
   }
 
   //componentDidMount: function() {
@@ -131,24 +133,28 @@ export default class CreateTopicForm extends Component{
     </div>
   }
 
-  onFormSubmit(e)
-  {
+  onFormSubmit(e) {
     const {actions, newTopic} = this.props;
 
     // we need to call `.toJS()` ince `newTopic` is immutable
     let data = newTopic.toJS();
 
     // normalize inputs from forms elements
-    ['contextTopicId','typeId'].forEach(propName => data[propName] = data[propName][0].value)
-
-    let postData={};
-    this.props.formFields.fields.forEach(function(field){
-      postData[field.name] = data[field.name]
+    this.props.formFields.fields.forEach(function({type, name}) {
+      // `react-select` stores sigle value as an array too
+      if (type === 'select') {
+        data[name] = data[name] ? data[name][0].value : null;
+      }
     });
 
-    this.props.sysFields.forEach(function(field){
-      if(field && typeof field !== undefined) {
-        postData[field] = data[field]
+    let postData = {};
+    this.props.formFields.fields.forEach(function(field) {
+      postData[field.name] = data[field.name];
+    });
+
+    this.props.sysFields.forEach(function(field) {
+      if (field && typeof field !== undefined) {
+        postData[field] = data[field];
       }
     });
 

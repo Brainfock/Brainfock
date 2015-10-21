@@ -367,8 +367,6 @@ module.exports = function(app) {
 
     if (context.remotingContext.method.name === 'upsert') {
 
-      return cb(null, true);
-
       // TODO: we must validate if user can create pages in selected contextEntityId space
       if (userId) {
         let allowedEntities = [];
@@ -414,7 +412,6 @@ module.exports = function(app) {
                   ]
                   //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
                 }});
-
             }
 
 
@@ -752,38 +749,48 @@ module.exports = function(app) {
     const ownerContainerId = context.remotingContext.args.data.contextTopicId > 0
       // post/update topic of some other topic (e.g. update `issue` of some `project`)
       ? context.remotingContext.args.data.contextTopicId
-      // post/update root topic, e.g. update `project` topic
-      : context.remotingContext.args.data.id;
+      : (
+      context.remotingContext.args.data.id > 0
+        // post/update root topic, e.g. update `project` topic
+        ? context.remotingContext.args.data.id
+        : 0
+    );
 
-    console.log('[RBAC createTopicAccess] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName + '`:' + ownerContainerId);
+    console.log('[RBAC createTopicAccess] Validate access to  operation `' + context.remotingContext.method.name
+      + '` of model `' + context.modelName + '`:' + ownerContainerId);
 
-    app.models.Topic.findOne({where:{
-      id:ownerContainerId
-    }},
-    function(err, ContextTopic) {
-      // TODO: support for root topics
-      if (err || !ContextTopic) {
-        return reject();
-      }
-      if (ContextTopic.accessPrivateYn !== 1
-        || ContextTopic.ownerUserId === userId) {
-        return accept();
-      } else {
-        // if access is private, check user permissions:
-        app.models.EntityAccessAssign.findOne({where:{
-          authType:0,
-          authId:userId,
-          entityId:ContextTopic.entityId
-        }},
-        function(errEa, dataEa) {
-          if (errEa || !dataEa) {
-            return reject();
-          }
-          // user has access to context entity:
+    // creating root topic, e.g. project, board etc.
+    if (ownerContainerId === 0) {
+      return accept();
+    } else {
+      app.models.Topic.findOne({where:{
+        id:ownerContainerId
+      }},
+      function(err, ContextTopic) {
+        // TODO: support for root topics
+        if (err || !ContextTopic) {
+          return reject();
+        }
+        if (ContextTopic.accessPrivateYn !== 1
+          || ContextTopic.ownerUserId === userId) {
           return accept();
-        });
-      }
-    });
+        } else {
+          // if access is private, check user permissions:
+          app.models.EntityAccessAssign.findOne({where:{
+            authType:0,
+            authId:userId,
+            entityId:ContextTopic.entityId
+          }},
+          function(errEa, dataEa) {
+            if (errEa || !dataEa) {
+              return reject();
+            }
+            // user has access to context entity:
+            return accept();
+          });
+        }
+      });
+    }
   });
 
   /**
@@ -807,7 +814,7 @@ module.exports = function(app) {
       return reject();
     }
 
-    console.log('[RBAC createTopicAccess] Validate access to  operation `' + context.remotingContext.method.name
+    console.log('[RBAC deleteTopicAccess] Validate access to  operation `' + context.remotingContext.method.name
     + '` of model `' + context.modelName + '`:' + context.modelId);
 
     // check access to entity

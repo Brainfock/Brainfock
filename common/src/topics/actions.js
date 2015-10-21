@@ -134,10 +134,10 @@ function toQueryString(obj, urlEncode) {
 }
 export function find(type, query, contextTopicId) {
   let endpoint;
-  if(contextTopicId) {
-    endpoint = `topics/${contextTopicId}/topics/?filter[where][groupKey]=${type}` ;
+  if (contextTopicId) {
+    endpoint = `topics/${contextTopicId}/topics/?filter[where][groupKey]=${type}`;
   } else {
-    endpoint = 'topics/?filter[where][groupKey]='+type ;
+    endpoint = 'topics/?filter[where][groupKey]='+type;
   }
 
   // include some additional info
@@ -166,9 +166,9 @@ export function count(group, query, contextTopicId) {
 
   let endpoint;
   if(contextTopicId) {
-    endpoint = `topics/${contextTopicId}/topics/count?where[groupKey]=${group}` ;
+    endpoint = `topics/${contextTopicId}/topics/count?where[groupKey]=${group}`;
   } else {
-    endpoint = 'topics/count?where[groupKey]='+group ;
+    endpoint = 'topics/count?where[groupKey]='+group;
   }
 
   if(query) {
@@ -327,9 +327,9 @@ export function loadFormFields(group, contextTopicId) {
 
   let endpoint;
   if(contextTopicId) {
-    endpoint = `topics/${contextTopicId}/formFields/${group}` ;
+    endpoint = `topics/${contextTopicId}/formFields/${group}`;
   } else {
-    console.log('contextTopic must be provided for `formFields`')
+    endpoint = `topics/${contextTopicId}/formFields/${group}`;
   }
 
   return ({fetch, validate}) => ({

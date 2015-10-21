@@ -596,12 +596,7 @@ module.exports = function(Topic) {
 
     const models = Topic.app.models;
 
-    Topic.findOne({where:{id:id}}, function(err, contextTopic) {
-
-      if (err) throw err;
-      if (!contextTopic)
-        return cb(null, []);
-
+    if (id === '0') {
       Topic.app.models.TopicGroup.findOne({
         where:{
           groupKey:groupKey
@@ -613,148 +608,311 @@ module.exports = function(Topic) {
         if (!groupInstance)
           return cb(null, []);
 
+
         // TODO: allow to define `TopicGroupScheme` per context (parent) topic
         models.TopicGroupScheme.findOne({
-          where:{
-            isDefault: 1
-          }
-        },
-        function(e1, TopicGroupScheme) {
-          if (e1) throw e1;
-
-          if (!TopicGroupScheme)
-            return cb(null, []);
-
-          // find effective `TypeScheme` for this group in `TopicGroupScheme`
-          models.TopicGroupSchemeTypeScheme.findOne({
             where:{
-              topicGroupSchemeId: TopicGroupScheme.id,
-              topicGroupId: groupInstance.id
+              isDefault: 1
             }
-          }, function(e2, TopicGroupSchemeTypeScheme) {
-            if (e2) throw e2;
+          },
+          function(e1, TopicGroupScheme) {
+            if (e1) throw e1;
 
-            if (!TopicGroupSchemeTypeScheme)
+            if (!TopicGroupScheme)
               return cb(null, []);
 
-            // find effective `TypeScheme` for this group in `TopicGroupScheme` `````
+            // find effective `TypeScheme` for this group in `TopicGroupScheme`
+            models.TopicGroupSchemeTypeScheme.findOne({
+              where:{
+                topicGroupSchemeId: TopicGroupScheme.id,
+                topicGroupId: groupInstance.id
+              }
+            }, function(e2, TopicGroupSchemeTypeScheme) {
+              if (e2) throw e2;
 
-            // Find DEFAULT topic type scheme for this group
-            // TODO: allow to define different topic_type_scheme per parent context (so, project can have own)
-
-            Topic.app.models.TopicTypeScheme.findById(TopicGroupSchemeTypeScheme.topicTypeSchemeId,
-            function(typeErr, typeSchemeInstance) {
-              if (typeErr) throw typeErr;
-
-              if (!typeSchemeInstance)
+              if (!TopicGroupSchemeTypeScheme)
                 return cb(null, []);
 
-              /** @property contextTopic object - root topic, e.g. `project` */
-              /** @property groupInstance - group instance (e.g. `issues`) */
-              /** @property typeSchemeInstance */
+              // find effective `TypeScheme` for this group in `TopicGroupScheme` `````
 
-              Topic.app.models.TopicTypeSchemeTopicTypeMap.find({
-                where:{
-                  topicTypeSchemeId:typeSchemeInstance.id
-                },
-                order:'sortWeight DESC',
-                include: [
-                  'topicType'
-                ]
+              // Find DEFAULT topic type scheme for this group
+              // TODO: allow to define different topic_type_scheme per parent context (so, project can have own)
 
-              }, function(typeSchemeTypeMapErr, types) {
-                if (typeSchemeTypeMapErr) throw typeSchemeTypeMapErr;
+              Topic.app.models.TopicTypeScheme.findById(TopicGroupSchemeTypeScheme.topicTypeSchemeId,
+                function(typeErr, typeSchemeInstance) {
+                  if (typeErr) throw typeErr;
 
-                if (!types || types.length === 0)
-                  return cb(new Error('No topic types defined for scheme ' + typeSchemeInstance.id), []);
-
-                let TypeOptions = types.map(item => {
-                  let topicType = item.topicType();
-                  return {
-                    value: topicType.id,
-                    label: topicType.name
-                  };
-                });
-
-                const DefaultType = types[0].topicType();
-
-                if (!DefaultType) {
-                  return cb(null, []);
-                }
-
-                // Find DEFAULT screen scheme
-                Topic.app.models.ScreenScheme.findOne({
-                  // TODO: allow to provide non-default scheme
-                  where:{
-                    groupId: groupInstance.id
-                  }
-                }, function(ScreenSchemeErr, ScreenScheme) {
-
-                  if (ScreenSchemeErr) throw ScreenSchemeErr;
-
-                  if (!ScreenScheme)
+                  if (!typeSchemeInstance)
                     return cb(null, []);
 
-                  // Find what screen is configured for `DefaultType` type in `ScreenScheme` scheme
-                  Topic.app.models.ScreenScheme_TopicTypeScreen_Map.findOne({
-                    where: {
-                      screenSchemeId: ScreenScheme.id,
-                      topicTypeId: DefaultType.id
+                  /** @property contextTopic object - root topic, e.g. `project` */
+                  /** @property groupInstance - group instance (e.g. `issues`) */
+                  /** @property typeSchemeInstance */
+
+                  Topic.app.models.TopicTypeSchemeTopicTypeMap.find({
+                    where:{
+                      topicTypeSchemeId:typeSchemeInstance.id
                     },
+                    order:'sortWeight DESC',
                     include: [
-                      'screen'
+                      'topicType'
                     ]
-                  }, function(err, ScreenSchemeTopicTypeScreenMap) {
 
-                    if (err) throw err;
+                  }, function(typeSchemeTypeMapErr, types) {
+                    if (typeSchemeTypeMapErr) throw typeSchemeTypeMapErr;
 
-                    if (!ScreenSchemeTopicTypeScreenMap)
+                    if (!types || types.length === 0)
+                      return cb(new Error('No topic types defined for scheme ' + typeSchemeInstance.id), []);
+
+                    let TypeOptions = types.map(item => {
+                      let topicType = item.topicType();
+                      return {
+                        value: topicType.id,
+                        label: topicType.name
+                      };
+                    });
+
+                    const DefaultType = types[0].topicType();
+
+                    if (!DefaultType) {
                       return cb(null, []);
+                    }
 
-                    const Screen = ScreenSchemeTopicTypeScreenMap.screen();
+                    // Find DEFAULT screen scheme
+                    Topic.app.models.ScreenScheme.findOne({
+                      // TODO: allow to provide non-default scheme
+                      where:{
+                        groupId: groupInstance.id
+                      }
+                    }, function(ScreenSchemeErr, ScreenScheme) {
 
-                    Screen.screenFields({
-                      // provides values to be available at `field.field()`
-                      include:['field']
-                    }, function(screenFieldsErr, screenFields) {
-                      if (screenFieldsErr) throw screenFieldsErr;
+                      if (ScreenSchemeErr) throw ScreenSchemeErr;
 
-                      if (!screenFields)
+                      if (!ScreenScheme)
                         return cb(null, []);
 
-                      let _screenFields = screenFields.map(field => {
-                        let fieldConfig = field.field().__data;
-                        return {
-                          group: groupInstance,
-                          contextTopic: contextTopic,
-                          ...fieldConfig
-                        };
-                      });
+                      // Find what screen is configured for `DefaultType` type in `ScreenScheme` scheme
+                      Topic.app.models.ScreenScheme_TopicTypeScreen_Map.findOne({
+                        where: {
+                          screenSchemeId: ScreenScheme.id,
+                          topicTypeId: DefaultType.id
+                        },
+                        include: [
+                          'screen'
+                        ]
+                      }, function(err, ScreenSchemeTopicTypeScreenMap) {
 
-                      Promise
-                      .all(_screenFields.map(FieldsHandler.populateFormField))
-                      .then(function(dataDone) {
-                        // manually add "group" and "type" select fields, re-using already populated data
-                        FieldsHandler.typeIdFieldProps({
-                          group: groupInstance,
-                          contextTopic: contextTopic,
-                          key: 'typeId',
-                          options:TypeOptions
-                        })
-                        .then(function(moreData) {
-                          dataDone.unshift(moreData);
-                          return cb(null, dataDone);
+                        if (err) throw err;
+
+                        if (!ScreenSchemeTopicTypeScreenMap)
+                          return cb(null, []);
+
+                        const Screen = ScreenSchemeTopicTypeScreenMap.screen();
+
+                        Screen.screenFields({
+                          // provides values to be available at `field.field()`
+                          include:['field']
+                        }, function(screenFieldsErr, screenFields) {
+                          if (screenFieldsErr) throw screenFieldsErr;
+
+                          if (!screenFields)
+                            return cb(null, []);
+
+                          let _screenFields = screenFields.map(field => {
+                            let fieldConfig = field.field().__data;
+                            return {
+                              group: groupInstance,
+                              contextTopic: null,
+                              ...fieldConfig
+                            };
+                          });
+
+                          Promise
+                            .all(_screenFields.map(FieldsHandler.populateFormField))
+                            .then(function(dataDone) {
+                              // manually add "group" and "type" select fields, re-using already populated data
+                              FieldsHandler.typeIdFieldProps({
+                                group: groupInstance,
+                                contextTopic: null,
+                                key: 'typeId',
+                                options:TypeOptions
+                              })
+                                .then(function(moreData) {
+                                  dataDone.unshift(moreData);
+                                  return cb(null, dataDone);
+                                });
+                            });
                         });
                       });
                     });
                   });
                 });
-              });
             });
           });
         });
+
+    } else {
+      Topic.findOne({where:{id:id}}, function(err, contextTopic) {
+
+        if (err) throw err;
+        if (!contextTopic)
+          return cb(null, []);
+
+        Topic.app.models.TopicGroup.findOne({
+            where:{
+              groupKey:groupKey
+            },
+            include: ['parentGroup']
+          },
+          function(groupErr, groupInstance) {
+            if (groupErr) throw groupErr;
+            if (!groupInstance)
+              return cb(null, []);
+
+            // TODO: allow to define `TopicGroupScheme` per context (parent) topic
+            models.TopicGroupScheme.findOne({
+                where:{
+                  isDefault: 1
+                }
+              },
+              function(e1, TopicGroupScheme) {
+                if (e1) throw e1;
+
+                if (!TopicGroupScheme)
+                  return cb(null, []);
+
+                // find effective `TypeScheme` for this group in `TopicGroupScheme`
+                models.TopicGroupSchemeTypeScheme.findOne({
+                  where:{
+                    topicGroupSchemeId: TopicGroupScheme.id,
+                    topicGroupId: groupInstance.id
+                  }
+                }, function(e2, TopicGroupSchemeTypeScheme) {
+                  if (e2) throw e2;
+
+                  if (!TopicGroupSchemeTypeScheme)
+                    return cb(null, []);
+
+                  // find effective `TypeScheme` for this group in `TopicGroupScheme` `````
+
+                  // Find DEFAULT topic type scheme for this group
+                  // TODO: allow to define different topic_type_scheme per parent context (so, project can have own)
+
+                  Topic.app.models.TopicTypeScheme.findById(TopicGroupSchemeTypeScheme.topicTypeSchemeId,
+                    function(typeErr, typeSchemeInstance) {
+                      if (typeErr) throw typeErr;
+
+                      if (!typeSchemeInstance)
+                        return cb(null, []);
+
+                      /** @property contextTopic object - root topic, e.g. `project` */
+                      /** @property groupInstance - group instance (e.g. `issues`) */
+                      /** @property typeSchemeInstance */
+
+                      Topic.app.models.TopicTypeSchemeTopicTypeMap.find({
+                        where:{
+                          topicTypeSchemeId:typeSchemeInstance.id
+                        },
+                        order:'sortWeight DESC',
+                        include: [
+                          'topicType'
+                        ]
+
+                      }, function(typeSchemeTypeMapErr, types) {
+                        if (typeSchemeTypeMapErr) throw typeSchemeTypeMapErr;
+
+                        if (!types || types.length === 0)
+                          return cb(new Error('No topic types defined for scheme ' + typeSchemeInstance.id), []);
+
+                        let TypeOptions = types.map(item => {
+                          let topicType = item.topicType();
+                          return {
+                            value: topicType.id,
+                            label: topicType.name
+                          };
+                        });
+
+                        const DefaultType = types[0].topicType();
+
+                        if (!DefaultType) {
+                          return cb(null, []);
+                        }
+
+                        // Find DEFAULT screen scheme
+                        Topic.app.models.ScreenScheme.findOne({
+                          // TODO: allow to provide non-default scheme
+                          where:{
+                            groupId: groupInstance.id
+                          }
+                        }, function(ScreenSchemeErr, ScreenScheme) {
+
+                          if (ScreenSchemeErr) throw ScreenSchemeErr;
+
+                          if (!ScreenScheme)
+                            return cb(null, []);
+
+                          // Find what screen is configured for `DefaultType` type in `ScreenScheme` scheme
+                          Topic.app.models.ScreenScheme_TopicTypeScreen_Map.findOne({
+                            where: {
+                              screenSchemeId: ScreenScheme.id,
+                              topicTypeId: DefaultType.id
+                            },
+                            include: [
+                              'screen'
+                            ]
+                          }, function(err, ScreenSchemeTopicTypeScreenMap) {
+
+                            if (err) throw err;
+
+                            if (!ScreenSchemeTopicTypeScreenMap)
+                              return cb(null, []);
+
+                            const Screen = ScreenSchemeTopicTypeScreenMap.screen();
+
+                            Screen.screenFields({
+                              // provides values to be available at `field.field()`
+                              include:['field']
+                            }, function(screenFieldsErr, screenFields) {
+                              if (screenFieldsErr) throw screenFieldsErr;
+
+                              if (!screenFields)
+                                return cb(null, []);
+
+                              let _screenFields = screenFields.map(field => {
+                                let fieldConfig = field.field().__data;
+                                return {
+                                  group: groupInstance,
+                                  contextTopic: contextTopic,
+                                  ...fieldConfig
+                                };
+                              });
+
+                              Promise
+                                .all(_screenFields.map(FieldsHandler.populateFormField))
+                                .then(function(dataDone) {
+                                  // manually add "group" and "type" select fields, re-using already populated data
+                                  FieldsHandler.typeIdFieldProps({
+                                    group: groupInstance,
+                                    contextTopic: contextTopic,
+                                    key: 'typeId',
+                                    options:TypeOptions
+                                  })
+                                    .then(function(moreData) {
+                                      dataDone.unshift(moreData);
+                                      return cb(null, dataDone);
+                                    });
+                                });
+                            });
+                          });
+                        });
+                      });
+                    });
+                });
+              });
+          });
       });
-    });
+    }
+
   };
 
   Topic.runOperation = function(id, operation, cb) {
