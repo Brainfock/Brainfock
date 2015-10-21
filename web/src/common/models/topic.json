@@ -677,6 +677,13 @@
       "principalId": "createTopicAccess",
       "permission": "ALLOW",
       "property": "updateAttributes"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "contextAndTopicAccess",
+      "permission": "ALLOW",
+      "property": "__findById__topics"
     }
   ],
   "methods": {}

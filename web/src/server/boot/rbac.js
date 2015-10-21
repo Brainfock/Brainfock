@@ -349,9 +349,11 @@ module.exports = function(app) {
       return reject();
     }
 
-
     var afterFindCb = function(err, Topic) {
-      if (err || !Topic){
+
+      console.log('Topic', Topic);
+
+      if (err || !Topic) {
         return reject();
       }
 
@@ -907,4 +909,178 @@ module.exports = function(app) {
         }
       });
   });
-}
+
+  /**
+   * Check if user is allowed to post new topic
+   *
+   * @todo review; add validation of a workspace; make work together with other roles
+   */
+  Role.registerResolver('deleteTopicAccess', function(role, context, cb) {
+    console.log('[RBAC deleteTopicAccess] ' + context.remotingContext.method.name);
+    function reject() {
+      process.nextTick(function() {
+        cb(null, false);
+      });
+    }
+    function accept() {
+      process.nextTick(function() {
+        cb(null, true);
+      });
+    }
+    if (context.modelName !== 'RawTopic') {
+      return reject();
+    }
+
+    console.log('[RBAC createTopicAccess] Validate access to  operation `' + context.remotingContext.method.name
+    + '` of model `' + context.modelName + '`:' + context.modelId);
+
+    // check access to entity
+    const userId = context.accessToken.userId;
+
+    context.model.findById(context.modelId, function(err, ContextTopic) {
+      console.log(err);
+      console.log(ContextTopic);
+      if (err || !ContextTopic) {
+        return reject();
+      }
+      if (ContextTopic.accessPrivateYn !== 1
+        || ContextTopic.ownerUserId === userId) {
+        return accept();
+      } else {
+        // if access is private, check user permissions:
+        app.models.EntityAccessAssign.findOne({where:{
+          authId:userId,
+          authType:0,
+          entityId:ContextTopic.entityId,
+        }},
+        function(errEa, dataEa) {
+          if (errEa || !dataEa) {
+            return reject();
+          }
+          // user has access to context entity:
+          return accept();
+        });
+      }
+    });
+  });
+
+  /**
+   * Validate context and children topic access
+   */
+  Role.registerResolver('contextAndTopicAccess', function(role, context, cb) {
+
+    const userId = context.accessToken.userId;
+
+    console.log('[RBAC contextAndTopicAccess] Validate access to  operation `'+context.remotingContext.method.name+'` of model `'+context.modelName+'`, user:'+userId)
+
+    function reject() {
+      process.nextTick(function() {
+        cb(null, false);
+      });
+    }
+
+    // if the target model is not project
+    if (context.modelName !== 'Topic') {
+      return reject();
+    }
+
+    // these methods expect `context.remotingContext.args.where`, not `context.remotingContext.args.filter.where`
+    if (context.remotingContext.method.name !== '__findById__topics') {
+      reject();
+    }
+
+    // TODO: allow guest access
+    if (!userId) {
+      return reject();
+    }
+
+    // check context topic access:
+    context.model.findById(context.modelId, function(err, Topic) {
+
+      if (err || !Topic) {
+        return reject();
+      }
+
+      if (Topic.accessPrivateYn !== 1
+      || Topic.ownerUserId === userId) {
+        // user has access to context, check topic access
+        context.model.findById(context.remotingContext.args.fk, function(err, ViewTopic) {
+
+          if (err || !ViewTopic) {
+            return reject();
+          }
+
+          if (ViewTopic.accessPrivateYn !== 1
+          || ViewTopic.ownerUserId === userId) {
+            return cb(null, true);
+          } else if (userId && userId > 0) {
+
+            let whereFilter = {
+              authType:0,
+              authId:userId,
+              entityId:ViewTopic.entityId,
+            };
+
+            app.models.EntityAccessAssign.findOne({where:whereFilter},
+              function(err, data) {
+                if (err || !data) {
+                  return cb(null, false);
+                }
+
+                return cb(null, true);
+              });
+          } else {
+            return cb(null, false);
+          }
+        });
+      } else if (userId && userId > 0) {
+
+        let whereFilter = {
+          authType:0,
+          authId:userId,
+          entityId:Topic.entityId,
+        };
+
+        app.models.EntityAccessAssign.findOne({where:whereFilter},
+          function(err, data) {
+            if (err || !data) {
+              return cb(null, false);
+            }
+
+            // user has access to context, checl view topic access:
+            context.model.findById(context.remotingContext.args.fk, function(err, ViewTopic) {
+
+              if (err || !ViewTopic) {
+                return reject();
+              }
+
+              if (ViewTopic.accessPrivateYn !== 1
+              || ViewTopic.ownerUserId === userId) {
+                return cb(null, true);
+              } else if (userId && userId > 0) {
+
+                let whereFilter = {
+                  authType:0,
+                  authId:userId,
+                  entityId:ViewTopic.entityId,
+                };
+
+                app.models.EntityAccessAssign.findOne({where:whereFilter},
+                  function(err, data) {
+                    if (err || !data) {
+                      return cb(null, false);
+                    }
+
+                    return cb(null, true);
+                  });
+              } else {
+                return cb(null, false);
+              }
+            });
+          });
+      } else {
+        return cb(null, false);
+      }
+    });
+  });
+};
