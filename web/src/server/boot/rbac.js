@@ -93,81 +93,76 @@ module.exports = function(app) {
       || context.remotingContext.method.name == '__get__topics'
     ) {
 
-      if(userId) {
-        var allowedEntities = [];
+      if (userId) {
+        let allowedEntities = [];
 
         app.models.EntityAccessAssign.find({where:{
-            auth_type:0,
-            auth_id:userId,
-          }},
-            function(err,data)
-            {
-              if (err) {
-                // apply base
-                context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
-                  {where: {
-                    or: [
-                      {and: [{accessPrivateYn: "1", "ownerUserId": userId}]},
-                      {accessPrivateYn: "0"}
-                    ]
-                    //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
-                  }});
-                return cb(null, true);
+          authType:0,
+          authId:userId,
+        }},
+        function(err, data) {
+          if (err || data.length === 0) {
+            // apply base
+            context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
+              {where: {
+                or: [
+                  {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
+                  {accessPrivateYn: '0'}
+                ]
+                //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
+              }});
+            return cb(null, true);
+          }
+
+          function final() {
+            if (allowedEntities.length > 0) {
+              context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
+                {where: {
+                  or: [
+                    {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
+                    {accessPrivateYn: '0'},
+                    {entityId:{inq:allowedEntities}}
+                  ]
+                  //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
+                }});
+            } else {
+              // base constraints: do not show private topics of other users:
+              context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
+                {where: {
+                  or: [
+                    {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
+                    {accessPrivateYn: '0'}
+                  ]
+                  //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
+                }});
+            }
+
+
+            //context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
+            //  {where: {
+            //    or: [
+            //      {entityId:{inq:allowedEntities}}
+            //    ]
+            //  }});
+            //console.log('context.remotingContext.args.filter:',context.remotingContext.args.filter);
+
+            return cb(null, true);
+          }
+          function populateValue($modelInstance, callback) {
+            allowedEntities.push($modelInstance.entity_id);
+            return callback();
+          }
+
+          let resCount = data.length;
+          let lopRes = [];
+          data.forEach(function(/*SettingsField model instance*/ item){
+            populateValue(item, function(result){
+              lopRes.push(1);
+              if (lopRes.length === (resCount)) {
+                return final();
               }
-
-              function final() {
-
-                if(allowedEntities.length>0) {
-                  context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
-                    {where: {
-                      or: [
-                        {and: [{accessPrivateYn: "1", "ownerUserId": userId}]},
-                        {accessPrivateYn: "0"},
-                        {entityId:{inq:allowedEntities}}
-                      ]
-                      //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
-                    }});
-                } else {
-                  // base constraints: do not show private topics of other users:
-                  context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
-                    {where: {
-                      or: [
-                        {and: [{accessPrivateYn: "1", "ownerUserId": userId}]},
-                        {accessPrivateYn: "0"}
-                      ]
-                      //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
-                    }});
-
-                }
-
-
-                //context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
-                //  {where: {
-                //    or: [
-                //      {entityId:{inq:allowedEntities}}
-                //    ]
-                //  }});
-                //console.log('context.remotingContext.args.filter:',context.remotingContext.args.filter);
-
-                return cb(null, true);
-              }
-              function populateValue($modelInstance, callback) {
-                allowedEntities.push($modelInstance.entity_id);
-                return callback();
-              }
-
-              let resCount = data.length;
-              let lopRes = [];
-              data.forEach(function(/*SettingsField model instance*/ item){
-                populateValue(item, function(result){
-                  lopRes.push(1);
-                  if(lopRes.length == (resCount)) {
-                    //console.log('allowedEntities:',allowedEntities);
-
-                    return final();
-                  }
-                });
-              })
+            });
+          });
 
 
           });
