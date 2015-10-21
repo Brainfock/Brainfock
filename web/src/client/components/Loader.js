@@ -1,11 +1,15 @@
-var React = require('react');
+import React from 'react';
+import {LinearProgress} from 'material-ui';
 
 // TODO: i18n
 module.exports = React.createClass({
-  render: function() {    
-  return (
-    <span><i className="fa fa-cog fa-spin" ></i> Loading...</span>
-    )
+  render: function() {
+    return (
+      <div style={{textAlign:'center',marginTop:'20%'}}>
+        <i className="fa fa-cog fa-spin" ></i> Loading...
+
+        <LinearProgress mode="indeterminate" style={{marginTop:'5%'}} />
+      </div>
+    );
   }
 });
-//
