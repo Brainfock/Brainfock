@@ -19,39 +19,27 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import {mergeQuery} from 'loopback-datasource-juggler/lib/utils';
-
-import app from "../../server/main";
-import FieldTypes from '../components/topicFields';
-import FieldsHandler from '../components/topicFieldsHandler.js';
 import loopback from 'loopback';
 
-/**
- * @link http://stackoverflow.com/a/32420242/360292
- * @param val
- * @returns {boolean}
- */
-function isString(val) {
-  return typeof val === 'string' || ((!!val && typeof val === 'object') && Object.prototype.toString.call(val) === '[object String]');
-}
+import FieldTypes from '../components/topicFields';
+import FieldsHandler from '../components/topicFieldsHandler.js';
 
 module.exports = function(Topic) {
 
   /**
    * Set `groupId` when topic is saved if `createGroup` is provided in `request`  as an alias to `TopicGroup.groupKey`
    */
-  Topic.observe('before save', function normalizeUserInput(ctx, next)
-  {
-    var context = loopback.getCurrentContext();
+  Topic.observe('before save', function normalizeUserInput(ctx, next) {
+    const context = loopback.getCurrentContext();
 
-    if(ctx.instance && !ctx.instance.groupId && context.get('http').req.body.createGroup)
-    {
+    if (ctx.instance && !ctx.instance.groupId && context.get('http').req.body.createGroup) {
       const createGroup = context.get('http').req.body.createGroup;
       // make sure workspace exists
       Topic.app.models.TopicGroup.findOne({
         where:{
           groupKey: createGroup
         }
-      },function(wspcErr,TopicGroup) {
+      }, function(wspcErr, TopicGroup) {
 
         if (wspcErr) throw wspcErr;
 
@@ -74,13 +62,11 @@ module.exports = function(Topic) {
    * validate workspace/namespace existance and access
    * set owner flags
    */
-  Topic.observe('before save', function normalizeUserInput(ctx, next)
-  {
+  Topic.observe('before save', function normalizeUserInput(ctx, next) {
     const currentUser = loopback.getCurrentContext().get('currentUser');
 
-    if (ctx.instance)
-    {
-      if (ctx.isNewInstance==true) {
+    if (ctx.instance) {
+      if (ctx.isNewInstance === true) {
         // make author an owner of this item
         ctx.instance.ownerUserId = currentUser.id;
         // theoretically, owner can be switched - save submitter as a separate value
@@ -88,10 +74,9 @@ module.exports = function(Topic) {
       }
     }
 
-    if(ctx.instance && ctx.instance.namespace && !ctx.instance.workspaceId)
-    {
+    if (ctx.instance && ctx.instance.namespace && !ctx.instance.workspaceId) {
       // make sure workspace exists
-      Topic.app.models.Workspace.findOne({where:{namespace:ctx.instance.namespace}},function(wspcErr,wspcInstance) {
+      Topic.app.models.Workspace.findOne({where:{namespace:ctx.instance.namespace}}, function(wspcErr, wspcInstance) {
 
         if (wspcErr) throw wspcErr;
 
@@ -102,13 +87,11 @@ module.exports = function(Topic) {
             message: `Can not find workspace "${ctx.instance.namespace}"`
           });
 
-        if(wspcInstance.accessPrivateYn === 0 || currentUser && wspcInstance.ownerUserId == currentUser.id) {
+        if (wspcInstance.accessPrivateYn === 0 || currentUser && wspcInstance.ownerUserId === currentUser.id) {
           ctx.instance.workspaceId = wspcInstance.id;
           ctx.instance.namespace = wspcInstance.namespace;
           next();
-        }
-        // TODO: allow users to be invited and granted permission to access private workspaces
-        else {
+        } else {
           return next({
             name: 'error',
             status: 403,
@@ -125,38 +108,34 @@ module.exports = function(Topic) {
    * Apply initial workflow stage for topic on creation
    * Stage is resolved based on workflow for topic type in effective scheme
    */
-  Topic.observe('before save', function applyInitialWorkflowStage(ctx, next)
-  {
-    if (ctx.instance)
-    {
+  Topic.observe('before save', function applyInitialWorkflowStage(ctx, next) {
+    if (ctx.instance) {
       // set initial workflow stage
-      if(!ctx.instance.workflowStageId) {
+      if (!ctx.instance.workflowStageId) {
         ctx.instance.getWorkflowTopicConfig(function(err, effectiveWorkflow) {
-          if(err) return next(err);
+          if (err) return next(err);
 
-          if(effectiveWorkflow===null) {
+          if (effectiveWorkflow === null) {
             return next({
               message: 'Could not find Workflow'
             });
           }
 
           effectiveWorkflow.getDefaultStage(function(err, wfStage) {
-            if(err) return next(err);
+            if (err) return next(err);
 
-            if(wfStage===null) {
+            if (wfStage === null) {
               return next({
-                message: 'Could not find initial Workflow Stage of '+(effectiveWorkflow.name || effectiveWorkflow.id) + ' workflow'
+                message: 'Could not find initial Workflow Stage of ' + (effectiveWorkflow.name || effectiveWorkflow.id) + ' workflow'
               });
-            }
-            else {
+            } else {
               ctx.instance.workflowStageId = wfStage.id;
               next();
             }
-          })
+          });
         });
       }
-    }
-    else {
+    } else {
       next();
     }
   });
@@ -164,28 +143,23 @@ module.exports = function(Topic) {
   /**
    * get entityId
    */
-  Topic.observe('before save', function normalizeUserInput(ctx, next)
-  {
-    if (ctx.instance)
-    {
-      if (ctx.isNewInstance==true)
-      {
+  Topic.observe('before save', function normalizeUserInput(ctx, next) {
+    if (ctx.instance) {
+      if (ctx.isNewInstance === true) {
         Topic.app.models.Entity.create({
           name: ctx.instance.summary,
           accessPrivateYn: ctx.instance.accessPrivateYn,
           ownerUserId: ctx.instance.ownerUserId,
           modelClassName: 'Topic',
-          modelPk: null,
-        }, function (err, entityInstance) {
-          if(err) {
+          modelPk: null
+        }, function(err, entityInstance) {
+          if (err) {
             throw err;
           }
-          ctx.instance.entityId =  entityInstance.id;
-          ctx.instance.entity_id =  entityInstance.id;
+          ctx.instance.entityId = entityInstance.id;
           next();
         });
-      }
-      else {
+      } else {
         next();
       }
     }else {
@@ -196,15 +170,13 @@ module.exports = function(Topic) {
   /**
    * update `entity` relation to link back after new `topic` is created and PK is obtained
    */
-  Topic.observe('after save', function updateTimestamp(ctx, next)
-  {
+  Topic.observe('after save', function updateTimestamp(ctx, next) {
     // after model has been saved, we have to pass model's ID back to entity registry:
     if (ctx.isNewInstance && ctx.instance.entityId) {
-      Topic.app.models.Entity.findById(ctx.instance.entityId, function (err, entityInstance) {
-        entityInstance.updateAttributes({modelPk:ctx.instance.id}, function(errE,instance){
-          if(errE) {
-            throw errE;
-          }
+      Topic.app.models.Entity.findById(ctx.instance.entityId, function(err, entityInstance) {
+        if (err) throw err;
+        entityInstance.updateAttributes({modelPk:ctx.instance.id}, function(err) {
+          if (err) throw err;
           next();
         });
       });
@@ -216,11 +188,9 @@ module.exports = function(Topic) {
   /**
    * populate topic `type` after remote create
    */
-  Topic.afterRemote( 'upsert', function( ctx, modelInstance, next)
-  {
+  Topic.afterRemote('upsert', function(ctx, modelInstance, next) {
     // reload topic to get updated values on columns that are managed by sql triggers (contextTopicNum etc.)
-    modelInstance.reload(function(errReload, instance)
-    {
+    modelInstance.reload(function(errReload, instance) {
       modelInstance.__data = instance.__data;
       // load extended type info
       modelInstance.type(function(err, type) {
@@ -229,11 +199,11 @@ module.exports = function(Topic) {
         modelInstance.__data.type = type;
         next(err, modelInstance);
       });
-    })
-  })
+    });
+  });
 
   Topic.on('attached', function() {
-    var override = Topic.findOne;
+    const override = Topic.findOne;
     Topic.findOneCore = override;
     Topic.findOne = function(filter, options, callback) {
 
@@ -259,34 +229,29 @@ module.exports = function(Topic) {
        * allow users to find topics by their contextTopicKey, eg. /api/topics/BF
        * currently this is designed to work with topics that don't have contextTopicId (root topics)
        */
-      if(filter.where.id) {
-
-        if(isNaN(filter.where.id))
-        {
+      if (filter.where.id) {
+        if (isNaN(filter.where.id)) {
           let parts = filter.where.id.split('-');
           let last = parts.pop();
 
-          let _filter={key:null,id:null};
+          let _filter = {key:null, id:null};
 
-          if(!Number.isInteger(last)) {
-            _filter.key=null;
-            _filter.id=filter.where.id;
-          }
-          else if (parts.length==0) {
-            _filter.key=null;
-            _filter.id=last;
-          }
-          else {
-            _filter.key=parts.implode('-');
-            _filter.id=last;
+          if (!Number.isInteger(last)) {
+            _filter.key = null;
+            _filter.id = filter.where.id;
+          } else if (parts.length === 0) {
+            _filter.key = null;
+            _filter.id = last;
+          } else {
+            _filter.key = parts.implode('-');
+            _filter.id = last;
           }
 
-          if(!_filter.key && _filter.id)
-          {
+          if (!_filter.key && _filter.id) {
             delete filter.where.id;
             filter = mergeQuery(filter, {where: {
               and: [
-                {or: [{contextTopicId: "0"}, {"contextTopicId": null}]},
+                {or: [{contextTopicId: '0'}, {contextTopicId: null}]},
                 {contextTopicKey: _filter.id}
               ]
             }});
@@ -295,58 +260,41 @@ module.exports = function(Topic) {
       }
 
       // go on with regular `findOne` method
-      return override.apply(this, [filter, options, callback])
-    }
+      return override.apply(this, [filter, options, callback]);
+    };
   });
 
-  Topic.afterRemote( 'find', function( ctx, data, next) {
-    if(ctx.result && data.length>0) {
+  Topic.afterRemote('find', function(ctx, data, next) {
 
-      function populateValue($modelInstance, callback) {
-        // TODO: remove placeholder/dummy icon
+    function populateValue($modelInstance, callback) {
+      // TODO: remove placeholder/dummy icon
 
-        $modelInstance.logo = {
-          icon: 'star',
-          background: 'pink'
+      $modelInstance.logo = {
+        icon: 'star',
+        background: 'pink'
+      };
+
+      if ($modelInstance.contextTopicKey) {
+        if (!$modelInstance.contextTopicId || $modelInstance.contextTopicId === 0) {
+          $modelInstance.uid =  $modelInstance.contextTopicKey;
         }
-
-        if($modelInstance.contextTopicKey) {
-          if(!$modelInstance.contextTopicId || $modelInstance.contextTopicId == 0) {
-            $modelInstance.uid =  $modelInstance.contextTopicKey;
-          }
-        } else {
-          if($modelInstance.contextTopicNum) {
-            $modelInstance.uid= $modelInstance.contextTopicNum;
-          }
-        }
-        // TODO: port completely:
-        //public function getUid() {
-        //  if($this->context_topic_key) {
-        //    if(!$this->context_topic_id || $this->context_topic_id == 0) {
-        //      return $this->context_topic_key;
-        //    }
-        //  else {
-        //      return CHtml::value($this,'contextTopic.uid');
-        //    }
-        //  }
-        //  if($this->context_topic_num) {
-        //    return $this->context_topic_num;
-        //  }
-        //}
-        //
-        callback();
+      } else if ($modelInstance.contextTopicNum) {
+        $modelInstance.uid = $modelInstance.contextTopicNum;
       }
+      callback();
+    }
 
+    if (ctx.result && data.length > 0) {
       let resCount = data.length;
       let lopRes = [];
-      ctx.result.forEach(function(/*Topic model instance*/ item){
-        populateValue(item, function(result){
+      ctx.result.forEach(function(/*Topic model instance*/ item) {
+        populateValue(item, function(result) {
           lopRes.push(1);
-          if(lopRes.length == (resCount)) {
+          if (lopRes.length === (resCount)) {
             next();
           }
         });
-      })
+      });
 
     } else {
       return next();
@@ -360,42 +308,32 @@ module.exports = function(Topic) {
    *  api/topics/1234?filter[extra][operations]
    * </code>
    */
-  Topic.afterRemote( 'findById', function( ctx, modelInstance, next)
-  {
-    if (modelInstance)
-    {
-      if(ctx.args.filter && ctx.args.filter.extra && ctx.args.filter.extra.hasOwnProperty('operations'))
-      {
+  Topic.afterRemote('findById', function(ctx, modelInstance, next) {
+    if (modelInstance) {
+      if (ctx.args.filter && ctx.args.filter.extra && ctx.args.filter.extra.hasOwnProperty('operations')) {
         // lookup operations based && next()
         modelInstance.getOperations(function(err, operations) {
-          if(err) return next(err);
-          modelInstance.operations=operations;
+          if (err) return next(err);
+          modelInstance.operations = operations;
           return next();
-        })
-      }
-      else
-      {
+        });
+      } else {
         return next();
       }
     } else {
       return next();
     }
   });
-  Topic.afterRemote( 'findOne', function( ctx, modelInstance, next)
-  {
-    if (modelInstance)
-    {
-      if(ctx.args.filter && ctx.args.filter.extra && ctx.args.filter.extra.hasOwnProperty('operations'))
-      {
+  Topic.afterRemote('findOne', function(ctx, modelInstance, next) {
+    if (modelInstance) {
+      if (ctx.args.filter && ctx.args.filter.extra && ctx.args.filter.extra.hasOwnProperty('operations')) {
         // lookup operations based && next()
         modelInstance.getOperations(function(err, operations) {
-          if(err) return next(err);
-          modelInstance.operations=operations;
+          if (err) return next(err);
+          modelInstance.operations = operations;
           return next();
-        })
-      }
-      else
-      {
+        });
+      } else {
         return next();
       }
     } else {
@@ -403,28 +341,27 @@ module.exports = function(Topic) {
     }
   });
 
-  Topic.afterRemote( '*.__get__topics', function( ctx, data, next)
-  {
-    if(ctx.args.filter && ctx.args.filter.extra && ctx.args.filter.extra.hasOwnProperty('operations') && ctx.result && data.length>0) {
+  Topic.afterRemote('*.__get__topics', function(ctx, data, next) {
+    function populateValue(modelInstance, callback) {
+      modelInstance.getOperations(function(err, operations) {
+        if (err) return next(err);
+        modelInstance.operations = operations;
+        return callback();
+      });
+    }
 
-      function populateValue(modelInstance, callback) {
-        modelInstance.getOperations(function(err, operations) {
-          if(err) return next(err);
-          modelInstance.operations=operations;
-          return callback();
-        })
-      }
+    if (ctx.args.filter && ctx.args.filter.extra && ctx.args.filter.extra.hasOwnProperty('operations') && ctx.result && data.length > 0) {
 
       let resCount = data.length;
       let lopRes = [];
-      ctx.result.forEach(function(/*Topic model instance*/ item){
-        populateValue(item, function(result){
+      ctx.result.forEach(function(/*Topic model instance*/ item) {
+        populateValue(item, function(result) {
           lopRes.push(1);
-          if(lopRes.length == (resCount)) {
+          if (lopRes.length === (resCount)) {
             next();
           }
         });
-      })
+      });
     } else {
       return next();
     }
@@ -432,11 +369,11 @@ module.exports = function(Topic) {
 
   Topic.prototype.getOperations = function(next) {
 
-    let self=this;
+    const self = this;
     self.getWorkflowTopicConfig(function(err, effectiveWorkflow) {
-      if(err) return next(err);
+      if (err) return next(err);
 
-      if(effectiveWorkflow===null) {
+      if (effectiveWorkflow === null) {
         return next({
           message: 'Could not find Workflow'
         });
@@ -448,38 +385,25 @@ module.exports = function(Topic) {
           workflowStageId: self.workflowStageId,
         },
         include: ['operation']
-      }, function(err,data){
-
+      }, function(err, data) {
+        if (err) return next(err);
         let operations = [];
-        data.forEach(function(opMap){
-          opMap.operation(function(err, operation){
-            if(operation)
+        data.forEach(function(opMap) {
+          opMap.operation(function(err, operation) {
+            if (err) return next(err);
+            if (operation)
               operations.push({
                 id:operation.id,
                 name:operation.name,
                 summary:operation.summary
-              })
-          })
-        })
+              });
+          });
+        });
 
-        return next(null,operations);
-      })
-
-      //effectiveWorkflow.getDefaultStage(function(err, wfStage) {
-      //  if(err) return next(err);
-      //
-      //  if(wfStage===null) {
-      //    return next({
-      //      message: 'Could not find initial Workflow Stage of '+(effectiveWorkflow.name || effectiveWorkflow.id) + ' workflow'
-      //    });
-      //  }
-      //  else {
-      //    ctx.instance.workflowStageId = wfStage.id;
-      //    next();
-      //  }
-      //})
+        return next(null, operations);
+      });
     });
-  }
+  };
 
   /**
    * return (any) workflow scheme
@@ -490,26 +414,24 @@ module.exports = function(Topic) {
       // TODO: allow to switch workflow schemes
     }}, function(err, wfScheme) {
 
-      if(err) throw err;
+      if (err) throw err;
 
-      if(!wfScheme)
-        next(null, null)
+      if (!wfScheme)
+        next(null, null);
       else
-        next(null, wfScheme)
-    })
-  }
+        next(null, wfScheme);
+    });
+  };
 
   /**
    * @return Workflow|null - active workflow for current topic type in active scheme
    */
-  Topic.prototype.getWorkflowTopicConfig = function(next)
-  {
-    let self=this;
-    this.getWorkflowScheme(function(err,wfScheme)
-    {
-      if(err) return next(err);
+  Topic.prototype.getWorkflowTopicConfig = function(next) {
+    const self = this;
+    this.getWorkflowScheme(function(err, wfScheme) {
+      if (err) return next(err);
 
-      if(wfScheme===null) {
+      if (wfScheme === null) {
         return next({
           message: 'Could not find Workflow Scheme'
         });
@@ -521,45 +443,38 @@ module.exports = function(Topic) {
           topicTypeId:self.typeId
         },
         include:['workflow']
-      }, function(err, WorkflowSchemeTopicTypeWorkflow)
-      {
-        if(err) return next(err);
+      }, function(err, WorkflowSchemeTopicTypeWorkflow) {
+        if (err) return next(err);
 
         // if there is no custom workflow for topic type, select default workflow in this scheme
-        if(WorkflowSchemeTopicTypeWorkflow===null)
-        {
+        if (WorkflowSchemeTopicTypeWorkflow === null) {
           wfScheme.defaultWorkflow(
-            function(err,workflow)
-            {
-              if(err) return next(err);
-              if(workflow===null) {
+            function(err, workflow) {
+              if (err) return next(err);
+              if (workflow === null) {
                 return next({
                   message: 'Could not find Workflow'
                 });
               }
               return next(null, workflow);
             }
-          )
-
-        }
-        else
-        {
+          );
+        } else {
           WorkflowSchemeTopicTypeWorkflow.workflow(
-            function(err,workflow)
-            {
-              if(err) return next(err);
-              if(workflow===null) {
+            function(err, workflow) {
+              if (err) return next(err);
+              if (workflow === null) {
                 return next({
                   message: 'Could not find Workflow'
                 });
               }
               return next(null, workflow);
             }
-          )
+          );
         }
-      })
-    })
-  }
+      });
+    });
+  };
 
   /**
    *
@@ -568,28 +483,28 @@ module.exports = function(Topic) {
    * @param cb
    */
   Topic.loadFilters = function(id, groupKey, cb) {
-    Topic.findOne( {where:{id:id}}, function (err, contextTopic) {
+    Topic.findOne({where:{id:id}}, function(err, contextTopic) {
 
-      if(err) throw err;
+      if (err) throw err;
 
-      if(!contextTopic)
-        return cb(null, [])
+      if (!contextTopic)
+        return cb(null, []);
 
       // Find DEFAULT topic type scheme
       // TODO: allow to define different topic_type_scheme per root (so, project can have own)
-      Topic.app.models.TopicTypeScheme.findOne({},function(typeErr,typeSchemeInstance){
+      Topic.app.models.TopicTypeScheme.findOne({}, function(typeErr, typeSchemeInstance) {
 
-        if(typeErr) throw typeErr;
+        if (typeErr) throw typeErr;
 
-        if(!typeSchemeInstance)
-          return cb(null, [])
+        if (!typeSchemeInstance)
+          return cb(null, []);
 
-        Topic.app.models.TopicGroup.findOne({where:{groupKey:groupKey}},function(groupErr,groupInstance){
+        Topic.app.models.TopicGroup.findOne({where:{groupKey:groupKey}}, function(groupErr, groupInstance) {
 
-          if(groupErr) throw groupErr;
+          if (groupErr) throw groupErr;
 
-          if(!groupInstance)
-            return cb(null, [])
+          if (!groupInstance)
+            return cb(null, []);
 
           // contextTopic - root topic, e.g. `project`
           // groupInstance - group instance (e.g. `issues`)
@@ -611,32 +526,36 @@ module.exports = function(Topic) {
           // we must get all available fields (filterable) for this `groupInstance`
           groupInstance.types({}, function(err, types) {
 
-            let TypeOptions = types.map(item => { return {
-              value: item.id,
-              label: item.name,
-            }});
+            if (err) throw err;
+
+            let TypeOptions = types.map(item => {
+              return {
+                value: item.id,
+                label: item.name
+              };
+            });
 
             let response = [
               {
                 id: 'type',
                 label:'Type',
                 options:TypeOptions,
-                type:FieldTypes.multiselect,
-              },{
+                type:FieldTypes.multiselect
+              }, {
                 // draft example
                 id: 'affectsVersion',
                 label:'Affects Version',
                 endpoint:`/api/topics/${id}/topics/?filter[where][groupKey]=version`,
                 type:FieldTypes.select,
-                options:[],
-              },{
+                options:[]
+              }, {
                 // draft example
                 id: 'linledIssue',
                 label:'Linked Issue',
                 endpoint:'/api/topics?filter[where][groupKey]=issue',
                 type:FieldTypes.select,
-                options:[],
-              },
+                options:[]
+              }
               //{
               //  id: 'contextTopicId',
               //  defaultValue:id,
@@ -660,8 +579,8 @@ module.exports = function(Topic) {
 
             cb(null, response);
           });
-        })
-      })
+        });
+      });
     });
   };
 
@@ -677,37 +596,33 @@ module.exports = function(Topic) {
 
     const models = Topic.app.models;
 
-    Topic.findOne( {where:{id:id}}, function (err, contextTopic) {
+    Topic.findOne({where:{id:id}}, function(err, contextTopic) {
 
-      if(err) throw err;
-      if(!contextTopic)
+      if (err) throw err;
+      if (!contextTopic)
         return cb(null, []);
 
-      Topic.app.models.TopicGroup.findOne(
-      {
+      Topic.app.models.TopicGroup.findOne({
         where:{
           groupKey:groupKey
         },
         include: ['parentGroup']
       },
-      function(groupErr, groupInstance)
-      {
-        if(groupErr) throw groupErr;
-        if(!groupInstance)
+      function(groupErr, groupInstance) {
+        if (groupErr) throw groupErr;
+        if (!groupInstance)
           return cb(null, []);
 
         // TODO: allow to define `TopicGroupScheme` per context (parent) topic
-        models.TopicGroupScheme.findOne(
-        {
+        models.TopicGroupScheme.findOne({
           where:{
             isDefault: 1
           }
         },
-        function(e1, TopicGroupScheme)
-        {
-          if(e1) throw e1;
+        function(e1, TopicGroupScheme) {
+          if (e1) throw e1;
 
-          if(!TopicGroupScheme)
+          if (!TopicGroupScheme)
             return cb(null, []);
 
           // find effective `TypeScheme` for this group in `TopicGroupScheme`
@@ -716,11 +631,10 @@ module.exports = function(Topic) {
               topicGroupSchemeId: TopicGroupScheme.id,
               topicGroupId: groupInstance.id
             }
-          }, function(e2, TopicGroupSchemeTypeScheme)
-          {
-            if(e2) throw e2;
+          }, function(e2, TopicGroupSchemeTypeScheme) {
+            if (e2) throw e2;
 
-            if(!TopicGroupSchemeTypeScheme)
+            if (!TopicGroupSchemeTypeScheme)
               return cb(null, []);
 
             // find effective `TypeScheme` for this group in `TopicGroupScheme` `````
@@ -729,11 +643,10 @@ module.exports = function(Topic) {
             // TODO: allow to define different topic_type_scheme per parent context (so, project can have own)
 
             Topic.app.models.TopicTypeScheme.findById(TopicGroupSchemeTypeScheme.topicTypeSchemeId,
-            function(typeErr,typeSchemeInstance)
-            {
-              if(typeErr) throw typeErr;
+            function(typeErr, typeSchemeInstance) {
+              if (typeErr) throw typeErr;
 
-              if(!typeSchemeInstance)
+              if (!typeSchemeInstance)
                 return cb(null, []);
 
               /** @property contextTopic object - root topic, e.g. `project` */
@@ -749,24 +662,24 @@ module.exports = function(Topic) {
                   'topicType'
                 ]
 
-              }, function(typeSchemeTypeMapErr, types)
-              {
-                if(typeSchemeTypeMapErr) throw typeSchemeTypeMapErr;
+              }, function(typeSchemeTypeMapErr, types) {
+                if (typeSchemeTypeMapErr) throw typeSchemeTypeMapErr;
 
-                if(!types || types.length==0)
-                  return cb(new Error('No topic types defined for scheme '+typeSchemeInstance.id), []);
+                if (!types || types.length === 0)
+                  return cb(new Error('No topic types defined for scheme ' + typeSchemeInstance.id), []);
 
                 let TypeOptions = types.map(item => {
                   let topicType = item.topicType();
                   return {
                     value: topicType.id,
                     label: topicType.name
-                  }});
+                  };
+                });
 
                 const DefaultType = types[0].topicType();
 
-                if(!DefaultType) {
-                  return cb(null, [])
+                if (!DefaultType) {
+                  return cb(null, []);
                 }
 
                 // Find DEFAULT screen scheme
@@ -775,8 +688,7 @@ module.exports = function(Topic) {
                   where:{
                     groupId: groupInstance.id
                   }
-                }, function(ScreenSchemeErr, ScreenScheme)
-                {
+                }, function(ScreenSchemeErr, ScreenScheme) {
 
                   if (ScreenSchemeErr) throw ScreenSchemeErr;
 
@@ -792,21 +704,19 @@ module.exports = function(Topic) {
                     include: [
                       'screen'
                     ]
-                  }, function(ScreenScheme_TopicTypeScreen_MapErr, ScreenScheme_TopicTypeScreen_Map)
-                  {
+                  }, function(err, ScreenSchemeTopicTypeScreenMap) {
 
-                    if (ScreenScheme_TopicTypeScreen_MapErr) throw ScreenScheme_TopicTypeScreen_MapErr;
+                    if (err) throw err;
 
-                    if (!ScreenScheme_TopicTypeScreen_Map)
+                    if (!ScreenSchemeTopicTypeScreenMap)
                       return cb(null, []);
 
-                    const Screen = ScreenScheme_TopicTypeScreen_Map.screen();
+                    const Screen = ScreenSchemeTopicTypeScreenMap.screen();
 
                     Screen.screenFields({
                       // provides values to be available at `field.field()`
                       include:['field']
-                    }, function(screenFieldsErr, screenFields)
-                    {
+                    }, function(screenFieldsErr, screenFields) {
                       if (screenFieldsErr) throw screenFieldsErr;
 
                       if (!screenFields)
@@ -818,13 +728,12 @@ module.exports = function(Topic) {
                           group: groupInstance,
                           contextTopic: contextTopic,
                           ...fieldConfig
-                        }
+                        };
                       });
 
                       Promise
                       .all(_screenFields.map(FieldsHandler.populateFormField))
-                      .then(function(dataDone)
-                      {
+                      .then(function(dataDone) {
                         // manually add "group" and "type" select fields, re-using already populated data
                         FieldsHandler.typeIdFieldProps({
                           group: groupInstance,
@@ -832,20 +741,19 @@ module.exports = function(Topic) {
                           key: 'typeId',
                           options:TypeOptions
                         })
-                        .then(function(moreData)
-                        {
+                        .then(function(moreData) {
                           dataDone.unshift(moreData);
                           return cb(null, dataDone);
-                        })
-                      })
-                    })
-                  })
-                })
-              })
-            })
-          })
-        })
-      })
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
     });
   };
 
@@ -967,8 +875,8 @@ module.exports = function(Topic) {
     'loadFilters',
     {
       accepts: [
-        {arg: 'id', type: 'any', http: { source: 'path' }, required: true },
-        {arg: 'groupKey', type: 'string', http: { source: 'path' }, required: true },
+        {arg: 'id', type: 'any', http: {source: 'path'}, required: true},
+        {arg: 'groupKey', type: 'string', http: {source: 'path'}, required: true}
       ],
       http: {verb: 'get', path: '/:id/filters/:groupKey'},
       returns: {arg: 'filters', type: 'Array'}
@@ -982,8 +890,8 @@ module.exports = function(Topic) {
     'loadFormFields',
     {
       accepts: [
-        {arg: 'id', type: 'any', http: { source: 'path' }, required: true },
-        {arg: 'groupKey', type: 'string', http: { source: 'path' }, required: true },
+        {arg: 'id', type: 'any', http: {source: 'path'}, required: true},
+        {arg: 'groupKey', type: 'string', http: {source: 'path'}, required: true}
       ],
       http: {verb: 'get', path: '/:id/formFields/:groupKey'},
       returns: {arg: 'filters', type: 'Array'}
@@ -997,7 +905,7 @@ module.exports = function(Topic) {
     'runOperation',
     {
       accepts: [
-        {arg: 'id', type: 'any', http: { source: 'path' }, required: true },
+        {arg: 'id', type: 'any', http: {source: 'path'}, required: true},
         {
           arg: 'custom',
           type: 'number',
