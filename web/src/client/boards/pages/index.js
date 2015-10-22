@@ -18,11 +18,10 @@
  * @link http://www.brainfock.com/
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
-
 import React from 'react';
-import Router from 'react-router';
 
 import List from './boards';
+import ProjectsEmpty from '../boards.empty';
 
 let ListComponent = require('../boards.react');
 
@@ -34,12 +33,13 @@ module.exports = React.createClass({
    */
   displayName: function(bcComponent) {
     // todo: i18n
-    return 'Boards'
+    return 'Boards';
   },
 
   componentWillMount() {
     if(process.env.IS_BROWSER==true) {
       this.props.topic_actions.loadTopicGroup('board', {}/*, this.props.parentModel*/);
+      this.props.topic_actions.find('board', {}/*, this.props.parentModel*/);
     }
   },
 
@@ -51,22 +51,23 @@ module.exports = React.createClass({
       return <h4>Loading...2</h4>
     }
 
-    // forward to board or topic view
-    if(this.props.params.board_id)
-      return <div>{React.cloneElement(this.props.children, this.props)}</div>;
-
-    // show all boards
-    else {
-      return <List
-        itemComponent={ListComponent}
-        board={board}
-        group={group}
-        list={list}
-        topic_actions={topic_actions}
-        msg={msg}
-        history={history}
-        meta={this.props.boards.meta}
-        />
+    if (!list.size) {
+      const {children, ...passProps} = this.props;
+      return (
+        <ProjectsEmpty {...passProps} />
+      );
     }
+
+    return <List
+      itemComponent={ListComponent}
+      board={board}
+      group={group}
+      list={list}
+      topic_actions={topic_actions}
+      msg={msg}
+      history={history}
+      meta={this.props.boards.meta}
+      />
+
   },
 });
