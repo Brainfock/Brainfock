@@ -18,7 +18,7 @@ export default class Todo extends Component {
       primaryText={todo.summary}
       secondaryText={todo.text}
       onClick={this._onClick.bind(this)}
-      rightIcon={
+      rightAvatar={
           <div className="stats">
             <span className="unread prop">{todo.countActiveTopics}</span>
             topics
