@@ -76,7 +76,7 @@ module.exports = function(Topic) {
 
     if (ctx.instance && ctx.instance.namespace && !ctx.instance.workspaceId) {
       // make sure workspace exists
-      Topic.app.models.Workspace.findOne({where:{namespace:ctx.instance.namespace}}, function(wspcErr, wspcInstance) {
+      Topic.app.models.Workspace.findOne({where: {namespace: ctx.instance.namespace}}, function (wspcErr, wspcInstance) {
 
         if (wspcErr) throw wspcErr;
 
@@ -85,6 +85,31 @@ module.exports = function(Topic) {
             name: 'error',
             status: 404,
             message: `Can not find workspace "${ctx.instance.namespace}"`
+          });
+
+        if (wspcInstance.accessPrivateYn === 0 || currentUser && wspcInstance.ownerUserId === currentUser.id) {
+          ctx.instance.workspaceId = wspcInstance.id;
+          ctx.instance.namespace = wspcInstance.namespace;
+          next();
+        } else {
+          return next({
+            name: 'error',
+            status: 403,
+            message: 'Authorization Required'
+          });
+        }
+      });
+    } else if (ctx.instance && !ctx.instance.namespace && ctx.instance.workspaceId) {
+      // make sure workspace exists
+      Topic.app.models.Workspace.findById(ctx.instance.workspaceId, function(wspcErr, wspcInstance) {
+
+        if (wspcErr) throw wspcErr;
+
+        if (!wspcInstance)
+          return next({
+            name: 'error',
+            status: 404,
+            message: `Can not find workspace ID:"${ctx.instance.workspaceId}"`
           });
 
         if (wspcInstance.accessPrivateYn === 0 || currentUser && wspcInstance.ownerUserId === currentUser.id) {
