@@ -23,6 +23,7 @@ import mui from 'material-ui';
 import Component from 'react-pure-render/component';
 import {FormattedMessage} from 'react-intl';
 import {Grid, Row, Col, Affix} from 'react-bootstrap';
+import DocumentTitle from 'react-document-title';
 
 import Loader from '../components/Loader';
 import ListActions from '../components/UIListActions';
@@ -48,10 +49,10 @@ export default class ProjectIssues extends Component {
     super(props);
     this.state = {
       count:0,
-      filters:props.location.query.filter || null,
+      filters:(props.location.query.filter ? props.location.query.filter : null),
       filtersOpen:false,
       loading:true,
-      searchQuery:props.location.query.query,
+      searchQuery:(props.location.query.query ? props.location.query.query : ''),
       showDetails: true
     };
   }
@@ -179,6 +180,7 @@ export default class ProjectIssues extends Component {
     }
 
     return (
+      <DocumentTitle title={this.props.boards.board.summary + " - " + this.props.boards.group.name}>
       <div className="bfk-browse">
         <div className="page-header clearfix">
           {ListActionsRendered}
@@ -227,6 +229,7 @@ export default class ProjectIssues extends Component {
           {content}
           </div>
       </div>
+      </DocumentTitle>
     );
   }
 
