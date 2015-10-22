@@ -22,12 +22,12 @@ import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import {RaisedButton, Paper} from 'material-ui';
 
-import Form from '../../topic/components/create-topic-form';
 
 export default class ProjectsEmpty extends Component {
 
   static propTypes = {
     boards: PropTypes.object.isRequired,
+    form: PropTypes.node.isRequired,
     params: PropTypes.object.isRequired,
     topic_actions: PropTypes.object.isRequired,
   };
@@ -47,17 +47,7 @@ export default class ProjectsEmpty extends Component {
 
     const {newTopic, formFields} = this.props.boards;
 
-    const formContent = (
-      <Form
-        actions={this.props.topic_actions}
-        containerStore={null}
-        formFields={formFields}
-        newTopic={newTopic}
-        params={this.props.params}
-        ref="formView"
-        topicGroup="project"
-        />
-    );
+    const formContent = React.cloneElement(this.props.form, {ref:'formView'});
 
     let formStyles = {
         padding: 20
@@ -82,7 +72,10 @@ export default class ProjectsEmpty extends Component {
 
           <h2>Welcome to project management!</h2>
           <div style={controlStyles}>
+            <p>Start improving your organization's management and workflows with Brainfock Project Management!</p>
             <p>Manage product and business development, sales and issue tracking.</p>
+            <p style={{display:'none'}}>Organize projects into workspaces.
+              Use default schemes or take advantage of customization powers of Brainfock.</p>
             <RaisedButton
               label="Create first project"
               onClick={e => this.setState({
