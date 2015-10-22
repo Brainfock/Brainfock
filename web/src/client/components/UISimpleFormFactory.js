@@ -175,6 +175,8 @@ class Page extends Component{
         // preselected
         if(item.value) {
           props.value = item.value;
+        } else {
+          props.value = '';
         }
       }
 
