@@ -19,11 +19,15 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import React from 'react';
+import {FormattedMessage} from 'react-intl';
 
 import List from '../boards/pages/boards';
 import ListComponent from '../boards/boards.react';
 import ProjectsEmpty from './components/projects-empty';
 import Loader from '../components/Loader';
+import ListActions from '../components/UIListActions';
+
+import Form from '../topic/components/create-topic-form';
 
 module.exports = React.createClass({
   /**
@@ -45,35 +49,83 @@ module.exports = React.createClass({
 
   render: function()
   {
-    const {boards:{list, board, group, meta}, topic_actions, msg, history} = this.props;
+    const {boards:{list, board, group, meta, formFields, newTopic }, topic_actions, msg, history} = this.props;
 
-    if (!group || meta.loading === true) {
+    if (!group || !group.groupKey || meta.loading === true) {
       return <h1><Loader /></h1>;
     }
+
+    const addItemForm = (
+      <Form
+        actions={this.props.topic_actions}
+        containerStore={null}
+        formFields={formFields}
+        newTopic={newTopic}
+        params={this.props.params}
+        ref="formView"
+        topicGroup="project"
+        />
+    );
 
     if (!list.size) {
       const {children, ...passProps} = this.props;
       return (
-        <ProjectsEmpty {...passProps} />
+        <ProjectsEmpty {...passProps} form={addItemForm} />
       );
     }
 
-    if (!group || !group.groupKey) {
-      return <h4>Loading...</h4>;
-    }
-
-    return <List
-      itemComponent={ListComponent}
-      emptyListComponent={ProjectsEmpty}
-      board={board}
-      group={group}
-      list={list}
-      topic_actions={topic_actions}
-      msg={msg}
-      history={history}
-      meta={this.props.boards.meta}
-      params={this.props.params}
+    const summary = meta.count > 0
+      ? <FormattedMessage
+      defaultMessage={msg.topics.list.countItems}
+      values={{countItems:meta.count}}
       />
+      : '';
+
+    const titleMsg = (
+      <h3 style={{
+        margin: 0,
+        padding: '24px 24px 0px',
+        color: 'rgba(0, 0, 0, 0.870588)',
+        fontSize: '24px',
+        lineHeight: '32px',
+        fontWeight: 400
+      }}>
+        <FormattedMessage
+          defaultMessage={msg.topics.form.create.title}
+          id={'msg.topics.form.create.title'}
+          values={{type:this.props.boards.group.name}}
+          />
+      </h3>
+    );
+
+    const ListActionsRendered = (
+      <div className="pull-right">
+        {summary}
+
+        <ListActions
+          addItemForm={addItemForm}
+          BUTTON_ACTION_LABEL={msg.topics.list.addNew.button}
+          formFields={formFields}
+          msg={msg.topics}
+          TITLE={titleMsg}
+          />
+      </div>
+    );
+    return (
+      <div>{ListActionsRendered}
+      <List
+        itemComponent={ListComponent}
+        board={board}
+        group={group}
+        list={list}
+        topic_actions={topic_actions}
+        msg={msg}
+        history={history}
+        meta={this.props.boards.meta}
+        params={this.props.params}
+        />
+        </div>
+    );
 
   },
 });
