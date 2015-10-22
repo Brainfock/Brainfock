@@ -342,7 +342,11 @@ export function loadFormFields(group, contextTopicId) {
       promise:  getApi(fetch, endpoint)
         .catch(response => {
           throw response;
-        })
+        }),
+    },
+    meta: {
+      contextTopicId: contextTopicId,
+      group: group
     }
   });
 }

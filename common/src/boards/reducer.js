@@ -32,6 +32,7 @@ const InitialState = Record({
   listFilters: List(),
   formFields: new (Record({
     loading: true,
+    group: '',
     fields:List(),
   })),
   newTopic: new Todo,
@@ -164,16 +165,27 @@ export default function boardsReducer(state = initialState, action) {
         ;
     }
 
-    case actions.LOAD_FORM_FIELDS_SUCCESS:
-    {
+    //case actions.LOAD_FORM_FIELDS: {
+    //
+    //  if (state.formFields.group !== action.meta.group) {
+    //    return state
+    //      //.updateIn(['formFields','fields'], list => list.clear())
+    //      //.updateIn(['formFields','fields'], list => list.push(...newlist))
+    //      .setIn(['formFields', 'loading'], true)
+    //      ;
+    //  }
+    //}
+
+    case actions.LOAD_FORM_FIELDS_SUCCESS: {
       const newlist = action.payload.filters.map((item) => {
         item.cid = getRandomString();
         return new (Record(item));
       });
       return state
-        .updateIn(['formFields','fields'], list => list.clear())
-        .updateIn(['formFields','fields'], list => list.push(...newlist))
-        .setIn(['formFields','loading'],false)
+        .updateIn(['formFields', 'fields'], list => list.clear())
+        .updateIn(['formFields', 'fields'], list => list.push(...newlist))
+        .setIn(['formFields', 'group'], action.meta.group)
+        .setIn(['formFields', 'loading'], false)
         ;
     }
 

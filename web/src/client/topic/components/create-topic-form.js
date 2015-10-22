@@ -46,7 +46,8 @@ export default class CreateTopicForm extends Component{
   };
 
   componentWillMount() {
-    if(!this.props.formFields || (this.props.formFields && this.props.formFields.fields.size === 0))
+    if(!this.props.formFields || (this.props.formFields && this.props.formFields.fields.size === 0)
+      || (this.props.formFields.group !== this.props.topicGroup))
       this.props.actions.loadFormFields(this.props.topicGroup, (this.props.containerStore ? this.props.containerStore.id : 0));
   }
 
