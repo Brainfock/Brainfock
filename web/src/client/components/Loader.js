@@ -5,7 +5,7 @@ import {LinearProgress} from 'material-ui';
 module.exports = React.createClass({
   render: function() {
     return (
-      <div style={{textAlign:'center',marginTop:'20%'}}>
+      <div style={{textAlign:'center',marginTop:'10%'}}>
         <i className="fa fa-cog fa-spin" ></i> Loading...
 
         <LinearProgress mode="indeterminate" style={{marginTop:'5%'}} />
