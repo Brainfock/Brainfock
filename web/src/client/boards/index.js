@@ -19,26 +19,48 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import React from 'react';
-import Component from 'react-pure-render/component';
 
-import MasterDetailsListView from './components/master-detail.list';
-import ListViewItem from './components/issues-list-item';
-import ProjectsEmpty from './components/projects-empty';
+import ProjectsEmpty from './components/boards.empty';
+import MasterDetailsListView from '../projects/components/master-detail.list';
+import ListView from '../projects/components/plain.list';
 
-export default class ProjectIssues extends Component {
+const views = {
+  'master.detail': MasterDetailsListView,
+  'list': ListView,
+  'boards.homepage': ListView,
+};
 
-  render() {
-    const {board, meta, listFilters, newTopic, formFields} = this.props.boards;
-    const msg = this.props.msg.topics;
+module.exports = React.createClass({
+
+  componentWillMount() {
+    if (process.env.IS_BROWSER === true) {
+      this.props.topic_actions.loadTopicGroup('board');
+      //this.props.topic_actions.find('project', {}/*, this.props.parentModel*/);
+    }
+  },
+
+  render: function()
+  {
+    //return <h1>{this.props.boards.group.summary}</h1>;
+
+    let View;
+      console.log('use extra view ' + this.props.boards.group.view);
+      console.log('views', views);
+    if (views[this.props.boards.group.view]) {
+      View = views[this.props.boards.group.view];
+    } else {
+      View = MasterDetailsListView;
+    }
+
     const {children, ...passProps} = this.props;
     return (
-      <MasterDetailsListView
-        containerTopic={board}
-        listViewItem={ListViewItem}
+      <View
+        containerTopic={null}
+        disableDetails
         emptyListFallback={ProjectsEmpty}
-        groupKey='contextBoard'
+        groupKey='board'
         {...passProps}
         />
     );
   }
-};
+});

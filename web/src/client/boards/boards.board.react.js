@@ -1,7 +1,8 @@
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 
-var mui = require('material-ui');
+import mui, {Styles, Avatar} from 'material-ui';
+const Colors = Styles.Colors;
 
 export default class Todo extends Component {
 
@@ -14,6 +15,9 @@ export default class Todo extends Component {
   render() {
     const {actions, todo} = this.props;
 
+    const color = Colors[todo.logoBackground];
+    const icon = "fa "+todo.logoIcon;
+
     return <mui.ListItem
       primaryText={todo.summary}
       secondaryText={todo.text}
@@ -24,6 +28,7 @@ export default class Todo extends Component {
             topics
           </div>
         }
+      leftAvatar={<Avatar icon={<span className={icon}/>} backgroundColor={color} />}
       > {this.confirmDialog()}
     </mui.ListItem>
 

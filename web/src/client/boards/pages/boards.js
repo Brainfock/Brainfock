@@ -26,8 +26,8 @@ export default class Boards extends Component {
 
   render() {
     let header = <div>
-      {this.props.board.group && <h4>{this.props.board.group.name}</h4>}
-      {!this.props.board.group && <h4>Loading...</h4>}
+      {this.props.group && <h4>{this.props.group.name}</h4>}
+      {!this.props.group && <h4>Loading...</h4>}
     </div>;
 
     if(this.props.meta.loading==true) {
