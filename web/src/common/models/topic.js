@@ -59,7 +59,38 @@ module.exports = function(Topic) {
   });
 
   /**
-   * validate workspace/namespace existance and access
+   * Set `groupSchemeId` for root topics to default group scheme if no value is provided by user
+   */
+  Topic.observe('before save', function normalizeUserInput(ctx, next) {
+
+    if (ctx.instance && ctx.isNewInstance === true
+        // Only root topics may have own group scheme settings
+    && (!ctx.instance.contextTopicId || ctx.instance.contextTopicId === 0)) {
+      // if no groupScheme is provided, set default
+      if (!ctx.instance.groupSchemeId) {
+        // find default
+        models.TopicGroupScheme.findOne({
+          where:{
+            isDefault: 1
+          }
+        },
+        function(err, groupScheme) {
+          if (err) throw err;
+
+          if (!groupScheme)
+            return next(new Error('Can not find default group scheme!'));
+
+          ctx.instance.groupSchemeId = groupScheme.id;
+          next();
+        });
+      }
+    } else {
+      next();
+    }
+  });
+
+  /**
+   * validate workspace/namespace existence and access
    * set owner flags
    */
   Topic.observe('before save', function normalizeUserInput(ctx, next) {
