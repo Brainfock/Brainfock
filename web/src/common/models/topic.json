@@ -178,6 +178,22 @@
       },
       "_selectable": true
     },
+    "groupSchemeId": {
+      "type": "Number",
+      "required": false,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
+      "mysql": {
+        "columnName": "group_scheme_id",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
+        "nullable": "Y"
+      },
+      "_selectable": true
+    },
     "typeId": {
       "type": "Number",
       "required": true,
