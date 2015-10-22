@@ -22,8 +22,8 @@ import React from 'react';
 
 import List from './boards';
 import ProjectsEmpty from '../boards.empty';
-
-let ListComponent = require('../boards.react');
+import ListComponent from '../boards.react';
+import Loader from '../../components/Loader';
 
 module.exports = React.createClass({
   /**
@@ -45,10 +45,10 @@ module.exports = React.createClass({
 
   render: function()
   {
-    const {boards:{list, board, group}, topic_actions, msg, history} = this.props;
+    const {boards:{list, board, group, meta}, topic_actions, msg, history} = this.props;
 
-    if(!group || !group.groupKey) {
-      return <h4>Loading...2</h4>
+    if (!group || !group.groupKey || meta.loading === true) {
+      return <h1><Loader /></h1>;
     }
 
     if (!list.size) {
@@ -58,16 +58,19 @@ module.exports = React.createClass({
       );
     }
 
-    return <List
-      itemComponent={ListComponent}
-      board={board}
-      group={group}
-      list={list}
-      topic_actions={topic_actions}
-      msg={msg}
-      history={history}
-      meta={this.props.boards.meta}
-      />
+    return (
+      <List
+        itemComponent={ListComponent}
+        board={board}
+        group={group}
+        list={list}
+        topic_actions={topic_actions}
+        msg={msg}
+        history={history}
+        meta={this.props.boards.meta}
+        params={this.props.params}
+        />
+    );
 
   },
 });
