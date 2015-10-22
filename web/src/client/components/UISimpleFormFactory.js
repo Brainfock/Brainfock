@@ -157,13 +157,10 @@ class Page extends Component{
     else if('text'==item.type || 'textarea' == item.type)
     {
       let props = {
-        name:item.name,
-        hintText:item.description,
         floatingLabelText:item.label + ':',
-
-        style:{
-          width:'100%'
-        },
+        fullWidth: true,
+        hintText:item.description,
+        name:item.name,
       };
       if('textarea' == item.type) {
         props.multiLine=true;

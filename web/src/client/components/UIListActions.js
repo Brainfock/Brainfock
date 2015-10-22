@@ -65,7 +65,8 @@ var ListActions =  React.createClass({
 
     const addItemForm = React.cloneElement(this.props.addItemForm, {
       ref: 'formView'
-    })
+    });
+
     return <mui.Dialog
       actions={dialogActions}
       autoDetectWindowHeight={true}

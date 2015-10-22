@@ -79,21 +79,20 @@ var PageWithNav = React.createClass({
         overflow: 'hidden'
       },
       content: {
-        boxSizing: 'border-box',
-        //padding: Spacing.desktopGutter + 'px',
         // removed maxWidth - this component is used as full-width container with side nav
         //maxWidth: (Spacing.desktopKeylineIncrement * 20) + 'px'
+        //padding: Spacing.desktopGutter + 'px',
+        boxSizing: 'border-box',
       },
       secondaryNavWhenMedium: {
         borderTop: 'none',
         position: 'absolute',
-        top: '64px',
         top: '18px',
         width: subNavWidth
       },
       contentWhenMedium: {
-        marginLeft: subNavWidth,
         borderLeft: 'solid 1px ' + Colors.grey300,
+        marginLeft: subNavWidth,
         minHeight: '800px'
       }
     };
@@ -141,11 +140,12 @@ var PageWithNav = React.createClass({
         <div style={styles.root}>
           <div style={styles.secondaryNav}>
             <mui.Menu
-              ref="menuItems"
-              zDepth={0}
               menuItems={this.props.menuItems}
+              onItemTap={this._onMenuItemClick}
+              ref="menuItems"
               selectedIndex={this._getSelectedIndex()}
-              onItemTap={this._onMenuItemClick} />
+              zDepth={0}
+              />
           </div>
           <div style={styles.content}>
             {React.cloneElement(children, passProps)}

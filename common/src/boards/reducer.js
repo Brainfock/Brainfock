@@ -33,7 +33,7 @@ const InitialState = Record({
   formFields: new (Record({
     loading: true,
     group: '',
-    fields:List(),
+    fields: List(),
   })),
   newTopic: new Todo,
   viewPage: new Todo,
@@ -42,7 +42,7 @@ const InitialState = Record({
   group: new TopicGroup,
   meta: new (Record({
     loading: true,
-    count:0,
+    count: 0,
   }))
 });
 
@@ -54,12 +54,12 @@ const revive = (state) => initialState.merge({
   listFilters: state.listFilters.map(todo => (new Record(todo))),
   newTopic: new Todo(state.newTopic),
   viewPage: new Todo(state.viewPage || {}),
-  board:  new Todo(),
+  board: new Todo(),
   viewTopic: new Todo({loading: false}),
   group: new TopicGroup,
   meta: new (Record({
     loading: true,
-    count:0,
+    count: 0,
   }))
 });
 
@@ -70,11 +70,11 @@ export default function boardsReducer(state = initialState, action) {
 
     case actions.FIND:
       return state
-        .setIn(['meta','loading'], true)
+        .setIn(['meta', 'loading'], true)
         .update('list', list => list.clear());
 
     case actions.FIND_ERROR:
-      return state.setIn(['meta','loading'], false)
+      return state.setIn(['meta', 'loading'], false)
 
     case actions.FIND_SUCCESS:
     {
@@ -85,7 +85,7 @@ export default function boardsReducer(state = initialState, action) {
       return state
         .update('list', list => list.clear())
         .update('list', list => list.push(...newlist))
-        .setIn(['meta','loading'], false)
+        .setIn(['meta', 'loading'], false)
         ;
     }
 
@@ -102,7 +102,8 @@ export default function boardsReducer(state = initialState, action) {
       return state
         .set('viewTopic', {'loading': true});
 
-    case actions.SET_CURRENT_TOPIC: {
+    case actions.SET_CURRENT_TOPIC:
+    {
       return state
         .setIn(['viewTopic', 'id'], action.payload);
     }
@@ -133,7 +134,7 @@ export default function boardsReducer(state = initialState, action) {
     // post or catch new comment via sockets:
     case commentsActions.ADD_ONE_COMMENT:
       return state
-        .updateIn(['viewTopic','comments'], comments => comments.push(Comment(action.payload)))
+        .updateIn(['viewTopic', 'comments'], comments => comments.push(Comment(action.payload)))
 
     case actions.LOAD_TOPIC_GROUP:
       return state
@@ -145,13 +146,14 @@ export default function boardsReducer(state = initialState, action) {
         //.setIn(['board', 'group'], new TopicGroup(action.payload))
         .set('group', new TopicGroup(action.payload));
 
-    case action.LOAD_TOPIC_GROUP_ERROR: {
-      console.log('error', action.payload);
+    case action.LOAD_TOPIC_GROUP_ERROR:
+    {
+      return state;
     }
 
     case actions.COUNT_SUCCESS:
       return state
-        .setIn(['meta','count'], action.payload.count);
+        .setIn(['meta', 'count'], action.payload.count);
 
     case actions.LOAD_FILTERS_SUCCESS:
     {
@@ -165,18 +167,8 @@ export default function boardsReducer(state = initialState, action) {
         ;
     }
 
-    //case actions.LOAD_FORM_FIELDS: {
-    //
-    //  if (state.formFields.group !== action.meta.group) {
-    //    return state
-    //      //.updateIn(['formFields','fields'], list => list.clear())
-    //      //.updateIn(['formFields','fields'], list => list.push(...newlist))
-    //      .setIn(['formFields', 'loading'], true)
-    //      ;
-    //  }
-    //}
-
-    case actions.LOAD_FORM_FIELDS_SUCCESS: {
+    case actions.LOAD_FORM_FIELDS_SUCCESS:
+    {
       const newlist = action.payload.filters.map((item) => {
         item.cid = getRandomString();
         return new (Record(item));
@@ -189,55 +181,66 @@ export default function boardsReducer(state = initialState, action) {
         ;
     }
 
-    case actions.SET_NEW_TOPIC: {
+    case actions.SET_NEW_TOPIC:
+    {
       return state.set('newTopic', action.payload);
     }
-    case actions.SET_NEW_TOPIC_FIELD: {
+    case actions.SET_NEW_TOPIC_FIELD:
+    {
       const {name, value} = action.payload;
       return state.setIn(['newTopic', name], value);
     }
-    case actions.CREATE: {
+    case actions.CREATE:
+    {
       return state
         // lockform submit buttons etc.
-        .setIn(['formFields','loading'],true)
+        .setIn(['formFields', 'loading'], true)
     }
-    case actions.CREATE_SUCCESS: {
+    case actions.CREATE_SUCCESS:
+    {
       return state
         .update('list', list => list.unshift(Todo(action.payload)))
-        .setIn(['formFields','loading'],false)
-    }
-    case actions.CREATE_ERROR: {
-      return state
-        .setIn(['formFields','loading'],false)
-    }
-
-    case actions.SAVE: {
-      return state
-        .setIn(['newTopic','loading'],true)
-    }
-    case actions.SAVE_SUCCESS: {
-      return state
-        .setIn(['newTopic','loading'],false)
+        .setIn(['formFields', 'loading'], false)
     }
     case actions.CREATE_ERROR:
-    case actions.SAVE_ERROR: {
+    {
       return state
-        .setIn(['newTopic','loading'],false)
+        .setIn(['formFields', 'loading'], false)
     }
 
-    case actions.RUN_OPERATION: {
+    case actions.SAVE:
+    {
+      return state
+        .setIn(['newTopic', 'loading'], true)
+    }
+    case actions.SAVE_SUCCESS:
+    {
+      return state
+        .setIn(['newTopic', 'loading'], false)
+    }
+    case actions.CREATE_ERROR:
+    case actions.SAVE_ERROR:
+    {
+      return state
+        .setIn(['newTopic', 'loading'], false)
+    }
+
+    case actions.RUN_OPERATION:
+    {
       return state
         .setIn(['viewTopic', 'loading'], true);
     }
-    case actions.RUN_OPERATION_SUCCESS: {
+    case actions.RUN_OPERATION_SUCCESS:
+    {
       return state
-      //  .set('viewTopic', new Todo(action.payload.topic))
+        //  .set('viewTopic', new Todo(action.payload.topic))
         .setIn(['viewTopic', 'wfStatus'], action.payload.topic.wfStatus)
         .setIn(['viewTopic', 'wfStage'], action.payload.topic.wfStage)
         .setIn(['viewTopic', 'operations'], action.payload.topic.operations)
         .setIn(['viewTopic', 'loading'], false);
     }
-    case actions.RUN_OPERATION_ERROR: {
+    case actions.RUN_OPERATION_ERROR:
+    {
       return state
         .setIn(['viewTopic', 'loading'], false);
     }
