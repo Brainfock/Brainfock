@@ -18,13 +18,12 @@
  * @link http://www.brainfock.com/
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
-
 import React from 'react';
-import Router from 'react-router';
 
 import List from '../boards/pages/boards';
-
-let ListComponent = require('../boards/boards.react');
+import ListComponent from '../boards/boards.react';
+import ProjectsEmpty from './components/projects-empty';
+import Loader from '../components/Loader';
 
 module.exports = React.createClass({
   /**
@@ -34,47 +33,47 @@ module.exports = React.createClass({
    */
   displayName: function(bcComponent) {
     // todo: i18n
-    return 'Projects'
+    return 'Projects';
   },
 
   componentWillMount() {
     if(process.env.IS_BROWSER==true) {
       this.props.topic_actions.loadTopicGroup('project', {}/*, this.props.parentModel*/);
+      this.props.topic_actions.find('project', {}/*, this.props.parentModel*/);
     }
   },
 
   render: function()
   {
-    const {boards:{list, board, group}, topic_actions, msg, history} = this.props;
+    const {boards:{list, board, group, meta}, topic_actions, msg, history} = this.props;
 
-    if(!group) {
-      return <h4>Loading...</h4>
+    if (!group || meta.loading === true) {
+      return <h1><Loader /></h1>;
     }
 
-    // forward to board or topic view
-    if(this.props.params.board_id) {
+    if (!list.size) {
       const {children, ...passProps} = this.props;
-      return React.cloneElement(children, passProps);
+      return (
+        <ProjectsEmpty {...passProps} />
+      );
     }
 
-    // show all boards
-    else {
-
-      if(!group || !group.groupKey) {
-        return <h4>Loading...</h4>
-      }
-
-      return <List
-        itemComponent={ListComponent}
-        board={board}
-        group={group}
-        list={list}
-        topic_actions={topic_actions}
-        msg={msg}
-        history={history}
-        meta={this.props.boards.meta}
-        params={this.props.params}
-        />
+    if (!group || !group.groupKey) {
+      return <h4>Loading...</h4>;
     }
+
+    return <List
+      itemComponent={ListComponent}
+      emptyListComponent={ProjectsEmpty}
+      board={board}
+      group={group}
+      list={list}
+      topic_actions={topic_actions}
+      msg={msg}
+      history={history}
+      meta={this.props.boards.meta}
+      params={this.props.params}
+      />
+
   },
 });
