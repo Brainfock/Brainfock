@@ -106,16 +106,13 @@ export default class App extends Component {
     newMuiTheme.appBar.height = 58;
 
     newMuiTheme.raisedButton.primaryColor = '#4b8cf7';
+    newMuiTheme.rawTheme.spacing.desktopKeylineIncrement = 58;
 
     this.setState({
       muiTheme: newMuiTheme
     });
 
     //newMuiTheme.appBar.textColor = Colors.deepPurpleA700;
-
-    //ThemeManager.modifyRawThemeSpacing(this.state.muiTheme, {
-    //  desktopKeylineIncrement: 58,
-    //});
   }
 
   render() {
