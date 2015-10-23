@@ -62,12 +62,7 @@ export default class Todo extends Component {
             <span className="label label-info pull-right">{todo.type && todo.type.name}</span>
           </div>}
       secondaryTextLines={2}
-      secondaryText={<div>
-          <span className="label label-default">{todo.status && todo.status.label}</span>
-          <br />
-          {todo.text}
-          </div>
-          }
+      secondaryText={todo.text}
 
       onClick={this._onClick.bind(this)}
       onDoubleClick={this._onDblClick.bind(this)}
