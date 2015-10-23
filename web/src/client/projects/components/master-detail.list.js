@@ -310,7 +310,7 @@ export default class ProjectIssues extends Component {
         actions={this.props.topic_actions}
         group={this.props.boards.group}
         // whether list should follow link when list item is clicked or just load u details
-        followItemOnClick={!this.state.showDetails || !this.state.disableDetails}
+        followItemOnClick={!this.state.showDetails || this.state.disableDetails}
         history={this.props.history}
         itemComponent={this.props.listViewItem}
         list={this.props.boards.list}
