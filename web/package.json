@@ -74,7 +74,7 @@
     "loopback-datasource-juggler": "^2.40.1",
     "loopback-webpack-plugin": "^0.1.2",
     "marked": "^0.3.5",
-    "material-ui": "^0.12.3",
+    "material-ui": "^0.13.*",
     "mocha": "^2.2.5",
     "mysql": "^2.9.0",
     "nconf": "^0.7.1",
