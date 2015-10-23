@@ -132,12 +132,16 @@ function toQueryString(obj, urlEncode) {
   }).join('&');
   if (urlEncode) return encodeURIComponent(queryString);else return queryString;
 }
-export function find(type, query, contextTopicId) {
-  let endpoint;
+export function find(type, query, contextTopicId, namespace) {
+  let endpoint = '';
+  if(namespace) {
+    endpoint += `workspaces/${namespace}/`
+  }
+
   if (contextTopicId) {
-    endpoint = `topics/${contextTopicId}/topics/?filter[where][groupKey]=${type}`;
+    endpoint += `topics/${contextTopicId}/topics/?filter[where][groupKey]=${type}`;
   } else {
-    endpoint = 'topics/?filter[where][groupKey]='+type;
+    endpoint += 'topics/?filter[where][groupKey]='+type;
   }
 
   // include some additional info
@@ -190,9 +194,13 @@ export function count(group, query, contextTopicId) {
   });
 }
 
-export function loadCurrent(id) {
+export function loadCurrent(id, namespace) {
 
-  let endpoint = 'topics/'+id ;
+  let endpoint = '';
+  if(namespace) {
+    endpoint += `workspaces/${namespace}/`;
+  }
+  endpoint += 'topics/'+id ;
 
   return ({fetch, validate}) => ({
     types: [

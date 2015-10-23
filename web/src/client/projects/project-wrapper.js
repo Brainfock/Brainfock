@@ -31,7 +31,7 @@ class Layout extends Component{
   componentDidMount() {
     if(process.env.IS_BROWSER==true) {
       // load info about CURRENT BOARD
-      this.props.topic_actions.loadCurrent(this.props.params.board_id);
+      this.props.topic_actions.loadCurrent(this.props.params.board_id, this.props.params.namespace);
       // load TOPIC of this BOARD
      // this.props.topic_actions.find(this.props.groupKey || 'board_topic', {},this.props.params.board_id);
     }
