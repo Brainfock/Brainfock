@@ -88,8 +88,8 @@ var AppLeftNav = React.createClass({
     return (
       <mui.LeftNav
           ref="leftNav"
-          docked={false}
-          isInitiallyOpen={false}
+          docked={this.props.location.pathname==='/'}
+          isInitiallyOpen={this.props.location.pathname!=='/'}
           header={header}
           menuItems={menuItems}
           selectedIndex={this._getSelectedIndex()}
@@ -139,7 +139,7 @@ var AppLeftNav = React.createClass({
    */
   _onLeftNavChange: function(e, key, payload) {
     this.props.history.pushState(null, payload.route);
-
+    this.refs.leftNav.close();
     //this.transitionTo(payload.route, (payload.params?payload.params:[]));
   },
 
