@@ -109,7 +109,13 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "topics": {
+      "type": "hasMany",
+      "model": "Topic",
+      "foreignKey": "workspaceId"
+    }
+  },
   "acls": [
     {
       "accessType": "*",
