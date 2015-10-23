@@ -66,7 +66,9 @@ export default class ProjectIssues extends Component {
     params: React.PropTypes.object.isRequired,
     topic_actions: React.PropTypes.object.isRequired,
   }
-
+  static contextTypes = {
+    location: React.PropTypes.object
+  }
   constructor(props, props2) {
     super(props);
     this.state = {
@@ -99,7 +101,7 @@ export default class ProjectIssues extends Component {
   componentWillUpdate(newProps) {
     if (process.env.IS_BROWSER === true) {
       const groupKey = this.props.groupKey;
-      if (newProps.location.query !== this.props.location.query) {
+      if (newProps.location.search != this.context.location.search) {
         this.props.topic_actions.count(groupKey, (newProps.location.query.filter || null), this.props.params.board_id);
         this.props.topic_actions.find(groupKey, (newProps.location.query.filter || null), this.props.params.board_id);
       }
