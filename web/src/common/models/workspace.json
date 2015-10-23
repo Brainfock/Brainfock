@@ -121,7 +121,58 @@
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",
-      "permission": "ALLOW"
+      "permission": "DENY"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "wspcTopicAccess",
+      "permission": "ALLOW",
+      "property": "__findById__topics"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "wspcTopicsList",
+      "permission": "ALLOW",
+      "property": "__get__topics__topics"
+    },
+
+
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "topicEntityAccess",
+      "permission": "ALLOW",
+      "property": "__get__topics"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "topicEntityAccess",
+      "permission": "ALLOW",
+      "property": "__count__topics"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "topicEntityAccess",
+      "permission": "ALLOW",
+      "property": "find"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "topicEntityAccess",
+      "permission": "ALLOW",
+      "property": "findById"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "topicEntityAccess",
+      "permission": "ALLOW",
+      "property": "findOne"
     }
   ],
   "methods": {}
