@@ -22,6 +22,8 @@ import React from 'react';
 import mui from 'material-ui';
 import {Tabs, Tab} from 'react-bootstrap';
 
+import TopicPreview from '../../boards/boards.board.react';
+
 export default class Dashboard extends React.Component{
 
   render()
@@ -35,8 +37,7 @@ export default class Dashboard extends React.Component{
           <h3>{msg.form.section.main}</h3>
         </div>
         <div className="container-fluid">
-
-          <h4>{msg.form.section.general}:</h4>
+          <h4 style={{display:'none'}}>{msg.form.section.general}:</h4>
 
           <mui.TextField
             name="summary"
@@ -61,21 +62,36 @@ export default class Dashboard extends React.Component{
 
           <br />
 
-          <mui.TextField
-            name="logoIcon"
-            value={this.props.topic.get('logoIcon')}
-            onChange={this.props.actions.setNewTopicField}
-            hintText={msg.form.hint.logoIcon}
-            floatingLabelText={msg.form.label.logoIcon}
-            />
+          <h4>Logo settings:</h4>
+          <div className="row ">
 
-          <mui.TextField
-            name="logoBackground"
-            value={this.props.topic.get('logoBackground')}
-            onChange={this.props.actions.setNewTopicField}
-            hintText={msg.form.hint.logoBackground}
-            floatingLabelText={msg.form.label.logoBackground}
-            />
+            <div className="col-md-push-6 col-md-6">
+              <h5>Preview:</h5>
+              <mui.Paper>
+                <TopicPreview isPreview todo={this.props.topic} />
+              </mui.Paper>
+            </div>
+
+            <div className="col-md-6 col-md-pull-6">
+              <mui.TextField
+                name="logoIcon"
+                value={this.props.topic.get('logoIcon')}
+                onChange={this.props.actions.setNewTopicField}
+                hintText={msg.form.hint.logoIcon}
+                floatingLabelText={msg.form.label.logoIcon}
+                />
+              <p>Available icon names listed at:<br/> https://fortawesome.github.io/Font-Awesome/icons/</p>
+
+              <mui.TextField
+                name="logoBackground"
+                value={this.props.topic.get('logoBackground')}
+                onChange={this.props.actions.setNewTopicField}
+                hintText={msg.form.hint.logoBackground}
+                floatingLabelText={msg.form.label.logoBackground}
+                />
+              <p>Pick Material Design color code from list:<br/> http://material-ui.com/#/customization/colors</p>
+            </div>
+          </div>
 
           <h4>{msg.form.section.access}:</h4>
 

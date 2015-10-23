@@ -4,12 +4,15 @@ import React, {PropTypes} from 'react';
 import mui, {Styles, Avatar} from 'material-ui';
 const Colors = Styles.Colors;
 
+import TopicIcon from '../topic/components/topic-icon';
+
 export default class Todo extends Component {
 
   static propTypes = {
-    group: PropTypes.object.isRequired,
-    actions: PropTypes.object.isRequired,
-    todo: PropTypes.object.isRequired
+    group: PropTypes.object,
+    actions: PropTypes.object,
+    todo: PropTypes.object.isRequired,
+    isPreview: PropTypes.bool
   }
 
   render() {
@@ -18,26 +21,24 @@ export default class Todo extends Component {
     const color = Colors[todo.logoBackground];
     const icon = "fa "+todo.logoIcon;
 
+    let rightAvatar;
+    if(!this.props.isPreview) {
+      rightAvatar = (
+        <div className="stats">
+          <span className="unread prop">{todo.countActiveTopics}</span>
+          topics
+        </div>
+      );
+    }
+
     return <mui.ListItem
       primaryText={todo.summary}
       secondaryText={todo.text}
       onClick={this._onClick.bind(this)}
-      rightAvatar={
-          <div className="stats">
-            <span className="unread prop">{todo.countActiveTopics}</span>
-            topics
-          </div>
-        }
+      rightAvatar={rightAvatar}
       leftAvatar={<Avatar icon={<span className={icon}/>} backgroundColor={color} />}
       > {this.confirmDialog()}
     </mui.ListItem>
-
-    return (
-      <li className="todo">
-        <span className="editable view">{todo.summary}</span>
-        <span className="button" onClick={() => actions.deleteTodo(todo)}>x</span>
-      </li>
-    );
   }
 
   confirmDialog() {
@@ -61,6 +62,10 @@ export default class Todo extends Component {
   }
 
   _onClick() {
+    if(this.props.isPreview === true) {
+      alert('This is a preview :)');
+      return;
+    }
     let link = this.props.group.permalink;
     console.log('LINK: '+link);
     const topic_key = this.props.todo.contextTopicKey;
