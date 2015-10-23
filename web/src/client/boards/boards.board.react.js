@@ -4,8 +4,6 @@ import React, {PropTypes} from 'react';
 import mui, {Styles, Avatar} from 'material-ui';
 const Colors = Styles.Colors;
 
-import TopicIcon from '../topic/components/topic-icon';
-
 export default class Todo extends Component {
 
   static propTypes = {
