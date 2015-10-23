@@ -50,8 +50,7 @@ var menuItems = [
     text: 'Brainfock Help' },
 
   // Link to Brainfock website & version, don't remove
-  { type: mui.MenuItem.Types.LINK,
-    payload: 'http://brainfock.org',
+  { route: '/wiki/Brainfock:About',
     text: <div style={{
       position: 'absolute',
       bottom: 0,
