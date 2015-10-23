@@ -197,6 +197,39 @@ module.exports = function(Topic) {
   });
 
   /**
+   * Validate uniqueness of
+   */
+  Topic.observe('before save', function normalizeUserInput(ctx, next) {
+    const context = loopback.getCurrentContext();
+
+    if (ctx.instance) {
+      if((!ctx.instance.contextTopicId || ctx.instance.contextTopicId === 0)
+        && ctx.instance.contextTopicKey && ctx.instance.workspaceId) {
+        // make sure it's unique
+
+        Topic.app.models.Topic.findOne({
+          where:{
+            contextTopicKey: ctx.instance.contextTopicKey,
+            workspaceId: ctx.instance.workspaceId,
+          }
+        }, function(err, existingTopic) {
+          if (err) throw err;
+
+          if(existingTopic && existingTopic.id) {
+            next(new Error(`There is already topic with "${ctx.instance.contextTopicKey}" key in that namespace`));
+          } else {
+            next();
+          }
+        });
+      } else {
+        next();
+      }
+    } else {
+      next();
+    }
+  });
+
+  /**
    * get entityId
    */
   Topic.observe('before save', function normalizeUserInput(ctx, next) {
