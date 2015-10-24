@@ -1,36 +1,65 @@
+/**
+ * Brainfock - community & issue management software
+ * Copyright (c) 2015, Sergii Gamaiunov (“Webkadabra”)  All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @link http://www.brainfock.com/
+ * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
+ */
+import Component from 'react-pure-render/component';
+import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {Link} from 'react-router';
+import io from 'socket.io-client';
+import {
+  ButtonToolbar,
+  Overlay,
+  Popover,
+  Grid,
+  Row,
+  Col
+} from 'react-bootstrap';
+import {
+  AppCanvas,
+  AppBar,
+  Styles,
+  Avatar,
+  RaisedButton
+} from 'material-ui';
+
 import './app.styl';
 import '../../less/main.less';
 
-import Component from 'react-pure-render/component';
-import Header from './header.react';
-import React, {PropTypes} from 'react';
 import {mapDispatchToProps, mapStateToProps} from '../../../../common';
-import {connect} from 'react-redux';
-import {Link} from 'react-router';
+import AppSideNav from './components/app-left-nav';
 
-let io = require('socket.io-client');
-
-import {ButtonToolbar, Overlay, Popover, Grid, Row, Col} from 'react-bootstrap';
-
-const {MenuItem, LeftNav, AppCanvas, AppBar, IconButton, Menu, Styles, FontIcon, Avatar, RaisedButton}
-    = require('material-ui');
-const {Colors, Spacing, Typography} = Styles;
 const ThemeManager = Styles.ThemeManager;
 const DefaultRawTheme = Styles.LightRawTheme;
 
-import AppSideNav from './components/app-left-nav';
-
 @connect(mapStateToProps, mapDispatchToProps)
-export default class App extends Component {
+class App extends Component {
 
   static propTypes = {
+    actions: PropTypes.object.isRequired,
     app: PropTypes.object.isRequired,
     children: PropTypes.any,
     history: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     msg: PropTypes.object.isRequired,
-    users: PropTypes.object.isRequired,
-  }
+    users: PropTypes.object.isRequired
+  };
 
   static childContextTypes = {
     muiTheme: React.PropTypes.object
@@ -50,48 +79,41 @@ export default class App extends Component {
     };
   }
 
-  // componentWillReceiveProps(nextProps, nextContext) {
-  //   let newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
-  //   this.setState({
-  //     muiTheme: newMuiTheme,});
-  // }
-
   componentWillMount() {
     // socket connection must be created during willMount, so io is available when rendering
-    if(process.env.IS_BROWSER && !this.io)
-    {
+    if (process.env.IS_BROWSER && !this.io) {
       const host = this.props.app.baseUrl;
 
-      if(!this.props.app.baseUrl) {
-        console.warn('[BFK] missing `baseUrl` config value, check your `server/config.json` and environment settings.');
+      if (!this.props.app.baseUrl) {
+        this.props.actions.appWarn('[BFK] missing `baseUrl` config value, check your `server/config.json` and environment settings.');
       }
 
       // TODO: move to actions e.g. appActions.setupIo((this.props.users.viewer && this.props.users.viewer.authToken) ? this.props.users.viewer.authToken : null);
       // TODO: SSL option
       this.io = io(host, this.props.users.viewer ? {
-        query: "auth_token=" + this.props.users.viewer.authToken,
+        query: 'auth_token=' + this.props.users.viewer.authToken,
         forceNew: true,
-        'force new connection': true,
+        'force new connection': true
       } : {});
 
-      this.io.on('connect', function(){
-        console.log('[BFK] sockets connection established');
+      this.io.on('connect', function() {
+        //console.log('[BFK] sockets connection established');
 
-        this.io.on('new-comment',function(data) {
+        this.io.on('new-comment', function(data) {
           this.props.actions.catchComment(data.data);
-        }.bind(this))
+        }.bind(this));
 
       }.bind(this));
 
       this.io.on('authenticated', function() {
-        console.log('[BFK] sockets authenticated')
+        //console.log('[BFK] sockets authenticated');
       });
       this.io.on('unauthorized', function() {
-        console.log('[BFK] could not authenticate user')
+        //console.log('[BFK] could not authenticate user');
       });
 
-      this.io.on('close', function(){
-        console.log('[BFK] disconnected from sockets')
+      this.io.on('close', function() {
+        //console.log('[BFK] disconnected from sockets');
       });
     } else {
       this.io = {};
@@ -111,8 +133,6 @@ export default class App extends Component {
     this.setState({
       muiTheme: newMuiTheme
     });
-
-    //newMuiTheme.appBar.textColor = Colors.deepPurpleA700;
   }
 
   render() {
@@ -124,84 +144,67 @@ export default class App extends Component {
 
     let rightElement;
 
-    if(viewer && viewer.username) {
+    if (viewer && viewer.username) {
       // TODO: use avatar instead when available
       rightElement = (
+        <ButtonToolbar style={{marginRight:10}}>
+          <Avatar
+            onClick={e => this.setState({target: e.target, showUserMenu: !this.state.showUserMenu})}
+            >
+              {viewer.username.charAt(0)}
+          </Avatar>
 
-      <ButtonToolbar style={{marginRight:10}}>
-        <Avatar
-          onClick={e => this.setState({ target: e.target, showUserMenu: !this.state.showUserMenu })}
-          >
-            {viewer.username.charAt(0)}
-        </Avatar>
+          <Overlay
+            container={this}
+            containerPadding={20}
+            placement="bottom"
+            show={this.state.showUserMenu}
+            target={()=> React.findDOMNode(this.state.target)}
+            >
+            <Popover id="signin">
 
-        <Overlay
-          container={this}
-          containerPadding={20}
-          placement="bottom"
-          show={this.state.showUserMenu}
-          target={()=> React.findDOMNode(this.state.target)}
-          >
-          <Popover id="signin">
-
-            <Grid fluid>
-              <Row className="show-grid">
-                <Col xs={12} md={3}>
-                  <Avatar>
-                    {viewer.username.charAt(0)}
-                  </Avatar>
-                </Col>
-                <Col xs={6} md={9}>
-                  <span>Logged in as <strong>{viewer.username}</strong> ({viewer.email})</span>
-                </Col>
-              </Row>
-              </Grid>
-            <hr />
-            <RaisedButton
-              label="Sign out"
-              style={{marginRight:10}}
-              onClick={e => {
-                this.props.actions.logout(viewer.authToken)
-                this.setState({showUserMenu: !this.state.showUserMenu });
-                this.props.history.pushState(null, '/login/');
-              }}
-              />
-            <RaisedButton
-              label='My account'
-              onClick={e => {
-                this.setState({showUserMenu: !this.state.showUserMenu });
-                this.props.history.pushState(null, '/me/');
-                }
-              }
-              primary
-              />
-          </Popover>
-        </Overlay>
-      </ButtonToolbar>
-
-
-        )
-    //    <IconMenu
-    //  iconButtonElement={<Avatar>{viewer.username.charAt(0)}</Avatar>}
-    //closeOnItemTouchTap={false}
-    //openDirection='bottom-left'
-    //  >
-    //  <MenuItem>Logged in as <strong>{viewer.username}</strong></MenuItem>
-    //  <MenuItem primaryText="Refresh" />
-    //  <MenuItem>
-    //    <RaisedButton label="Sign out" className="pull-left" />
-    //    <RaisedButton label="My account"  className="pull-right"  />
-    //  </MenuItem>
-    //  </IconMenu>
-    }
-    else {
+              <Grid fluid>
+                <Row className="show-grid">
+                  <Col md={3} xs={12}>
+                    <Avatar>
+                      {viewer.username.charAt(0)}
+                    </Avatar>
+                  </Col>
+                  <Col md={9} xs={6}>
+                    <span>{msg.app.header.user.welcome} <strong>{viewer.username}</strong> ({viewer.email})</span>
+                  </Col>
+                </Row>
+                </Grid>
+              <hr />
+              <RaisedButton
+                label="Sign out"
+                onClick={e => {
+                  this.props.actions.logout(viewer.authToken);
+                  this.setState({showUserMenu: !this.state.showUserMenu});
+                  this.props.history.pushState(null, '/login/');
+                }}
+                style={{marginRight:10}}
+                />
+              <RaisedButton
+                label={msg.app.header.user.accountButton.label}
+                onClick={e => {
+                  this.setState({showUserMenu: !this.state.showUserMenu});
+                  this.props.history.pushState(null, '/me/');
+                }}
+                primary
+                />
+            </Popover>
+          </Overlay>
+        </ButtonToolbar>
+      );
+    } else {
       rightElement = (
         <div style={{
           margin:'12px 10px 0 0'
         }}>
-          <Link to="/login"><i className="fa fa-lg fa-sign-in"></i> Sign in</Link>
+          <Link to="/login"><i className="fa fa-lg fa-sign-in"></i> {msg.app.header.user.signinButton.label}</Link>
         </div>
-      )
+      );
     }
 
     // todo: looks like we may remove `onLeftIconButtonTouchTap` event
@@ -209,29 +212,28 @@ export default class App extends Component {
       <AppCanvas predefinedLayout={1}>
         <AppBar
           autoWidth={false}
+          iconElementRight={rightElement}
+          onLeftIconButtonClick={this._onLeftIconButtonTouchTap.bind(this)}
+          onLeftIconButtonTouchTap={this._onLeftIconButtonTouchTap.bind(this)}
+          pathname={pathname}
+          style={{borderBottom:'1px solid #E0E0E0'}}
           title="Brainfock"
           zDepth={0}
-          onLeftIconButtonTouchTap={this._onLeftIconButtonTouchTap.bind(this)}
-          onLeftIconButtonClick={this._onLeftIconButtonTouchTap.bind(this)}
-          iconElementRight={rightElement}
-          style={{
-            borderBottom:'1px solid #E0E0E0'
-          }}
           />
         <AppSideNav ref="leftNav" {...this.props} />
-        { /*<Header msg={msg.app.header} {...{viewer, pathname}} /> */ }
         <div style={{
           paddingTop:this.state.muiTheme.rawTheme.spacing.desktopKeylineIncrement
-          }}>
+        }}>
         {React.cloneElement(children, props)}
         </div>
       </AppCanvas>
     );
   }
 
-  _onLeftIconButtonTouchTap () {
-    if(this.refs.leftNav)
+  _onLeftIconButtonTouchTap() {
+    if (this.refs.leftNav)
       this.refs.leftNav.toggle();
   }
-
 }
+
+export default App;
