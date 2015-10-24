@@ -4,7 +4,6 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import config from '../config';
 import createLocation from 'history/lib/createLocation';
-import createStore from './createStore';
 import useragent from 'useragent';
 import {HOT_RELOAD_PORT} from '../../../webpack/constants';
 import {IntlProvider} from 'react-intl';
