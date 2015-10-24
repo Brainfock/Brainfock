@@ -4,7 +4,7 @@ import '../../less/main.less';
 import Component from 'react-pure-render/component';
 import Header from './header.react';
 import React, {PropTypes} from 'react';
-import {mapDispatchToProps, mapStateToProps} from '@este/common';
+import {mapDispatchToProps, mapStateToProps} from '../../../../common';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 
@@ -42,8 +42,8 @@ export default class App extends Component {
     };
   }
 
-  constructor(...args) {
-    super(...args);
+  constructor(args) {
+    super(args);
     this.state = {
       showUserMenu: false,
       muiTheme: ThemeManager.getMuiTheme(DefaultRawTheme)

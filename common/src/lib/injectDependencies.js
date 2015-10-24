@@ -1,9 +1,8 @@
-// Dependencies middleware detects all actionsCreators that return function
-// instead of a Flux Standard Action. In that case, that function is given
-// the object of registered dependencies + getState, so it can destruct it and
-// use services it needs.
+// Something like Angular services, but code is explicit.
+// Function returned from action gets dependencies, getState, and dispatch.
+// Actions is where we should place statefull workflows.
 export default function injectDependencies(statics, dynamic = {}) {
-  // TODO: Add invariants.
+  // TODO: Add invariants and publish it as npm module.
   return ({dispatch, getState}) => next => action => {
     if (typeof action !== 'function') return next(action);
     const dependencies = {...statics};

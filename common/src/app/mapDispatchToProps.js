@@ -33,6 +33,7 @@ export default function mapDispatchToProps(dispatch) {
 
   return {
     actions: bindActionCreators(creators, dispatch),
-    topic_actions: bindActionCreators(topic_actions_creators, dispatch)
+    topic_actions: bindActionCreators(topic_actions_creators, dispatch),
+    dispatch
   };
 }
