@@ -68,7 +68,7 @@ export default class App extends Component {
 
       // TODO: move to actions e.g. appActions.setupIo((this.props.users.viewer && this.props.users.viewer.authToken) ? this.props.users.viewer.authToken : null);
       // TODO: SSL option
-      this.io = io(`http://${host}`, this.props.users.viewer ? {
+      this.io = io(host, this.props.users.viewer ? {
         query: "auth_token=" + this.props.users.viewer.authToken,
         forceNew: true,
         'force new connection': true,
