@@ -1,6 +1,6 @@
 /**
  * Brainfock - community & issue management software
- * Copyright (c) 2015, Sergii Gamaiunov (“Webkadabra”)  All rights reserved.
+ * Copyright (c) 2015, Sergii Gamaiunov (ï¿½Webkadabraï¿½)  All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,11 +19,23 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 
+
 export const APP_SET_BASEURL = 'APP_SET_BASEURL';
+export const APP_WARNING = 'APP_WARNING';
 
 export function setAppBaseUrl(url) {
   return {
     type: APP_SET_BASEURL,
     payload: url
+  };
+}
+
+export function appWarn(info) {
+  if (typeof console !== 'undefined') {
+    console.warn(info); // eslint-disable-line no-console, no-undef
+  }
+  return {
+    type: APP_WARNING,
+    payload: info
   };
 }
