@@ -34,7 +34,7 @@ export function loadEntityComments(entity_id) {
   let endpoint = 'entities/'+entity_id+'/comments?filter[include][user]' ;
 
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       LOAD_COMMENTS,
       LOAD_COMMENTS_SUCCESS,
       LOAD_COMMENTS_ERROR
@@ -58,7 +58,7 @@ export function postComment(entity_id, data) {
   const endpoint = 'entities/'+entity_id+'/comments?include=user';
 
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       POST_COMMENT,
       POST_COMMENT_SUCCESS,
       POST_COMMENT_ERROR

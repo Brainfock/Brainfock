@@ -152,7 +152,7 @@ export function find(type, query, contextTopicId, namespace) {
   }
 
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       FIND,
       FIND_SUCCESS,
       FIND_ERROR
@@ -180,7 +180,7 @@ export function count(group, query, contextTopicId) {
   }
 
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       COUNT,
       COUNT_SUCCESS,
       COUNT_ERROR
@@ -203,7 +203,7 @@ export function loadCurrent(id, namespace) {
   endpoint += 'topics/'+id ;
 
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       FIND_ONE,
       FIND_ONE_SUCCESS,
       FIND_ONE_ERROR
@@ -222,7 +222,7 @@ export function loadTopic(id) {
   let endpoint = 'topics/'+id+'?filter[include][1][type]&filter[include][2][author]&filter[extra][operations]' ;
 
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       LOAD_TOPIC,
       LOAD_TOPIC_SUCCESS,
       LOAD_TOPIC_ERROR
@@ -254,7 +254,7 @@ export function loadContextGroupTopicByNum(contextTopicId, groupKey, topicNum) {
     endpoint += `&filter[where][contextTopicNum]=${topicNum}` ;
 
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       LOAD_TOPIC,
       LOAD_TOPIC_SUCCESS,
       LOAD_TOPIC_ERROR
@@ -285,7 +285,7 @@ export function loadTopicGroup(name) {
   let endpoint = `topicGroups/findOne?filter[where][group_key]=${name}` ;
 
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       LOAD_TOPIC_GROUP,
       LOAD_TOPIC_GROUP_SUCCESS,
       LOAD_TOPIC_GROUP_ERROR
@@ -318,7 +318,7 @@ export function loadFilters(group, query, contextTopicId) {
   }
 
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       LOAD_FILTERS,
       LOAD_FILTERS_SUCCESS,
       LOAD_FILTERS_ERROR
@@ -341,7 +341,7 @@ export function loadFormFields(group, contextTopicId) {
   }
 
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       LOAD_FORM_FIELDS,
       LOAD_FORM_FIELDS_SUCCESS,
       LOAD_FORM_FIELDS_ERROR
@@ -378,7 +378,7 @@ export function create(data) {
   const endpoint = 'topics';
 
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       CREATE,
       CREATE_SUCCESS,
       CREATE_ERROR
@@ -403,7 +403,7 @@ export function save(id, data) {
   const endpoint = 'topics/'+id;
 
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       SAVE,
       SAVE_SUCCESS,
       SAVE_ERROR
@@ -432,7 +432,7 @@ export function runOperation(topicId, operation) {
   const endpoint = `topics/${topicId}/runOperation`;
 
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       RUN_OPERATION,
       RUN_OPERATION_SUCCESS,
       RUN_OPERATION_ERROR
@@ -464,7 +464,7 @@ export function deleteTopic(topicId) {
   const endpoint = `rawTopics/${topicId}`;
 
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       DELETE_TOPIC,
       DELETE_TOPIC_SUCCESS,
       DELETE_TOPIC_ERROR

@@ -28,8 +28,8 @@ export const SAVE_SUCCESS = 'WIKI_SAVE_SUCCESS';
 export const SET_EDIT_WIKI_FIELD = 'SET_EDIT_WIKI_FIELD';
 
 
-const getApi = (fetch, endpoint) =>
-  fetch(`/api/${endpoint}`, {
+const getApi = (fetch, endpoint, host='/') =>
+  fetch(`${host}api/${endpoint}`, {
     headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
     method: 'get',
     credentials: 'include', // accept cookies from server, for authentication
@@ -39,9 +39,67 @@ const getApi = (fetch, endpoint) =>
       throw response;
     });
 
+export function fetchContextPage(data) {
+
+  const {
+    location,
+    params,
+    props,
+    app,
+    users
+    } = data;
+
+  let query = [];
+  query.push('filter[where][contextEntityId]=0');
+  query.push('filter[where][pageUid]='+params.uid);
+  if(users && users.viewer) {
+    query.push('access_token='+users.viewer.authToken)
+  }
+
+//let query = [];
+  //query.push('filter[where][contextEntityId]=0');
+  //query.push('filter[where][pageUid]='+params.uid);
+  //if(props.users && props.users.viewer) {
+  //  query.push('access_token='+props.users.viewer.authToken)
+  //}
+  const host = app.baseUrl;
+  console.log('host',host)
+  //return fetch('/api/wikiPages/findOne?'+ query.join('&'), {
+  //  headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+  //  method: 'get',
+  //  credentials: 'include', // accept cookies from server, for authentication
+  //})
+  //  .then(response => {
+  //    if (response.status === 200) return response.json();
+  //    throw response;
+  //  });
+  //
+  //return promisingagent.get(`http://localhost:3000/api/wikiPages/findOne?` + query.join('&'))
+  //  .then((response) => {
+  //    findWikiSuccess(response.body);
+  //    return response.body
+  //  });
+
+  let endpoint =  'wikiPages/findOne?'+ query.join('&');
+  console.log("ENDPOINT", endpoint);
+  return ({fetch, validate}) => ({
+    type: [
+      FIND,
+      FIND_SUCCESS,
+      FIND_ERROR
+    ],
+    payload: {
+      promise:  getApi(fetch, endpoint, host)
+        .catch(response => {
+          throw response;
+        })
+    }
+  });
+}
+
 export function findContextPage(context_id, uid) {
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       FIND,
       FIND_SUCCESS,
       FIND_ERROR
@@ -108,7 +166,7 @@ export function saveWikiChanges(id, fields) {
   }
 
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       SAVE,
       SAVE_SUCCESS,
       SAVE_ERROR

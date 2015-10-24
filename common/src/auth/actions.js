@@ -35,7 +35,7 @@ export function setFormField({target: {name, value}}) {
 
 export function login(fields) {
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       LOGIN,
       LOGIN_SUCCESS,
       LOGIN_ERROR
@@ -63,7 +63,7 @@ export function login(fields) {
 
 export function logout(token) {
   return ({fetch, validate}) => ({
-    types: [
+    type: [
       LOGOUT,
       LOGOUT_SUCCESS,
       LOGOUT_ERROR
