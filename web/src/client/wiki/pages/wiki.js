@@ -21,46 +21,24 @@
 import Component from 'react-pure-render/component';
 import DocumentTitle from 'react-document-title';
 var promisingagent = require('promisingagent');
-
 var React = require('react'),
-    Router = require('react-router'),
-    {Link, Navigation} = Router,
-    mui = require('material-ui'),
-    Menu = mui.Menu;
+  Router = require('react-router'),
+  {Link, Navigation} = Router,
+  mui = require('material-ui'),
+  Menu = mui.Menu;
 
-var Loader = require('../../components/Loader');
+import fetch from '../../../common/components/fetch';
 
-class Page extends Component{
+import Loader from '../../components/Loader';
 
-  /**
-   * resolve component data, for server-side render *only*
-   *
-   * @param props
-   * @param dispatch
-   * @returns {*|{get}}
-   */
-  resolveData(props, {params, actions}, dispatch)
-  {
-    var query = [];
-    query.push('filter[where][contextEntityId]=0');
-    query.push('filter[where][pageUid]='+params.uid);
-    if(props.users && props.users.viewer) {
-      query.push('access_token='+props.users.viewer.authToken)
-    }
+import {fetchContextPage} from '../../../../../common/src/wiki/actions';
 
-    const host = props.app.baseUrl;
-
-    return promisingagent.get(`http://${host}/api/wikiPages/findOne?` + query.join('&'))
-      .then((response) => {
-        actions.findWikiSuccess(response.body);
-        return response.body
-      });
-  }
+@fetch(fetchContextPage)
+class Page extends Component {
 
   componentWillMount(props)  {
-    if(this.props.params.uid
-      && (!this.props.wiki.viewPage.pageUid || this.props.wiki.viewPage.pageUid !== this.props.params.uid))
-    {
+    if (this.props.params.uid
+      && (!this.props.wiki.viewPage.pageUid || this.props.wiki.viewPage.pageUid !== this.props.params.uid)) {
       this.props.actions.findContextPage(0, this.props.params.uid);
     }
   }
