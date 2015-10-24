@@ -4,6 +4,15 @@ export default {
       madeByHtml: `made by <a href="https://twitter.com/webkadabra">Webkadabra</a>`
     },
     header: {
+      user: {
+        welcome: `Logged in as`,
+        accountButton: {
+          label: `My account`
+        },
+        signinButton: {
+          label: `Sign in`
+        }
+      },
       h1: `Home`,
       login: 'Login',
       me: 'Me (protected)',
