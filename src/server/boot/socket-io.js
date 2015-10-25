@@ -14,15 +14,12 @@ module.exports = function(app) {
   //app.once('started', function(server) {
   app.on('started', function(server)
   {
-    console.log("START SOCKET");
-
     app.io = require('socket.io')();
     app.io.listen(server);
 
     app.io.use(function(socket, next)
     {
       var auth_token = socket.handshake.query.auth_token || null;
-      console.log('handshake auth_token:'+auth_token);
       if (auth_token) {
         app.models.AccessToken.findById(auth_token, function(err, token) {
           if (err) {
@@ -36,9 +33,10 @@ module.exports = function(app) {
                 if (ctx) {
                   ctx.set('accessToken', token);
                   socket.authWasRequired=true;
+                  return next(null, token);
+                } else {
+                  return next(null, token);
                 }
-
-                return next(null, token);
               } else {
                 var e = new Error('Invalid Access Token');
                 e.status = e.statusCode = 401;
@@ -84,7 +82,7 @@ module.exports = function(app) {
                 if(accessGranted==true) {
                   socket.join('comments-'+data.entity_id); // We are using room of socket io
                 }
-              })
+              });
             }
           })
         });
