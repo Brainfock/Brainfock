@@ -25,11 +25,9 @@ let React = require('react'),
 
 let {Route, Redirect, Link} = Router;
 
-
 // TODO: i18n
 // TODO: add ability to reorder & add custom elements
 var menuItems = [
-  //{ route: 'dashboard', text: 'Get Started' },
   {
     // matching any of these routes will make this link "active"
     //routes: ['projects','project'],
@@ -41,14 +39,13 @@ var menuItems = [
   { route: '/issues', params:{}, text: 'Issues' },
   { route: '/boards', params:{}, text: 'Boards' },
   { route: '/wiki/Index', params:{uid:'Index'}, text: 'Wiki' },
-
-
   { type: mui.MenuItem.Types.SUBHEADER, text: 'Resources' },
-
-    // Link to Brainfock guides in global wiki:
+  // Link to Brainfock guides in global wiki:
   { route: '/wiki/BFK_Guide',
     text: 'Brainfock Help' },
-
+  // TODO: hide from non-admin users
+  { type: mui.MenuItem.Types.SUBHEADER, text: ' '},
+  { route: '/admin', params:{}, text: <span>System Admin <i className="fa fa-cog"></i></span>},
   // Link to Brainfock website & version, don't remove
   { route: '/wiki/Brainfock:About',
     text: <div style={{
@@ -65,7 +62,7 @@ var menuItems = [
            title={VERSION_FULL}
         />
       Powered by {VERSION_FULL}</div>
-  }
+  },
 ];
 
 /**

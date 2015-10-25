@@ -19,19 +19,8 @@ export default function createRoutes(getState) {
     }
   }
 
- /* <Route path=�/boards�>
-  <Route path=�/�> render list </Route>
-    <Route path=�/:id�> render id </Route>
-      <Route path=�/:id/todos�>.. </Route>
-      </Route>*/
+  const AdminModule = (process.env.IS_BROWSER) ? require('react-router-proxy?!./modules/admin/components/AdminHome') : require('./modules/admin/components/AdminHome');
 
-  /*
-   <Route component={require('./projects/index.js')} path="projects">
-   <Route component={require('./boards/pages/board.js')}  path="/project/:board_id">
-   <Route component={require('./boards/pages/topic.js')}  path="issues" />
-   </Route>
-   </Route>
-   */
   return (
     <Route component={App} path="/">
       <IndexRoute component={Home} />
@@ -51,6 +40,13 @@ export default function createRoutes(getState) {
       <Route component={Wiki} path="wiki/:uid" />
       <Route component={WikiEdit} path="wiki/:uid/edit" />
 
+      <Route path="admin"
+             component={AdminModule}
+             childRoutes={[
+                require('./modules/admin/modules/users'),
+                //require('./modules/admin/routes/Course'),
+            ]}
+        />
       <Route component={require('./projects/index')} path="projects"/>
       <Route component={require('./projects/project-wrapper')}  >
         { /*  <Route component={require('./projects/topic.js')} path="/:namespace/:board_id-:id" />*/ }
