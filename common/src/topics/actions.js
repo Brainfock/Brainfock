@@ -132,6 +132,7 @@ function toQueryString(obj, urlEncode) {
   }).join('&');
   if (urlEncode) return encodeURIComponent(queryString);else return queryString;
 }
+
 export function find(type, query, contextTopicId, namespace) {
   let endpoint = '';
   if(namespace) {
@@ -166,16 +167,22 @@ export function find(type, query, contextTopicId, namespace) {
   });
 }
 
-export function count(group, query, contextTopicId) {
+export function count(group, query, contextTopicId, namespace) {
 
-  let endpoint;
-  if(contextTopicId) {
-    endpoint = `topics/${contextTopicId}/topics/count?where[groupKey]=${group}`;
+  let endpoint = '';
+  if (namespace) {
+    endpoint += `workspaces/${namespace}/`;
   } else {
-    endpoint = 'topics/count?where[groupKey]='+group;
+    console.warn('Topics count: `namespace` is missing!');
   }
 
-  if(query) {
+  if (contextTopicId) {
+    endpoint += `topics/${contextTopicId}/topics/count?where[groupKey]=${group}`;
+  } else {
+    endpoint += 'topics/count?where[groupKey]='+group;
+  }
+
+  if (query) {
     endpoint += '&'+toQueryString({where:query},false);
   }
 
@@ -252,6 +259,38 @@ export function loadContextGroupTopicByNum(contextTopicId, groupKey, topicNum) {
     endpoint += `&filter[where][contextTopicKey]=${topicNum}` ;
   else
     endpoint += `&filter[where][contextTopicNum]=${topicNum}` ;
+
+  return ({fetch, validate}) => ({
+    type: [
+      LOAD_TOPIC,
+      LOAD_TOPIC_SUCCESS,
+      LOAD_TOPIC_ERROR
+    ],
+    payload: {
+      promise:  getApi(fetch, endpoint)
+        .catch(response => {
+          throw response;
+        })
+    }
+  });
+}
+
+/**
+ * Load single topic in a `namespace` by `groupKey` and `contextTopicNum` or `contextTopicKey`
+ * @param contextTopicId
+ * @param groupKey
+ * @param topicNum
+ * @returns {Function}
+ */
+export function loadNamespaceTopicByNum(namespace, ownerTopicKeyOrId, groupKey, topicNum) {
+
+  let endpoint = `workspaces/${namespace}/topics/${ownerTopicKeyOrId}/topics/${groupKey}/${topicNum}?filter[include][1][type]&filter[include][2][author]&filter[extra][operations]` ;
+  //endpoint += `&filter[where][groupKey]=${groupKey}` ;
+  //
+  //if(isNaN(topicNum))
+  //  endpoint += `&filter[where][contextTopicKey]=${topicNum}` ;
+  //else
+  //  endpoint += `&filter[where][contextTopicNum]=${topicNum}` ;
 
   return ({fetch, validate}) => ({
     type: [

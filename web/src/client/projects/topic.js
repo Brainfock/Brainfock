@@ -55,7 +55,7 @@ var TopicView = React.createClass({
     if(process.env.IS_BROWSER==true) {
       if(this.props.params.id)
       {
-        this.props.topic_actions.loadContextGroupTopicByNum(this.props.params.board_id, this.props.params.group_key, this.props.params.id);
+        this.props.topic_actions.loadNamespaceTopicByNum(this.props.params.namespace, this.props.params.board_id, this.props.params.group_key, this.props.params.id);
       }
     }
   },
@@ -64,7 +64,7 @@ var TopicView = React.createClass({
   {
     if(newProps.params.namespace && newProps.params.group_key && newProps.params.id && (this.props.params !== newProps.params))
     {
-      this.props.topic_actions.loadContextGroupTopicByNum(this.props.params.group_key, this.props.params.id);
+      this.props.topic_actions.loadNamespaceTopicByNum(this.props.params.namespace, this.props.params.board_id, this.props.params.group_key, this.props.params.id);
     }
   },
 
@@ -130,7 +130,7 @@ var TopicView = React.createClass({
 
     return (
       <div className="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
-        <DropdownButton className="pull-right" eventKey={3} title="">
+        <DropdownButton key={i++} className="pull-right" eventKey={i} id="operations" title="">
           {operaitons}
         </DropdownButton>
         {this.props.boards.viewTopic && <h2 style={{fontWeight:800}}>{this.props.boards.viewTopic.summary} <span className="label label-primary ">{this.props.boards.viewTopic.wfStage}</span></h2>}
@@ -180,7 +180,7 @@ var TopicView = React.createClass({
       <mui.FlatButton
         disabled={disabled}
         label='BTN_DELETE'
-        onClick={this.doDelete.bind(this)}
+        onClick={this.doDelete}
         primary
         ref='BTN_DELETE'
         />,

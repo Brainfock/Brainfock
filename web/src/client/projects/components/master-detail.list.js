@@ -67,7 +67,7 @@ export default class ProjectIssues extends Component {
     if (process.env.IS_BROWSER === true) {
       const groupKey = this.props.groupKey;
       // load TOPICS of this BOARD
-      this.props.topic_actions.count(groupKey, this.state.filters, this.props.params.board_id);
+      this.props.topic_actions.count(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
       this.props.topic_actions.find(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
       // load available filters
       this.props.topic_actions.loadFilters(groupKey, {}, this.props.params.board_id);
@@ -82,8 +82,8 @@ export default class ProjectIssues extends Component {
     if (process.env.IS_BROWSER === true) {
       const groupKey = this.props.groupKey;
       if (newProps.location.search != this.context.location.search) {
-        this.props.topic_actions.count(groupKey, (newProps.location.query.filter || null), this.props.params.board_id);
-        this.props.topic_actions.find(groupKey, (newProps.location.query.filter || null), this.props.params.board_id);
+        this.props.topic_actions.count(groupKey, (newProps.location.query.filter || null), this.props.params.board_id, this.props.params.namespace);
+        this.props.topic_actions.find(groupKey, (newProps.location.query.filter || null), this.props.params.board_id, this.props.params.namespace);
       }
     }
   }
