@@ -41,6 +41,7 @@ export default function createRoutes(getState) {
       <Route component={WikiEdit} path="wiki/:uid/edit" />
 
       <Route path="admin"
+             onEnter={requireAuth}
              component={AdminModule}
              childRoutes={[
                 require('./modules/admin/modules/users'),
