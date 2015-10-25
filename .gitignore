@@ -1,3 +1,11 @@
 node_modules
 .idea
 *.log
+*.sublime-workspace
+.DS_Store
+.idea
+bower_components
+build
+coverage
+dist
+npm-debug.log
