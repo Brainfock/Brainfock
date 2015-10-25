@@ -978,7 +978,7 @@ module.exports = function(app) {
 
     const userId = context.accessToken.userId;
 
-    console.log('[RBAC wspcTopicAccess] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName + '`, user:' + userId);
+    console.log('[RBAC wspcTopicAccess] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName + ':' + context.modelId + '`, user:' + userId);
 
     function reject() {
       process.nextTick(function() {
@@ -1007,7 +1007,16 @@ module.exports = function(app) {
       if (wspcInstance.accessPrivateYn !== 1
       || wspcInstance.ownerUserId === userId) {
         // user has access to context, check topic access
-        app.models.Topic.findById(context.remotingContext.args.fk, function(err, ViewTopic) {
+
+        let whereFilter = {
+          workspaceId:context.modelId
+        };
+        if (isNaN(context.remotingContext.args.fk)) {
+          whereFilter.contextTopicKey = context.remotingContext.args.fk;
+        } else {
+          whereFilter.id = context.remotingContext.args.fk;
+        }
+        app.models.Topic.findOne({where:whereFilter}, function(err, ViewTopic) {
 
           if (err || !ViewTopic) {
             return reject();
@@ -1051,9 +1060,237 @@ module.exports = function(app) {
    * `api/workspaces/[name]/topics/[topicId]/topics`
    */
   Role.registerResolver('wspcTopicsList', function(role, context, cb) {
+    const userId = context.accessToken.userId;
+    function reject() {
+      process.nextTick(function() {
+        cb(null, false);
+      });
+    }
+
+    // little debug won't hurt nobody
+    console.log('[RBAC wspcTopicsList] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName + '`, user:' + userId);
+
+    if (context.modelName !== 'Workspace') {
+      console.log('[RBAC] Model [' + context.modelName + '] is not supported by `topicEntityAccess` resolver');
+      return reject();
+    }
+
+    //console.log('>> context.remotingContext.args', context.remotingContext.args)
+
+    // check if workspace exists
+    if (context.modelId) {
+
+      let accessValidators = [
+        context.model.promiseUserAccess(context.modelId, userId)
+      ];
+
+      console.log('-----');
+      //console.log(context.ctorArgs);
+
+      //const context = loopback.getCurrentContext();
+      //
+      //if (ctx.instance && !ctx.instance.groupId && context.get('http').req.body.createGroup) {
+      //  const createGroup = context.get('http').req.body.createGroup;
+      //
+      if (context.remotingContext.method.name === '__get__topics__topics'
+      || context.remotingContext.method.name === '__count__topics__topics') {
+        accessValidators.push(app.models.Topic.promiseUserAccess({
+          workspaceId: context.modelId,
+          contextTopicKey: context.remotingContext.args.nk
+        }, userId));
+        //accessValidators.push(app.models.Topic.promiseUserAccess(`${context.remotingContext.ctorArgs}:${context.remotingContext.args.nk}`, userId));
+      }
+
+      ////////////////////////////
+
+      Promise.all(accessValidators)
+        .then(function() {
+          console.log('promises went ok');
+          // apply additional rules
+          let allowedEntities = [];
+
+          ///////////////////////////////////////////////
+          if (context.remotingContext.method.name === '__get__topics__topics'
+          || context.remotingContext.method.name === '__get__topics') {
+            if (userId) {
+
+              app.models.EntityAccessAssign.find({where:{
+                  authType:0,
+                  authId:userId
+                }},
+                function(err, data) {
+                  if (err || data.length === 0) {
+                    // apply base
+                    context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
+                      {where: {
+                        or: [
+                          {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
+                          {accessPrivateYn: '0'}
+                        ]
+                        //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
+                      }});
+                    return cb(null, true);
+                  }
+
+                  function final() {
+                    if (allowedEntities.length > 0) {
+                      context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
+                        {where: {
+                          or: [
+                            {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
+                            {accessPrivateYn: '0'},
+                            {entityId:{inq:allowedEntities}}
+                          ]
+                          //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
+                        }});
+                    } else {
+                      // base constraints: do not show private topics of other users:
+                      context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
+                        {where: {
+                          or: [
+                            {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
+                            {accessPrivateYn: '0'}
+                          ]
+                          //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
+                        }});
+                    }
+
+
+                    //context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
+                    //  {where: {
+                    //    or: [
+                    //      {entityId:{inq:allowedEntities}}
+                    //    ]
+                    //  }});
+                    //console.log('context.remotingContext.args.filter:',context.remotingContext.args.filter);
+
+                    return cb(null, true);
+                  }
+                  function populateValue($modelInstance, callback) {
+                    allowedEntities.push($modelInstance.entity_id);
+                    return callback();
+                  }
+
+                  let resCount = data.length;
+                  let lopRes = [];
+                  data.forEach(function(/*SettingsField model instance*/ item) {
+                    populateValue(item, function(result) {
+                      lopRes.push(1);
+                      if (lopRes.length === (resCount)) {
+                        return final();
+                      }
+                    });
+                  });
+                });
+            } else {
+              // do not show private topics:
+              context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
+                {where: {
+                  accessPrivateYn: '0'
+                }});
+              return cb(null, true);
+            }
+            // these methods expect `context.remotingContext.args.where`, not `context.remotingContext.args.filter.where`:
+          } else if (context.remotingContext.method.name === '__count__topics'
+            || context.remotingContext.method.name === '__count__topics__topics') {
+
+            if (userId) {
+              app.models.EntityAccessAssign.find({where:{
+                  authType:0,
+                  authId:userId
+                }},
+                function(err, data) {
+                  if (err) {
+                    // apply base
+                    context.remotingContext.args = mergeQuery(context.remotingContext.args,
+                      {where: {
+                        or: [
+                          {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
+                          {accessPrivateYn: '0'}
+                        ]
+                        //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
+                      }});
+                    return cb(null, true);
+                  }
+                  function final() {
+                    if (allowedEntities.length > 0) {
+                      context.remotingContext.args = mergeQuery(context.remotingContext.args,
+                        {where: {
+                          or: [
+                            {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
+                            {accessPrivateYn: '0'},
+                            {entityId:{inq:allowedEntities}}
+                          ]
+                          //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
+                        }});
+                    } else {
+                      // base constraints: do not show private topics of other users:
+                      context.remotingContext.args = mergeQuery(context.remotingContext.args,
+                        {where: {
+                          or: [
+                            {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
+                            {accessPrivateYn: '0'}
+                          ]
+                          //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
+                        }});
+                    }
+
+                    //context.remotingContext.args = mergeQuery(context.remotingContext.args,
+                    //  {where: {
+                    //    or: [
+                    //      {entityId:{inq:allowedEntities}}
+                    //    ]
+                    //  }});
+                    //console.log('context.remotingContext.args:',context.remotingContext.args);
+
+                    return cb(null, true);
+                  }
+                  function populateValue($modelInstance, callback) {
+                    allowedEntities.push($modelInstance.entity_id);
+                    return callback();
+                  }
+
+                  let resCount = data.length;
+                  let lopRes = [];
+                  data.forEach(function(/*SettingsField model instance*/ item) {
+                    populateValue(item, function(result) {
+                      lopRes.push(1);
+                      if (lopRes.length === (resCount)) {
+                        return final();
+                      }
+                    });
+                  });
+                });
+            } else {
+              // base constraints: do not show private topics of other users:
+              context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
+                {where: {
+                  accessPrivateYn: '0'
+                }});
+
+              return cb(null, true);
+            }
+          } else {
+            return reject();
+          }
+        })
+        .catch(function() {
+          return cb(null, false);
+        });
+    } else {
+      return reject();
+    }
+  });
+
+  /**
+   * Validate access endpoints:
+   *
+   * `api/workspaces`
+   */
+  Role.registerResolver('wspcList', function(role, context, cb) {
 
     const userId = context.accessToken.userId;
-    console.log('[RBAC wspcTopicsList] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName + '`, user:' + userId);
+    console.log('[RBAC wspcList] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName + '`, user:' + userId);
     function reject() {
       process.nextTick(function() {
         cb(null, false);
@@ -1063,265 +1300,59 @@ module.exports = function(app) {
     // if the target model is not project
     if (context.modelName !== 'Workspace'
     ) {
-      console.log('[RBAC] Model [' + context.modelName + '] is not supported by `topicEntityAccess` resolver');
+      console.log('[RBAC] Model [' + context.modelName + '] is not supported by `wspcList` resolver');
       return reject();
     }
 
-    let allowedEntities = [];
-
-    // TODO: currently, even if user does not have access to entity, he will be able to fetch EMPTY comments list like /api/entities/1699/comments
-    if (context.remotingContext.method.name === '__get__topics__topics'
-      || context.remotingContext.method.name === '__get__topics'
-    ) {
+    if ('find' === context.remotingContext.method.name) {
       if (userId) {
+        // TODO: check if user has access provider for private non-owned workspace
+        context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
+          {where: {
+            or: [
+              {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
+              {accessPrivateYn: '0'}
+            ]
+          }});
 
-        app.models.EntityAccessAssign.find({where:{
-            authType:0,
-            authId:userId
-          }},
-          function(err, data) {
-            if (err || data.length === 0) {
-              // apply base
-              context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
-                {where: {
-                  or: [
-                    {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
-                    {accessPrivateYn: '0'}
-                  ]
-                  //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
-                }});
-              return cb(null, true);
-            }
-
-            function final() {
-              if (allowedEntities.length > 0) {
-                context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
-                  {where: {
-                    or: [
-                      {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
-                      {accessPrivateYn: '0'},
-                      {entityId:{inq:allowedEntities}}
-                    ]
-                    //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
-                  }});
-              } else {
-                // base constraints: do not show private topics of other users:
-                context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
-                  {where: {
-                    or: [
-                      {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
-                      {accessPrivateYn: '0'}
-                    ]
-                    //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
-                  }});
-              }
-
-
-              //context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
-              //  {where: {
-              //    or: [
-              //      {entityId:{inq:allowedEntities}}
-              //    ]
-              //  }});
-              //console.log('context.remotingContext.args.filter:',context.remotingContext.args.filter);
-
-              return cb(null, true);
-            }
-            function populateValue($modelInstance, callback) {
-              allowedEntities.push($modelInstance.entity_id);
-              return callback();
-            }
-
-            let resCount = data.length;
-            let lopRes = [];
-            data.forEach(function(/*SettingsField model instance*/ item) {
-              populateValue(item, function(result) {
-                lopRes.push(1);
-                if (lopRes.length === (resCount)) {
-                  return final();
-                }
-              });
-            });
-          });
+        return cb(null, true);
       } else {
-
 
         // base constraints: do not show private topics of other users:
         context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
           {where: {
             accessPrivateYn: '0'
-            //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
           }});
-
 
         return cb(null, true);
       }
-
-      //if(1==2 && context.remotingContext.args.filter.group) {
-      //  console.log('yes');
-      //  //app.models.TopicGroup.findOne({where:{groupKey:context.remotingContext.args.filter.group}},
-      //  //  function(err,groupInstance)
-      //  //  {
-      //  //    if (err) {
-      //  //      return reject();
-      //  //      //return callback(err);
-      //  //    }
-      //  //  //console.log('find method');
-      //  //  delete context.remotingContext.args.filter.group;
-      //  //    console.log('!!!!',context.remotingContext.args.filter);
-      //  //  context.remotingContext.args.filter.group_id = groupInstance.id;
-      //  //  context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
-      //  //    {where: {
-      //  //      or: [
-      //  //        {and: [{accessPrivateYn: "1", "ownerUserId": userId}]},
-      //  //        {accessPrivateYn: "0"}
-      //  //      ]
-      //  //      // TODO: add validationvia au
-      //  //      //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
-      //  //    }});
-      //  //  return cb(null, true);
-      //  //})
-      //} else {
-      //console.log('find method');
-
-      //}
-      return;
 
       // these methods expect `context.remotingContext.args.where`, not `context.remotingContext.args.filter.where`:
-    } else if (context.remotingContext.method.name === '__count__topics'
-      || context.remotingContext.method.name === 'count') {
+    } else if ('count' === context.remotingContext.method.name) {
 
       if (userId) {
-        app.models.EntityAccessAssign.find({where:{
-            authType:0,
-            authId:userId
-          }},
-          function(err, data) {
-            if (err) {
-              // apply base
-              context.remotingContext.args = mergeQuery(context.remotingContext.args,
-                {where: {
-                  or: [
-                    {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
-                    {accessPrivateYn: '0'}
-                  ]
-                  //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
-                }});
-              return cb(null, true);
-            }
-            function final() {
-              if (allowedEntities.length > 0) {
-                context.remotingContext.args = mergeQuery(context.remotingContext.args,
-                  {where: {
-                    or: [
-                      {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
-                      {accessPrivateYn: '0'},
-                      {entityId:{inq:allowedEntities}}
-                    ]
-                    //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
-                  }});
-              } else {
-                // base constraints: do not show private topics of other users:
-                context.remotingContext.args = mergeQuery(context.remotingContext.args,
-                  {where: {
-                    or: [
-                      {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
-                      {accessPrivateYn: '0'}
-                    ]
-                    //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
-                  }});
-              }
+        // TODO: check if user has access provider for private non-owned workspace
+        context.remotingContext.args = mergeQuery(context.remotingContext.args,
+          {where: {
+            or: [
+              {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
+              {accessPrivateYn: '0'}
+            ]
+          }});
 
-              //context.remotingContext.args = mergeQuery(context.remotingContext.args,
-              //  {where: {
-              //    or: [
-              //      {entityId:{inq:allowedEntities}}
-              //    ]
-              //  }});
-              //console.log('context.remotingContext.args:',context.remotingContext.args);
-
-              return cb(null, true);
-            }
-            function populateValue($modelInstance, callback) {
-              allowedEntities.push($modelInstance.entity_id);
-              return callback();
-            }
-
-            let resCount = data.length;
-            let lopRes = [];
-            data.forEach(function(/*SettingsField model instance*/ item) {
-              populateValue(item, function(result) {
-                lopRes.push(1);
-                if (lopRes.length === (resCount)) {
-                  return final();
-                }
-              });
-            });
-          });
+        return cb(null, true);
       } else {
+
         // base constraints: do not show private topics of other users:
-        context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
+        context.remotingContext.args = mergeQuery(context.remotingContext.args,
           {where: {
             accessPrivateYn: '0'
           }});
 
         return cb(null, true);
       }
-
-      return;
-    }
-
-    // do not allow anonymous users
-
-    if (!userId) {
+    } else {
       return reject();
     }
-
-    const afterFindCb = function(err, Topic) {
-
-      if (err || !Topic) {
-        return reject();
-      }
-
-      //console.log('Topic:',Topic);
-      if (Topic.accessPrivateYn !== 1
-        || Topic.ownerUserId === userId)
-        return cb(null, true);
-
-      if (userId) {
-        let whereFilter = {
-          authType:0,
-          authId:userId
-        };
-
-        if (context.modelName === 'Entity') {
-          whereFilter.entityId = Topic.id;
-        } else {
-          whereFilter.entityId = Topic.entityId;
-        }
-
-        app.models.EntityAccessAssign.findOne({where:whereFilter},
-          function(err, data) {
-            if (err || !data) {
-              return cb(null, false);
-            }
-            return cb(null, true);
-          });
-      } else {
-        return cb(null, false);
-      }
-    };
-
-    if (context.modelId) {
-      /* when api request is like /api/someModel/findOne/123 */
-      console.log('[RBAC] Lookup with `findById`, model id:', context.modelId);
-      context.model.findById(context.modelId, afterFindCb);
-    } else if (context.remotingContext.args.filter) {
-      /* when api request is like /api/wikiPage/findOne/?filter[where][pageUid]=SomeWikiPage */
-      console.log('[RBAC] Lookup with `findOne`, model id:', context.remotingContext.args);
-      context.model.findOne(context.remotingContext.args.filter, afterFindCb);
-    } else {
-      return cb(null, false);
-    }
-  })
+  });
 };

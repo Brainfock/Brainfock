@@ -513,6 +513,44 @@ module.exports = function(Topic) {
   };
 
   /**
+   * Check if userId has read access on topic
+   * @param {Number} userId
+   * @param {Function} next
+   * @returns {*}
+   */
+  Topic.prototype.checkUserAccess = function(userId, next) {
+    if (this.accessPrivateYn === 0 || (this.accessPrivateYn === 1 && userId > 0 && this.ownerUserId === userId)) {
+      return next(null, true);
+    } else if (userId > 0) {
+
+      Topic.app.models.EntityAccessAssign.findOne(
+        {where:{
+          authType:0,
+          authId:userId,
+          entityId:this.entityId
+        }},
+        (err, data) => next(null, !(err || !data))
+      );
+    } else {
+      return next(null, false);
+    }
+  };
+
+  Topic.promiseUserAccess = function(topicWhere, userId) {
+    return new Promise(
+      function(resolve, reject) {
+        Topic.findOne({where:topicWhere}, function(err, instance) {
+          console.log('HERE!',instance)
+          if(err || !instance) return reject(null, false);
+          instance.checkUserAccess(userId, function(err,isAllowed) {
+            if(err || !isAllowed) return reject(null, false);
+            return resolve(null, true);
+          })
+        });
+      });
+  }
+
+  /**
    * @return Workflow|null - active workflow for current topic type in active scheme
    */
   Topic.prototype.getWorkflowTopicConfig = function(next) {

@@ -124,6 +124,51 @@
       "permission": "DENY"
     },
     {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "wspcList",
+      "permission": "ALLOW",
+      "property": "find"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "wspcList",
+      "permission": "ALLOW",
+      "property": "count"
+    },
+    {
+      "_comment": "This operation's permissions are controlled by afterRemote hook",
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "findOne"
+    },
+    {
+      "_comment": "This operation's permissions are controlled by afterRemote hook",
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "findById"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "wspcTopicsList",
+      "permission": "ALLOW",
+      "property": "__get__topics"
+    },
+    {
+      "_comment": "See additional accell validation control inside operation body",
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "__findByKey__topics"
+    },
+    {
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "wspcTopicAccess",
@@ -137,42 +182,19 @@
       "permission": "ALLOW",
       "property": "__get__topics__topics"
     },
-
-
     {
       "accessType": "*",
       "principalType": "ROLE",
-      "principalId": "topicEntityAccess",
-      "permission": "ALLOW",
-      "property": "__get__topics"
-    },
-    {
-      "accessType": "*",
-      "principalType": "ROLE",
-      "principalId": "topicEntityAccess",
+      "principalId": "wspcTopicsList",
       "permission": "ALLOW",
       "property": "__count__topics"
     },
     {
-      "accessType": "EXECUTE",
+      "accessType": "*",
       "principalType": "ROLE",
-      "principalId": "topicEntityAccess",
+      "principalId": "wspcTopicsList",
       "permission": "ALLOW",
-      "property": "find"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "topicEntityAccess",
-      "permission": "ALLOW",
-      "property": "findById"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "topicEntityAccess",
-      "permission": "ALLOW",
-      "property": "findOne"
+      "property": "__count__topics__topics"
     }
   ],
   "methods": {}
