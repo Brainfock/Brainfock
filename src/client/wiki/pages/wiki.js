@@ -31,7 +31,7 @@ import fetch from '../../../common/components/fetch';
 
 import Loader from '../../components/Loader';
 
-import {fetchContextPage} from '../../../../../common/src/wiki/actions';
+import {fetchContextPage} from '../../../common/wiki/actions';
 
 @fetch(fetchContextPage)
 class Page extends Component {

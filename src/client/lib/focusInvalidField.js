@@ -1,4 +1,4 @@
-import {ValidationError} from '../../../../common';
+import {ValidationError} from '../../common';
 import ReactDOM from 'react-dom';
 
 export default function focusInvalidField(component, error) {

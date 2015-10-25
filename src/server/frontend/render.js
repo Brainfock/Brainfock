@@ -11,11 +11,11 @@ import {Provider} from 'react-redux';
 import {RoutingContext, match} from 'react-router';
 import serialize from 'serialize-javascript';
 import Promise from 'bluebird';
-import Todo from '../../../../common/src/todos/todo';
+import Todo from '../../common/todos/todo';
 import initialState from '../initialState';
-import {configureStore} from '../../../../common';
+import {configureStore} from '../../common';
 import {fromJS} from 'immutable';
-import {mapDispatchToProps} from '../../../../common';
+import {mapDispatchToProps} from '../../common';
 
 import createRoutes from '../../client/createRoutes.js';
 import {createMemoryHistory} from 'history';

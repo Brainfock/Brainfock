@@ -42,7 +42,7 @@ import {
 import './app.styl';
 import '../../less/main.less';
 
-import {mapDispatchToProps, mapStateToProps} from '../../../../common';
+import {mapDispatchToProps, mapStateToProps} from '../../common';
 import AppSideNav from './components/app-left-nav';
 
 const ThemeManager = Styles.ThemeManager;
