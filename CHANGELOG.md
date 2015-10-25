@@ -4,7 +4,57 @@ Changelog
 Summary of changes in Brainfock project code. Changelog entries usually are split into `Features`, `Fixes` and `Style tweaks` sections.
 When makes sense, items in these section may be subdivided by application component (e.g. `Server`, `API`, `iOS Client`).
 
+## 25 Oct Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.21.0:
+
+* Modify `baseUrl` app config property to store full base url with protocol and trailing slash
+* Modify server-side rendering and re-factor stack
+* Update project structure
+* Add workspace API:
+  * `api/workspaces/count`
+  * `api/workspaces/[NAMESPACE]/topics`
+  * `api/workspaces/[NAMESPACE]/topics/[TOPIC_KEY]`
+  * `api/workspaces/[NAMESPACE]/topics/[TOPIC_ID]`
+  * `api/workspaces/[NAMESPACE]/topics/[TOPIC_KEY]/topics`
+  * `api/workspaces/[NAMESPACE]/topics/[TOPIC_KEY]/topics/[GROUP_KEY]/[TOPIC_NUM]`
+  * `api/workspaces/[NAMESPACE]/topics/[TOPIC_KEY]/topics/count`
+* Modify workspace API: allow to find workspace by namespace, e.g. `api/workspaces/brainfock`
+* Add `topics` relation on `workspaces` with nestRemoting, see details at http://blog.brainfock.org/2015/10/23/loopback-tip-of-the-day-nest-remoting/
+* Add validation of unique topic key in a workspace
+* Modify topic `before save`: set `groupSchemeId` for root topics to default group scheme if no value is provided by user
+* Add topic property `groupSchemeId`
+* Modify `before save` hook - populate `namespace` value when only `workspaceId` is provided
+* Add support to create root topics (e.g. project, discussion board, blog etc.)
+* Add `delete` feature to topic;
+* Add `RawTopic` model accessing `topic` db table for operations that are not supported by MYSQL views (e.g. delete topic via API since you can't delete from topic view table
+
+### Fixes
+* Fix: form fields (scheme) is not updated when switching between modules
+* Fix: topics list API does not respond on empty database
+* Fix: simple form factory's `react-select` inputs are not working
+* Fix: new topic dialog form buttons are not visible on a smaller screens
+
+##### Web Client
+* SimpleFormFactory's `RemoteSelectField` component: add `endpointQueryString` property, that works together with `endpoint ` and represents filter property key for search query, e.g. `filter[where][summary]`
+* TopicFieldsHandler: add field props resolver for `workspaceId`
+* Improve all topic lists (projects, issues, boards) with reusable components
+* Use new server-side fetching with @fetch decorator
+* Add HOC wrapper for fetching component data
+* Add preview to project settings page demonstrating how item will look like in a common list
+* Re-factor various topics lists (project, project issues & boards, global borads)
+* Add reusable master-detail component for topics
+* Update `material-ui` dep version
+* Change Brainfock project website link to `Brainfock:About` Wiki page
+* Add component for empty `boards` list
+* Add component for empty `projects` list
+
+### Style & UI tweaks
+* Modify main side nav to be open & docked at homepage
+* Add Brainfock logo watermark to the bottom of a page
+* Add linear progress bar and align `loading` placeholder to the center
+
+
 ## 20 Oct Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.20.0:
+
 ### Features
 * Allow to change topic status via workflow operations.
 
@@ -28,7 +78,6 @@ When makes sense, items in these section may be subdivided by application compon
 * New `Discussion Boards` module for projects, mostly to demonstrate different topic groups/types.
 * Tweak `me` page  - add header with actual username & email, placeholder for features to come and sidenote
 * Wiki Style tweak: remove unnecessary top padding
-
 
 ##### API
 * New `extra.operations` filter to populate property with all available operations (if requested).
@@ -54,7 +103,6 @@ When makes sense, items in these section may be subdivided by application compon
 * Add new topic REST API endpoint `api/topics/:contextTopicKey/formFields`
 
   Load fields for topic `create` form screen. Available fields are based on topic type, group and group parent (if any), effective screen scheme (currently supports default scheme), and screen configuration (screen_fields in configured order). Currently, only system fields are available, but custom fields are in TODO.
-
 
 * Find topics by their contextTopicKey, eg. /api/topics/BF
 * REST API `GET topics/count` (filters supported via `?where[prop]=value`)
@@ -83,13 +131,11 @@ When makes sense, items in these section may be subdivided by application compon
 * setup catching IO comments once per app
 
 ### Fixes
-
 *  API does not return contentRendered after `updateAttributes` operation (disappearing text after saving existing `WikiPage`)
 * Fix creating record of a new wiki page when it had namespace in it
 * Fix assets path for statics
 
 ### Style tweaks
-
 * Adjust grids and lists of topics & topic issues
 * Switch top navigation bar background from black to light grey
 * Add LESS stylesheets to project (some may need a cleanup)

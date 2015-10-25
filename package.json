@@ -2,7 +2,7 @@
   "name": "brainfock-app-web",
   "description": "Brainfock web server and client.",
   "author": "Sergii Gamaiunov <hello@webkadabra.com>",
-  "version": "0.22.0",
+  "version": "0.21.0",
   "contributors": [],
   "main": "src/server/main",
   "private": true,
