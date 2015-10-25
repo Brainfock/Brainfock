@@ -16,6 +16,10 @@
   "User": {
     "dataSource": "db"
   },
+  "Member": {
+    "dataSource": "db",
+    "public": true
+  },
   "AccessToken": {
     "dataSource": "db",
     "public": false

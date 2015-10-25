@@ -1,0 +1,11 @@
+{
+  "name": "Member",
+  "base": "User",
+  "idInjection": false,
+  "mysql": {
+    "table": "user"
+  },
+  "options": {
+    "validateUpsert": true
+  }
+}
