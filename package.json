@@ -7,6 +7,7 @@
   "main": "src/server/main",
   "private": true,
   "scripts": {
+    "postinstall": "gulp build --production",
     "build": "NODE_ENV=production gulp build",
     "start": "NODE_ENV=production node src/server",
     "start-dev": "gulp",
