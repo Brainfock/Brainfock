@@ -1,4 +1,5 @@
 import {HotKeys} from 'react-hotkeys';
+import {FormattedMessage, FormattedRelative, FormattedDate} from 'react-intl';
 
 var React = require('react'),
     Router = require('react-router'),
@@ -27,6 +28,11 @@ var Page = React.createClass({
       }
     };
   },
+  getInitialState: function() {
+    return {
+      hasBeenSaved: false
+    };
+  },
 
   /**
    * Magic goes here!
@@ -52,6 +58,7 @@ var Page = React.createClass({
   render: function()
   {
     const page = this.getViewPage();
+    this.props.msg.wiki
     console.log('page:',page);
     if(page.loading == true) {
       var disabled=true;
@@ -87,6 +94,15 @@ var Page = React.createClass({
                 <mui.RaisedButton label="Save" primary={true}  disabled={disabled}  onClick={this.save}  />
               &nbsp;<mui.RaisedButton label="Cancel" primary={false}  disabled={disabled} onClick={this.cancelAndReturn} />
               &nbsp;<mui.RaisedButton label="Return" primary={false}  disabled={disabled} onClick={this.cancelAndReturn} />
+                  <span style={{textColor:(this.state.hasBeenSaved?'#8C8C8C':'#C1C1C1'),paddingLeft:15}}>
+
+                    {this.state.hasBeenSaved && page.updatedOn && <FormattedRelative value={Date.parse(page.updatedOn)} />}
+
+                    {!this.state.hasBeenSaved && page.updatedOn &&
+                      <span>
+                        Last updated on <FormattedDate value={page.updatedOn}/>
+                      </span>}
+                  </span>
               </HotKeys>
               </div>
             </div>
@@ -109,10 +125,14 @@ var Page = React.createClass({
     e.preventDefault();
     const page = this.getViewPage();
     var content = this.refs.contentInput.getValue();
+
     this.props.actions.saveWikiChanges(page.id, {
       content: content,
       contextEntityId:page.contextEntityId,
       pageUid:page.pageUid,
+    });
+    this.setState({
+      hasBeenSaved: true
     });
   },
 
