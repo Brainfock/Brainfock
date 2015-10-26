@@ -142,4 +142,66 @@ export default {
       //},
     }
   },
+
+  users: {
+    list:{
+      addNew: {
+        button: 'Add New',
+      },
+      countItems: `{countItems, plural,
+  =0 {No items in list}
+  one {# item}
+  other {# items}
+}`,
+      column: {
+        label: {
+          name: 'Name',
+          email: 'Email',
+        },
+        hint: {
+          id: 'Unique user ID'
+        }
+      }
+    },
+    form: {
+      create: {
+        title: 'Create New {type}',
+      },
+      button: {
+        create: 'Create',
+        cancel: 'Cancel',
+        save: 'Save',
+      },
+      label: {
+        accessPrivate: 'Available to invited users only',
+        summary: 'Summary (name)',
+        text: 'Project description',
+        logoIcon: 'Project icon',
+        logoBackground: 'Project background color',
+      },
+      hint: {
+        summary: 'Try to keep it short',
+        text: 'Markdown markup supported',
+        logoIcon: 'Font Awesome icon name',
+        logoBackground: 'Logo Background',
+      },
+      section: {
+        main: 'Settings',
+        general: 'Project details',
+        access: 'Access settings',
+        danger: 'Danger zone',
+      },
+      deleteItem: {
+         button: 'Delete this project',
+      }
+      //summary: {
+      //  label: 'Available to invited users only',
+      //  hint: 'Summary (name)',
+      //},
+      //accessPrivate: {
+      //  label: 'Available to invited users only',
+      //  hint: 'Summary (name)',
+      //},
+    }
+  },
 };
