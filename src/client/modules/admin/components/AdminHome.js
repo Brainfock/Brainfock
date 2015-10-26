@@ -19,16 +19,27 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import React from 'react'
+import Component from 'react-pure-render/component';
 import {Link} from 'react-router';
+import {connect} from 'react-redux';
+import {mapAdminDispatchToProps, mapStateToProps} from '../../../../common';
+
 import {Paper} from 'material-ui';
 
-class AdminHome extends React.Component {
+@connect(mapStateToProps, mapAdminDispatchToProps)
+class AdminHome extends Component {
 
   render() {
-    const classNAme="col-xs-6 col-sm-3"
+    const classNAme="col-xs-6 col-sm-3";
+
+    const {children, ...props} = this.props;
+
+    if(children) {
+      return React.cloneElement(children, props);
+    }
+
     return (
       <div>
-        {this.props.children ||
           <div className="container-fluid">
             <div className="row">
             <div style={{padding:25}}>
@@ -77,7 +88,6 @@ class AdminHome extends React.Component {
 
             </div>
           </div>
-        }
       </div>
     )
   }
