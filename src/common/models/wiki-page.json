@@ -155,14 +155,62 @@
       },
       "_selectable": true
     },
-    "createdAt": {
+    "updatedOn": {
+      "type": "String",
+      "required": false,
+      "length": null,
+      "precision": null,
+      "scale": null,
+      "mysql": {
+        "columnName": "updated_on",
+        "dataType": "timestamp",
+        "dataLength": null,
+        "dataPrecision": null,
+        "dataScale": null,
+        "nullable": "N"
+      },
+      "_selectable": true
+    },
+    "name": {
+      "type": "String",
+      "required": false,
+      "length": 255,
+      "precision": null,
+      "scale": null,
+      "mysql": {
+        "columnName": "name",
+        "dataType": "varchar",
+        "dataLength": 255,
+        "dataPrecision": null,
+        "dataScale": null,
+        "nullable": "Y"
+      },
+      "_selectable": true
+    },
+    "deletedYn": {
+      "type": "Number",
+      "required": false,
+      "length": null,
+      "precision": 3,
+      "scale": 0,
+      "mysql": {
+        "columnName": "deleted_yn",
+        "dataType": "tinyint",
+        "dataLength": null,
+        "dataPrecision": 3,
+        "dataScale": 0,
+        "nullable": "N"
+      },
+      "_selectable": false
+    },
+    "ownerUserId": {
       "type": "Number",
       "required": false,
       "length": null,
       "precision": 10,
       "scale": 0,
       "mysql": {
-        "columnName": "created_at",
+        "columnName": "owner_user_id",
         "dataType": "int",
         "dataLength": null,
         "dataPrecision": 10,
@@ -171,22 +219,24 @@
       },
       "_selectable": true
     },
-    "updatedAt": {
+    "accessPrivateYn": {
       "type": "Number",
       "required": false,
       "length": null,
-      "precision": 10,
+      "precision": 3,
       "scale": 0,
       "mysql": {
-        "columnName": "updated_at",
-        "dataType": "int",
+        "columnName": "access_private_yn",
+        "dataType": "tinyint",
         "dataLength": null,
-        "dataPrecision": 10,
+        "dataPrecision": 3,
         "dataScale": 0,
         "nullable": "Y"
       },
       "_selectable": true
-    },
+    }
+  },
+  "_properties": {
     "treeRoot": {
       "type": "Number",
       "required": false,
@@ -251,18 +301,18 @@
       },
       "_selectable": true
     },
-    "name": {
-      "type": "String",
+    "createdAt": {
+      "type": "Number",
       "required": false,
-      "length": 255,
-      "precision": null,
-      "scale": null,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
       "mysql": {
-        "columnName": "name",
-        "dataType": "varchar",
-        "dataLength": 255,
-        "dataPrecision": null,
-        "dataScale": null,
+        "columnName": "created_at",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
         "nullable": "Y"
       },
       "_selectable": true
@@ -275,54 +325,6 @@
       "scale": 0,
       "mysql": {
         "columnName": "show_children_tree",
-        "dataType": "tinyint",
-        "dataLength": null,
-        "dataPrecision": 3,
-        "dataScale": 0,
-        "nullable": "Y"
-      },
-      "_selectable": true
-    },
-    "deletedYn": {
-      "type": "Number",
-      "required": false,
-      "length": null,
-      "precision": 3,
-      "scale": 0,
-      "mysql": {
-        "columnName": "deleted_yn",
-        "dataType": "tinyint",
-        "dataLength": null,
-        "dataPrecision": 3,
-        "dataScale": 0,
-        "nullable": "N"
-      },
-      "_selectable": false
-    },
-    "ownerUserId": {
-      "type": "Number",
-      "required": false,
-      "length": null,
-      "precision": 10,
-      "scale": 0,
-      "mysql": {
-        "columnName": "owner_user_id",
-        "dataType": "int",
-        "dataLength": null,
-        "dataPrecision": 10,
-        "dataScale": 0,
-        "nullable": "Y"
-      },
-      "_selectable": true
-    },
-    "accessPrivateYn": {
-      "type": "Number",
-      "required": false,
-      "length": null,
-      "precision": 3,
-      "scale": 0,
-      "mysql": {
-        "columnName": "access_private_yn",
         "dataType": "tinyint",
         "dataLength": null,
         "dataPrecision": 3,
