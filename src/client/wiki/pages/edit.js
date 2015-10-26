@@ -1,3 +1,5 @@
+import {HotKeys} from 'react-hotkeys';
+
 var React = require('react'),
     Router = require('react-router'),
     {Link, Navigation} = Router,
@@ -6,6 +8,15 @@ var React = require('react'),
 
 var $ = require('jquery');
 
+const keyMap = {
+  //'delete': ['del', {sequence: 'backspace', action: 'keyup'}],
+  //'expand': 'alt+up',
+  'saveWiki': 'ctrl+s',
+  //'contract': 'alt+down',
+  //'konami': 'up up down down left right left right b a enter',
+  //'commandDown': {sequence: 'command', action: 'keydown'},
+  //'commandUp': {sequence: 'command', action: 'keyup'}
+};
 
 var Page = React.createClass({
 
@@ -48,13 +59,20 @@ var Page = React.createClass({
       var disabled=false;
     }
 
+    const handlers = {
+      'saveWiki': this.save
+    };
+
     return (
+      <HotKeys keyMap={keyMap}>
+
         <div className="wiki-wrapper">
           <div className="wiki-page">
+
             <div className="container-fluid">
               <div className="row">
                 <h3>{page.pageUid} - edit</h3>
-
+                <HotKeys handlers={handlers}>
                 <mui.TextField
                     ref="contentInput"
                   //hintText="Hint Text (MultiLine)"
@@ -69,7 +87,7 @@ var Page = React.createClass({
                 <mui.RaisedButton label="Save" primary={true}  disabled={disabled}  onClick={this.save}  />
               &nbsp;<mui.RaisedButton label="Cancel" primary={false}  disabled={disabled} onClick={this.cancelAndReturn} />
               &nbsp;<mui.RaisedButton label="Return" primary={false}  disabled={disabled} onClick={this.cancelAndReturn} />
-
+              </HotKeys>
               </div>
             </div>
           </div>
@@ -77,6 +95,7 @@ var Page = React.createClass({
             <Link to="wiki" params={{uid: 'Special:Index'}}>This Wiki Index</Link>
           </div>
         </div>
+      </HotKeys>
     );
   },
 
@@ -86,7 +105,8 @@ var Page = React.createClass({
     this.props.history.pushState(null, `/wiki/${page.pageUid}`);
   },
 
-  save: function() {
+  save: function(e) {
+    e.preventDefault();
     const page = this.getViewPage();
     var content = this.refs.contentInput.getValue();
     this.props.actions.saveWikiChanges(page.id, {
