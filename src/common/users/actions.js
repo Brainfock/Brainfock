@@ -25,13 +25,13 @@ export const FIND = 'FIND_USERS';
 export const FIND_SUCCESS = 'FIND_USERS_SUCCESS';
 export const FIND_ERROR = 'FIND_USERS_ERROR';
 
-export function findUsers(query) {
+export function findUsers(includes, query) {
   let endpoint = '';
 
-  endpoint += 'members/';
+  endpoint += 'members/?'+includes;
 
   if(query) {
-    endpoint += '?'+toQueryString({filter:{where:query}},false);
+    endpoint += '&'+toQueryString({filter:{where:query}},false);
   }
 
   return ({fetch, validate}) => ({

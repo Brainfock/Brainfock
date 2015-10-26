@@ -157,9 +157,11 @@ export default {
         label: {
           name: 'Name',
           email: 'Email',
+          role: 'Access permission',
         },
         hint: {
-          id: 'Unique user ID'
+          id: 'Unique user ID',
+          role: 'Access permission',
         }
       }
     },

@@ -53,7 +53,7 @@ class Users extends Component {
   }
   componentWillMount() {
     if (!this.props.users.list || !this.props.users.list.size)
-      this.props.actions.findUsers();
+      this.props.actions.findUsers('filter[include][roles]');
   }
 
   componentDidMount() {
@@ -67,10 +67,6 @@ class Users extends Component {
   _updateDeviceWidth() {
     let width = window.innerWidth;
     let height = window.innerHeight;
-    console.log('Device sizes:',{
-      deviceWidth: width,
-      deviceHeight: height,
-    })
 
     let tableHeight = height
       - this.context.muiTheme.appBar.height
@@ -114,7 +110,7 @@ class Users extends Component {
           onRowSelection={this._onRowSelection}>
           <TableHeader enableSelectAll={this.state.enableSelectAll} displaySelectAll={false}>
             <TableRow>
-              <TableHeaderColumn colSpan="4" tooltip='Super Header' style={{textAlign: 'center'}}>
+              <TableHeaderColumn colSpan="5" tooltip='Super Header' style={{textAlign: 'center'}}>
                 <h4>User management</h4>
               </TableHeaderColumn>
             </TableRow>
@@ -123,6 +119,7 @@ class Users extends Component {
               <TableHeaderColumn></TableHeaderColumn>
               <TableHeaderColumn tooltip={msg.list.column.hint.name}>{msg.list.column.label.name}</TableHeaderColumn>
               <TableHeaderColumn tooltip={msg.list.column.hint.email}>{msg.list.column.label.email}</TableHeaderColumn>
+              <TableHeaderColumn tooltip={msg.list.column.hint.role}>{msg.list.column.label.role}</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody
@@ -136,12 +133,17 @@ class Users extends Component {
                 <TableRowColumn><UserAvatar user={todo}/></TableRowColumn>
                 <TableRowColumn>{todo.username}</TableRowColumn>
                 <TableRowColumn>{todo.email}</TableRowColumn>
+                <TableRowColumn>
+                {todo.roles && todo.roles.map(role =>
+                  <span className="label label-primary">{role.name}</span>
+                )}
+                </TableRowColumn>
               </TableRow>
             )}
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableRowColumn colSpan="4" style={{textAlign: 'center'}}>
+              <TableRowColumn colSpan="5" style={{textAlign: 'center'}}>
                 Super Footer
               </TableRowColumn>
             </TableRow>

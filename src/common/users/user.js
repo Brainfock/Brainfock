@@ -1,9 +1,10 @@
-import {Record} from 'immutable';
+import {Record, List} from 'immutable';
 
 const User = Record({
   id: '',
   email: '',
-  username: ''
+  username: '',
+  roles: List(),
 });
 
 export default User;
