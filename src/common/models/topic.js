@@ -197,25 +197,30 @@ module.exports = function(Topic) {
   });
 
   /**
-   * Validate uniqueness of
+   * Validate uniqueness of namespace per groupId/workspaceId pair
    */
   Topic.observe('before save', function normalizeUserInput(ctx, next) {
     const context = loopback.getCurrentContext();
 
     if (ctx.instance) {
-      if((!ctx.instance.contextTopicId || ctx.instance.contextTopicId === 0)
+      if ((!ctx.instance.contextTopicId || ctx.instance.contextTopicId === 0)
         && ctx.instance.contextTopicKey && ctx.instance.workspaceId) {
-        // make sure it's unique
 
+        if (!ctx.instance.groupId) {
+          return next(new Error('groupId is missing!'));
+        }
+
+        // make sure it's unique among its group
         Topic.app.models.Topic.findOne({
           where:{
             contextTopicKey: ctx.instance.contextTopicKey,
             workspaceId: ctx.instance.workspaceId,
+            groupId: ctx.instance.groupId
           }
         }, function(err, existingTopic) {
           if (err) throw err;
 
-          if(existingTopic && existingTopic.id) {
+          if (existingTopic && existingTopic.id) {
             next(new Error(`There is already topic with "${ctx.instance.contextTopicKey}" key in that namespace`));
           } else {
             next();
