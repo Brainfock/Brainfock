@@ -195,6 +195,13 @@
       "principalId": "wspcTopicsList",
       "permission": "ALLOW",
       "property": "__count__topics__topics"
+    },
+    {
+      "_comment": "principal sohuld be of lower level e.g. `createWorkspace`",
+      "principalType": "ROLE",
+      "principalId": "Admin",
+      "permission": "ALLOW",
+      "property": "create"
     }
   ],
   "methods": {}
