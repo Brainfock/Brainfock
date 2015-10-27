@@ -33,10 +33,10 @@ export default function createRoutes(getState) {
       <Route component={require('./boards/pages/board.js')} path="/board/:board_id">
         <Route component={require('./boards/pages/topic.js')} path="/board/:board_id/topic/:id" />
       </Route>
-
       <Route component={require('./boards/pages/board.js')} path="/board/:board_id/:key">
-        <Route component={require('./boards/pages/topic.js')} path="/board/:board_id/topic/:id" />
+        { /*<Route component={require('./boards/pages/topic.js')} path="/board/:board_id/topic/:id" /> */ }
       </Route>
+      <Route component={require('./boards/pages/topic.js')} path="/board/:board_id/:boardKey/:id/:key"/>
 
       <Route component={Wiki} path="wiki/:uid" />
       <Route component={WikiEdit} path="wiki/:uid/edit" />
