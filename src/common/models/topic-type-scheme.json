@@ -27,22 +27,6 @@
       },
       "_selectable": false
     },
-    "topicGroupId": {
-      "type": "Number",
-      "required": true,
-      "length": null,
-      "precision": 10,
-      "scale": 0,
-      "mysql": {
-        "columnName": "topic_group_id",
-        "dataType": "int",
-        "dataLength": null,
-        "dataPrecision": 10,
-        "dataScale": 0,
-        "nullable": "N"
-      },
-      "_selectable": false
-    },
     "name": {
       "type": "String",
       "required": false,
