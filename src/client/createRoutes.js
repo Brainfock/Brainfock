@@ -20,6 +20,7 @@ export default function createRoutes(getState) {
   }
 
   const AdminModule = (process.env.IS_BROWSER) ? require('react-router-proxy?!./modules/admin/components/AdminHome') : require('./modules/admin/components/AdminHome');
+  const CreateWorkspace = (process.env.IS_BROWSER) ? require('react-router-proxy?!./workspace/create') : require('./workspace/create');
 
   return (
     <Route component={App} path="/">
@@ -40,14 +41,15 @@ export default function createRoutes(getState) {
       <Route component={Wiki} path="wiki/:uid" />
       <Route component={WikiEdit} path="wiki/:uid/edit" />
 
+      <Route component={CreateWorkspace} path="/workspaces/create" />
+
       <Route path="admin"
              onEnter={requireAuth}
              component={AdminModule}
              childRoutes={[
                 require('./modules/admin/modules/users'),
                 //require('./modules/admin/routes/Course'),
-            ]}
-        />
+            ]}/>
       <Route component={require('./projects/index')} path="projects"/>
       <Route component={require('./projects/project-wrapper')}  >
         { /*  <Route component={require('./projects/topic.js')} path="/:namespace/:board_id-:id" />*/ }

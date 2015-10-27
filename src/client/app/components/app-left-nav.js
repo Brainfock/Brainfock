@@ -19,6 +19,7 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 
+import Component from 'react-pure-render/component';
 let React = require('react'),
     Router = require('react-router'),
     mui = require('material-ui');
@@ -46,6 +47,7 @@ var menuItems = [
   // TODO: hide from non-admin users
   { type: mui.MenuItem.Types.SUBHEADER, text: ' '},
   { route: '/admin', params:{}, text: <span>System Admin <i className="fa fa-cog"></i></span>},
+  { route: '/workspaces/create', params:{}, text: "Create Workspace"},
   // Link to Brainfock website & version, don't remove
   { route: '/wiki/Brainfock:About',
     text: <div style={{
@@ -70,16 +72,17 @@ var menuItems = [
  *
  * @author sergii gamaiunov <hello@webkadabra.com>
  */
-var AppLeftNav = React.createClass({
-  mixins: [Router.Navigation, Router.State],
+export default class AppLeftNav extends Component {
 
-  getInitialState: function() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       selectedIndex: null
-    };
-  },
+    }
+  }
 
-  render: function() {
+  render() {
+    console.log(this.props,'LEFT NAV PROPS ^^^^^')
     var header = <div className="logo" onClick={this._onHeaderClick}>Brainfock</div>;
     return (
       <mui.LeftNav
@@ -89,14 +92,14 @@ var AppLeftNav = React.createClass({
           header={header}
           menuItems={menuItems}
           selectedIndex={this._getSelectedIndex()}
-          onChange={this._onLeftNavChange}
+          onChange={this._onLeftNavChange.bind(this)}
           />
     );
-  },
+  }
 
-  toggle: function() {
+  toggle() {
     this.refs.leftNav.toggle();
-  },
+  }
 
   /**
    * helper to correctly highlight LeftNav's active item: matches agains single "route" parameter of item, or anyone
@@ -104,7 +107,7 @@ var AppLeftNav = React.createClass({
    * @returns {number}
    * @private
    */
-  _getSelectedIndex: function()
+  _getSelectedIndex()
   {
     // turn this off until we can make it so clicking active link still does the navigation
     return;
@@ -123,7 +126,7 @@ var AppLeftNav = React.createClass({
       }
       if (currentItem.route && this.props.history.isActive(currentItem.route, (currentItem.params?currentItem.params:[]))) return i;
     };
-  },
+  }
 
   /**
    * fired only when LeftNav has changed selected item
@@ -133,18 +136,18 @@ var AppLeftNav = React.createClass({
    * @param payload
    * @private
    */
-  _onLeftNavChange: function(e, key, payload) {
+  _onLeftNavChange(e, key, payload) {
     this.props.history.pushState(null, payload.route);
     this.refs.leftNav.close();
     //this.transitionTo(payload.route, (payload.params?payload.params:[]));
-  },
+  }
 
-  _onHeaderClick: function() {
+  _onHeaderClick() {
     // uncomment to send user somewhere:
     //this.transitionTo('root');
     // close panel
     this.refs.leftNav.close();
   }
-});
+};
 
 module.exports = AppLeftNav;
