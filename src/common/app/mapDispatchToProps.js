@@ -4,6 +4,7 @@ import * as todosActions from '../todos/actions';
 import * as wikiActions from '../wiki/actions';
 import * as topicActions from '../topics/actions';
 import * as commentsActions from '../comments/actions';
+import * as workspaceActions from '../workspace/actions';
 
 import {Map} from 'immutable';
 import {bindActionCreators} from 'redux';
@@ -14,6 +15,7 @@ const actions = [
   todosActions,
   wikiActions,
   commentsActions,
+  workspaceActions
 ];
 
 const topic_actions = [

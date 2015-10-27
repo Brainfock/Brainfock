@@ -10,6 +10,7 @@ import users from '../users/reducer';
 import wiki from '../wiki/reducer';
 import boards from '../boards/reducer';
 import app from './app-reducer';
+import workspace from '../workspace/reducer';
 import form from '../form/reducer';
 
 const appReducer = combineReducers({
@@ -21,7 +22,8 @@ const appReducer = combineReducers({
   users,
   wiki,
   boards,
-  form
+  form,
+  workspace
 });
 
 export default appReducer;
