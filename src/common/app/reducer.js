@@ -1,5 +1,4 @@
 import {combineReducers} from 'redux';
-import {reducer as formReducer} from 'redux-form';
 import Immutable from 'immutable';
 
 // Reducers
@@ -11,13 +10,7 @@ import users from '../users/reducer';
 import wiki from '../wiki/reducer';
 import boards from '../boards/reducer';
 import app from './app-reducer';
-
-
-//const immutableize = reducer => (state, action) =>
-//  Immutable.fromJS(reducer(state && state.toJS ? state.toJS() : {}, action));
-//const form = immutableize(formReducer);
-const form = formReducer;
-
+import form from '../form/reducer';
 
 const appReducer = combineReducers({
   app,
