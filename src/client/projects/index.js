@@ -19,21 +19,14 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import React from 'react';
+import Component from 'react-pure-render/component';
 
 import ProjectsEmpty from './components/projects-empty';
 import MasterDetailsListView from './components/master-detail.list';
 
-module.exports = React.createClass({
+export default class ProjectsIndex extends Component {
 
-  componentWillMount() {
-    if (process.env.IS_BROWSER === true) {
-      //this.props.topic_actions.loadTopicGroup('project', {}/*, this.props.parentModel*/);
-      //this.props.topic_actions.find('project', {}/*, this.props.parentModel*/);
-    }
-  },
-
-  render: function()
-  {
+  render() {
     const {children, ...passProps} = this.props;
     return (
       <MasterDetailsListView
@@ -45,4 +38,4 @@ module.exports = React.createClass({
         />
     );
   }
-});
+}
