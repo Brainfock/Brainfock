@@ -22,6 +22,10 @@ import {mergeQuery} from 'loopback-datasource-juggler/lib/utils';
 import loopback from 'loopback';
 
 module.exports = function(Workspace) {
+
+  Workspace.validatesPresenceOf('name', 'namespace')
+  Workspace.validatesUniquenessOf('namespace', {message: 'Namespace is not available'});
+
   /**
    * Check if userId has read access on workspace
    * @param {Number} userId
