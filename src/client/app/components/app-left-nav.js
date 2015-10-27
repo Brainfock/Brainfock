@@ -20,11 +20,9 @@
  */
 
 import Component from 'react-pure-render/component';
-let React = require('react'),
-    Router = require('react-router'),
-    mui = require('material-ui');
-
-let {Route, Redirect, Link} = Router;
+import React, {PropTypes} from 'react';
+import Router, {Route, Redirect, Link} from 'react-router';
+import mui from 'material-ui';
 
 // TODO: i18n
 // TODO: add ability to reorder & add custom elements
@@ -74,26 +72,29 @@ var menuItems = [
  */
 export default class AppLeftNav extends Component {
 
+  static propTypes = {
+    history: PropTypes.object,
+    location: PropTypes.object
+  };
   constructor(props) {
     super(props);
     this.state = {
       selectedIndex: null
-    }
+    };
   }
 
   render() {
-    console.log(this.props,'LEFT NAV PROPS ^^^^^')
-    var header = <div className="logo" onClick={this._onHeaderClick}>Brainfock</div>;
+    const header = <div className="logo" onClick={this._onHeaderClick}>Brainfock</div>;
     return (
       <mui.LeftNav
-          ref="leftNav"
-          docked={this.props.location.pathname==='/'}
-          isInitiallyOpen={this.props.location.pathname!=='/'}
-          header={header}
-          menuItems={menuItems}
-          selectedIndex={this._getSelectedIndex()}
-          onChange={this._onLeftNavChange.bind(this)}
-          />
+        docked={this.props.location.pathname === '/'}
+        header={header}
+        isInitiallyOpen={this.props.location.pathname !== '/'}
+        menuItems={menuItems}
+        onChange={this._onLeftNavChange.bind(this)}
+        ref="leftNav"
+        selectedIndex={this._getSelectedIndex()}
+        />
     );
   }
 
@@ -107,25 +108,24 @@ export default class AppLeftNav extends Component {
    * @returns {number}
    * @private
    */
-  _getSelectedIndex()
-  {
+  _getSelectedIndex() {
     // turn this off until we can make it so clicking active link still does the navigation
     return;
 
-    var currentItem;
-    for (var i = menuItems.length - 1; i >= 0; i--) {
+    let currentItem;
+    for (let i = menuItems.length - 1; i >= 0; i--) {
       currentItem = menuItems[i];
       // multiple routes match support:
-      if(currentItem.routes) {
+      if (currentItem.routes) {
         // see if any *one* route is valid
-        for (var i2 = currentItem.routes.length - 1; i2 >= 0; i2--) {
+        for (let i2 = currentItem.routes.length - 1; i2 >= 0; i2--) {
           let _routeName = currentItem.routes[i2];
-          if (this.props.history.isActive(_routeName, (currentItem.params?currentItem.params:[]))) return i;
+          if (this.props.history.isActive(_routeName, (currentItem.params ? currentItem.params : []))) return i;
 
         }
       }
-      if (currentItem.route && this.props.history.isActive(currentItem.route, (currentItem.params?currentItem.params:[]))) return i;
-    };
+      if (currentItem.route && this.props.history.isActive(currentItem.route, (currentItem.params ? currentItem.params: []))) return i;
+    }
   }
 
   /**
