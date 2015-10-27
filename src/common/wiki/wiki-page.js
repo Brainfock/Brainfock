@@ -33,5 +33,8 @@ export default Record({
   entityId:'',
   updatedOn:'',
 
+  // client-only
+  clientSavedOn:'',
+
   loading:true
 });

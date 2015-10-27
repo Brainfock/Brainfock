@@ -65,7 +65,8 @@ export default function todosReducer(state = initialState, action) {
       return state
         // ensure we'll have page `id` after save for correct REST API calls
         .set('viewPage', new Todo(action.payload))
-        .setIn(['viewPage', 'loading'], false);
+        .setIn(['viewPage', 'loading'], false)
+        .setIn(['viewPage', 'clientSavedOn'], Date.now());
     }
 
     case actions.FIND: {
