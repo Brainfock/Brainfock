@@ -14,7 +14,6 @@ export default class Home extends Component {
     muiTheme: React.PropTypes.object
   };
   getTheme() {
-    console.log('this.context.muiTheme.leftNav',this.context.muiTheme.leftNav)
     return  this.context.muiTheme.leftNav;
   }
 
