@@ -18,28 +18,40 @@
  * @link http://www.brainfock.com/
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
-import React, {Component} from 'react';
-import AsynchronousBlurValidationForm, {fields} from './components/createWorkspaceForm.js';
-import {connect} from 'react-redux';
-import {mapDispatchToProps, mapStateToProps} from '../../common';
-import {initialize} from 'redux-form';
+import React, {PropTypes, Component} from 'react';
+import AsynchronousBlurValidationForm from './components/createWorkspaceForm.js';
 
 class AsynchronousBlurValidation extends Component {
+
+  static propTypes = {
+    actions: PropTypes.object,
+    history: PropTypes.object,
+    location: PropTypes.object
+  };
+
   render() {
-    console.log('AsynchronousBlurValidation props',this.props)
-   // const {children, ...passProps} = this.props;
     return (
       <AsynchronousBlurValidationForm
-
         onSubmit={this.onSubmit.bind(this)}
         />
     );
   }
 
   onSubmit(data) {
-    // data is actually a synthetic event
-   console.log('SUBMIT', data);
-    //this.props.dispatch(initialize('newItemForm', {}));
+    this.props.actions.postWorkspace(data)
+      .then(({error, payload}) => {
+        if (error) {
+          // error is handled by redux-form
+          //focusInvalidField(this, payload);
+        } else
+          this.redirectAfterSuccess(payload);
+      });
+  }
+
+  // TODO: use redux-react-router
+  redirectAfterSuccess(payload) {
+    const {history} = this.props;
+    history.replaceState(null, '/workspaces/' + payload.namespace);
   }
 
 }
