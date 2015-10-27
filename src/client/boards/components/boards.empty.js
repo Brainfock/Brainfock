@@ -47,17 +47,7 @@ export default class ProjectsEmpty extends Component {
 
     const {newTopic, formFields} = this.props.boards;
 
-    const formContent = (
-      <Form
-        actions={this.props.topic_actions}
-        containerStore={null}
-        formFields={formFields}
-        newTopic={newTopic}
-        params={this.props.params}
-        ref="formView"
-        topicGroup="board"
-        />
-    );
+    const formContent = React.cloneElement(this.props.form, {ref: 'formView'});
 
     let formStyles = {
         padding: 20
