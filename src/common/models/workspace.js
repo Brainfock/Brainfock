@@ -63,9 +63,9 @@ module.exports = function(Workspace) {
       function(resolve, reject) {
         Workspace.findById(modelId, function(err, instance) {
           if (err || !instance) return reject(null, false);
-          instance.checkUserAccess(userId,function(err,isAllowed) {
+          instance.checkUserAccess(userId, function (err, isAllowed) {
             if (err || !isAllowed) return reject(null, false);
-            return resolve(modelId, true);
+            return resolve(instance, true);
           });
         });
       });

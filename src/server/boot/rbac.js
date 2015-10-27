@@ -821,8 +821,6 @@ module.exports = function(app) {
     const userId = context.accessToken.userId;
 
     context.model.findById(context.modelId, function(err, ContextTopic) {
-      console.log(err);
-      console.log(ContextTopic);
       if (err || !ContextTopic) {
         return reject();
       }
@@ -1075,8 +1073,6 @@ module.exports = function(app) {
       return reject();
     }
 
-    //console.log('>> context.remotingContext.args', context.remotingContext.args)
-
     // check if workspace exists
     if (context.modelId) {
 
@@ -1084,14 +1080,6 @@ module.exports = function(app) {
         context.model.promiseUserAccess(context.modelId, userId)
       ];
 
-      console.log('-----');
-      //console.log(context.ctorArgs);
-
-      //const context = loopback.getCurrentContext();
-      //
-      //if (ctx.instance && !ctx.instance.groupId && context.get('http').req.body.createGroup) {
-      //  const createGroup = context.get('http').req.body.createGroup;
-      //
       if (context.remotingContext.method.name === '__get__topics__topics'
       || context.remotingContext.method.name === '__count__topics__topics') {
         accessValidators.push(app.models.Topic.promiseUserAccess({
@@ -1101,11 +1089,8 @@ module.exports = function(app) {
         //accessValidators.push(app.models.Topic.promiseUserAccess(`${context.remotingContext.ctorArgs}:${context.remotingContext.args.nk}`, userId));
       }
 
-      ////////////////////////////
-
       Promise.all(accessValidators)
         .then(function() {
-          console.log('promises went ok');
           // apply additional rules
           let allowedEntities = [];
 
@@ -1154,16 +1139,6 @@ module.exports = function(app) {
                           //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
                         }});
                     }
-
-
-                    //context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
-                    //  {where: {
-                    //    or: [
-                    //      {entityId:{inq:allowedEntities}}
-                    //    ]
-                    //  }});
-                    //console.log('context.remotingContext.args.filter:',context.remotingContext.args.filter);
-
                     return cb(null, true);
                   }
                   function populateValue($modelInstance, callback) {
@@ -1234,14 +1209,6 @@ module.exports = function(app) {
                           //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
                         }});
                     }
-
-                    //context.remotingContext.args = mergeQuery(context.remotingContext.args,
-                    //  {where: {
-                    //    or: [
-                    //      {entityId:{inq:allowedEntities}}
-                    //    ]
-                    //  }});
-                    //console.log('context.remotingContext.args:',context.remotingContext.args);
 
                     return cb(null, true);
                   }
