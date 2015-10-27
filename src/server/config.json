@@ -33,5 +33,12 @@
       "disableStackTrace": false
     }
   },
-  "legacyExplorer": false
+  "legacyExplorer": false,
+  "bfk": {
+    "reservedNamespace": [
+      "admin",
+      "workspace",
+      "auth"
+    ]
+  }
 }

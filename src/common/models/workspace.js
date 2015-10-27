@@ -19,12 +19,17 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import {mergeQuery} from 'loopback-datasource-juggler/lib/utils';
-import loopback from 'loopback';
+import app from '../../server/main';
 
 module.exports = function(Workspace) {
 
-  Workspace.validatesPresenceOf('name', 'namespace')
+  const config = app.get('bfk');
+  Workspace.validatesPresenceOf('name', 'namespace');
   Workspace.validatesUniquenessOf('namespace', {message: 'Namespace is not available'});
+  // add reserved namespaces under {bfk:{reservedNamespace:[]} property at config.json
+  if (config.reservedNamespace) {
+    Workspace.validatesExclusionOf('namespace', {in: config.reservedNamespace});
+  }
 
   /**
    * Check if userId has read access on workspace
