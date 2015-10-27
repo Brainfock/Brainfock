@@ -64,16 +64,14 @@ export default class Todo extends Component {
       alert('This is a preview :)');
       return;
     }
+
     let link = this.props.group.permalink;
-    console.log('LINK: '+link);
-    const topic_key = this.props.todo.contextTopicKey;
-    let replaced = link.replace(/:topic_key/g, topic_key);
+    let replaced = link.replace(/:topic_key/g, this.props.todo.contextTopicKey);
     replaced = replaced.replace(/:id/g, this.props.todo.id);
-    replaced = replaced.replace(/:board_key/g, this.props.todo.contextTopicKey);
+    replaced = replaced.replace(/:board_key/g, this.props.params.key);
+    replaced = replaced.replace(/:context_id/g, this.props.todo.contextTopicId);
     replaced = replaced.replace(/:namespace/g, this.props.todo.namespace);
 
-    //this.props.history.pushState(null, link);
     this.props.history.pushState(null, replaced);
   }
-
 }
