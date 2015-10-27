@@ -30,25 +30,26 @@ import SimpleFormFactory from '../../components/UISimpleFormFactory';
  *
  * @author sergii gamaiunov <Hello@webkadabra.com>
  */
-export default class CreateTopicForm extends Component{
+export default class CreateTopicForm extends Component {
 
   static defaultProps = {
-    sysFields: ['namespace','accessPrivateYn','createGroup']
+    sysFields: ['namespace', 'accessPrivateYn', 'createGroup']
   };
 
   static propTypes = {
-    containerStore: React.PropTypes.any.isRequired,
-    params: React.PropTypes.object.isRequired,
-    formFields: React.PropTypes.object,
     actions: React.PropTypes.any.isRequired,
+    containerStore: React.PropTypes.any.isRequired,
+    formFields: React.PropTypes.object,
+    params: React.PropTypes.object.isRequired,
     // topic group to load form for, e.g. `issue` if we want to greate topic in group `issue`
-    topicGroup: React.PropTypes.string.isRequired,
+    topicGroup: React.PropTypes.string.isRequired
   };
 
   componentWillMount() {
-    if(!this.props.formFields || (this.props.formFields && this.props.formFields.fields.size === 0)
-      || (this.props.formFields.group !== this.props.topicGroup))
+    if (!this.props.formFields || (this.props.formFields && this.props.formFields.fields.size === 0)
+      || (this.props.formFields.group !== this.props.topicGroup)) {
       this.props.actions.loadFormFields(this.props.topicGroup, (this.props.containerStore ? this.props.containerStore.id : 0));
+    }
   }
 
   componentDidMount() {
@@ -94,26 +95,26 @@ export default class CreateTopicForm extends Component{
    * 2) system loads available issue types for this project and updates "Topic Type" dropdown
    * 3) after issue type is selected, system fetches form schema for this project & topic type
    */
-  render()
-  {
-    return <form ref="frm" onSubmit={this.onFormSubmit.bind(this)} className="form-horizontal">
-      {this.renderForm()}
-      <br />
+  render() {
+    return (
+      <form ref="frm" onSubmit={this.onFormSubmit.bind(this)} className="form-horizontal">
+        {this.renderForm()}
+        <br />
 
-      <mui.Checkbox
-        name="accessPrivateYn" ref="accessSettings" value="1"
-        label='createForm_LABEL_access_private_yn'
-        onCheck={(function(event, isChecked){
-              this.props.actions.setNewTopicField({
-                target:{
-                  name: event.target.name,
-                  value: isChecked
-                }
-              })
-             }).bind(this)}
-        />
-    </form>
-
+        <mui.Checkbox
+          name="accessPrivateYn" ref="accessSettings" value="1"
+          label='createForm_LABEL_access_private_yn'
+          onCheck={(function(event, isChecked){
+                this.props.actions.setNewTopicField({
+                  target:{
+                    name: event.target.name,
+                    value: isChecked
+                  }
+                })
+               }).bind(this)}
+          />
+      </form>
+    );
   }
 
   /**
@@ -122,16 +123,18 @@ export default class CreateTopicForm extends Component{
    * @returns {XML}
    */
   renderForm() {
-    if(!this.props.formFields.fields) {
+    if (!this.props.formFields.fields) {
       return <Loader />;
     }
-    return <div className="clearfix">
-      <SimpleFormFactory
-        formScheme={this.props.formFields.fields}
-        onChange={this.props.actions.setNewTopicField}
-        modelValues={this.props.newTopic}
-        />
-    </div>
+    return (
+      <div className="clearfix">
+        <SimpleFormFactory
+          formScheme={this.props.formFields.fields}
+          onChange={this.props.actions.setNewTopicField}
+          modelValues={this.props.newTopic}
+          />
+      </div>
+    );
   }
 
   onFormSubmit(e) {
@@ -159,11 +162,13 @@ export default class CreateTopicForm extends Component{
       }
     });
 
+    if (this.props.containerStore && !postData.contextTopicId)
+      postData.contextTopicId = this.props.containerStore.id;
+
     actions.create(postData)
       .then(({error, payload}) => {
         if (error) {
           alert('Error! Check console');
-          console.log(error);
           //focusInvalidField(this, payload);
         } else {
           // item added successfully
