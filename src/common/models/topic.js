@@ -96,16 +96,58 @@ module.exports = function(Topic) {
   Topic.observe('before save', function normalizeUserInput(ctx, next) {
     const currentUser = loopback.getCurrentContext().get('currentUser');
 
-    if (ctx.instance) {
-      if (ctx.isNewInstance === true) {
-        // make author an owner of this item
-        ctx.instance.ownerUserId = currentUser.id;
-        // theoretically, owner can be switched - save submitter as a separate value
-        ctx.instance.submittedUserId = currentUser.id;
-      }
+    if (!ctx.instance) {
+      return next();
     }
 
-    if (ctx.instance && ctx.instance.namespace && !ctx.instance.workspaceId) {
+    if (ctx.isNewInstance === true) {
+      // make author an owner of this item
+      ctx.instance.ownerUserId = currentUser.id;
+      // theoretically, owner can be switched - save submitter as a separate value
+      ctx.instance.submittedUserId = currentUser.id;
+    }
+
+    // inherit workspaceId from contextTopicId
+    if (ctx.instance.contextTopicId) {
+      Topic.findById(ctx.instance.contextTopicId, function (err, contextTopicInstance) {
+
+        if (err) throw err;
+
+        if (!contextTopicInstance) {
+          return next({
+            name: 'error',
+            status: 404,
+            message: `Can not find topic ${ctx.instance.contextTopicId}`
+          });
+        }
+
+        contextTopicInstance.checkUserAccess(currentUser.id || 0, (err, isAllowed) => {
+          if (err) throw err;
+          if (!isAllowed) {
+            return next({
+              name: 'error',
+              status: 403,
+              message: 'Authorization Required'
+            });
+          } else {
+            Topic.app.models.Workspace.promiseUserAccess(contextTopicInstance.workspaceId, currentUser.id || 0)
+              .then((wspcInstance)=> {
+                console.log("SET WORKSPACE TO", wspcInstance.id)
+                ctx.instance.workspaceId = wspcInstance.id;
+                ctx.instance.namespace = wspcInstance.namespace;
+              })
+              .catch(function () {
+                return next({
+                  name: 'error',
+                  status: 403,
+                  message: 'Authorization Required'
+                });
+              });
+          }
+        });
+      });
+    }
+    else if (ctx.instance.namespace && !ctx.instance.workspaceId) {
       // make sure workspace exists
       Topic.app.models.Workspace.findOne({where: {namespace: ctx.instance.namespace}}, function (wspcErr, wspcInstance) {
 
@@ -130,7 +172,7 @@ module.exports = function(Topic) {
           });
         }
       });
-    } else if (ctx.instance && !ctx.instance.namespace && ctx.instance.workspaceId) {
+    } else if (!ctx.instance.namespace && ctx.instance.workspaceId) {
       // make sure workspace exists
       Topic.app.models.Workspace.findById(ctx.instance.workspaceId, function(wspcErr, wspcInstance) {
 
