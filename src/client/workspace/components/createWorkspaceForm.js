@@ -19,6 +19,7 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import React, {Component, PropTypes} from 'react';
+import {Link} from 'react-router';
 import {reduxForm} from 'redux-form';
 export const fields = ['namespace', 'name'];
 import {TextField, Paper, RaisedButton, FlatButton} from 'material-ui';
@@ -37,7 +38,7 @@ const validate = values => {
 const asyncValidate = (values/*, dispatch */) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (values.namespace === 'admin') {
+      if ((['projects', 'admin', 'issues']).indexOf(values.namespace) !== -1) {
         reject({namespace: 'That namespace is taken'});
       } else {
         resolve();
@@ -47,7 +48,7 @@ const asyncValidate = (values/*, dispatch */) => {
       //} else {
       //  resolve();
       //}
-    }, 10000); // simulate server latency
+    }, 1); // simulate server latency
   });
 };
 
@@ -69,8 +70,10 @@ class AsynchronousBlurValidationForm extends Component {
           className="clearfix"
           style={{
             backgroundColor:'#4660D8',
-            color: '#fff'
-          }} >
+            color: '#fff',
+            padding: '0 20px 20px'
+          }}
+          >
           <div className="col-md-5 col-md-offset-4 col-sm-offset-2">
             <div style={{paddingLeft:40}}>
               <h1>Create a Workspace</h1>
@@ -123,8 +126,20 @@ class AsynchronousBlurValidationForm extends Component {
                     right: 50
                   }}
                   />
-              </div> </Paper>
+              </div>
+            </Paper>
+
+            <div style={{
+              padding: '0 20px'
+            }}>
+              <Link style={{
+              color:'white',
+              padding: 0,
+              float:'right'
+            }}
+                    to='/wiki/Brainfock:Workspace'>Help</Link>
             </div>
+          </div>
         </div>
       </form>
     );
@@ -132,7 +147,7 @@ class AsynchronousBlurValidationForm extends Component {
 }
 
 export default reduxForm({
-  form: 'asynchronousBlurValidation',
+  form: 'createWorkspace',
   fields,
   asyncValidate,
   asyncBlurFields: ['namespace'],
