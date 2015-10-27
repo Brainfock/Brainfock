@@ -70,7 +70,7 @@ export default class Page extends Component{
     }
 
     const handlers = {
-      'saveWiki': this.save
+      'saveWiki': this.save.bind(this)
     };
 
     return (
