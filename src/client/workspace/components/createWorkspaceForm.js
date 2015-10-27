@@ -22,7 +22,7 @@ import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
 import {reduxForm} from 'redux-form';
 export const fields = ['namespace', 'name'];
-import {TextField, Paper, RaisedButton, FlatButton} from 'material-ui';
+import {TextField, Paper, RaisedButton} from 'material-ui';
 
 const validate = values => {
   const errors = {};
@@ -75,12 +75,12 @@ class AsynchronousBlurValidationForm extends Component {
           }}
           >
           <div className="col-md-5 col-md-offset-4 col-sm-offset-2">
-            <div style={{paddingLeft:40}}>
+            <div style={{paddingLeft:20}}>
               <h1>Create a Workspace</h1>
             </div>
           </div>
 
-          <div className="col-md-5 col-md-offset-4 col-sm-offset-4">
+          <div className="col-sm-offset-2 col-sm-8  col-md-5 col-md-offset-4 col-lg-4 col-lg-offset-4">
             <Paper
               className="clearfix"
               style={{
@@ -102,9 +102,10 @@ class AsynchronousBlurValidationForm extends Component {
               }
               <TextField
                 errorText={name.touched && name.error && name.error}
-                type="text" placeholder="name"
-                {...name}
-                fullWidth />
+                fullWidth
+                placeholder="name"
+                type="text"
+                {...name} />
               {asyncValidating &&
                 <i className="fa fa-spin fa-circle-o-notch"
                    style={{
@@ -130,13 +131,13 @@ class AsynchronousBlurValidationForm extends Component {
             </Paper>
 
             <div style={{
-              padding: '0 20px'
+              padding: '0 40px 20px 0'
             }}>
               <Link style={{
-              color:'white',
-              padding: 0,
-              float:'right'
-            }}
+                color:'white',
+                float:'right',
+                padding: 0
+              }}
                     to='/wiki/Brainfock:Workspace'>Help</Link>
             </div>
           </div>
