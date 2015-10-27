@@ -1,69 +1,72 @@
+import React, {PropTypes} from 'react';
+import Component from 'react-pure-render/component';
 import {HotKeys} from 'react-hotkeys';
-import {FormattedMessage, FormattedRelative, FormattedDate} from 'react-intl';
+import {FormattedRelative, FormattedDate} from 'react-intl';
+import Router, {Link, Navigation} from 'react-router';
+import {TextField, RaisedButton} from 'material-ui';
 
-var React = require('react'),
-    Router = require('react-router'),
-    {Link, Navigation} = Router,
-    mui = require('material-ui'),
-    Menu = mui.Menu;
-
-var $ = require('jquery');
-
+// define hotkeys
 const keyMap = {
-  //'delete': ['del', {sequence: 'backspace', action: 'keyup'}],
-  //'expand': 'alt+up',
-  'saveWiki': 'ctrl+s',
-  //'contract': 'alt+down',
-  //'konami': 'up up down down left right left right b a enter',
-  //'commandDown': {sequence: 'command', action: 'keydown'},
-  //'commandUp': {sequence: 'command', action: 'keyup'}
+  saveWiki: 'ctrl+s'
 };
 
-var Page = React.createClass({
+export default class Page extends Component{
 
-  getDefaultProps: function() {
-    return {
-      wiki: {
-        ViewPage: {loading: true}
-      }
-    };
-  },
-  getInitialState: function() {
-    return {
-      hasBeenSaved: false
-    };
-  },
+  static propTypes = {
+    actions: PropTypes.object,
+    history: PropTypes.object.isRequired,
+    params: PropTypes.object.isRequired,
+    wiki: PropTypes.object.isRequired,
+  };
 
-  /**
-   * Magic goes here!
-   */
-  componentWillMount: function()
-  {
-    if(process.env.IS_BROWSER==true) {
-      if(this.props.params.uid)
-      {
+  static defaultProps  = {
+    wiki: {
+      ViewPage: {loading: true}
+    }
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      hasBeenSaved: false,
+      elapsed: 0
+    };
+  }
+
+  componentWillMount() {
+    if (process.env.IS_BROWSER) {
+      if (this.props.params.uid) {
         this.props.actions.findContextPage(0, this.props.params.uid);
-      }
-      else {
+      } else {
         this.props.actions.findContextPage(0, 'Index');
       }
     }
-  },
+  }
 
-  getViewPage:function() {
-    // Did not use transmit here yet;
-    return this.props.wiki.viewPage;
-  },
+  componentDidUpdate() {
+    if (!this.timer && this.props.wiki.viewPage.clientSavedOn) {
+      this.timer = setInterval(this.tick, (15 * 1000));
+    }
+  }
 
-  render: function()
-  {
-    const page = this.getViewPage();
-    this.props.msg.wiki
-    console.log('page:',page);
-    if(page.loading == true) {
-      var disabled=true;
-    } else {
-      var disabled=false;
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
+  tick() {
+    const elapsed = new Date() - this.props.wiki.viewPage.clientSavedOn;
+    const inSeconds = Math.round(elapsed / 1000);
+    this.setState({
+      elapsed: elapsed,
+      inSeconds:inSeconds,
+    });
+  }
+
+  render() {
+    const page = this.props.wiki.viewPage;
+    let disabled = false;
+    if (page.loading === true) {
+      disabled = true;
     }
 
     const handlers = {
@@ -72,15 +75,13 @@ var Page = React.createClass({
 
     return (
       <HotKeys keyMap={keyMap}>
-
         <div className="wiki-wrapper">
           <div className="wiki-page">
-
             <div className="container-fluid">
               <div className="row">
                 <h3>{page.pageUid} - edit</h3>
                 <HotKeys handlers={handlers}>
-                <mui.TextField
+                <TextField
                     ref="contentInput"
                   //hintText="Hint Text (MultiLine)"
                     defaultValue={page.content}
@@ -90,14 +91,11 @@ var Page = React.createClass({
                     style={{width:"99%"}}
                     onChange={this.props.actions.setWikiViewPageField}
                 />
-
-                <mui.RaisedButton label="Save" primary={true}  disabled={disabled}  onClick={this.save}  />
-              &nbsp;<mui.RaisedButton label="Cancel" primary={false}  disabled={disabled} onClick={this.cancelAndReturn} />
-              &nbsp;<mui.RaisedButton label="Return" primary={false}  disabled={disabled} onClick={this.cancelAndReturn} />
-                  <span style={{textColor:(this.state.hasBeenSaved?'#8C8C8C':'#C1C1C1'),paddingLeft:15}}>
-
-                    {this.state.hasBeenSaved && page.updatedOn && <FormattedRelative value={Date.parse(page.updatedOn)} />}
-
+                <RaisedButton label="Save" primary={true}  disabled={disabled}  onClick={this.save.bind(this)}  />
+              &nbsp;<RaisedButton label="Cancel" primary={false}  disabled={disabled} onClick={this.cancelAndReturn.bind(this)} />
+              &nbsp;<RaisedButton label="Return" primary={false}  disabled={disabled} onClick={this.cancelAndReturn.bind(this)} />
+                  <span style={{textColor:(this.state.hasBeenSaved ? '#8C8C8C' : '#C1C1C1'), paddingLeft:15}}>
+                    {this.state.hasBeenSaved && page.clientSavedOn && <FormattedRelative elapsed={this.state.elapsed} value={page.clientSavedOn} />}
                     {!this.state.hasBeenSaved && page.updatedOn &&
                       <span>
                         Last updated on <FormattedDate value={page.updatedOn}/>
@@ -113,18 +111,16 @@ var Page = React.createClass({
         </div>
       </HotKeys>
     );
-  },
+  }
 
-  cancelAndReturn: function() {
+  cancelAndReturn() {
+    this.props.history.pushState(null, `/wiki/${this.props.wiki.viewPage.pageUid}`);
+  }
 
-    const page = this.getViewPage();
-    this.props.history.pushState(null, `/wiki/${page.pageUid}`);
-  },
-
-  save: function(e) {
+  save(e) {
     e.preventDefault();
-    const page = this.getViewPage();
-    var content = this.refs.contentInput.getValue();
+    const page = this.props.wiki.viewPage;
+    const content = this.refs.contentInput.getValue();
 
     this.props.actions.saveWikiChanges(page.id, {
       content: content,
@@ -134,14 +130,5 @@ var Page = React.createClass({
     this.setState({
       hasBeenSaved: true
     });
-  },
-
-  componentWillReceiveProps: function(newProps,b,c)  {
-    if(newProps.wiki.viewPage.pageUid !==  this.props.params.uid)
-    {
-      //Actions.findContextPage(0, this.getParams().uid);
-    }
-  },
-});
-
-module.exports = Page;
+  }
+};
