@@ -22,9 +22,12 @@
 export const CREATE = 'WORKSPACE_SAVE';
 export const CREATE_ERROR = 'WORKSPACE_SAVE_ERROR';
 export const CREATE_SUCCESS = 'WORKSPACE_SAVE_SUCCESS';
+export const FIND_ONE = 'WORKSPACE_FIND_ONE';
+export const FIND_ONE_SUCCESS = 'WORKSPACE_FIND_ONE_SUCCESS';
+export const FIND_ONE_ERROR = 'WORKSPACE_FIND_ONE_ERROR';
 export const SET_EDIT_WIKI_FIELD = 'WORKSPACE_EDIT_WIKI_FIELD';
 
-import {apiPost} from '../lib/services';
+import {apiPost, apiGet} from '../lib/services';
 
 export function postWorkspace(fields) {
   const endpoint = 'workspaces';
@@ -52,6 +55,59 @@ export function postWorkspace(fields) {
             return jsonResponce;
         }, function (reason) {
           // other errors, i.e. 50x
+          throw response;
+        })
+    }
+  });
+}
+
+export function findByIdWorkspace(id) {
+  const endpoint = `workspaces/${id}`;
+
+  return ({fetch}) => ({
+    type: [
+      FIND_ONE,
+      FIND_ONE_SUCCESS,
+      FIND_ONE_ERROR
+    ],
+    payload: {
+      promise: getApi(fetch, endpoint)
+        .catch(response => {
+          throw response;
+        })
+    }
+  });
+}
+
+/**
+ * Fetch data for workspace homepage, fired by @fetch decorator and is isomorphic
+ *
+ * @todo since this action is executed on a last route in app and receives wildcard value, handle 404 globally
+ * @param data
+ * @returns {Function}
+ */
+export function fetchWorkspaceHomepage(data) {
+  const {
+    location,
+    params,
+    props,
+    app,
+    users
+    } = data;
+
+  const host = app.baseUrl;
+  const id = params.namespace;
+
+  let endpoint = `workspaces/${id}`;
+  return ({fetch, validate}) => ({
+    type: [
+      FIND_ONE,
+      FIND_ONE_SUCCESS,
+      FIND_ONE_ERROR
+    ],
+    payload: {
+      promise: apiGet(fetch, endpoint, host)
+        .catch(response => {
           throw response;
         })
     }

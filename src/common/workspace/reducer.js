@@ -37,7 +37,8 @@ const InitialState = Record({
   meta: new (Record({
     loading: true,
     count: 0,
-  }))
+  })),
+  active: new Model(),
 });
 
 const initialState = new InitialState;
@@ -52,17 +53,32 @@ export default function spacesReducer(state = initialState, action) {
   switch (action.type) {
 
     case actions.CREATE:
-    {
       return state
         // lockform submit buttons etc.
         .setIn(['formFields', 'loading'], true);
-    }
+
     case actions.CREATE_SUCCESS:
-    {
       return state
-        .update('list', list => list.unshift(Model(action.payload)))
+        .update('list', list => list.unshift(Model({data: action.payload})))
         .setIn(['formFields', 'loading'], false);
-    }
+
+    case actions.FIND_ONE:
+      return state
+        .setIn(['active', 'meta', 'isFetching'], true);
+
+    case actions.FIND_ONE_ERROR:
+      return state
+        .setIn(['active', 'meta', 'isFetching'], false)
+        .setIn(['active', 'meta', 'errors'], ['Something went wrong']);
+
+    case actions.FIND_ONE_SUCCESS:
+      return state
+        .set('active', new Model({
+          data: action.payload,
+          meta: {
+            isFetching: false
+          }
+        }));
 
   }
 
