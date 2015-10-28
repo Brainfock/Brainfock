@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 
 import ProjectsEmpty from '../components/boards.empty';
 import MasterDetailsListView from '../../projects/components/master-detail.list';
@@ -34,13 +35,9 @@ module.exports = React.createClass({
     }
   },
 
-  render: function()
-  {
-    //return <h1>{this.props.boards.group.summary}</h1>;
+  render: function () {
 
     let View;
-    console.log('use extra view ' + this.props.boards.group.view);
-    console.log('views', views);
     if (views[this.props.boards.group.view]) {
       View = views[this.props.boards.group.view];
     } else {
@@ -50,7 +47,7 @@ module.exports = React.createClass({
     const {children, groupKey, ...passProps} = this.props;
     return (
       <div>
-        <h1>{this.props.boards.board.summary}</h1>
+        <h4><Link to='/boards'>{this.props.boards.group.summary}</Link> > {this.props.boards.board.summary}</h4>
         <MasterDetailsListView
           {...passProps}
           containerTopic={this.props.boards.board}

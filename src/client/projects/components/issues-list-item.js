@@ -38,7 +38,7 @@ export default class Todo extends Component {
     const {actions, todo} = this.props;
 
     let icon;
-    if(todo.accessPrivateYn==1) {
+    if (todo.accessPrivateYn) {
       icon = (<i className="fa fa-eye-slash"></i>);
     }
 
@@ -48,7 +48,7 @@ export default class Todo extends Component {
     }
     return  <div style={style}>
       <mui.ListItem
-      primaryText={
+        primaryText={
           <div>
             <div className="pull-left" style={{marginRight:5}}>
               <div className="stats" style={{marginRight:5,width:'100%'}}>

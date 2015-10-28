@@ -1,6 +1,6 @@
 /**
  * Brainfock - community & issue management software
- * Copyright (c) 2015, Sergii Gamaiunov (�Webkadabra�)  All rights reserved.
+ * Copyright (c) 2015, Sergii Gamaiunov,  All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -37,19 +37,27 @@ import Filters from '../../components/UISimpleFilters';
 export default class ProjectIssues extends Component {
 
   static propTypes = {
+    // "Context" of this topic; a link to {Topic} by contextTopicId. May be null for root views (e.g. list all projects, boards etc.)
     boards: React.PropTypes.object.isRequired,
+    containerTopic: React.PropTypes.any,
+    // React Component to render is list is empty
+    emptyListFallback: React.PropTypes.element,
     groupKey: React.PropTypes.string.isRequired,
+    // react-router history
     history: React.PropTypes.object.isRequired,
     listViewItem: React.PropTypes.object.isRequired,
     location: React.PropTypes.object.isRequired,
     msg: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired,
-    topic_actions: React.PropTypes.object.isRequired,
-  }
+    topic_actions: React.PropTypes.object.isRequired
+  };
+
   static contextTypes = {
     location: React.PropTypes.object
-  }
+  };
+
   constructor(props, props2) {
+
     super(props);
     this.state = {
       count:0,
@@ -58,20 +66,19 @@ export default class ProjectIssues extends Component {
       loading:true,
       searchQuery:(props.location.query && props.location.query.query ? props.location.query.query : ''),
       showDetails: true,
-      disableDetails: false,
+      disableDetails: false
     };
   }
 
   componentDidMount() {
-    // pull all topics (projects) from server - this list is filtered by client
-    if (process.env.IS_BROWSER === true) {
+
+    if (process.env.IS_BROWSER === true) { // or get an infinite loop
+
       const groupKey = this.props.groupKey;
-      // load TOPICS of this BOARD
       this.props.topic_actions.count(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
       this.props.topic_actions.find(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
-      // load available filters
       this.props.topic_actions.loadFilters(groupKey, {}, this.props.params.board_id);
-
+      // FIXME: does not play well going back & forth with deeper level topics (e.g. forum topic of a board of a project)
       if (!this.props.boards.group || this.props.boards.group.groupKey !== groupKey) {
         this.props.topic_actions.loadTopicGroup(groupKey);
       }
@@ -79,9 +86,12 @@ export default class ProjectIssues extends Component {
   }
 
   componentWillUpdate(newProps) {
+
     if (process.env.IS_BROWSER === true) {
+
       const groupKey = this.props.groupKey;
-      if (newProps.location.search != this.context.location.search) {
+
+      if (newProps.location.search !== this.context.location.search) {
         this.props.topic_actions.count(groupKey, (newProps.location.query.filter || null), this.props.params.board_id, this.props.params.namespace);
         this.props.topic_actions.find(groupKey, (newProps.location.query.filter || null), this.props.params.board_id, this.props.params.namespace);
       }
@@ -89,6 +99,7 @@ export default class ProjectIssues extends Component {
   }
 
   render() {
+
     const {board, meta, listFilters, newTopic, formFields} = this.props.boards;
     const msg = this.props.msg.topics;
 
@@ -110,14 +121,15 @@ export default class ProjectIssues extends Component {
       margin: '0 -15px',
       padding: '10px 15px'
     };
+
     if (this.state.filtersOpen === false) {
       filterStyles.display = 'none';
     }
 
     const titleMsg = (
       <h3 style={{
-      // adjust heading to match materia-ui design
-      // TODO: use variables form theme, don't hadrcode styles in here
+        // adjust heading to match material-ui design
+        // TODO: use variables form theme, don't hadrcode styles in here
         margin: 0,
         padding: '24px 24px 0px',
         color: 'rgba(0, 0, 0, 0.870588)',
@@ -133,6 +145,7 @@ export default class ProjectIssues extends Component {
       </h3>
     );
 
+    // don't show filter toggle button when details are disabled
     const detailsToggleIconClass = this.state.showDetails ? 'fa-info-circle fa-lg fa' : 'fa-info fa-lg fa';
 
     const addItemForm = (
@@ -142,14 +155,13 @@ export default class ProjectIssues extends Component {
         formFields={formFields}
         newTopic={newTopic}
         params={this.props.params}
-        ref="formView"
         topicGroup={this.props.groupKey}
         />
     );
 
     if (!this.props.boards.list.size) {
       const EmptyListFallback = this.props.emptyListFallback;
-      const {children, ...passProps} = this.props;
+      const {children, ...passProps} = this.props; // extract children to avoid redux data corrupt & loop infinitely
       return <EmptyListFallback {...passProps} form={addItemForm}/>;
     }
 
@@ -170,10 +182,10 @@ export default class ProjectIssues extends Component {
             target: e.target
           })}
           style={{
-            display: this.props.disableDetails == true ? 'none' : '',
+            display: this.props.disableDetails === true ? 'none' : '',
             height:38,
             padding:9,
-            width:38,
+            width:38
           }}
           tooltip="Toggle Details"
           />
@@ -189,7 +201,6 @@ export default class ProjectIssues extends Component {
     );
 
     const iconButtonElement = <mui.IconButton iconClassName="fa fa-list-alt" tooltip="Filter presets"/>;
-
     const content = this.renderListContent();
 
     return (
@@ -247,6 +258,7 @@ export default class ProjectIssues extends Component {
   }
 
   toggleFilters() {
+
     let setVisibility = !this.state.filtersOpen;
     this.setState({filtersOpen: setVisibility});
   }
@@ -283,14 +295,13 @@ export default class ProjectIssues extends Component {
   }
 
   renderList() {
-    const groupKey = this.props.groupKey;
 
+    const groupKey = this.props.groupKey;
     return (
       <ListView
         actions={this.props.topic_actions}
-        group={this.props.boards.group}
-        // whether list should follow link when list item is clicked or just load u details
         followItemOnClick={!this.state.showDetails || this.state.disableDetails}
+        group={this.props.boards.group}
         history={this.props.history}
         itemComponent={this.props.listViewItem}
         list={this.props.boards.list}
@@ -303,6 +314,7 @@ export default class ProjectIssues extends Component {
   }
 
   renderDetails() {
+
     if (this.props.boards.viewTopic.loading) {
       return (
         <div style={{width:'100%', textAlign:'center'}}>

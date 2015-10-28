@@ -5,26 +5,27 @@ import Todo from './boards.board.react';
 export default class List extends Component {
 
   static propTypes = {
-    //actions: React.PropTypes.object.isRequired,
-    list: React.PropTypes.isRequired,
+    actions: React.PropTypes.object.isRequired,
+    // whether list should follow link when list item is clicked or just load u details
+    followItemOnClick: React.PropTypes.bool,
     group: React.PropTypes.isRequired,
     itemComponent: React.PropTypes.element,
-    //msg: React.PropTypes.object.isRequired
-  }
+    list: React.PropTypes.isRequired,
+    msg: React.PropTypes.object.isRequired
+  };
 
   static defaultProps = {
     itemComponent: Todo
   };
 
   render() {
-    //const {actions, list, msg, group, board} = this.props;
     const {children, ...passProps} = this.props;
 
     if (!this.props.list.size) return (
       <p>{this.props.msg.emptyList}</p>
     );
 
-    let Item = this.props.itemComponent;
+    const Item = this.props.itemComponent;
 
     return (
       <div>
@@ -34,7 +35,4 @@ export default class List extends Component {
       </div>
     );
   }
-
-
-
 }
