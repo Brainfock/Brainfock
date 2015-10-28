@@ -51,7 +51,7 @@ class AsynchronousBlurValidation extends Component {
   // TODO: use redux-react-router
   redirectAfterSuccess(payload) {
     const {history} = this.props;
-    history.replaceState(null, '/workspaces/' + payload.namespace);
+    history.replaceState(null, `/${payload.namespace}?gettingStarted`);
   }
 
 }
