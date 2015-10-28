@@ -35,7 +35,7 @@ var menuItems = [
     params:{},
     text: 'Projects',
   },
-  { route: '/issues', params:{}, text: 'Issues' },
+  // { route: '/issues', params:{}, text: 'Issues' },
   { route: '/boards', params:{}, text: 'Boards' },
   { route: '/wiki/Index', params:{uid:'Index'}, text: 'Wiki' },
   { type: mui.MenuItem.Types.SUBHEADER, text: 'Resources' },
