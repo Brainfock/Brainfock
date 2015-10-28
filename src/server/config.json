@@ -37,8 +37,12 @@
   "bfk": {
     "reservedNamespace": [
       "admin",
-      "workspace",
-      "auth"
+      "auth",
+      "boards",
+      "create",
+      "projects",
+      "wiki",
+      "workspaces"
     ]
   }
 }
