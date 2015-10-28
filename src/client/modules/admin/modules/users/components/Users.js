@@ -19,6 +19,7 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import React from 'react'
+import {Link} from 'react-router'
 import {Table, TableHeader, TableRow, TableHeaderColumn, TableBody, TableRowColumn, TableFooter, Styles} from 'material-ui';
 const {Spacing, Colors} = Styles;
 
@@ -88,6 +89,12 @@ class Users extends Component {
 
   render() {
 
+    const {children, ...props} = this.props;
+
+    if(children) {
+      return React.cloneElement(children, props);
+    }
+
     const {users: {list, listMeta:{isFetching, count}}} = this.props;
     const msg = this.props.msg.users;
 
@@ -131,7 +138,7 @@ class Users extends Component {
               <TableRow selected={false} selectable={false}>
                 <TableRowColumn>{todo.id}</TableRowColumn>
                 <TableRowColumn><UserAvatar user={todo}/></TableRowColumn>
-                <TableRowColumn>{todo.username}</TableRowColumn>
+                <TableRowColumn><Link to={`/admin/users/${todo.id}`}>{todo.username}</Link></TableRowColumn>
                 <TableRowColumn>{todo.email}</TableRowColumn>
                 <TableRowColumn>
                 {todo.roles && todo.roles.map(role =>
