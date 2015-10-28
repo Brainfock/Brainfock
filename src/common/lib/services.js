@@ -19,8 +19,8 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 
-export const apiGet = (fetch, endpoint) =>
-  fetch(`/api/${endpoint}`, {
+export const apiGet = (fetch, endpoint, host) =>
+  fetch((host ? host : '/') + `api/${endpoint}`, {
     headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
     method: 'get',
     credentials: 'include', // accept cookies from server, for authentication
