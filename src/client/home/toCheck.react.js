@@ -21,10 +21,10 @@ export default class ToCheck extends Component {
               <FormattedHTMLMessage defaultMessage={item.txt} />
             </li>
           )}
-          <li>
+          { /*<li>
             {msg.isomorphicPage}{' '}
             <Link to="/this-is-not-the-web-page-you-are-looking-for">404</Link>.
-          </li>
+           </li> */ }
           <li>
             {msg.andMuchMore}
           </li>
