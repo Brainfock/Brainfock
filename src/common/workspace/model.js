@@ -22,11 +22,15 @@ import {Record, List, Map} from 'immutable';
 
 export default Record({
   cid: '',
-  id: '',
-  namespace: '',
-  name: '',
-  accessPrivateYn: '',
-
-  // ui state fields
-  loading: true,
+  data: new (Record({
+    id: '',
+    namespace: '',
+    name: '',
+    accessPrivateYn: ''
+  })),
+  meta: new (Record({
+    isFetching: false,
+    hasError: false,
+    errors: List()
+  })),
 });
