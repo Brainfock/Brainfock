@@ -95,10 +95,15 @@ export function fetchWorkspaceHomepage(data) {
     users
     } = data;
 
+  let query = [];
+  if (users && users.viewer) {
+    query.push('access_token=' + users.viewer.authToken)
+  }
+
   const host = app.baseUrl;
   const id = params.namespace;
+  const endpoint = `workspaces/${id}?` + query.join('&');
 
-  let endpoint = `workspaces/${id}`;
   return ({fetch, validate}) => ({
     type: [
       FIND_ONE,
