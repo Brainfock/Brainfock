@@ -1,7 +1,7 @@
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 
-import mui, {Styles, Avatar} from 'material-ui';
+import mui, {Styles, Avatar, IconButton} from 'material-ui';
 const Colors = Styles.Colors;
 
 export default class Todo extends Component {
@@ -19,6 +19,23 @@ export default class Todo extends Component {
     const color = Colors[todo.logoBackground];
     const icon = "fa "+todo.logoIcon;
 
+    let privacyIcon;
+    if (todo.accessPrivateYn) {
+      privacyIcon = (
+        <span>
+          <IconButton iconClassName="fa fa-eye-slash"
+                      tooltip="Private & Invisible"
+                      style={{
+              marginTop:'-25px',
+            }}
+                      iconStyle={{
+              fontSize:'19px',
+            }}
+            />
+        </span>
+      );
+    }
+
     let rightAvatar;
     if(!this.props.isPreview) {
       rightAvatar = (
@@ -30,7 +47,7 @@ export default class Todo extends Component {
     }
 
     return <mui.ListItem
-      primaryText={todo.summary}
+      primaryText={<div>{todo.summary}{privacyIcon}</div>}
       secondaryText={todo.text}
       onClick={this._onClick.bind(this)}
       rightAvatar={rightAvatar}
