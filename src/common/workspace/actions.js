@@ -18,18 +18,26 @@
  * @link http://www.brainfock.com/
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
+import {apiPost, apiGet} from '../lib/services';
 
 export const CREATE = 'WORKSPACE_SAVE';
 export const CREATE_ERROR = 'WORKSPACE_SAVE_ERROR';
 export const CREATE_SUCCESS = 'WORKSPACE_SAVE_SUCCESS';
+
 export const FIND_ONE = 'WORKSPACE_FIND_ONE';
 export const FIND_ONE_SUCCESS = 'WORKSPACE_FIND_ONE_SUCCESS';
 export const FIND_ONE_ERROR = 'WORKSPACE_FIND_ONE_ERROR';
+
 export const SET_EDIT_WIKI_FIELD = 'WORKSPACE_EDIT_WIKI_FIELD';
 
-import {apiPost, apiGet} from '../lib/services';
-
+/**
+ * Create new workspace
+ *
+ * @param fields
+ * @returns {Function}
+ */
 export function postWorkspace(fields) {
+
   const endpoint = 'workspaces';
 
   return ({fetch, validate}) => ({
@@ -42,7 +50,9 @@ export function postWorkspace(fields) {
       promise: apiPost(fetch, endpoint, fields)
         .catch(response => {
           // decode validation error messages from server
-          if (response.status === 422) return response.json();
+          if (!response) {
+            throw new Error('No response');
+          } else if (response.ok === false) return response.json();
           else {
             throw response;
           }
@@ -53,15 +63,22 @@ export function postWorkspace(fields) {
           }
           else
             return jsonResponce;
-        }, function (reason) {
-          // other errors, i.e. 50x
+        }, function (response) {
+          // throw other errors (i.e. 50x) that don't have `.json()` available
           throw response;
         })
     }
   });
 }
 
+/**
+ * Find workspace by id (or namespace)
+ *
+ * @param id
+ * @returns {Function}
+ */
 export function findByIdWorkspace(id) {
+
   const endpoint = `workspaces/${id}`;
 
   return ({fetch}) => ({
@@ -87,6 +104,7 @@ export function findByIdWorkspace(id) {
  * @returns {Function}
  */
 export function fetchWorkspaceHomepage(data) {
+
   const {
     location,
     params,

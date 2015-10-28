@@ -14,15 +14,27 @@ module.exports =  formReducer.plugin({
   createWorkspace: (state, action) => {
     switch(action.type) {
       case CREATE_ERROR:
-        if(action.error === true && action.payload.error) {
-          return {
-          ...state,
-          namespace: {
-            asyncError: action.payload.error.details.messages.namespace.join('; '),
-            touched: true,
-            value: state.namespace.value
+        if (action.error === true) {
+          if (action.payload.error && action.payload.error.details) {
+            return {
+              ...state,
+              namespace: {
+                asyncError: action.payload.error.details.messages.namespace.join('; '),
+                touched: true,
+                value: state.namespace.value
+              }
+            };
+          } else if (action.payload.error) {
+            return { //
+              ...state,
+              _error: action.payload.error.message || 'Unknown Error!'
+            };
+          } else {
+            return {
+              ...state,
+              _error: action.payload.message.length > 0 && action.payload.message || 'Unknown Error!'
+            };
           }
-        };
         } else {
           return state;
         }

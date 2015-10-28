@@ -63,7 +63,7 @@ class AsynchronousBlurValidationForm extends Component {
     muiTheme: PropTypes.object
   };
   render() {
-    const {asyncValidating, fields: {namespace, name}, resetForm, handleSubmit} = this.props;
+    const {asyncValidating, fields: {namespace, name}, resetForm, handleSubmit, error} = this.props;
     return (
       <form onSubmit={handleSubmit}>
         <div
@@ -87,6 +87,7 @@ class AsynchronousBlurValidationForm extends Component {
                 margin: 20,
                 padding: '20px 30px 20px 20px'
               }} >
+              {error && <div className="alert alert-danger">{error}</div>}
               <TextField
                 errorText={namespace.touched && namespace.error && namespace.error}
                 fullWidth
@@ -118,7 +119,7 @@ class AsynchronousBlurValidationForm extends Component {
                 height: this.context.muiTheme.button.height
               }}>
                 <RaisedButton
-                  label="Create"
+                  label="Next"
                   onClick={handleSubmit}
                   primary
                   style={{
