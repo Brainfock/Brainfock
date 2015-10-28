@@ -15,7 +15,7 @@ class ViewUser extends React.Component {
       <div>
         <h4>Settings index page</h4>
         <ul>
-          <li><Link to="/workspaces/Webkadabra/settings/profile">Profile</Link></li>
+          <li><Link to={`/workspaces/${this.props.params.namespace}/settings/profile`}>Profile</Link></li>
         </ul>
       </div>
     )
