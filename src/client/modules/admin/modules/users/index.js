@@ -18,23 +18,6 @@
  * @link http://www.brainfock.com/
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
-//if(typeof require.ensure !== "function") require.ensure = function(d, c) { c(require) };
-
-//if (typeof require.ensure !== 'function') require.ensure =
-//  require('isomorphic-ensure')({
-//
-//    // If you want to use loaders, pass them through options:
-//    loaders: {
-//      //raw: require('raw-loader'),
-//      //json: require('json-loader'),
-//      "react-router-proxy": require('react-router-proxy-loader'),
-//    },
-//
-//    // If you require local files, pass the current location:
-//    dirname: __dirname,
-//  })
-//;
-
 module.exports = {
   path: 'users',
 
@@ -49,21 +32,16 @@ module.exports = {
 
   getChildRoutes(location, cb) {
 
+    // currently, this is working better than 'react-router-proxy-loader'
     if(process.env.IS_BROWSER)
       require.ensure([], (require) => {
+        [
         cb(null, require('./modules/user'))
+        ]
       })
     else cb(null, [
       require('./modules/user'),
     ])
-
-    //const UserModule = (process.env.IS_BROWSER)
-    //  ? require('react-router-proxy?!./modules/user')
-    //  : require('./modules/user');
-    //
-    //cb(null, [
-    //  UserModule,
-    //])
   },
 
 }
