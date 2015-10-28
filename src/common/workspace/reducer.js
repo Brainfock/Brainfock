@@ -44,7 +44,7 @@ const InitialState = Record({
 const initialState = new InitialState;
 
 const revive = (state) => initialState.merge({
-  list: state.list.map(item => new Model(item)),
+  list: state.list.map(item => new Model(item))
 });
 
 export default function spacesReducer(state = initialState, action) {
@@ -54,7 +54,7 @@ export default function spacesReducer(state = initialState, action) {
 
     case actions.CREATE:
       return state
-        // lockform submit buttons etc.
+        // lock form submit buttons etc.
         .setIn(['formFields', 'loading'], true);
 
     case actions.CREATE_SUCCESS:
@@ -79,7 +79,6 @@ export default function spacesReducer(state = initialState, action) {
             isFetching: false
           }
         }));
-
   }
 
   return state;
