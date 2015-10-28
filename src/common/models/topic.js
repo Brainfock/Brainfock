@@ -132,9 +132,9 @@ module.exports = function(Topic) {
           } else {
             Topic.app.models.Workspace.promiseUserAccess(contextTopicInstance.workspaceId, currentUser.id || 0)
               .then((wspcInstance)=> {
-                console.log("SET WORKSPACE TO", wspcInstance.id)
                 ctx.instance.workspaceId = wspcInstance.id;
                 ctx.instance.namespace = wspcInstance.namespace;
+                next();
               })
               .catch(function () {
                 return next({
