@@ -20,7 +20,9 @@ module.exports = {
 
     if (process.env.IS_BROWSER)
       require.ensure([], (require) => {
+        [
         cb(null, require('./modules/profile'))
+        ]
       })
     else cb(null, [
       require('./modules/profile'),

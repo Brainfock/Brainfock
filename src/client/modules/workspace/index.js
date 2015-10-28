@@ -1,6 +1,6 @@
 module.exports = {
   path: '/workspaces/:namespace',
-  //
+
   //getIndexRoute(location, cb) {
   //
   //  const Component = (process.env.IS_BROWSER)
@@ -24,19 +24,13 @@ module.exports = {
 
     if (process.env.IS_BROWSER)
       require.ensure([], (require) => {
+        [
         cb(null, require('./modules/settings'))
+        ]
       })
     else cb(null, [
       require('./modules/settings'),
     ])
-
-    //const UserModule = (process.env.IS_BROWSER)
-    //  ? require('react-router-proxy?!./modules/user')
-    //  : require('./modules/user');
-    //
-    //cb(null, [
-    //  UserModule,
-    //])
   },
 
 }
