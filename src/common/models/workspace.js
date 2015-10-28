@@ -18,6 +18,7 @@
  * @link http://www.brainfock.com/
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
+import loopback from 'loopback';
 import {mergeQuery} from 'loopback-datasource-juggler/lib/utils';
 import app from '../../server/main';
 
