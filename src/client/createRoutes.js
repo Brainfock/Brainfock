@@ -50,6 +50,9 @@ export default function createRoutes(getState) {
                 require('./modules/admin/modules/users'),
                 //require('./modules/admin/routes/Course'),
             ]}/>
+
+      <Route {...require('./modules/Workspace')} />
+
       <Route component={require('./projects/index')} path="projects"/>
       <Route component={require('./projects/project-wrapper')}  >
         { /*  <Route component={require('./projects/topic.js')} path="/:namespace/:board_id-:id" />*/ }
@@ -67,6 +70,8 @@ export default function createRoutes(getState) {
         {/* <Route component={require('./projects/menuItem')} path="/:namespace/:root_board_id/g/:group_key" /> */}
         {/* <Route component={require('./projects/menuItem')} path="/:namespace/:root_board_id/g/:group_key/i/:item_id" /> */}
       </Route>
+
+      <Route {...require('./workspace/homepage')} />
 
       <Route component={NotFound} path="*" />
     </Route>
