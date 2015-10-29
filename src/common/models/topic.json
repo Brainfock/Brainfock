@@ -648,13 +648,6 @@
     {
       "accessType": "*",
       "principalType": "ROLE",
-      "principalId": "topicEntityAccess",
-      "permission": "ALLOW",
-      "property": "runOperation"
-    },
-    {
-      "accessType": "*",
-      "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "ALLOW",
       "property": "topics"
@@ -693,6 +686,14 @@
       "principalId": "createTopicAccess",
       "permission": "ALLOW",
       "property": "updateAttributes"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "principalId_": "topicWriteAccess",
+      "permission": "ALLOW",
+      "property": "runOperation"
     },
     {
       "accessType": "*",
