@@ -77,7 +77,7 @@ export function postWorkspace(fields) {
  * @param id
  * @returns {Function}
  */
-export function findByIdWorkspace(id) {
+export function workspaceFindById(id) {
 
   const endpoint = `workspaces/${id}`;
 
@@ -88,7 +88,7 @@ export function findByIdWorkspace(id) {
       FIND_ONE_ERROR
     ],
     payload: {
-      promise: getApi(fetch, endpoint)
+      promise: apiGet(fetch, endpoint)
         .catch(response => {
           throw response;
         })
