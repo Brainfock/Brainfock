@@ -990,10 +990,7 @@ module.exports = function(app) {
       reject();
     }
 
-    // TODO: allow guest access
-    if (!userId) {
-      return reject();
-    }
+    // TODO: check ACL if current user (gues, authenticated, etc.) has access
 
     // check workspace access
     context.model.findById(context.modelId, function(err, wspcInstance) {
