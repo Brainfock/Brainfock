@@ -87,7 +87,7 @@ export default class Todo extends Component {
     replaced = replaced.replace(/:id/g, this.props.todo.id);
     replaced = replaced.replace(/:board_key/g, this.props.params.key);
     replaced = replaced.replace(/:context_id/g, this.props.todo.contextTopicId);
-    replaced = replaced.replace(/:namespace/g, this.props.todo.namespace);
+    replaced = replaced.replace(/:namespace/g, this.props.todo.workspace && this.props.todo.workspace.namespace || this.props.todo.namespace);
 
     this.props.history.pushState(null, replaced);
   }
