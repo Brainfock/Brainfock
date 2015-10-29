@@ -511,6 +511,7 @@ export function deleteTopic(topicId) {
     ],
     payload: {
       promise: fetch(`/api/${endpoint}`, {
+        credentials: 'include', // accept cookies from server, for authentication
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
         method: 'DELETE',
       })
