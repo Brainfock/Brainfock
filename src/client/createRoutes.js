@@ -51,7 +51,7 @@ export default function createRoutes(getState) {
                 //require('./modules/admin/routes/Course'),
             ]}/>
 
-      <Route {...require('./modules/Workspace')} />
+      <Route {...require('./modules/workspace')} />
 
       <Route component={require('./projects/index')} path="projects"/>
       <Route component={require('./projects/project-wrapper')}  >
