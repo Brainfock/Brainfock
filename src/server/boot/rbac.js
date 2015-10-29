@@ -293,11 +293,7 @@ module.exports = function(app) {
       return;
     }
 
-    // do not allow anonymous users
-
-    if (!userId) {
-      return reject();
-    }
+    // TODO: ACL to test if current user ($everyone, guest etc.) can access this operation
 
     const afterFindCb = function(err, Topic) {
 
