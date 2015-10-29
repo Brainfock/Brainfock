@@ -1,8 +1,8 @@
 {
   "name": "brainfock-app-web",
-  "description": "Brainfock web server and client.",
+  "description": "Brainfock business management & CMS software.",
   "author": "Sergii Gamaiunov <hello@webkadabra.com>",
-  "version": "0.21.1",
+  "version": "0.22",
   "contributors": [],
   "main": "src/server/main",
   "private": true,
