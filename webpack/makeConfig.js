@@ -89,9 +89,10 @@ export default function makeConfig(isDevelopment) {
       chunkFilename: '[name]-[chunkhash].js',
       publicPath: `http://localhost:${constants.HOT_RELOAD_PORT}/build/`
     } : {
-      path: constants.BUILD_DIR,
+      chunkFilename: '[name]-[chunkhash].js',
       filename: '[name].js',
-      chunkFilename: '[name]-[chunkhash].js'
+      path: constants.BUILD_DIR,
+      publicPath: `/_assets/`
     },
     plugins: (() => {
       const plugins = [
