@@ -146,10 +146,11 @@ export function find(type, query, contextTopicId, namespace) {
   }
 
   // include some additional info
-  endpoint += '&filter[include][type]';
+  endpoint += '&filter[include][0][type]';
+  endpoint += '&filter[include][1][workspace]';
 
-  if(query) {
-    endpoint += '&'+toQueryString({filter:{where:query}},false);
+  if (query) {
+    endpoint += '&' + toQueryString({filter: {where: query}}, false);
   }
 
   return ({fetch, validate}) => ({
