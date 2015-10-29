@@ -492,9 +492,8 @@
     {
       "accessType": "*",
       "principalType": "ROLE",
-      "principalId": "deleteTopicAccess",
-      "permission": "ALLOW",
-      "property": "deleteById"
+      "principalId": "$everyone",
+      "permission": "DENY"
     }
   ]
 }
