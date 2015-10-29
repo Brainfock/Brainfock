@@ -50,7 +50,8 @@ export default {
     }
   },
   home: {
-    infoHtml: `<a href="https://github.com/Brainfock/Brainfock">Brainfock</a> Project Management & Team Collaboration.`,
+    infoHtml: `<a href="https://github.com/Brainfock/Brainfock">Brainfock</a> — Business Management & Team Collaboration
+    software.`,
     title: 'Brainfock App',
     toCheck: {
       andMuchMore: '... and much more.',
