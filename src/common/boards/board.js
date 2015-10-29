@@ -47,6 +47,12 @@ export default Record({
 
   // included via relations
   type: {},
+  workspace: new (Record({
+    id: '',
+    namespace: '',
+    name: '',
+    accessPrivateYn: ''
+  })),
   group: {},
   owner: {},
   author: {},
