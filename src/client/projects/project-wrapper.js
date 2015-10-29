@@ -32,6 +32,7 @@ class Layout extends Component{
     if(process.env.IS_BROWSER==true) {
       // load info about CURRENT BOARD
       this.props.topic_actions.loadCurrent(this.props.params.board_id, this.props.params.namespace);
+      this.props.actions.workspaceFindById(this.props.params.namespace);
       // load TOPIC of this BOARD
      // this.props.topic_actions.find(this.props.groupKey || 'board_topic', {},this.props.params.board_id);
     }
@@ -39,7 +40,7 @@ class Layout extends Component{
 
   render () {
 
-    if(!this.props.boards.board || this.props.boards.board.loading == true) {
+    if (this.props.workspace.active.meta.isFetching || !this.props.boards.board || this.props.boards.board.loading == true) {
       return <AppContentCanvas header={
         <h1><Loader /></h1>
       }/>
@@ -58,7 +59,8 @@ class Layout extends Component{
    */
   menuItems() {
     return [
-      { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}`,
+      {
+        route: `/${this.props.workspace.active.data.namespace}/${this.props.boards.board.contextTopicKey}`,
         text: (
           <div
             /*onMouseOver={function(e){e.target.style.background}}*/
@@ -73,12 +75,15 @@ class Layout extends Component{
             {this.props.boards.board.summary}</div>
         )
       },
-      { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}/issues`, text: 'Issues'},
-      { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}/boards`, text: 'Discussion Boards'},
+      {route: `/${this.props.params.namespace}/${this.props.boards.board.contextTopicKey}/issues`, text: 'Issues'},
+      {
+        route: `/${this.props.params.namespace}/${this.props.boards.board.contextTopicKey}/boards`,
+        text: 'Discussion Boards'
+      },
       // what about other menuss & modules?
       // Like agile or scrum boards, custom reports?
-      { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}/users`, text: 'Users'},
-      { route: `/${this.props.boards.board.namespace}/${this.props.boards.board.contextTopicKey}/settings`, text: 'Settings'},
+      {route: `/${this.props.params.namespace}/${this.props.boards.board.contextTopicKey}/users`, text: 'Users'},
+      {route: `/${this.props.params.namespace}/${this.props.boards.board.contextTopicKey}/settings`, text: 'Settings'},
     ];
   }
 };
