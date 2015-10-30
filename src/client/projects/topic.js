@@ -25,7 +25,7 @@ var bs = require('react-bootstrap'),
 
 var Loader = require('../components/Loader');
 var AppContentCanvas = require('../components/layout/AppContentCanvas');
-
+import OperationsDropdown from './components/OperationsDropdown.js'
 /**
  * TopicView
  *
@@ -86,63 +86,50 @@ var TopicView = React.createClass({
   /**
    * @returns {XML}
    */
-  render: function()
-  {
-    if(this.props.boards.viewTopic.loading==true)
-    {
-      return <AppContentCanvas header={
-        <h4 className="pull-left"><Loader /></h4>
-      }/>
-    }
+  render: function () {
 
     const viewTopic = this.props.boards.viewTopic;
-    let operaitons = [];
-    let i = 0;
-    const self=this;
-    if(viewTopic.operations) {
-      viewTopic.operations.forEach(function(op){
-        i++;
-        var _style={};
-        var active=false;
-        if(viewTopic.workflowStageId==op.id) {
-          _style['font-weight']=800;
-          active=true;
-        }
-        operaitons.push(<MenuItem
-          active={active}
-          eventKey={i}
-          onSelect={
-          function() {self.applyOperation(op.id)}
-          }
-          >
-          {op.name}</MenuItem>);
-      });
+
+    if (viewTopic.loading == true &&
+        // replace whole page by loader only if we're switching between topics, or else we get unnecessary redraw of comments etc.
+      (!viewTopic.id || parseInt(viewTopic.contextTopicNum) !== parseInt(this.props.params.id))) {
+
+      return (
+        <AppContentCanvas header={
+          <h4 className="pull-left"><Loader /></h4>
+        }/>
+      );
     }
-    operaitons.push(<MenuItem divider/>);
-    operaitons.push(
-      <MenuItem
-        className="ui-alert-link"
-        eventKey={i++}
-        onSelect={this.showDeletePrompt}
-      >
-      Delete
-    </MenuItem>);
+
+    let style = {
+      opacity: this.props.boards.viewTopic.loading == true ? .3 : 1,
+      position: 'relative'
+    };
 
     return (
-      <div className="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
-        <DropdownButton key={i++} className="pull-right" eventKey={i} id="operations" title="">
-          {operaitons}
-        </DropdownButton>
-        {this.props.boards.viewTopic && <h2 style={{fontWeight:800}}>{this.props.boards.viewTopic.summary} <span className="label label-primary ">{this.props.boards.viewTopic.wfStage}</span></h2>}
-
+      <div style={style} className="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+        {viewTopic.loading && <div style={{position:'absolute',width:'100%'}}><Loader noLabel/></div>}
+        <OperationsDropdown
+          activeStageId={viewTopic.workflowStageId}
+          operations={viewTopic.operations}
+          handleOperation={this.applyOperation}
+          onSelectDelete={this.showDeletePrompt}
+          />
+        {this.props.boards.viewTopic &&
+        <h2 style={{fontWeight:800}}>
+          {this.props.boards.viewTopic.summary}
+            <span className="label label-primary ">
+              {this.props.boards.viewTopic.wfStage}
+            </span>
+        </h2>}
         <mui.Card>
           <mui.CardHeader
             avatar={viewTopic.author.username && <mui.Avatar>{viewTopic.author.username.charAt(0)}</mui.Avatar>}
             subtitle= {viewTopic.createdOn}
             title={viewTopic.author && <b>{viewTopic.author.username}</b>}
             />
-          {this.props.boards.viewTopic.text
-          && <mui.CardText>{this.props.boards.viewTopic.text}</mui.CardText>}
+          {this.props.boards.viewTopic.text &&
+          <mui.CardText>{this.props.boards.viewTopic.text}</mui.CardText>}
         </mui.Card>
         <div style={{paddingTop:this.context.muiTheme.rawTheme.spacing.desktopGutter}}>
           {this.comments()}
