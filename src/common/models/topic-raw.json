@@ -488,6 +488,13 @@
       "_selectable": true
     }
   },
+  "relations": {
+    "owner": {
+      "type": "belongsTo",
+      "model": "User",
+      "foreignKey": "ownerUserId"
+    }
+  },
   "acls": [
     {
       "accessType": "*",
