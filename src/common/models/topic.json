@@ -587,13 +587,18 @@
     },
     "author": {
       "type": "belongsTo",
-      "model": "User",
+      "model": "Member",
       "foreignKey": "submittedUserId"
     },
     "owner": {
       "type": "belongsTo",
       "model": "User",
       "foreignKey": "ownerUserId"
+    },
+    "contextTopic": {
+      "type": "belongsTo",
+      "model": "Topic",
+      "foreignKey": "contextTopicId"
     }
   },
   "acls": [
@@ -683,24 +688,36 @@
     {
       "accessType": "*",
       "principalType": "ROLE",
-      "principalId": "createTopicAccess",
+      "principalId": "contextAndTopicAccess",
+      "permission": "ALLOW",
+      "property": "__findById__topics"
+    },
+
+    {
+      "COMMENT": "owner can update topic",
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$owner",
       "permission": "ALLOW",
       "property": "updateAttributes"
     },
     {
+      "COMMENT": "Operation is same as updating a topic",
       "accessType": "*",
       "principalType": "ROLE",
-      "principalId": "$authenticated",
-      "principalId_": "topicWriteAccess",
+      "principalId": "$updateTopic",
       "permission": "ALLOW",
       "property": "runOperation"
-    },
+    }
+  ],
+  "baseAcls": [
     {
-      "accessType": "*",
+      "accessType": "EXECUTE",
       "principalType": "ROLE",
-      "principalId": "contextAndTopicAccess",
+      "_principalId": "createTopicAccess",
+      "principalId": "$authenticated",
       "permission": "ALLOW",
-      "property": "__findById__topics"
+      "property": "updateAttributes"
     }
   ],
   "methods": {}
