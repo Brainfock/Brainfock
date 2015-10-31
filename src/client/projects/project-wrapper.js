@@ -58,6 +58,12 @@ class Layout extends Component{
    * @returns {*[]}
    */
   menuItems() {
+
+    let icon;
+    if (this.props.boards.board.accessPrivateYn) {
+      icon = (<i className="fa fa-eye-slash"></i>);
+    }
+
     return [
       {
         route: `/${this.props.workspace.active.data.namespace}/${this.props.boards.board.contextTopicKey}`,
@@ -72,7 +78,7 @@ class Layout extends Component{
               color:"#000",
               lineHeight:'16px',
             }}>
-            {this.props.boards.board.summary}</div>
+            {this.props.boards.board.summary} {icon}</div>
         )
       },
       {route: `/${this.props.params.namespace}/${this.props.boards.board.contextTopicKey}/issues`, text: 'Issues'},
