@@ -26,6 +26,8 @@ import FieldsHandler from '../components/topicFieldsHandler.js';
 
 module.exports = function(Topic) {
 
+  Topic.validatesPresenceOf('typeId', 'groupId', 'workspaceId', 'summary');
+
   /**
    * Set `groupId` when topic is saved if `createGroup` is provided in `request`  as an alias to `TopicGroup.groupKey`
    */
@@ -761,6 +763,8 @@ module.exports = function(Topic) {
   /**
    * Load form fields for topic screen. Currently, supports default (create) screen only
    *
+   * @todo: re-factor!
+   *
    * @param id
    * @param groupKey
    * @param cb
@@ -902,11 +906,18 @@ module.exports = function(Topic) {
                           .all(_screenFields.map(FieldsHandler.populateFormField))
                           .then(function(dataDone) {
                             // manually add "group" and "type" select fields, re-using already populated data
+                            // TODO: select first
+                            // isRequired
                             FieldsHandler.typeIdFieldProps({
                               group: groupInstance,
                               contextTopic: null,
                               key: 'typeId',
-                              options:TypeOptions
+                              options: TypeOptions,
+                              isRequired: 1,
+                              value: {
+                                value: DefaultType.id,
+                                label: DefaultType.name
+                              }
                             })
                               .then(function(moreData) {
                                 dataDone.unshift(moreData);
@@ -1066,7 +1077,12 @@ module.exports = function(Topic) {
                               group: groupInstance,
                               contextTopic: contextTopic,
                               key: 'typeId',
-                              options:TypeOptions
+                              options: TypeOptions,
+                              isRequired: 1,
+                              value: {
+                                value: DefaultType.id,
+                                label: DefaultType.name
+                              }
                             })
                               .then(function(moreData) {
                                 dataDone.unshift(moreData);
