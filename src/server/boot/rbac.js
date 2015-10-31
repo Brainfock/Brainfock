@@ -29,6 +29,9 @@ import {mergeQuery} from 'loopback-datasource-juggler/lib/utils';
 module.exports = function(app) {
 
   const Role = app.models.Role;
+  const ACL = app.models.ACL;
+  const Topic = app.models.Topic;
+  const Workspace = app.models.Workspace;
 
   /*Role.registerResolver('teamMember', function(role, context, cb) {
     function reject() {
@@ -68,6 +71,168 @@ module.exports = function(app) {
     });
   });*/
 
+  /**
+   * @todo: do not allow updating locked topics
+   */
+  Role.registerResolver('$updateTopic', function (role, context, cb) {
+
+    const userId = context.accessToken.userId || null;
+    console.log('[RBAC $updateTopic] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName + '`, user:' + userId);
+
+    function reject() {
+      process.nextTick(function () {
+        cb(null, false);
+      });
+    }
+
+    //ACL.isMappedToRole('USER', userId, '$authenticated', (err, isAllowed) => {
+    Role.isInRole('$authenticated', context, (err, isAllowed) => {
+
+      if (!isAllowed) {
+        return reject();
+      }
+      let where = {};
+      if (context.modelId) {
+        where = {id: context.modelId};
+      } else if (context.remotingContext.args.filter && context.remotingContext.args.filter.where) {
+        where = context.remotingContext.args.filter.where;
+      } else {
+        return cb(null, false);
+      }
+
+      Topic.promiseUserAccess(where, userId)
+        .then((topicInstance) => {
+          // check if user has access to topic CONTEXT and workspace
+          // topicInstance
+          if (topicInstance.contextTopicId > 0) {
+            topicInstance.contextTopic((err, contextTopicInstance) => {
+
+              if (err || !contextTopicInstance) return cb(null, false);
+
+              contextTopicInstance.checkUserAccess(userId, function (err, isAllowed) {
+                if (err || !isAllowed) return reject(null, false);
+
+                Workspace.promiseUserAccess(topicInstance.workspaceId, userId)
+                  .then((wspcInstance) => {
+                    return cb(null, true);
+                  })
+                  .catch(() => cb(null, false));
+              });
+            });
+          } else {
+            Workspace.promiseUserAccess(topicInstance.workspaceId, userId)
+              .then((wspcInstance) => {
+                return cb(null, true);
+              })
+              .catch(() => cb(null, false));
+          }
+        })
+        .catch(() => cb(null, false));
+      //// find Topic and validate access
+      //if (context.modelId) {
+      //  /* when api request is like /api/someModel/findOne/123 */
+      //  context.model.findById(context.modelId, afterFindCb);
+      //} else if (context.remotingContext.args.filter) {
+      //  /* when api request is like /api/wikiPage/findOne/?filter[where][pageUid]=SomeWikiPage */
+      //  context.model.findOne(context.remotingContext.args.filter, afterFindCb);
+      //} else {
+      //  return cb(null, false);
+      //}
+      // if user is authenticated, we must check if everybody can update or only owner,
+      // if there is access to workspace, context and topic
+
+      // console.log('ACCESS', );
+
+      //Role.isInRole('allowUpdateTopics', context, (err, isAllowed) => {
+      //  console.log('ACCESS', isAllowed);
+      //  return cb(null,userId > 0)
+      //})
+
+    });
+
+    //,
+    //{
+    //  "accessType": "*",
+    //  "principalType": "ROLE",
+    //  "principalId": "$authenticated",
+    //  "permission": "ALLOW",
+    //  "property": "runOperation"
+    //}
+    // check if current user has role ""
+
+    // hardcoded rule to deny anonymous from updating topics. we could also check for composite role,
+    // e.g. "$canUpdateTopics" which would be allowed for $authenticated role
+    //Role.isInRole('$authenticated', context, (err, isInRole) => {
+    //Role.isInRole('allowUpdateTopics', context, (err, isInRole) => {
+    //  console.log('isInRole', isInRole)
+    //Role.getRoles(context, (err, roles) => {
+    //  console.log('roles',roles)
+    //return cb(null, isInRole);
+    //})
+    //Role.isInRole('contextAndTopicAccess', context, (err, isInRole) => {
+    //  console.log('isInRole', isInRole)
+
+    //})
+    //})
+
+
+    // ACL - is to check if some actual USER has access to some specific model/object
+    //ACL.checkPermission('USER', userId, 'Topic', 'runOperation', 'EXECUTE', function(err, access) {
+    //  console.log('ERR',err);
+    //  console.log('access: ',access);
+    //  return cb(null, userId > 0);
+    //});
+
+
+    //ACL.checkAccessForContext(context, function(err, access) {
+    //  console.log('err', err)
+    //  console.log('access: ', access)
+    //  return cb(null, userId > 0);
+    //  // check access to wsp, context & topic
+    //})
+
+
+    //ACL.resolvePrincipal('USER', userId || 0, function(err, principal) {
+    //  console.log('RESOLVED PRINCIPAL', principal);
+    //  let principals = [];
+    //  if (principal) {
+    //    principals.push({
+    //      type: 'USER',
+    //      id: principal.id
+    //    });
+    //  }
+    //  ACL.checkAccessForContext({
+    //    principals: principals,
+    //    //principals: [{
+    //    //  type: 'USER',
+    //    //  id: '$authenticated'
+    //    //}],
+    //    model: Topic,
+    //    id: context.modelId,
+    //    // check if current user (?) at all has this operation enabled
+    //    methodNames: ['updateAttributes'],
+    //    method: method,
+    //    //property: 'updateAttributes',
+    //    property: 'updateAttributes',
+    //    accessType: 'WRITE'
+    //  }, function(err, access) {
+    //    console.log('err', err)
+    //    console.log('access: ', access)
+    //    return cb(null, userId > 0);
+    //    // check access to wsp, context & topic
+    //  })
+    //
+    //})
+
+
+    // ACL.checkPermission("USER", principalId, model, property, accessType, callback)
+
+
+  });
+
+  /**
+   * topicEntityAccess ROLE
+   */
   Role.registerResolver('topicEntityAccess', function(role, context, cb) {
 
     const userId = context.accessToken.userId;
@@ -341,8 +506,12 @@ module.exports = function(app) {
     } else {
       return cb(null, false);
     }
+
   });
 
+  /**
+   * createWikiPage ROLE
+   */
   Role.registerResolver('createWikiPage', function(role, context, cb) {
     console.log('[RBAC createWikiPage] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName + '`');
     const userId = context.accessToken.userId;
@@ -483,31 +652,26 @@ module.exports = function(app) {
   });
 
   Role.registerResolver('commentEntityAccess', function(role, context, cb) {
+
     console.log('[RBAC commentEntityAccess] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName);
+
     const userId = context.accessToken.userId;
-    //console.log('[topicEntityAccess]: userId='+userId)
-    //console.log('context.result',context.remotingContext.result);
-    //console.log('context.remotingContext.req',context.remotingContext.req);
-    //console.log('context.remotingContext.method.name',context.remotingContext.method.name);
+
     function reject() {
       process.nextTick(function() {
         cb(null, false);
       });
     }
 
-    // if the target model is not project
     if (context.modelName !== 'Comment') {
-      //console.log('Not Comment')
       return reject();
     }
-//
 
     let allowedEntities = [];
 
     if (context.remotingContext.method.name === 'find') {
 
       if (userId) {
-
 
         app.models.EntityAccessAssign.find({where:{
           authType:0,
@@ -717,8 +881,7 @@ module.exports = function(app) {
 
   /**
    * Check if user is allowed to post new topic
-   *
-   * @todo review; add validation of a workspace; make work together with other roles
+   * @todo add workspace access validation
    */
   Role.registerResolver('createTopicAccess', function(role, context, cb) {
 
@@ -741,6 +904,8 @@ module.exports = function(app) {
 
     // check access to entity
     const userId = context.accessToken.userId;
+
+    try {
 
     const ownerContainerId = context.remotingContext.args.data.contextTopicId > 0
       // post/update topic of some other topic (e.g. update `issue` of some `project`)
@@ -786,6 +951,10 @@ module.exports = function(app) {
           });
         }
       });
+    }
+    }
+    catch (e) {
+      return reject();
     }
   });
 
@@ -863,7 +1032,7 @@ module.exports = function(app) {
 
     // these methods expect `context.remotingContext.args.where`, not `context.remotingContext.args.filter.where`
     if (context.remotingContext.method.name !== '__findById__topics') {
-      reject();
+      return reject();
     }
 
     // TODO: allow guest access
@@ -983,7 +1152,7 @@ module.exports = function(app) {
       return reject();
     }
     if (context.remotingContext.method.name !== '__findById__topics') {
-      reject();
+      return reject();
     }
 
     // TODO: check ACL if current user (gues, authenticated, etc.) has access
