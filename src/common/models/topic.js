@@ -587,11 +587,10 @@ module.exports = function(Topic) {
     return new Promise(
       function(resolve, reject) {
         Topic.findOne({where:topicWhere}, function(err, instance) {
-          console.log('HERE!',instance)
           if(err || !instance) return reject(null, false);
           instance.checkUserAccess(userId, function(err,isAllowed) {
             if(err || !isAllowed) return reject(null, false);
-            return resolve(null, true);
+            return resolve(instance, true);
           })
         });
       });
