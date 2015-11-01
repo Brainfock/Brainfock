@@ -105,8 +105,8 @@ class Page extends Component{
    */
   renderItem(item)
   {
-    if(item.type == 'select' || item.type == 'multiselect')
-    {
+    if (item.type == 'select' || item.type == 'multiselect') {
+
       let props = {
         name:item.name,
         placeholder:item.label,
@@ -116,6 +116,11 @@ class Page extends Component{
         },
         width:'100%'
       };
+
+      if (this.props.form.meta.errors && this.props.form.meta.errors.get(item.name)) {
+        props.errorText = this.props.form.meta.errors.get(item.name);
+      }
+
       if(item.type == 'multiselect') {
         props.multi = true;
       }
@@ -148,20 +153,25 @@ class Page extends Component{
 
       return (
         <div  style={{'width':'100%'}}>
-          <FilterComponent {...props} />
+          <RemoteSelectField {...props} />
         </div>
       );
     }
 
     // text input
-    else if('text'==item.type || 'textarea' == item.type)
-    {
+    else if ('text' == item.type || 'textarea' == item.type) {
+
       let props = {
         floatingLabelText:item.label + ':',
         fullWidth: true,
         hintText:item.description,
         name:item.name,
       };
+
+      if (this.props.form.meta.errors && this.props.form.meta.errors.get(item.name)) {
+        props.errorText = this.props.form.meta.errors.get(item.name);
+      }
+
       if('textarea' == item.type) {
         props.multiLine=true;
       }
