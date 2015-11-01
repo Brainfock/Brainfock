@@ -41,7 +41,10 @@ const InitialState = Record({
   board: new Todo,
   viewTopic: new Todo,
   group: new TopicGroup,
+
+  // `meta` represents meta state of a list
   meta: new (Record({
+    groupKey: '', // group key of a list, changes only on request end (success or error)
     // TODO: clean up using of 'loading' in favor of more descriptiove 'isFetching'
     loading: true,
     count: 0,
@@ -72,38 +75,29 @@ export default function boardsReducer(state = initialState, action) {
   switch (action.type) {
 
     case actions.FIND:
+
+      if (action.meta.groupKey && state.meta.groupKey
+        && action.meta.groupKey != state.meta.groupKey) {
+        state.update('list', list => list.clear());
+      }
+
       return state
         .setIn(['meta', 'loading'], true)
         .setIn(['meta', 'isFetching'], true)
-        //.update('list', list => list.clear())
-        ;
+        .deleteIn(['meta', 'error']); // reset list errors (e.g. there was problem fetchin sometihng and user switched lists)
 
     case actions.FIND_ERROR:
     {
+
+      if (action.meta.groupKey && (!state.meta.groupKey || (state.meta.groupKey
+        && action.meta.groupKey != state.meta.groupKey))) {
+        // clear list, or else user may see error message with items of another list
+        state = state.update('list', list => list.clear())
+      }
+
       if (action.error === true) {
 
-        console.log('> error', action)
-
-        if (1 == 2 && action.payload.error && action.payload.error.details) {
-          let errorDetails = {};
-          // loop
-          for (let fieldName in action.payload.error.details.messages) {
-            if (action.payload.error.details.messages.hasOwnProperty(fieldName)) {
-              const message = action.payload.error.details.messages[fieldName];
-              //state[fieldName].asyncError = message.join('; ');
-              //state[fieldName].touched = true;
-              errorDetails[fieldName] = message.join('; ');
-            }
-            ;
-          }
-
-          return state
-            .setIn(['meta', 'error'], true)
-            .setIn(['meta', 'errors'], Map(errorDetails))
-            .setIn(['meta', 'isFetching'], false)
-            .setIn(['meta', 'loading'], false);
-
-        } else if (action.payload.error) {
+        if (action.payload.error) {
           return state
             .setIn(['meta', 'error'], action.payload.error.message || 'Unknown Error!')
             .setIn(['meta', 'isFetching'], false)
@@ -131,6 +125,10 @@ export default function boardsReducer(state = initialState, action) {
       return state
         .update('list', list => list.clear())
         .update('list', list => list.push(...newlist))
+
+        .setIn(['meta', 'groupKey'], action.meta.groupKey)
+
+        .setIn(['meta', 'isFetching'], false)
         .setIn(['meta', 'loading'], false)
         // cleanup list fetch errors after list is loaded successfully
         .deleteIn(['meta', 'error'])
@@ -141,6 +139,8 @@ export default function boardsReducer(state = initialState, action) {
     case actions.FIND_ONE:
       return state
         .set('board', {'loading': true});
+    // todo: board.meta.isFetching - if fetching form serer
+    // todo: board.meta.isLoaded - if model has been loaded (redundant if we have id)
 
     case actions.FIND_ONE_SUCCESS:
       return state
