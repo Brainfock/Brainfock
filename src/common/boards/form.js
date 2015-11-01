@@ -27,7 +27,6 @@ export default Record({
   meta: new (Record({
     isSubmitting: false,
     isFetching: false,
-    hasError: false,
     error: '',
     errors: new Map(),
   })),
