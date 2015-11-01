@@ -153,6 +153,7 @@ export default class ProjectIssues extends Component {
         actions={this.props.topic_actions}
         containerStore={this.props.containerTopic}
         formFields={formFields}
+        form={this.props.boards.form}
         newTopic={newTopic}
         params={this.props.params}
         topicGroup={this.props.groupKey}
