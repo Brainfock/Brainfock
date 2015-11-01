@@ -42,8 +42,13 @@ const InitialState = Record({
   viewTopic: new Todo,
   group: new TopicGroup,
   meta: new (Record({
+    // TODO: clean up using of 'loading' in favor of more descriptiove 'isFetching'
     loading: true,
     count: 0,
+    isSubmitting: false,
+    isFetching: false,
+    error: '',
+    errors: new Map(),
   })),
   form: new FormRecord
 });
@@ -59,10 +64,6 @@ const revive = (state) => initialState.merge({
   board: new Todo(),
   viewTopic: new Todo({loading: false}),
   group: new TopicGroup,
-  meta: new (Record({
-    loading: true,
-    count: 0,
-  }))
 });
 
 export default function boardsReducer(state = initialState, action) {
@@ -73,10 +74,53 @@ export default function boardsReducer(state = initialState, action) {
     case actions.FIND:
       return state
         .setIn(['meta', 'loading'], true)
-        .update('list', list => list.clear());
+        .setIn(['meta', 'isFetching'], true)
+        //.update('list', list => list.clear())
+        ;
 
     case actions.FIND_ERROR:
-      return state.setIn(['meta', 'loading'], false)
+    {
+      if (action.error === true) {
+
+        console.log('> error', action)
+
+        if (1 == 2 && action.payload.error && action.payload.error.details) {
+          let errorDetails = {};
+          // loop
+          for (let fieldName in action.payload.error.details.messages) {
+            if (action.payload.error.details.messages.hasOwnProperty(fieldName)) {
+              const message = action.payload.error.details.messages[fieldName];
+              //state[fieldName].asyncError = message.join('; ');
+              //state[fieldName].touched = true;
+              errorDetails[fieldName] = message.join('; ');
+            }
+            ;
+          }
+
+          return state
+            .setIn(['meta', 'error'], true)
+            .setIn(['meta', 'errors'], Map(errorDetails))
+            .setIn(['meta', 'isFetching'], false)
+            .setIn(['meta', 'loading'], false);
+
+        } else if (action.payload.error) {
+          return state
+            .setIn(['meta', 'error'], action.payload.error.message || 'Unknown Error!')
+            .setIn(['meta', 'isFetching'], false)
+            .setIn(['meta', 'loading'], false);
+        } else {
+          return state
+            .setIn(['meta', 'error'], action.payload.message.length > 0 && action.payload.message || 'Unknown Error!')
+            .setIn(['meta', 'isFetching'], false)
+            .setIn(['meta', 'loading'], false);
+        }
+      }
+      else {
+        return state
+          .setIn(['meta', 'loading'], false)
+          .setIn(['meta', 'isFetching'], false)
+      }
+    }
 
     case actions.FIND_SUCCESS:
     {
@@ -88,6 +132,9 @@ export default function boardsReducer(state = initialState, action) {
         .update('list', list => list.clear())
         .update('list', list => list.push(...newlist))
         .setIn(['meta', 'loading'], false)
+        // cleanup list fetch errors after list is loaded successfully
+        .deleteIn(['meta', 'error'])
+        .deleteIn(['meta', 'errors'])
         ;
     }
 
