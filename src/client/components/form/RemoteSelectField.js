@@ -84,11 +84,23 @@ var RemoteSelectField = React.createClass({
       <div className="hint">{this.props.hint}</div>
     );
   },
+  renderError () {
+    if (!this.props.errorText) return null;
+    return (
+      <div style={{fontSize:12,color:'red',padding:'10px 0 0 0'}}>{this.props.errorText}</div>
+    );
+  },
   render () {
+
+    const {...props} = this.props;
+    if (this.props.endpoint) {
+      props.asyncOptions = this.loadOptions;
+    }
     return (
       <div className="section">
         <h3 className="section-heading">{this.props.label}</h3>
-        <Select asyncOptions={this.loadOptions} {...this.props} className="remote-example" />
+        <Select {...props} className="remote-example"/>
+        {this.renderError()}
         {this.renderHint()}
       </div>
     );
