@@ -74,6 +74,52 @@ module.exports = function(app) {
   /**
    * @todo: do not allow updating locked topics
    */
+  Role.registerResolver('$createTopic', function (role, context, cb) {
+
+    function reject() {
+      process.nextTick(function () {
+        cb(null, false);
+      });
+    }
+
+    console.log('> $createTopic data', context.remotingContext.args.data);
+
+    // check if user can create this topic
+
+
+    const userId = context.accessToken.userId || null;
+
+    const ownerContainerId = context.remotingContext.args.data.contextTopicId > 0
+      // post/update topic of some other topic (e.g. update `issue` of some `project`)
+      ? context.remotingContext.args.data.contextTopicId
+      : (
+      context.remotingContext.args.data.id > 0
+        // post/update root topic, e.g. update `project` topic
+        ? context.remotingContext.args.data.id
+        : 0
+    );
+
+    console.log('[RBAC $createTopic] Validate access to  operation `' + context.remotingContext.method.name
+      + '` of model `' + context.modelName + '`:' + ownerContainerId);
+
+    Role.isInRole('$authenticated', context, (err, isAllowed) => {
+
+      // TODO: allow to configure guest posting access per workspace (e.g. gather web form data)
+      if (!isAllowed) {
+        return reject();
+      } else {
+        // currently, acccess to context and workspace is checked in 'before save'
+
+        // find topic, check workspace access, then context access, then topic access
+
+        return cb(null, true);
+      }
+    });
+  });
+
+  /**
+   * @todo: do not allow updating locked topics
+   */
   Role.registerResolver('$updateTopic', function (role, context, cb) {
 
     const userId = context.accessToken.userId || null;
@@ -922,6 +968,7 @@ module.exports = function(app) {
 
     // creating root topic, e.g. project, board etc.
     if (ownerContainerId === 0) {
+      // TODO: DO NOT ALLOW GUESTS
       return accept();
     } else {
       app.models.Topic.findOne({where:{

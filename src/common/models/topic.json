@@ -674,25 +674,24 @@
     {
       "accessType": "*",
       "principalType": "ROLE",
-      "principalId": "createTopicAccess",
+      "principalId": "contextAndTopicAccess",
+      "permission": "ALLOW",
+      "property": "__findById__topics"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$createTopic",
       "permission": "ALLOW",
       "property": "create"
     },
     {
       "accessType": "*",
       "principalType": "ROLE",
-      "principalId": "createTopicAccess",
+      "principalId": "$createTopic",
       "permission": "ALLOW",
       "property": "upsert"
     },
-    {
-      "accessType": "*",
-      "principalType": "ROLE",
-      "principalId": "contextAndTopicAccess",
-      "permission": "ALLOW",
-      "property": "__findById__topics"
-    },
-
     {
       "COMMENT": "owner can update topic",
       "accessType": "*",
