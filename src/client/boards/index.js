@@ -41,16 +41,14 @@ module.exports = React.createClass({
 
   render: function()
   {
-    //return <h1>{this.props.boards.group.summary}</h1>;
-
     let View;
-      console.log('use extra view ' + this.props.boards.group.view);
-      console.log('views', views);
     if (views[this.props.boards.group.view]) {
       View = views[this.props.boards.group.view];
     } else {
       View = MasterDetailsListView;
     }
+
+    View = MasterDetailsListView;
 
     const {children, ...passProps} = this.props;
     return (
