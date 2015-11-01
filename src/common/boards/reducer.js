@@ -22,10 +22,11 @@
 import * as actions from '../topics/actions';
 import * as commentsActions from '../comments/actions';
 import Todo from './board';
+import FormRecord from './form';
 import TopicGroup from './topic-group';
 import Comment from '../comments/comment';
 import getRandomString from '../lib/getRandomString';
-import {List, Range, Record} from 'immutable';
+import Immutable, {List, Range, Record, Map} from 'immutable';
 
 const InitialState = Record({
   list: List(),
@@ -43,7 +44,8 @@ const InitialState = Record({
   meta: new (Record({
     loading: true,
     count: 0,
-  }))
+  })),
+  form: new FormRecord
 });
 
 const initialState = new InitialState;
@@ -103,10 +105,8 @@ export default function boardsReducer(state = initialState, action) {
         .set('viewTopic', {'loading': true});
 
     case actions.SET_CURRENT_TOPIC:
-    {
       return state
         .setIn(['viewTopic', 'id'], action.payload);
-    }
 
     case actions.LOAD_TOPIC_SUCCESS:
     {
@@ -120,7 +120,6 @@ export default function boardsReducer(state = initialState, action) {
     // load all comments
     case commentsActions.LOAD_COMMENTS_SUCCESS:
     {
-
       const newlist = action.payload.map((item) => {
         console.log('item', item)
         item.cid = getRandomString();
@@ -147,9 +146,7 @@ export default function boardsReducer(state = initialState, action) {
         .set('group', new TopicGroup(action.payload));
 
     case action.LOAD_TOPIC_GROUP_ERROR:
-    {
       return state;
-    }
 
     case actions.COUNT_SUCCESS:
       return state
@@ -168,11 +165,9 @@ export default function boardsReducer(state = initialState, action) {
     }
 
     case actions.LOAD_FORM_FIELDS:
-    {
       return state
         .setIn(['formFields', 'loading'], true)
         ;
-    }
 
     case actions.LOAD_FORM_FIELDS_SUCCESS:
     {
@@ -189,68 +184,94 @@ export default function boardsReducer(state = initialState, action) {
     }
 
     case actions.SET_NEW_TOPIC:
-    {
       return state.set('newTopic', action.payload);
-    }
+
     case actions.SET_NEW_TOPIC_FIELD:
     {
       const {name, value} = action.payload;
-      return state.setIn(['newTopic', name], value);
+      return state.setIn(['newTopic', name], value)
+        .deleteIn(['form', 'meta', 'errors', name]);
     }
+
     case actions.CREATE:
-    {
       return state
         // lockform submit buttons etc.
         .setIn(['formFields', 'loading'], true)
-    }
+
+
     case actions.CREATE_SUCCESS:
-    {
       return state
         .update('list', list => list.unshift(Todo(action.payload)))
         .setIn(['formFields', 'loading'], false)
-    }
+
+    case actions.CLEAN_FORM_GENERAL_ERRORS:
+      return state
+        .deleteIn(['form', 'meta', 'error']);
+
     case actions.CREATE_ERROR:
     {
-      return state
-        .setIn(['formFields', 'loading'], false)
+      if (action.error === true) {
+
+        if (action.payload.error && action.payload.error.details) {
+          let errorDetails = {};
+          // loop
+          for (let fieldName in action.payload.error.details.messages) {
+            if (action.payload.error.details.messages.hasOwnProperty(fieldName)) {
+              const message = action.payload.error.details.messages[fieldName];
+              //state[fieldName].asyncError = message.join('; ');
+              //state[fieldName].touched = true;
+              errorDetails[fieldName] = message.join('; ');
+            }
+            ;
+          }
+
+          return state
+            .setIn(['form', 'meta', 'errors'], Map(errorDetails))
+            .setIn(['formFields', 'loading'], false);
+
+        } else if (action.payload.error) {
+          return state
+            .setIn(['form', 'meta', 'error'], action.payload.error.message || 'Unknown Error!')
+            .setIn(['formFields', 'loading'], false);
+        } else {
+          return state
+            .setIn(['form', 'meta', 'error'], action.payload.message.length > 0 && action.payload.message || 'Unknown Error!')
+            .setIn(['formFields', 'loading'], false);
+        }
+      } else {
+        return state;
+      }
     }
 
     case actions.SAVE:
-    {
       return state
         .setIn(['newTopic', 'loading'], true)
-    }
+
     case actions.SAVE_SUCCESS:
-    {
       return state
         .setIn(['newTopic', 'loading'], false)
-    }
+
     case actions.CREATE_ERROR:
     case actions.SAVE_ERROR:
-    {
       return state
         .setIn(['newTopic', 'loading'], false)
-    }
+
 
     case actions.RUN_OPERATION:
-    {
       return state
         .setIn(['viewTopic', 'loading'], true);
-    }
+
     case actions.RUN_OPERATION_SUCCESS:
-    {
       return state
         //  .set('viewTopic', new Todo(action.payload.topic))
         .setIn(['viewTopic', 'wfStatus'], action.payload.topic.wfStatus)
         .setIn(['viewTopic', 'wfStage'], action.payload.topic.wfStage)
         .setIn(['viewTopic', 'operations'], action.payload.topic.operations)
         .setIn(['viewTopic', 'loading'], false);
-    }
+
     case actions.RUN_OPERATION_ERROR:
-    {
       return state
         .setIn(['viewTopic', 'loading'], false);
-    }
   }
 
   return state;
