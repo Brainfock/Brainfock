@@ -167,6 +167,13 @@ export default function boardsReducer(state = initialState, action) {
         ;
     }
 
+    case actions.LOAD_FORM_FIELDS:
+    {
+      return state
+        .setIn(['formFields', 'loading'], true)
+        ;
+    }
+
     case actions.LOAD_FORM_FIELDS_SUCCESS:
     {
       const newlist = action.payload.filters.map((item) => {
