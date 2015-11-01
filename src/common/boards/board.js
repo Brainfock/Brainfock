@@ -65,5 +65,5 @@ export default Record({
   createGroup:'',
 
   // ui state fields
-  loading:true,
+  loading: false,
 });
