@@ -63,7 +63,6 @@ export default class ProjectIssues extends Component {
       count:0,
       filters:(props.location.query && props.location.query.filter ? props.location.query.filter : null),
       filtersOpen:false,
-      loading:true,
       searchQuery:(props.location.query && props.location.query.query ? props.location.query.query : ''),
       showDetails: true,
       disableDetails: false
@@ -102,12 +101,6 @@ export default class ProjectIssues extends Component {
 
     const {board, meta, listFilters, newTopic, formFields} = this.props.boards;
     const msg = this.props.msg.topics;
-
-    if (this.props.boards.meta.loading === true) {
-      return (
-        <div className="row"><h1><Loader /></h1></div>
-      );
-    }
 
     let filterToggleButton = (
       <mui.IconButton
@@ -160,7 +153,9 @@ export default class ProjectIssues extends Component {
         />
     );
 
-    if (!this.props.boards.list.size) {
+    if (!this.props.boards.list.size
+        // don't show empty list fallback if being loaded - e.g., filters were applied
+      && !this.props.boards.meta.isFetching && !this.props.boards.meta.error) {
       const EmptyListFallback = this.props.emptyListFallback;
       const {children, ...passProps} = this.props; // extract children to avoid redux data corrupt & loop infinitely
       return <EmptyListFallback {...passProps} form={addItemForm}/>;
@@ -213,7 +208,8 @@ export default class ProjectIssues extends Component {
             <mui.TextField
               defaultValue={this.state.searchQuery}
               hintText={this.state.searchQuery ? null : 'Search in text'}
-              onChange={this.searchQueryChanged}
+              onChange={this.searchQueryChanged.bind(this)}
+              onKeyDown={::this.onKeyDown}
               ref="searchbox"
               />
 
@@ -251,6 +247,8 @@ export default class ProjectIssues extends Component {
               />
           </div>
           <div className="clearfix">
+            {this.props.boards.meta.error &&
+            <div className="alert alert-warning" style={{margin:0,borderRadius:0}}>{this.props.boards.meta.error}</div>}
             {content}
           </div>
         </div>
@@ -266,16 +264,36 @@ export default class ProjectIssues extends Component {
 
   renderListContent() {
 
+    // show state of loading list
+    if (this.props.boards.meta.isFetching === true &&
+      (!this.props.boards.list.size || this.props.boards.meta.groupKey != this.props.groupKey)) {
+      return (
+        <div className="row"><h1><Loader /></h1></div>
+      );
+    }
+    // having empty list at this point meant there was an error during fetch
+    if (!this.props.boards.list.size) {
+      return null;
+    }
+
     let rowWidth = this.state.showDetails ? 8 : 12;
     let detialStyle = !this.state.showDetails ? {display:'none'} : {};
 
     if (this.props.disableDetails === true) {
-      return this.renderList();
+      return (
+        <div>
+          {this.props.boards.meta.isFetching === true &&
+          <div style={{position:'absolute',width:'100%'}}><Loader noLabel/></div>}
+          {this.renderList()}
+        </div>
+      );
     }
     return (
       <Grid fluid style={{
         paddingLeft:0,
       }}>
+        {this.props.boards.meta.isFetching === true &&
+        <div style={{position:'absolute',width:'100%'}}><Loader noLabel/></div>}
         <Row>
           <Col md={rowWidth}>
             {this.renderList()}
@@ -316,7 +334,7 @@ export default class ProjectIssues extends Component {
 
   renderDetails() {
 
-    if (this.props.boards.viewTopic.loading) {
+    if (this.props.boards.viewTopic.isFetching === true) {
       return (
         <div style={{width:'100%', textAlign:'center'}}>
           <h1><Loader /></h1>
@@ -341,5 +359,37 @@ export default class ProjectIssues extends Component {
         </div>
       </mui.Paper>
     );
+  }
+
+  timer = null;
+
+  searchQueryChanged(e) {
+
+    // TODO: call action for reduces to get latest value
+    clearTimeout(this.timer);
+    this.timer = setTimeout(this.applySearchQuery.bind(this), 400);
+  }
+
+  applySearchQuery() {
+
+    const newValue = this.refs.searchbox.getValue();
+    let currentQuery = this.props.location.query;
+
+    if (newValue) {
+      currentQuery['query'] = newValue;
+    } else {
+      // reset query, e.g. "show all"
+      currentQuery['query'] = '';
+    }
+
+    this.props.history.pushState(null, this.props.location.pathname, currentQuery);
+    this.setState({searchQuery: newValue});
+  }
+
+  onKeyDown(e) {
+    ///const {actions, newTodo} = this.props;
+    if (e.key === 'Enter' /*&& newTodo.title.trim()*/)
+      this.applySearchQuery();
+    //actions.addTodo(newTodo);
   }
 };
