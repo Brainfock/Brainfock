@@ -113,7 +113,8 @@ export default class FieldsHandler {
           // `name` is used for form inputs to identify model's attribute
           name: data.key,
           type: 'select', // todo: hasOne rather
-          options:data.options || []
+          options:data.options || [],
+          value: data.value || null,
         });
       }
     );
