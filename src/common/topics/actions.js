@@ -55,6 +55,7 @@ export const LOAD_FORM_FIELDS_ERROR = 'TOPIC_LOAD_FORM_FIELDS_ERROR';
 
 export const SET_NEW_TOPIC = 'SET_NEW_TOPIC';
 export const SET_NEW_TOPIC_FIELD = 'SET_NEW_TOPIC_FIELD';
+export const CLEAN_FORM_GENERAL_ERRORS = 'TOPIC_CLEAN_FORM_GENERAL_ERRORS';
 export const CREATE = 'TOPIC_CREATE';
 export const CREATE_SUCCESS = 'TOPIC_CREATE_SUCCESS';
 export const CREATE_ERROR = 'TOPIC_CREATE_ERROR';
@@ -409,6 +410,12 @@ export function setNewTopicField({target: {name, value}}) {
 export function setNewTopic(data) {
   return {
     type: SET_NEW_TOPIC,
+    payload: data
+  };
+}
+export function cleanErrorSummary(data) {
+  return {
+    type: CLEAN_FORM_GENERAL_ERRORS,
     payload: data
   };
 }
