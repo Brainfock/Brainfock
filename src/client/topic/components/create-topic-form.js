@@ -21,7 +21,7 @@
 import React from 'react';
 import Component from 'react-pure-render/component';
 
-import mui from 'material-ui';
+import mui, {FlatButton} from 'material-ui';
 import Loader from '../../components/Loader';
 import SimpleFormFactory from '../../components/UISimpleFormFactory';
 
@@ -98,9 +98,13 @@ export default class CreateTopicForm extends Component {
   render() {
     return (
       <form ref="frm" onSubmit={this.onFormSubmit.bind(this)} className="form-horizontal">
+        {this.props.form && this.props.form.meta.error
+        && <div className="alert alert-danger">
+          <i onClick={this.props.actions.cleanErrorSummary} className="fa fa-times"></i> {this.props.form.meta.error}
+        </div>
+        }
         {this.renderForm()}
         <br />
-
         <mui.Checkbox
           name="accessPrivateYn" ref="accessSettings" value="1"
           label='createForm_LABEL_access_private_yn'
@@ -132,6 +136,7 @@ export default class CreateTopicForm extends Component {
           formScheme={this.props.formFields.fields}
           onChange={this.props.actions.setNewTopicField}
           modelValues={this.props.newTopic}
+          form={this.props.form}
           />
       </div>
     );
@@ -142,12 +147,15 @@ export default class CreateTopicForm extends Component {
 
     // we need to call `.toJS()` ince `newTopic` is immutable
     let data = newTopic.toJS();
+    console.log('> postData', data)
 
     // normalize inputs from forms elements
     this.props.formFields.fields.forEach(function({type, name}) {
       // `react-select` stores sigle value as an array too
-      if (type === 'select') {
-        data[name] = data[name] ? data[name][0].value : null;
+      if (type === 'select' && data[name]) {
+        if (data[name].length > 0 || data[name].value)
+          data[name] = data[name] ? (data[name].value ? data[name].value
+            : (data[name][0].value ? data[name][0].value : null)) : null;
       }
     });
 
@@ -168,11 +176,51 @@ export default class CreateTopicForm extends Component {
     actions.create(postData)
       .then(({error, payload}) => {
         if (error) {
+          // TODO: snackbar message?
+          //focusInvalidField(this, payload);
+        } else {
+          // item added successfully
+        }
+      });
+  }
+
+  handleDataSubmit(data) {
+
+    const {actions, newTopic} = this.props;
+
+    // normalize inputs from forms elements
+    this.props.formFields.fields.forEach(function ({type, name}) {
+      // `react-select` stores sigle value as an array too
+      if (type === 'select' && data[name]) {
+        if (data[name].length > 0 || data[name].value)
+          data[name] = data[name] ? (data[name].value ? data[name].value
+            : (data[name][0].value ? data[name][0].value : null)) : null;
+      }
+    });
+
+    let postData = {};
+    this.props.formFields.fields.forEach(function (field) {
+      postData[field.name] = data[field.name];
+    });
+
+    this.props.sysFields.forEach(function (field) {
+      if (field && typeof field !== undefined) {
+        postData[field] = data[field];
+      }
+    });
+
+    if (this.props.containerStore && !postData.contextTopicId)
+      postData.contextTopicId = this.props.containerStore.id;
+
+    actions.create(postData)
+      .then(({error, payload}) => {
+        if (error) {
           alert('Error! Check console');
           //focusInvalidField(this, payload);
         } else {
           // item added successfully
         }
       });
+
   }
 }
