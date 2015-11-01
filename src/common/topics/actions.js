@@ -61,6 +61,11 @@ export const CREATE_SUCCESS = 'TOPIC_CREATE_SUCCESS';
 export const CREATE_ERROR = 'TOPIC_CREATE_ERROR';
 export const SET_CURRENT_TOPIC = 'TOPIC_SET_CURRENT_TOPIC';
 
+const validateForm = (validate, fields) => validate(fields)
+  .prop('summary').required()
+  //.prop('password').required().simplePassword()
+  .promise;
+
 const getApi = (fetch, endpoint) =>
   fetch(`/api/${endpoint}`, {
     headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
@@ -431,7 +436,8 @@ export function create(data) {
       CREATE_ERROR
     ],
     payload: {
-      promise: apiPut(fetch, endpoint, data)
+      promise: validateForm(validate, data)
+        .then(() => apiPut(fetch, endpoint, data))
         .catch(response => {
           // decode validation error messages from server
           if (!response) {
