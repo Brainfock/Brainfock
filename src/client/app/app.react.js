@@ -99,9 +99,12 @@ class App extends Component {
       this.io.on('connect', function() {
         //console.log('[BFK] sockets connection established');
 
-        this.io.on('new-comment', function(data) {
-          this.props.actions.catchComment(data.data);
-        }.bind(this));
+        if (!this.ioSubscribed) {
+          this.ioSubscribed = true;
+          this.io.on('new-comment', function (data) {
+            this.props.actions.catchComment(data.data);
+          }.bind(this));
+        }
 
       }.bind(this));
 
