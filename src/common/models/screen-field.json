@@ -73,6 +73,21 @@
         "dataScale": 0,
         "nullable": "N"
       }
+    },
+    "isRequired": {
+      "type": "number",
+      "required": false,
+      "length": null,
+      "precision": 1,
+      "scale": 0,
+      "mysql": {
+        "columnName": "is_required",
+        "dataType": "tinyint",
+        "dataLength": null,
+        "dataPrecision": 1,
+        "dataScale": 0,
+        "nullable": "N"
+      }
     }
   },
   "validations": [],
