@@ -165,9 +165,21 @@ export function find(type, query, contextTopicId, namespace) {
       FIND_SUCCESS,
       FIND_ERROR
     ],
+    meta: {
+      groupKey: type
+    },
     payload: {
       promise:  getApi(fetch, endpoint)
         .catch(response => {
+          if (!response) throw new Error('No response');
+          else if (response.ok === false) return response.json();
+          else throw response;
+        })
+        .then((jsonResponce) => {
+          if (jsonResponce.error) throw jsonResponce;
+          else return jsonResponce;
+        }, (response) => {
+          // throw errors that don't have `.json()` available further
           throw response;
         })
     }
@@ -457,12 +469,6 @@ export function create(data) {
           // throw other errors (i.e. 50x) that don't have `.json()` available
           throw response;
         })
-      // TODO: add validation
-      //promise: validateForm(validate, fields)
-      //  .then(() => post(fetch, endpoint, fields))
-      //  .catch(response => {
-      //    throw response;
-      //  })
     }
   });
 }
@@ -482,20 +488,14 @@ export function save(id, data) {
         .catch(response => {
           throw response;
         })
-      // TODO: add validation
-      //promise: validateForm(validate, fields)
-      //  .then(() => post(fetch, endpoint, fields))
-      //  .catch(response => {
-      //    throw response;
-      //  })
     }
   });
 }
 
-
 export const RUN_OPERATION = 'TOPIC_RUN_OPERATION';
 export const RUN_OPERATION_SUCCESS = 'TOPIC_RUN_OPERATION_SUCCESS';
 export const RUN_OPERATION_ERROR = 'TOPIC_RUN_OPERATION_ERROR';
+
 export function runOperation(topicId, operation) {
 
   const endpoint = `topics/${topicId}/runOperation`;
@@ -515,12 +515,6 @@ export function runOperation(topicId, operation) {
         topicId:topicId,
         operation:operation
       }
-      // TODO: add validation
-      //promise: validateForm(validate, fields)
-      //  .then(() => post(fetch, endpoint, fields))
-      //  .catch(response => {
-      //    throw response;
-      //  })
     }
   });
 }
@@ -528,6 +522,7 @@ export function runOperation(topicId, operation) {
 export const DELETE_TOPIC = 'DELETE_TOPIC';
 export const DELETE_TOPIC_SUCCESS = 'DELETE_TOPIC_SUCCESS';
 export const DELETE_TOPIC_ERROR = 'DELETE_TOPIC_ERROR';
+
 export function deleteTopic(topicId) {
 
   const endpoint = `rawTopics/${topicId}`;
@@ -551,12 +546,6 @@ export function deleteTopic(topicId) {
         .catch(response => {
           throw response;
         }),
-      // TODO: add validation
-      //promise: validateForm(validate, fields)
-      //  .then(() => post(fetch, endpoint, fields))
-      //  .catch(response => {
-      //    throw response;
-      //  })
     }
   });
 }
