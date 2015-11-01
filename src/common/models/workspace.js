@@ -29,7 +29,7 @@ module.exports = function(Workspace) {
   Workspace.validatesUniquenessOf('namespace', {message: 'Namespace is not available'});
   // add reserved namespaces under {bfk:{reservedNamespace:[]} property at config.json
   if (config.reservedNamespace) {
-    Workspace.validatesExclusionOf('namespace', {in: config.reservedNamespace});
+    Workspace.validatesExclusionOf('namespace', {'in': config.reservedNamespace});
   }
 
   /**
