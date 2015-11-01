@@ -47,7 +47,17 @@ module.exports = React.createClass({
     const {children, groupKey, ...passProps} = this.props;
     return (
       <div>
-        <h4><Link to='/boards'>{this.props.boards.group.summary}</Link> > {this.props.boards.board.summary}</h4>
+        <div className="breadcrumbs-bar" style={{
+          background: '#8982A2', // variants: 8C8D98, 7F8090, 7E848E, DAD9E6, FDFDFD
+          padding: '5px 15px',
+          margin: 0,
+          color: '#fff'
+        }}>
+          <h4><Link to='/boards'
+                    style={{color: '#EFEFEF',textDecoration:'underline'}}>{this.props.boards.group.summary}</Link>
+            > {this.props.boards.board.summary}</h4>
+        </div>
+
         <MasterDetailsListView
           {...passProps}
           containerTopic={this.props.boards.board}
