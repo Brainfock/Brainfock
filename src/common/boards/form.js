@@ -25,6 +25,7 @@ export default Record({
   cid: '',
   data: new (Model),
   meta: new (Record({
+    isSubmitting: false,
     isFetching: false,
     hasError: false,
     error: '',

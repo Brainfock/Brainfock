@@ -40,9 +40,8 @@ import RemoteSelectField from './form/RemoteSelectField';
 class Page extends Component{
 
   static propTypes = {
-    // You can declare that a prop is a specific JS primitive. By default, these
-    // are all optional.
     formScheme: React.PropTypes.any.isRequired,
+    form: React.PropTypes.any.isRequired,
     handleSubmit: React.PropTypes.func,
     onChange: React.PropTypes.func.isRequired,
     modelValues: React.PropTypes.object,
@@ -105,6 +104,8 @@ class Page extends Component{
    */
   renderItem(item)
   {
+    const meta = this.props.form.meta;
+
     if (item.type == 'select' || item.type == 'multiselect') {
 
       let props = {
@@ -117,8 +118,12 @@ class Page extends Component{
         width:'100%'
       };
 
-      if (this.props.form.meta.errors && this.props.form.meta.errors.get(item.name)) {
-        props.errorText = this.props.form.meta.errors.get(item.name);
+      if (meta.errors && meta.errors.get(item.name)) {
+        if (meta.isSubmitting == true) {
+          props.errorText = <i className="fa fa-spin fa-cog"></i>;
+        } else {
+          props.errorText = meta.errors.get(item.name);
+        }
       }
 
       if(item.type == 'multiselect') {

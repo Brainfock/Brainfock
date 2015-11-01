@@ -197,6 +197,8 @@ export default function boardsReducer(state = initialState, action) {
       return state
         // lockform submit buttons etc.
         .setIn(['formFields', 'loading'], true)
+        .setIn(['form', 'meta', 'isSubmitting'], true)
+        .deleteIn(['form', 'meta', 'error'])
 
 
     case actions.CREATE_SUCCESS:
@@ -227,19 +229,23 @@ export default function boardsReducer(state = initialState, action) {
 
           return state
             .setIn(['form', 'meta', 'errors'], Map(errorDetails))
+            .setIn(['form', 'meta', 'isSubmitting'], false)
             .setIn(['formFields', 'loading'], false);
 
         } else if (action.payload.error) {
           return state
             .setIn(['form', 'meta', 'error'], action.payload.error.message || 'Unknown Error!')
+            .setIn(['form', 'meta', 'isSubmitting'], false)
             .setIn(['formFields', 'loading'], false);
         } else {
           return state
             .setIn(['form', 'meta', 'error'], action.payload.message.length > 0 && action.payload.message || 'Unknown Error!')
+            .setIn(['form', 'meta', 'isSubmitting'], false)
             .setIn(['formFields', 'loading'], false);
         }
       } else {
-        return state;
+        return state
+          .setIn(['form', 'meta', 'isSubmitting'], false);
       }
     }
 
