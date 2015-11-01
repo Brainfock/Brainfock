@@ -38,6 +38,7 @@ export default class CreateTopicForm extends Component {
 
   static propTypes = {
     actions: React.PropTypes.any.isRequired,
+    newTopic: React.PropTypes.any.isRequired,
     containerStore: React.PropTypes.any.isRequired,
     formFields: React.PropTypes.object,
     params: React.PropTypes.object.isRequired,
@@ -74,6 +75,26 @@ export default class CreateTopicForm extends Component {
       }});
   }
 
+  componentWillReceiveProps(newProps) {
+
+    if (newProps.formFields && this.props.formFields != newProps.formFields) {
+
+      //  after we successfully loaded form fields from server - some of those fields may have had
+      // default value sent by server as well, so quickly go over fields and set default values.
+      newProps.formFields.fields.forEach((fieldScheme) => {
+        if (fieldScheme.value && fieldScheme.name) {
+          console.log('> setNewTopicField')
+          this.props.actions.setNewTopicField({
+            target: {
+              name: fieldScheme.name,
+              value: fieldScheme.value
+            }
+          });
+        }
+      });
+    }
+  }
+
   //componentDidMount: function() {
   //  // focus on input:
   //  var self=this;
@@ -106,8 +127,9 @@ export default class CreateTopicForm extends Component {
         {this.renderForm()}
         <br />
         <mui.Checkbox
-          name="accessPrivateYn" ref="accessSettings" value="1"
+          defaultChecked={this.props.newTopic.accessPrivateYn}
           label='createForm_LABEL_access_private_yn'
+          name="accessPrivateYn"
           onCheck={(function(event, isChecked){
                 this.props.actions.setNewTopicField({
                   target:{
@@ -116,6 +138,8 @@ export default class CreateTopicForm extends Component {
                   }
                 })
                }).bind(this)}
+          ref="accessSettings"
+          value="1"
           />
       </form>
     );
