@@ -28,6 +28,16 @@ module.exports = function(Topic) {
 
   Topic.validatesPresenceOf('typeId', 'groupId', 'workspaceId', 'summary');
 
+  Topic.validate('typeId', typeIdcustomValidator, {message: 'Type is required'});
+  function typeIdcustomValidator(err) {
+    if (!this.typeId || !(this.typeId > 0)) err();
+  };
+
+  Topic.validate('contextTopicId', contextTopicIdcustomValidator, {message: 'is required'});
+  function contextTopicIdcustomValidator(err) {
+    if (this.contextTopicId === 0) err();
+  };
+
   /**
    * Set `groupId` when topic is saved if `createGroup` is provided in `request`  as an alias to `TopicGroup.groupKey`
    */
