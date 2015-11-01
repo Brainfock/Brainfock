@@ -426,6 +426,22 @@ export function create(data) {
     payload: {
       promise: apiPut(fetch, endpoint, data)
         .catch(response => {
+          // decode validation error messages from server
+          if (!response) {
+            throw new Error('No response');
+          } else if (response.ok === false) return response.json();
+          else {
+            throw response;
+          }
+        })
+        .then(function (jsonResponce) {
+          if (jsonResponce.error) {
+            throw jsonResponce;
+          }
+          else
+            return jsonResponce;
+        }, function (response) {
+          // throw other errors (i.e. 50x) that don't have `.json()` available
           throw response;
         })
       // TODO: add validation
