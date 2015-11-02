@@ -11,8 +11,6 @@ import {Provider} from 'react-redux';
 import {RoutingContext, match} from 'react-router';
 import serialize from 'serialize-javascript';
 import Promise from 'bluebird';
-import Todo from '../../common/todos/todo';
-import initialState from '../initialState';
 import {configureStore} from '../../common';
 import {fromJS} from 'immutable';
 import {mapDispatchToProps} from '../../common';
@@ -33,7 +31,7 @@ import app from '../main';
 export default function render(req, res, next) {
   const ctx = loopback.getCurrentContext();
   const currentUser = ctx && ctx.get('currentUser');
-  let _state ={
+  let initialState = {
     device: {
       isMobile: ['phone', 'tablet'].indexOf(req.device.type) > -1
     },
@@ -44,11 +42,10 @@ export default function render(req, res, next) {
 
   // provide auth token id to client
   if(currentUser) {
-    _state.users.viewer.authToken = ctx.get('accessToken').id;
+    initialState.users.viewer.authToken = ctx.get('accessToken').id;
   }
 
-  const state = fromJS(initialState).mergeDeep(_state).toJS();
-  const store = configureStore({initialState: state});
+  const store = configureStore({initialState});
 
   const {actions} = mapDispatchToProps(store.dispatch);
   actions.setAppBaseUrl(app.get('baseUrl'));
