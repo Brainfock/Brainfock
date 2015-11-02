@@ -348,6 +348,9 @@ export function loadTopicGroup(name) {
       LOAD_TOPIC_GROUP_SUCCESS,
       LOAD_TOPIC_GROUP_ERROR
     ],
+    meta: {
+      groupKey: name
+    },
     payload: {
       promise: apiGet(fetch, endpoint)
         .then(function(value) {

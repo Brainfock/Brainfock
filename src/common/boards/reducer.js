@@ -41,6 +41,7 @@ const InitialState = Record({
   board: new Todo,
   viewTopic: new Todo,
   group: new TopicGroup,
+  groups: new Map(),
 
   // `meta` represents meta state of a list
   meta: new (Record({
@@ -184,13 +185,20 @@ export default function boardsReducer(state = initialState, action) {
 
     case actions.LOAD_TOPIC_GROUP:
       return state
+        // TODO: set group as a part of topic if there is topicId in action.meta ?
         //.setIn(['board', 'group'],new TopicGroup())
         .set('group', new TopicGroup());
 
     case actions.LOAD_TOPIC_GROUP_SUCCESS:
+    {
+      if (action.meta.groupKey && !state.groups.get(action.meta.groupKey)) {
+        state = state.setIn(['groups', action.meta.groupKey], new TopicGroup(action.payload))
+      }
+
       return state
         //.setIn(['board', 'group'], new TopicGroup(action.payload))
         .set('group', new TopicGroup(action.payload));
+    }
 
     case action.LOAD_TOPIC_GROUP_ERROR:
       return state;
