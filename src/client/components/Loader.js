@@ -3,12 +3,14 @@ import {LinearProgress} from 'material-ui';
 
 // TODO: i18n
 module.exports = React.createClass({
+
   propTypes: {
     asGlobal: PropTypes.bool, // render progress bar on very top of page
     noLabel: PropTypes.bool,
   },
+
   render: function() {
-    console.log('> Loader props', this.props)
+
     let {wrapperStyle, propgressBarStyle} = {};
     if (!this.props.noLabel) {
       propgressBarStyle = {margin: 0}
@@ -22,6 +24,7 @@ module.exports = React.createClass({
         zIndex: 9999
       }
     }
+
     return (
       <div>
         <div style={wrapperStyle}>
