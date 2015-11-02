@@ -11,31 +11,35 @@ const views = {
   'boards.homepage': ListView,
 };
 
+/**
+ * Board view
+ *
+ * List topics of a board (same as issues of a project)
+ */
 module.exports = React.createClass({
 
-  //componentDidMount() {
-  //  // pull all topics (projects) from server - this list is filtered by client
-  //  if(process.env.IS_BROWSER==true) {
-  //    // load info about current group
-  //    this.props.topic_actions.loadTopicGroup(this.props.groupKey || 'board', {}/*, this.props.parentModel*/);
-  //    // load info about CURRENT BOARD
-  //    this.props.topic_actions.loadCurrent(this.props.params.board_id);
-  //    // load TOPICS of this BOARD
-  //    this.props.topic_actions.find(this.props.groupKey || 'board_topic', {},this.props.params.board_id);
-  //  }
-  //}
-
+  getDefaultProps(){
+    return {
+      groupKey: 'board'
+    }
+  },
 
   componentWillMount() {
+
     if (process.env.IS_BROWSER === true) {
+
       // load info about CURRENT BOARD
       this.props.topic_actions.loadCurrent(this.props.params.board_id);
-      this.props.topic_actions.loadTopicGroup('board');
-      //this.props.topic_actions.find('project', {}/*, this.props.parentModel*/);
+
+      if (!this.props.boards.groups.has(this.props.groupKey))
+        this.props.topic_actions.loadTopicGroup('board');
     }
   },
 
   render: function () {
+
+    const {children, groupKey, ...passProps} = this.props;
+    const group = this.props.boards.groups.get(groupKey);
 
     let View;
     if (views[this.props.boards.group.view]) {
@@ -44,7 +48,6 @@ module.exports = React.createClass({
       View = MasterDetailsListView;
     }
 
-    const {children, groupKey, ...passProps} = this.props;
     return (
       <div>
         <div className="breadcrumbs-bar" style={{
@@ -53,9 +56,10 @@ module.exports = React.createClass({
           margin: 0,
           color: '#fff'
         }}>
+          {group &&
           <h4><Link to='/boards'
-                    style={{color: '#EFEFEF',textDecoration:'underline'}}>{this.props.boards.group.summary}</Link>
-            > {this.props.boards.board.summary}</h4>
+                    style={{color: '#EFEFEF',textDecoration:'underline'}}>{group.summary}</Link>
+            > {this.props.boards.board.summary}</h4>}
         </div>
 
         <MasterDetailsListView
