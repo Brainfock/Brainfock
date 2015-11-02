@@ -1,9 +1,20 @@
+/* eslint-disable no-undef, no-console */
 import bg from 'gulp-bg';
 import eslint from 'gulp-eslint';
+import fs from 'fs';
 import gulp from 'gulp';
-import runSequence from 'run-sequence';
-import webpackBuild from './webpack/build';
+import gutil from 'gulp-util';
+import mocha from 'gulp-mocha';
 import os from 'os';
+import path from 'path';
+import runSequence from 'run-sequence';
+import shell from 'gulp-shell';
+import webpackBuild from './webpack/build';
+import yargs from 'yargs';
+
+const args = yargs
+  .alias('p', 'production')
+  .argv;
 
 const runEslint = () => {
   return gulp.src([
@@ -16,12 +27,12 @@ const runEslint = () => {
   .pipe(eslint.format());
 };
 
-// Always use Gulp only in development
-gulp.task('set-dev-environment', () => {
-  process.env.NODE_ENV = 'development'; // eslint-disable-line no-undef
+gulp.task('env', () => {
+  process.env.NODE_ENV = args.production ? 'production' : 'development';
 });
 
-gulp.task('build', webpackBuild);
+gulp.task('build-webpack', ['env'], webpackBuild);
+gulp.task('build', ['build-webpack']);
 
 gulp.task('eslint', () => {
   return runEslint();
@@ -32,15 +43,39 @@ gulp.task('eslint-ci', () => {
   return runEslint().pipe(eslint.failAfterError());
 });
 
-gulp.task('test', (done) => {
-  runSequence('eslint-ci', 'build', done);
+gulp.task('mocha', () => {
+  // read: false, not to load file contents
+  gulp.src('src/**/__test__/**/*.js', {read: false})
+    .pipe(mocha({
+      require: ['./test/mochaSetup.js'],
+      reporter: 'spec'
+    }))
+    // .on('error', process.exit.bind(process, 1));
+    .on('error', gutil.log);
 });
 
+// Continuous test running
+gulp.task('mocha-watch', () => {
+  gulp.watch(['test/**/**', 'src/client/**', 'src/common/**'], ['mocha']);
+});
+
+gulp.task('test', done => {
+  runSequence('eslint-ci', 'mocha', 'build-webpack', done);
+});
+
+gulp.task('server-node', bg('node', './src/server'));
 gulp.task('server-hot', bg('node', './webpack/server'));
+// Shell fixes Windows este/issues/522, bg is still needed for server-hot.
+gulp.task('server-nodemon', shell.task(
+  // Normalize makes path cross platform.
+  path.normalize('node_modules/.bin/nodemon src/server')
+));
 
-gulp.task('server', ['set-dev-environment', 'server-hot'], bg(
-  os.type() === 'Windows_NT' ? '.\\node_modules\\.bin\\nodemon.cmd' : './node_modules/.bin/nodemon', './src/server'));
-
-gulp.task('server-hot-only', ['set-dev-environment', 'server-hot']);
+gulp.task('server', ['env'], done => {
+  if (args.production)
+    runSequence('build', 'server-node', done);
+  else
+    runSequence('server-hot', 'server-nodemon', done);
+});
 
 gulp.task('default', ['server']);
