@@ -207,4 +207,9 @@ export default {
       //},
     }
   },
+  error: {
+    service: {
+      fetchFailed: 'Could not load data, please, try again'
+    }
+  }
 };
