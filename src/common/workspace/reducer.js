@@ -28,14 +28,15 @@ const InitialState = Record({
   list: List(),
   listFilters: List(),
   formFields: new (Record({
-    loading: true,
+    loading: false,
     group: '',
     fields: List(),
   })),
   newTopic: new Model,
   viewPage: new Model,
   meta: new (Record({
-    loading: true,
+    isFetching: false,
+    loading: false,
     count: 0,
   })),
   active: new Model(),
@@ -75,9 +76,11 @@ export default function spacesReducer(state = initialState, action) {
       return state
         .set('active', new Model({
           data: action.payload,
-          meta: {
-            isFetching: false
-          }
+          meta: new (Record({
+            isFetching: false,
+            hasError: false,
+            errors: List()
+          }))
         }));
   }
 
