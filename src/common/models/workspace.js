@@ -126,8 +126,7 @@ module.exports = function(Workspace) {
    * @returns {*}
    */
   function validateWorkspaceViewAccess(ctx, instance, next) {
-    console.log('validateWorkspaceViewAccess')
-    console.log(instance)
+
     const currentUser = loopback.getCurrentContext().get('currentUser');
     if (instance) {
       let e = new Error('Authorization Required');
