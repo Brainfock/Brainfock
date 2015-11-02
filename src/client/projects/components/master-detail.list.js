@@ -33,6 +33,7 @@ import ListView from '../../boards/boards.react';
 import ListViewItem from './issues-list-item';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import Filters from '../../components/UISimpleFilters';
+import FetchActionError from '../../components/FetchActionError';
 
 export default class ProjectIssues extends Component {
 
@@ -69,8 +70,7 @@ export default class ProjectIssues extends Component {
     };
   }
 
-  componentDidMount() {
-
+  fetchData() {
     if (process.env.IS_BROWSER === true) { // or get an infinite loop
 
       const groupKey = this.props.groupKey;
@@ -82,6 +82,10 @@ export default class ProjectIssues extends Component {
         this.props.topic_actions.loadTopicGroup(groupKey);
       }
     }
+  }
+
+  componentDidMount() {
+    this.fetchData();
   }
 
   componentWillUpdate(newProps) {
@@ -248,7 +252,11 @@ export default class ProjectIssues extends Component {
           </div>
           <div className="clearfix" style={{position:'relative'}}>
             {this.props.boards.meta.error &&
-            <div className="alert alert-warning" style={{margin:0,borderRadius:0}}>{this.props.boards.meta.error}</div>}
+            <FetchActionError
+              msg={this.props.msg}
+              meta={this.props.boards.meta}
+              handleRetry={this.fetchData.bind(this)}
+              />}
             {content}
           </div>
         </div>
