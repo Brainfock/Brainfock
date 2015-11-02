@@ -246,7 +246,7 @@ export default class ProjectIssues extends Component {
               style={filterStyles}
               />
           </div>
-          <div className="clearfix">
+          <div className="clearfix" style={{position:'relative'}}>
             {this.props.boards.meta.error &&
             <div className="alert alert-warning" style={{margin:0,borderRadius:0}}>{this.props.boards.meta.error}</div>}
             {content}
@@ -268,7 +268,7 @@ export default class ProjectIssues extends Component {
     if (this.props.boards.meta.isFetching === true &&
       (!this.props.boards.list.size || this.props.boards.meta.groupKey != this.props.groupKey)) {
       return (
-        <div className="row"><h1><Loader /></h1></div>
+        <h1><Loader asGlobal/></h1>
       );
     }
     // having empty list at this point meant there was an error during fetch

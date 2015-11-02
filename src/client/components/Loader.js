@@ -4,18 +4,33 @@ import {LinearProgress} from 'material-ui';
 // TODO: i18n
 module.exports = React.createClass({
   propTypes: {
-    noLabel: PropTypes.bool
+    asGlobal: PropTypes.bool, // render progress bar on very top of page
+    noLabel: PropTypes.bool,
   },
   render: function() {
-    let propgressBarStyle = {}
+    console.log('> Loader props', this.props)
+    let {wrapperStyle, propgressBarStyle} = {};
     if (!this.props.noLabel) {
-      propgressBarStyle = {marginTop: '5%'}
+      propgressBarStyle = {margin: 0}
+    }
+    if (this.props.asGlobal) {
+      wrapperStyle = {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 9999
+      }
     }
     return (
-      <div style={{textAlign:'center',marginTop:!this.props.noLabel ? '10%' : 0}}>
-        {!this.props.noLabel && <span><i className="fa fa-cog fa-spin"></i> Loading...</span>}
-
-        <LinearProgress mode="indeterminate" style={propgressBarStyle}/>
+      <div>
+        <div style={wrapperStyle}>
+          <LinearProgress mode="indeterminate" style={propgressBarStyle}/>
+        </div>
+        {!this.props.noLabel &&
+        <div style={{textAlign:'center',marginTop:!this.props.noLabel ? '10%' : 0}}>
+          <span><i className="fa fa-cog fa-spin"></i> Loading...</span>
+        </div>}
       </div>
     );
   }

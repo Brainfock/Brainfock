@@ -40,9 +40,12 @@ class Layout extends Component{
 
   render () {
 
+    // return full-page loader only if there's really no data
     if (this.props.workspace.active.meta.isFetching || !this.props.boards.board || this.props.boards.board.loading == true) {
       return <AppContentCanvas header={
-        <h1><Loader /></h1>
+        <h1>
+          <Loader />
+        </h1>
       }/>
     }
 
