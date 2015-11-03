@@ -1,8 +1,42 @@
 Changelog
 =========
 
-Summary of changes in Brainfock project code. Changelog entries usually are split into `Features`, `Fixes` and `Style tweaks` sections.
+Summary of most notable changes in Brainfock project code. Changelog entries usually are split into `Features`, `Fixes` and `Style tweaks` sections.
 When makes sense, items in these section may be subdivided by application component (e.g. `Server`, `API`, `iOS Client`).
+
+
+## 29 Oct Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.22.0:
+* Add admin module
+
+  Module takes advantage of require.ensure and does not load module files unless client requested them.
+* Add workspaces module, using same techniques as in admin module
+* Add script to initiate users (Demo data)
+
+  To run, do:
+  > $ node src/sever/bin/initiateUsers.js
+
+  or
+  > $ NODE_ENV=development node src/sever/bin/initiateUsers.js
+* Add dynamic route resolver for root 'workspace' page, e.g. http://brianfock.org/brainfock
+* Handle global errors (db connection, auth etc.) and present to user
+* Improve isomorphic data fetch
+* Tweak watermark Brainfock logo size
+* Add `member` model (useful for admin section)
+* Add `users` actions
+* Add hotkey `ctrl+s` while editing wiki page
+* Add "Create Workspace" page, utilizing `redux-form` (non-immutable, only suitable for simple forms)
+* Add `workspace` reducer & action
+* Modify `workspace` ACL to allow `Admin` role to CREATE
+* Add reserved workspace namespaces config & validation & add names of all root modules to this list
+* Add 'before save' hook to `Topic` model's inherit workspaceId from contextTopicId
+* Modify topic group permalink template variables:
+  * `/:id/` - for topic Id;
+  * `/:topic_key/` - for `contextTopicKey` of a topic;
+  * `/:board_key/` - for `contextTopicKey` of **parent topi**c (e.g. board or project);
+  * `/:context_id/` - for `contextTopicId` (link to context topic, e.g. project or board id);
+  * `/:namespace/` - topic workspace namespace.
+* Loader component: Add option to render line-progress bar only, without `loading` label
+* Add server data fetch for workspace homepage, fired by @fetch decorator and is isomorphic
 
 ## 25 Oct Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.21.0:
 
@@ -159,7 +193,6 @@ When makes sense, items in these section may be subdivided by application compon
 * bump version
 
 
-
 # Changelog for older version of Brainfock, before `PHP -> Node.js` migration.
 
 
@@ -265,12 +298,12 @@ When makes sense, items in these section may be subdivided by application compon
 * fix moving projects across lists at workspace dashboard screen
 * Ticket details panel : allow to change priority; better empty milestone
 
-## 25 Sep 2014; Sergii Gamaiunov <hello@webkadabra.com> v0.10.0:
+## Sergii Gamaiunov <hello@webkadabra.com> v0.10.0:
 + notification system
 + notification i18n
 + notification delivery system
 
-## 7 Sep 2014; Sergii Gamaiunov <hello@webkadabra.com> v0.9.3:
+## Sergii Gamaiunov <hello@webkadabra.com> v0.9.3:
 * update select2 lib/plugin
 * tickets list: filters are visible right away
 * [#31] Datepicker - make it obvious that user can change years/months
@@ -286,11 +319,11 @@ When makes sense, items in these section may be subdivided by application compon
 + automatically track tasks by author and assignee
 + improve entity_watch workflow, add subscribe_via description field
 
-## 5 Sep 2014; Sergii Gamaiunov <hello@webkadabra.com> v0.9.1:
+## Sergii Gamaiunov <hello@webkadabra.com> v0.9.1:
 * fix EntityWatchBehavior (when deleting "Watch" relation)
 * adjust Task model - user_watch attribute rules
 
-## 4 Sep 2014; Sergii Gamaiunov <hello@webkadabra.com> v0.9.0:
+## Sergii Gamaiunov <hello@webkadabra.com> v0.9.0:
 + New CActiveRecord behavior - EntityWatchBehavior
 + allow user to subscribe to tasks
 * improve project/tasks API
@@ -377,14 +410,14 @@ When makes sense, items in these section may be subdivided by application compon
 ## Sergii Gamaiunov <hello@webkadabra.com> v0.7.8:
 + UserEventWatch model
 * allow for bigger project description
-* improve tickets form (add visual ����� maxlength counter)
+* improve tickets form (add visual  maxlength counter)
 * improve dock form l10n
 * do not render details panel on model sync - it interrupts inline editing flow
 * css/ui cleanup & custom TODC bootstrap adjustment
 * space dashboard/project deletion l10n (ru, uk)
 * confirm dialog fix
 
-## 25 Aug 2014; Sergii Gamaiunov <hello@webkadabra.com> v0.7.7:
+## Sergii Gamaiunov <hello@webkadabra.com> v0.7.7:
 + new common confirm view with customizable buttons set
 + tickets: copy issue title & number to clipboard
 + suggest page refresh after language settings has been changed
@@ -425,7 +458,7 @@ When makes sense, items in these section may be subdivided by application compon
 * allow to toggle sidebar
 * cleanup
 
-## 19 Aug 2014; Sergii Gamaiunov <hello@webkadabra.com> v0.7.1:
+## Sergii Gamaiunov <hello@webkadabra.com> v0.7.1:
 * improve project user invites system (backend & frontend)
 + activity stream when project created
 + user dashboard: visual counter on how many invites user has
@@ -438,7 +471,7 @@ When makes sense, items in these section may be subdivided by application compon
 * activity feed backend improvement
 * bug: invite empty user
 
-## 18 Aug 2014; Sergii Gamaiunov <hello@webkadabra.com> v0.7.0:
+## Sergii Gamaiunov <hello@webkadabra.com> v0.7.0:
 + improve project user invites system (backend & frontend)
 * EntityBehavior: allow to override entity className (to prevent wrong class names for extended classes)
 * backgrid added
@@ -464,7 +497,7 @@ When makes sense, items in these section may be subdivided by application compon
 ## Sergii Gamaiunov <hello@webkadabra.com> v0.5.1:
 + improved access control over project stream feed - user will see only event related to entities he has access to
 
-## 1 Aug 2014; Sergii Gamaiunov <hello@webkadabra.com> v0.5.0:
+## Sergii Gamaiunov <hello@webkadabra.com> v0.5.0:
 + entity access introduced
 + cast stream event when new message topic is created
 + new project activiy feed
@@ -490,21 +523,21 @@ When makes sense, items in these section may be subdivided by application compon
 ## Sergii Gamaiunov <hello@webkadabra.com> v0.4.2:
 * update & fix nanoscroller on list views
 
-## 31 Jul 2014; Sergii Gamaiunov <hello@webkadabra.com> v0.4.1:
+## Sergii Gamaiunov <hello@webkadabra.com> v0.4.1:
 + comments for tickets
 
-## 30 Jul 2014; Sergii Gamaiunov <hello@webkadabra.com> v0.4.0:
+## Sergii Gamaiunov <hello@webkadabra.com> v0.4.0:
 + new activity stream event component logic & table structure
 + added ModelEntityBehavior to deal with entity records outside of CommentableBehavior
 
-## 29 Jul 2014; Sergii Gamaiunov <hello@webkadabra.com> v0.3.1:
+## Sergii Gamaiunov <hello@webkadabra.com> v0.3.1:
 * improve users access validation on project/workspace level: user will only see project he owns, he has access to or
   that are in a space he owns (duh!)
 
-## 29 Jul 2014; Sergii Gamaiunov <hello@webkadabra.com> v0.3.0:
+## Sergii Gamaiunov <hello@webkadabra.com> v0.3.0:
 + invite users to projects
 
-## 29 Jul 2014; Sergii Gamaiunov <hello@webkadabra.com> v0.2.2:
+## Sergii Gamaiunov <hello@webkadabra.com> v0.2.2:
 + unified list view: app\www\app\js\views\common\superListView.js
 * refactored tasks & message boards to use new superListView base view
 
@@ -513,15 +546,15 @@ When makes sense, items in these section may be subdivided by application compon
 * auto-post first comments when creating a new topic (message boards)
 * bug fixes
 
-## 28 Jul 2014; Sergii Gamaiunov <hello@webkadabra.com> v0.2.0:
+## Sergii Gamaiunov <hello@webkadabra.com> v0.2.0:
 + comments for project message board
 + new layout for project message board
 * continued improvement of project message board module
 * continued CSS/layout clean up
 * display current app version & build name & time (bottom-left corner)
 
-## 27 Jul 2014; Sergii Gamaiunov <hello@webkadabra.com> v0.1.1:
+## Sergii Gamaiunov <hello@webkadabra.com> v0.1.1:
 * bringing order to CSS/layout regarding lists with details panel
 
-## 26 Jul 2014; Sergii Gamaiunov <hello@webkadabra.com> v0.1.0:
+## Sergii Gamaiunov <hello@webkadabra.com> v0.1.0:
 + messages module

@@ -1,82 +1,87 @@
 [![Brainfock](https://brainfock.files.wordpress.com/2014/11/logo_greenhex_trans.png?w=250)](http://brainfock.org)
 
-#### Topic management solution / CMF
-Copyright (C) 2013-2015 Sergii Gamaiunov, <hello@webkadabra.com>
+## Business and Community Management Solution
 
-> Brainfock is a modern web-based CMF started out as task & project management tool and ended up as something that angels might have crafted. It  will help you manage projects, project's tasks, deals, contacts, run community (discussion borads), manage documents like Wiki & much more.
+Written in universal JavaScript, NodeJS server with Loopback, ReactJS client with everything.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+Copyright (C) 2015 Sergii Gamaiunov <[@SergiiGama](https://twitter.com/SergiiGama)>
 
-Follow Brainfock on [GitHub](https://github.com/Brainfock/Brainfock), [Twitter](https://twitter.com/brainfockapp) or [Facebook](https://www.facebook.com/Brainfock) for updates.
+> Brainfock is a modern web-based CMF started out as task & project management tool and ended up as something that angels might have crafted. It  will help you manage projects, project's tasks, deals, contacts, run community (discussion boards), manage documents like Wiki & much more. WIP, however!
 
-### Features
+Follow Brainfock on [GitHub](https://github.com/Brainfock/Brainfock) or [Facebook](https://www.facebook.com/Brainfock) for updates, and say hi to me [@SergiiGama](https://twitter.com/SergiiGama) so that I know that you know, you know. Oh, and finally there is [![Gitter chat https://gitter.im/Brainfock/Brainfock](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Brainfock/Brainfock?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+Features
+--------------------------
+Whether you represent a **company** or a **single developer**, Brainfock at this stage is a great product if you want to join Open Source development, as it can be a great learning source because of it's development stack with live reloads of code, rich tests and cutting-edge technologies. Project is WIP, join and support!
 
 - Robust React.js-powered Web-client
-- Server-side rendering of React components
-- WebSockets
+- Server-side rendering of React components, so documents like WIKI are Search-Engine-friendly
+- WebSockets (Socket.io)
+- Workspaces
 - Projects, Planning & Milestones, Tickets
 - Discussion boards (per project or any other object)
 - Wiki module - each object can have it's own Wiki; Special pages, Pages Index etc.
 - Customizable data scheme (projects, boards, issues are available out-of-the-box, everything is configurable)
-- Customizable issue types
-- Access control per container (e.g. project, discussion board) and items (e.g. issue, board topic)
-- User notificaitons
-- Activity stream per object (project, issue etc.)
+- Customizable issue (topic) types
+- Access control per container (e.g. project, discussion board) and items (e.g. issue, board topic) 
+- User notifications *in progress*
+- Activity stream per object (project, issue etc.) *in progress*
 - I18n & L10n
 
 ![](http://i57.tinypic.com/5cjfkh.png)
 
-Code:
-- frontend is done fully on React.js
-- Node.js / Loopback (Express) in the back
+Status
+--------------------------
+Currently under **heavy development**, rewriting PHP/Backbone code to Node/React. Public code release is planned with version 0.x.0-beta.1
+
+Stay tuned for updates and definitely hit me up with a quick shouts  [@SergiiGama](https://twitter.com/SergiiGama) if you've read to this point, such support means a lot!
 
 
-### Status
-
-Currently in develoment (porting PHP/Backbone code to Node/React). Public code release is planned with version v1.0
-Please, stay tuned for updates!
-
-### Tech summary
-
-Brainfock uses a number of Open Source libraries to work properly. We used great [Este.js](https://github.com/este/este) stack
-coupled with [Loopback](http://loopback.io/) to deal with web backend, models etc. For more tech info, please, see README-TECH
-
+Tech summary
+--------------------------
 * React.js
-* Google's Material Design guildelines (utilizing powerful <http://material-ui.com>)
+* Google's Material Design guidelines (utilizing powerful <http://material-ui.com>)
 * Node.js' NPM, Webpack & Bower
-* [Marked] - a super fast port of Markdown to JavaScript
+* [Loopback](http://loopback.io/)
 
-Developers, please, follow [README-DEVS.md](/README-DEVS.md) for in-depth information about Este stack, setup and development
+Please, follow [SETUP.md](/SETUP.md) for in-depth information about used technologies and stack, setup and development.
 
-### Installation
 
+Installation
+--------------------------
 ```
-Please, see README-DEVS.md for details
+Please, see SETUP.md for details
 ```
 
-### Contibution & support
+
+Contribution & support
+--------------------------
 Want to contribute? Great! I'll be very happy to get help. More info is coming closer to public code release.
 
-### Contacts
+
+Contacts
+--------------------------
 Developer - Sergii Gamaiunov <hello@webkadabra.com>
 
-### Todo
-- Customizable workflows per container & issue group/type
-- Workspaces
+
+Todo
+--------------------------
 - Web installer
+- Activity stream *(in progress)*
+- Admin interface *(in progress)*
+- User sign-up per workspace, sign-up with 3rd party providers (optional, configurable by admin)
+- Admin's configuration wizard for data schemes and more predefined schemes (Sales management etc.)
 - Private messages
 - Uploads module
-- Plugin system (backend) & modules system for web-client
-- Mobile native apps for Android & iOS
+- Plugins/extensions system
+- Mobile native apps for Android & iOS with `react-native`
 - Tests coverage
 - VCS integration for software development
-- Admin interface
-- More predefined data schemes (Sales management etc.)
+- Improved CMS page editor
+
 
 License
----
-
-AGPL v3
+--------------------------
+Currently evaluating, most likely AGPL v3
 
 ## Notes
 
@@ -86,8 +91,10 @@ AGPL v3
 
 ## Credit
 
-Sergii Gamaiunov, [twitter.com/Webkadabra](https://twitter.com/Webkadabra)
+Sergii Gamaiunov, [@SergiiGama](https://twitter.com/SergiiGama), <hello@webkadabra.com>
 
 ** Authors **
 
-[sergii gamaiunov]:http://webkadabra.com/
+[sergii gamaiunov]:<[@SergiiGama](https://twitter.com/SergiiGama)>, <hello@webkadabra.com>
+
+# Thank You!
