@@ -155,8 +155,10 @@ export function find(type, query, contextTopicId, namespace) {
   endpoint += '&filter[include][0][type]';
   endpoint += '&filter[include][1][workspace]';
 
+  let queryString;
   if (query) {
-    endpoint += '&' + toQueryString({filter: {where: query}}, false);
+    queryString = toQueryString({filter: {where: query}}, false);
+    endpoint += '&' + queryString;
   }
 
   return ({fetch, validate}) => ({
@@ -166,7 +168,8 @@ export function find(type, query, contextTopicId, namespace) {
       FIND_ERROR
     ],
     meta: {
-      groupKey: type
+      groupKey: type,
+      queryString: queryString
     },
     payload: {
       promise:  getApi(fetch, endpoint)

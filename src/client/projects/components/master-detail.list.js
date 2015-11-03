@@ -57,9 +57,9 @@ export default class ProjectIssues extends Component {
     location: React.PropTypes.object
   };
 
-  constructor(props, props2) {
-
+  constructor(props) {
     super(props);
+
     this.state = {
       count:0,
       filters:(props.location.query && props.location.query.filter ? props.location.query.filter : null),
@@ -71,13 +71,14 @@ export default class ProjectIssues extends Component {
   }
 
   fetchData() {
+
     if (process.env.IS_BROWSER === true) { // or get an infinite loop
 
       const groupKey = this.props.groupKey;
       this.props.topic_actions.count(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
       this.props.topic_actions.find(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
       this.props.topic_actions.loadFilters(groupKey, {}, this.props.params.board_id);
-      // FIXME: does not play well going back & forth with deeper level topics (e.g. forum topic of a board of a project)
+
       if (!this.props.boards.group || this.props.boards.group.groupKey !== groupKey) {
         this.props.topic_actions.loadTopicGroup(groupKey);
       }
@@ -92,11 +93,17 @@ export default class ProjectIssues extends Component {
 
     if (process.env.IS_BROWSER === true) {
 
-      const groupKey = this.props.groupKey;
+      if (`${newProps.location.search}` !== `${this.props.location.search}`) {
 
-      if (newProps.location.search !== this.context.location.search) {
-        this.props.topic_actions.count(groupKey, (newProps.location.query.filter || null), this.props.params.board_id, this.props.params.namespace);
-        this.props.topic_actions.find(groupKey, (newProps.location.query.filter || null), this.props.params.board_id, this.props.params.namespace);
+        let query = {};
+        if (this.state.searchQuery) {
+
+          const queryString = encodeURI('%' + newProps.location.query.query + '%');
+          query.summary = {like: queryString};
+        }
+        let filter = Object.assign(query, newProps.location.query.filter);
+        this.props.topic_actions.count(this.props.groupKey, filter, this.props.params.board_id, this.props.params.namespace);
+        this.props.topic_actions.find(this.props.groupKey, filter, this.props.params.board_id, this.props.params.namespace);
       }
     }
   }
@@ -159,7 +166,9 @@ export default class ProjectIssues extends Component {
 
     if (!this.props.boards.list.size
         // don't show empty list fallback if being loaded - e.g., filters were applied
-      && !this.props.boards.meta.isFetching && !this.props.boards.meta.error) {
+      && !this.props.boards.meta.isFetching && !this.props.boards.meta.error
+        // dont show empty fallback when filters or search query are not empty - user probably just searcher for something that isn't there
+      && (!this.state.searchQuery && !this.state.filters)) {
       const EmptyListFallback = this.props.emptyListFallback;
       const {children, ...passProps} = this.props; // extract children to avoid redux data corrupt & loop infinitely
       return <EmptyListFallback {...passProps} form={addItemForm}/>;
@@ -380,7 +389,10 @@ export default class ProjectIssues extends Component {
 
   applySearchQuery() {
 
+    console.log('> applySearchQuery');
     const newValue = this.refs.searchbox.getValue();
+
+    //let currentQuery = Object.assign({}, this.props.location.query);
     let currentQuery = this.props.location.query;
 
     if (newValue) {
@@ -390,8 +402,8 @@ export default class ProjectIssues extends Component {
       currentQuery['query'] = '';
     }
 
-    this.props.history.pushState(null, this.props.location.pathname, currentQuery);
     this.setState({searchQuery: newValue});
+    this.props.history.pushState(null, this.props.location.pathname, currentQuery);
   }
 
   onKeyDown(e) {

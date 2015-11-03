@@ -46,6 +46,7 @@ const InitialState = Record({
   // `meta` represents meta state of a list
   meta: new (Record({
     groupKey: '', // group key of a list, changes only on request end (success or error)
+    queryString: '',
     // TODO: clean up using of 'loading' in favor of more descriptiove 'isFetching'
     loading: true,
     count: 0,
@@ -119,6 +120,12 @@ export default function boardsReducer(state = initialState, action) {
 
     case actions.FIND_SUCCESS:
     {
+
+      //console.log('> state.meta.queryString', state.meta.queryString);
+      //if (action.meta && action.meta.queryString) {
+      //  console.log('> action.meta.queryString', action.meta.queryString);
+      //}
+
       const newlist = action.payload.map((item) => {
         item.cid = getRandomString();
         return new Todo(item);
@@ -128,6 +135,7 @@ export default function boardsReducer(state = initialState, action) {
         .update('list', list => list.push(...newlist))
 
         .setIn(['meta', 'groupKey'], action.meta.groupKey)
+        //.setIn(['meta', 'queryString'],  action.meta.queryString || '')
 
         .setIn(['meta', 'isFetching'], false)
         .setIn(['meta', 'loading'], false)
