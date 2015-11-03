@@ -33,10 +33,28 @@ module.exports = function(Topic) {
     if (!this.typeId || !(this.typeId > 0)) err();
   };
 
+  Topic.validate('workspaceId', function (err) {
+    if (!this.workspaceId || !(this.workspaceId > 0)) err();
+  }, {message: 'is required'});
+
+  Topic.validate('groupId', function (err) {
+    if (!this.groupId || !(this.groupId > 0)) err();
+  }, {message: 'is required'});
+
+  Topic.validate('typeId', function (err) {
+    if (!this.typeId || !(this.typeId > 0)) err();
+  }, {message: 'is required'});
+
   Topic.validate('contextTopicId', contextTopicIdcustomValidator, {message: 'is required'});
   function contextTopicIdcustomValidator(err) {
     if (this.contextTopicId === 0) err();
   };
+
+  Topic.validate('contextTopicKey', function (err) {
+    if (!this.contextTopicId && (!this.contextTopicKey || this.contextTopicKey.trim() === '')) err();
+  }, {message: 'is required'});
+
+  Topic.validatesFormatOf('contextTopicKey', {with: /^[a-zA-Z\-]+$/})
 
   /**
    * Set `groupId` when topic is saved if `createGroup` is provided in `request`  as an alias to `TopicGroup.groupKey`
