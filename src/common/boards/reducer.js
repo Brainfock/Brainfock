@@ -366,7 +366,7 @@ export default function boardsReducer(state = initialState, action) {
       // TODO: find topic in `list` and update 'DELETED' flag
       if (action.meta.topicId && state.viewTopic && state.viewTopic.id == action.meta.topicId) {
         return state
-          .setIn(['viewTopic', 'data', 'deletedYn'], true)
+          .setIn(['viewTopic', 'data', 'deletedYn'], 1)
           .setIn(['viewTopic', 'meta', 'isDeleting'], false)
           .setIn(['viewTopic', 'meta', 'error'], action.payload.error.message)
       }
@@ -378,23 +378,17 @@ export default function boardsReducer(state = initialState, action) {
 
       if (action.meta.topicId && state.viewTopic && state.viewTopic.id == action.meta.topicId) {
         return state
-          .setIn(['viewTopic', 'deletedYn'], true)
-          .setIn(['viewTopic', 'data', 'deletedYn'], true)
+          .setIn(['viewTopic', 'deletedYn'], 1)
+          .setIn(['viewTopic', 'data', 'deletedYn'], 1)
           .setIn(['viewTopic', 'meta', 'isDeleting'], false)
           .setIn(['viewTopic', 'meta', 'error'], '')
-
-        //.update('list', list =>
-        //  list.findIndex(function(item) {
-        //      return true;
-        //    }), function(item) {
-        //    return item.set("deletedYn", true);
-        //  }
-        //);
-        //.update('list', list =>
-        //  list
-        //    .filter(item => item.id === action.meta.topicId)
-        //    .set('deletedYn', true)
-        //);
+          .update('list', list =>
+            list.update(list.findIndex(function (item) {
+              return item.id == action.meta.topicId;
+            }), function (v) {
+              return v.set('deletedYn', 1);
+            })
+        );
       }
       return state;
     }
