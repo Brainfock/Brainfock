@@ -147,6 +147,7 @@ export default function boardsReducer(state = initialState, action) {
 
     case actions.FIND_ONE:
       return state
+        .set('board', {'isFetching': true})
         .set('board', {'loading': true});
     // todo: board.meta.isFetching - if fetching form serer
     // todo: board.meta.isLoaded - if model has been loaded (redundant if we have id)
@@ -154,11 +155,13 @@ export default function boardsReducer(state = initialState, action) {
     case actions.FIND_ONE_SUCCESS:
       return state
         .set('board', new Todo(action.payload))
+        .setIn(['board', 'isFetching'], false)
         .setIn(['board', 'loading'], false);
 
     case actions.LOAD_TOPIC:
       return state
-        .set('viewTopic', {'loading': true});
+        .setIn(['viewTopic', 'isFetching'], true)
+        .setIn(['viewTopic', 'loading'], true);
 
     case actions.SET_CURRENT_TOPIC:
       return state
@@ -170,6 +173,7 @@ export default function boardsReducer(state = initialState, action) {
       const data = action.payload.length && action.payload.length > 0 ? action.payload[0] : action.payload;
       return state
         .set('viewTopic', new Todo(data))
+        .setIn(['viewTopic', 'isFetching'], false)
         .setIn(['viewTopic', 'loading'], false);
     }
 
@@ -323,12 +327,14 @@ export default function boardsReducer(state = initialState, action) {
     case actions.CREATE_ERROR:
     case actions.SAVE_ERROR:
       return state
+        // TODO: isSubmitting rather
         .setIn(['newTopic', 'loading'], false)
 
 
     case actions.RUN_OPERATION:
       return state
-        .setIn(['viewTopic', 'loading'], true);
+        .setIn(['viewTopic', 'loading'], true)
+        .setIn(['viewTopic', 'isFetching'], true);
 
     case actions.RUN_OPERATION_SUCCESS:
       return state
@@ -336,10 +342,12 @@ export default function boardsReducer(state = initialState, action) {
         .setIn(['viewTopic', 'wfStatus'], action.payload.topic.wfStatus)
         .setIn(['viewTopic', 'wfStage'], action.payload.topic.wfStage)
         .setIn(['viewTopic', 'operations'], action.payload.topic.operations)
+        .setIn(['viewTopic', 'isFetching'], false)
         .setIn(['viewTopic', 'loading'], false);
 
     case actions.RUN_OPERATION_ERROR:
       return state
+        .setIn(['viewTopic', 'isFetching'], false)
         .setIn(['viewTopic', 'loading'], false);
   }
 

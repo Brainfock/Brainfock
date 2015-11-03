@@ -66,4 +66,9 @@ export default Record({
 
   // ui state fields
   loading: false,
+  isFetching: false,
+  // TODO: structurize all models like so:
+  meta: new (Record({
+    isFetching: false
+  })),
 });
