@@ -47,9 +47,10 @@ export default class Todo extends Component {
       style={background:'rgb(243, 243, 243)'};
     }
     let notice = '';
-    if (todo.deletedYn) {
+    if (todo.deletedYn == 1) {
       style.opacity = .2;
-      notice = '(item is deleted)';
+      // TODO: add l18n
+      notice = '(item is deleted) ';
     }
     return  <div style={style}>
       <mui.ListItem
@@ -105,6 +106,9 @@ export default class Todo extends Component {
   }
 
   _onClick() {
+    if (this.props.todo.deletedYn === 1) {
+      return;
+    }
     if(this.props.followItemOnClick) {
       this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/${this.props.topicGroupKey}/${this.props.todo.contextTopicNum}`);
     } else {
