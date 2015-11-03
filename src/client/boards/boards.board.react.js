@@ -27,8 +27,10 @@ export default class Todo extends Component {
                       tooltip="Private & Invisible"
                       style={{
               marginTop:'-25px',
+              height:'16px'
             }}
                       iconStyle={{
+              height:'16px',
               fontSize:'19px',
             }}
             />
