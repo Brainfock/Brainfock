@@ -21,8 +21,8 @@
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import {RaisedButton, Paper, Card, CardHeader, CardText, Avatar, FlatButton, Dialog} from 'material-ui';
-import OperationsDropdown from './OperationsDropdown.js'
-import Loader from '../../components/Loader.js'
+import OperationsDropdown from './OperationsDropdown.js';
+import Loader from '../../components/Loader.js';
 import Comments from '../../topic/components/comments';
 import {FormattedDate} from 'react-intl';
 
@@ -35,6 +35,10 @@ export default class Issue extends Component {
     onDeleted: PropTypes.func,
     topic: PropTypes.object.isRequired,
     topic_actions: PropTypes.object.isRequired
+  };
+
+  static defaultProps = {
+    isBirdview: false
   };
 
   static contextTypes = {
@@ -81,6 +85,15 @@ export default class Issue extends Component {
             />
           {topic &&
           <h2 style={{fontWeight:800}}>
+            {!this.props.isBirdview &&
+            <span className="stats">
+              <span style={{
+              fontSize: '14pt',
+              margin: '0 5px 0px 0px',
+              lineHeight: '18pt',
+              verticalAlign: 'text-bottom'
+             }}
+                    className="prop">#{topic.contextTopicNum}</span></span>}
             {topic.summary}
             <span className="label label-primary ">
               {topic.wfStage}
