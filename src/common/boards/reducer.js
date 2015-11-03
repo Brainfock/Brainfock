@@ -26,7 +26,7 @@ import FormRecord from './form';
 import TopicGroup from './topic-group';
 import Comment from '../comments/comment';
 import getRandomString from '../lib/getRandomString';
-import Immutable, {List, Range, Record, Map} from 'immutable';
+import {List, Record, Map} from 'immutable';
 
 const InitialState = Record({
   list: List(),
@@ -34,7 +34,7 @@ const InitialState = Record({
   formFields: new (Record({
     loading: true,
     group: '',
-    fields: List(),
+    fields: List()
   })),
   newTopic: new Todo,
   viewPage: new Todo,
@@ -53,7 +53,7 @@ const InitialState = Record({
     isSubmitting: false,
     isFetching: false,
     error: '',
-    errors: new Map(),
+    errors: new Map()
   })),
   form: new FormRecord
 });
@@ -68,7 +68,7 @@ const revive = (state) => initialState.merge({
   viewPage: new Todo(state.viewPage || {}),
   board: new Todo(),
   viewTopic: new Todo({loading: false}),
-  group: new TopicGroup,
+  group: new TopicGroup
 });
 
 export default function boardsReducer(state = initialState, action) {
@@ -79,7 +79,7 @@ export default function boardsReducer(state = initialState, action) {
     case actions.FIND:
 
       if (action.meta.groupKey && state.meta.groupKey
-        && action.meta.groupKey != state.meta.groupKey) {
+        && action.meta.groupKey !== state.meta.groupKey) {
         state.update('list', list => list.clear());
       }
 
@@ -92,9 +92,9 @@ export default function boardsReducer(state = initialState, action) {
     {
 
       if (action.meta.groupKey && (!state.meta.groupKey || (state.meta.groupKey
-        && action.meta.groupKey != state.meta.groupKey))) {
+        && action.meta.groupKey !== state.meta.groupKey))) {
         // clear list, or else user may see error message with items of another list
-        state = state.update('list', list => list.clear())
+        state = state.update('list', list => list.clear());
       }
 
       if (action.error === true) {
@@ -110,11 +110,10 @@ export default function boardsReducer(state = initialState, action) {
             .setIn(['meta', 'isFetching'], false)
             .setIn(['meta', 'loading'], false);
         }
-      }
-      else {
+      } else {
         return state
           .setIn(['meta', 'loading'], false)
-          .setIn(['meta', 'isFetching'], false)
+          .setIn(['meta', 'isFetching'], false);
       }
     }
 
@@ -141,8 +140,7 @@ export default function boardsReducer(state = initialState, action) {
         .setIn(['meta', 'loading'], false)
         // cleanup list fetch errors after list is loaded successfully
         .deleteIn(['meta', 'error'])
-        .deleteIn(['meta', 'errors'])
-        ;
+        .deleteIn(['meta', 'errors']);
     }
 
     case actions.FIND_ONE:
@@ -181,7 +179,6 @@ export default function boardsReducer(state = initialState, action) {
     case commentsActions.LOAD_COMMENTS_SUCCESS:
     {
       const newlist = action.payload.map((item) => {
-        console.log('item', item)
         item.cid = getRandomString();
         return new Comment(item);
       });
@@ -265,13 +262,13 @@ export default function boardsReducer(state = initialState, action) {
         // lockform submit buttons etc.
         .setIn(['formFields', 'loading'], true)
         .setIn(['form', 'meta', 'isSubmitting'], true)
-        .deleteIn(['form', 'meta', 'error'])
+        .deleteIn(['form', 'meta', 'error']);
 
 
     case actions.CREATE_SUCCESS:
       return state
         .update('list', list => list.unshift(Todo(action.payload)))
-        .setIn(['formFields', 'loading'], false)
+        .setIn(['formFields', 'loading'], false);
 
     case actions.CLEAN_FORM_GENERAL_ERRORS:
       return state
@@ -279,6 +276,10 @@ export default function boardsReducer(state = initialState, action) {
 
     case actions.CREATE_ERROR:
     {
+
+      // TODO: review, cleanup:
+      state.setIn(['newTopic', 'loading'], false);
+
       if (action.error === true) {
 
         if (action.payload.error && action.payload.error.details) {
@@ -291,7 +292,6 @@ export default function boardsReducer(state = initialState, action) {
               //state[fieldName].touched = true;
               errorDetails[fieldName] = message.join('; ');
             }
-            ;
           }
 
           return state
@@ -318,17 +318,16 @@ export default function boardsReducer(state = initialState, action) {
 
     case actions.SAVE:
       return state
-        .setIn(['newTopic', 'loading'], true)
+        .setIn(['newTopic', 'loading'], true);
 
     case actions.SAVE_SUCCESS:
       return state
-        .setIn(['newTopic', 'loading'], false)
+        .setIn(['newTopic', 'loading'], false);
 
-    case actions.CREATE_ERROR:
     case actions.SAVE_ERROR:
       return state
         // TODO: isSubmitting rather
-        .setIn(['newTopic', 'loading'], false)
+        .setIn(['newTopic', 'loading'], false);
 
 
     case actions.RUN_OPERATION:
@@ -353,9 +352,9 @@ export default function boardsReducer(state = initialState, action) {
     case actions.DELETE_TOPIC:
     {
 
-      if (action.meta.topicId && state.viewTopic && state.viewTopic.id == action.meta.topicId) {
+      if (action.meta.topicId && state.viewTopic && state.viewTopic.id === action.meta.topicId) {
         return state
-          .setIn(['viewTopic', 'meta', 'isDeleting'], false)
+          .setIn(['viewTopic', 'meta', 'isDeleting'], false);
       }
       return state;
     }
@@ -363,12 +362,11 @@ export default function boardsReducer(state = initialState, action) {
     case actions.DELETE_TOPIC_ERROR:
     {
 
-      // TODO: find topic in `list` and update 'DELETED' flag
-      if (action.meta.topicId && state.viewTopic && state.viewTopic.id == action.meta.topicId) {
+      if (action.meta.topicId && state.viewTopic && state.viewTopic.id === action.meta.topicId) {
         return state
           .setIn(['viewTopic', 'data', 'deletedYn'], 1)
           .setIn(['viewTopic', 'meta', 'isDeleting'], false)
-          .setIn(['viewTopic', 'meta', 'error'], action.payload.error.message)
+          .setIn(['viewTopic', 'meta', 'error'], action.payload.error.message);
       }
       return state;
     }
@@ -376,7 +374,7 @@ export default function boardsReducer(state = initialState, action) {
     case actions.DELETE_TOPIC_SUCCESS:
     {
 
-      if (action.meta.topicId && state.viewTopic && state.viewTopic.id == action.meta.topicId) {
+      if (action.meta.topicId && state.viewTopic && state.viewTopic.id === action.meta.topicId) {
         return state
           .setIn(['viewTopic', 'deletedYn'], 1)
           .setIn(['viewTopic', 'data', 'deletedYn'], 1)
@@ -384,7 +382,7 @@ export default function boardsReducer(state = initialState, action) {
           .setIn(['viewTopic', 'meta', 'error'], '')
           .update('list', list =>
             list.update(list.findIndex(function (item) {
-              return item.id == action.meta.topicId;
+              return item.id === action.meta.topicId;
             }), function (v) {
               return v.set('deletedYn', 1);
             })
