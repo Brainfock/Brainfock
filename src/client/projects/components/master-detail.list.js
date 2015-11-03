@@ -41,6 +41,8 @@ export default class ProjectIssues extends Component {
     // "Context" of this topic; a link to {Topic} by contextTopicId. May be null for root views (e.g. list all projects, boards etc.)
     boards: React.PropTypes.object.isRequired,
     containerTopic: React.PropTypes.any,
+    // React Component to render in details section
+    detailsComponent: React.PropTypes.element,
     // React Component to render is list is empty
     emptyListFallback: React.PropTypes.element,
     groupKey: React.PropTypes.string.isRequired,
@@ -368,14 +370,28 @@ export default class ProjectIssues extends Component {
         </mui.Paper>
       );
     }
-    return (
-      <mui.Paper>
-        <div style={{padding:'1px 15px 15px 15px'}}>
-          <h1>{this.props.boards.viewTopic.summary}</h1>
-          {this.props.boards.viewTopic.text}
-        </div>
-      </mui.Paper>
-    );
+
+    if (this.props.detailsComponent) {
+      const Details = this.props.detailsComponent;
+      return <Details
+        topic_actions={this.props.topic_actions}
+        io={this.props.io}
+        actions={this.props.actions}
+        onDeleted={()=>{
+          // TODO: close details panel?
+        }.bind(this)}
+        topic={this.props.boards.viewTopic}
+        />
+    } else {
+      return (
+        <mui.Paper>
+          <div style={{padding:'1px 15px 15px 15px'}}>
+            <h1>{this.props.boards.viewTopic.summary}</h1>
+            {this.props.boards.viewTopic.text}
+          </div>
+        </mui.Paper>
+      );
+    }
   }
 
   timer = null;

@@ -46,6 +46,11 @@ export default class Todo extends Component {
     if(this.props.viewTopic && this.props.viewTopic.id == todo.id) {
       style={background:'rgb(243, 243, 243)'};
     }
+    let notice = '';
+    if (todo.deletedYn) {
+      style.opacity = .2;
+      notice = '(item is deleted)';
+    }
     return  <div style={style}>
       <mui.ListItem
         primaryText={
@@ -58,7 +63,7 @@ export default class Todo extends Component {
               </div>
               <div className="label label-default" style={{width:'100%'}}>{todo.wfStage}</div>
             </div>
-            {icon} {todo.summary}
+            {icon} {notice}{todo.summary}
             <span className="label label-info pull-right">{todo.type && todo.type.name}</span>
           </div>}
       secondaryTextLines={2}

@@ -1,6 +1,6 @@
 /**
- * Brainfock - community & issue management software
- * Copyright (c) 2015, Sergii Gamaiunov (�Webkadabra�)  All rights reserved.
+ * Brainfock - business & community management software
+ * Copyright (c) 2015, Sergii Gamaiunov
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @link http://www.brainfock.com/
+ * @link http://www.brainfock.org
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import React from 'react';
@@ -24,6 +24,7 @@ import Component from 'react-pure-render/component';
 import MasterDetailsListView from './components/master-detail.list';
 import ListViewItem from './components/issues-list-item';
 import ProjectsEmpty from './components/projects-empty';
+import IssueView from './components/Issue';
 
 export default class ProjectIssues extends Component {
 
@@ -36,6 +37,7 @@ export default class ProjectIssues extends Component {
         containerTopic={board}
         listViewItem={ListViewItem}
         emptyListFallback={ProjectsEmpty}
+        detailsComponent={IssueView}
         groupKey='issue'
         {...passProps}
         />

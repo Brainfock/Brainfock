@@ -21,8 +21,36 @@
 
 import {Record, List, Map} from 'immutable';
 
+const ModelSchema = Record({
+  id: '',
+  workspaceId: '',
+  namespace: '',
+  summary: '',
+  text: '',
+  entityId: '',
+  contextTopicNum: '',
+  contextTopicKey: '',
+  contextTopicId: '',
+  typeId: '',
+  groupId: '',
+  dueDate: '',
+  accessPrivateYn: '',
+  logoIcon: '',
+  logoBackground: '',
+  updatedOn: '',
+  createdOn: '',
+  deletedYn: '',
+  // read-only, available via database view
+  wfStage: '',
+  wfStatus: '',
+})
+
 export default Record({
   cid: '',
+
+  // TODO: move all model data properties under 'data' prop
+  data: new (ModelSchema),
+
   id: '',
   workspaceId: '',
   namespace: '',
@@ -40,7 +68,7 @@ export default Record({
   logoBackground:'',
   updatedOn:'',
   createdOn:'',
-
+  deletedYn: '',
   // read-only, available via database view
   wfStage:'',
   wfStatus:'',
@@ -69,6 +97,8 @@ export default Record({
   isFetching: false,
   // TODO: structurize all models like so:
   meta: new (Record({
-    isFetching: false
+    isDeleting: false,
+    isFetching: false,
+    error: '',
   })),
 });

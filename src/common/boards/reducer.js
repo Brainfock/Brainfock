@@ -349,6 +349,55 @@ export default function boardsReducer(state = initialState, action) {
       return state
         .setIn(['viewTopic', 'isFetching'], false)
         .setIn(['viewTopic', 'loading'], false);
+
+    case actions.DELETE_TOPIC:
+    {
+
+      if (action.meta.topicId && state.viewTopic && state.viewTopic.id == action.meta.topicId) {
+        return state
+          .setIn(['viewTopic', 'meta', 'isDeleting'], false)
+      }
+      return state;
+    }
+
+    case actions.DELETE_TOPIC_ERROR:
+    {
+
+      // TODO: find topic in `list` and update 'DELETED' flag
+      if (action.meta.topicId && state.viewTopic && state.viewTopic.id == action.meta.topicId) {
+        return state
+          .setIn(['viewTopic', 'data', 'deletedYn'], true)
+          .setIn(['viewTopic', 'meta', 'isDeleting'], false)
+          .setIn(['viewTopic', 'meta', 'error'], action.payload.error.message)
+      }
+      return state;
+    }
+
+    case actions.DELETE_TOPIC_SUCCESS:
+    {
+
+      if (action.meta.topicId && state.viewTopic && state.viewTopic.id == action.meta.topicId) {
+        return state
+          .setIn(['viewTopic', 'deletedYn'], true)
+          .setIn(['viewTopic', 'data', 'deletedYn'], true)
+          .setIn(['viewTopic', 'meta', 'isDeleting'], false)
+          .setIn(['viewTopic', 'meta', 'error'], '')
+
+        //.update('list', list =>
+        //  list.findIndex(function(item) {
+        //      return true;
+        //    }), function(item) {
+        //    return item.set("deletedYn", true);
+        //  }
+        //);
+        //.update('list', list =>
+        //  list
+        //    .filter(item => item.id === action.meta.topicId)
+        //    .set('deletedYn', true)
+        //);
+      }
+      return state;
+    }
   }
 
   return state;

@@ -77,6 +77,17 @@ const getApi = (fetch, endpoint) =>
       throw response;
     });
 
+const deleteApi = (fetch, endpoint) =>
+  fetch(`/api/${endpoint}`, {
+    headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+    method: 'DELETE',
+    credentials: 'include', // accept cookies from server, for authentication
+  })
+    .then(response => {
+      if (response.status === 204) return response.json();
+      throw response;
+    });
+
 
 /**
  * @author Jrop <http://stackoverflow.com/a/31415775/360292>
@@ -539,19 +550,56 @@ export function deleteTopic(topicId) {
       DELETE_TOPIC_SUCCESS,
       DELETE_TOPIC_ERROR
     ],
+    meta: {
+      topicId: topicId
+    },
     payload: {
+
       promise: fetch(`/api/${endpoint}`, {
         credentials: 'include', // accept cookies from server, for authentication
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
         method: 'DELETE',
       })
         .then(response => {
-          if (response.status === 204) return response.json();
+          if (response.status === 204) return true;
           throw response;
         })
         .catch(response => {
+          if (!response) throw new Error('No response');
+          else if (response.ok === false) return response.json();
+          else throw response;
+        })
+        .then((jsonResponce) => {
+          if (jsonResponce.error) throw jsonResponce;
+          else return jsonResponce;
+        }, (response) => {
+          // throw errors that don't have `.json()` available further
           throw response;
         }),
+      //
+      //promise: deleteApi(fetch, endpoint)
+      //  .catch(response => {
+      //    if (!response) throw new Error('No response');
+      //    else if (response.ok === false) return response.json();
+      //    else throw response;
+      //  })
+      //  .then((jsonResponce) => {
+      //    if (jsonResponce.error) throw jsonResponce;
+      //    else return jsonResponce;
+      //  }, (response) => {
+      //    // throw errors that don't have `.json()` available further
+      //    throw response;
+      //  })
+
+      //.then(response => {
+      //  if (response.status === 204) return response.json();
+      //  throw response;
+      //})
+      //.catch(response => {
+      //  response.text().then((text)=>{
+      //    throw text
+      //  });
+      //}),
     }
   });
 }
