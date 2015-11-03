@@ -77,9 +77,9 @@ export default class CreateTopicForm extends Component {
 
   componentWillReceiveProps(newProps) {
 
-    if (newProps.formFields && this.props.formFields != newProps.formFields) {
+    if (newProps.formFields && this.props.formFields !== newProps.formFields) {
 
-      //  after we successfully loaded form fields from server - some of those fields may have had
+      // after we successfully loaded form fields from server - some of those fields may have had
       // default value sent by server as well, so quickly go over fields and set default values.
       newProps.formFields.fields.forEach((fieldScheme) => {
         if (fieldScheme.value && fieldScheme.name) {
@@ -167,11 +167,11 @@ export default class CreateTopicForm extends Component {
   }
 
   onFormSubmit(e) {
+
     const {actions, newTopic} = this.props;
 
     // we need to call `.toJS()` ince `newTopic` is immutable
     let data = newTopic.toJS();
-    console.log('> postData', data)
 
     // normalize inputs from forms elements
     this.props.formFields.fields.forEach(function({type, name}) {

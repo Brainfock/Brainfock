@@ -36,7 +36,9 @@ const InitialState = Record({
     group: '',
     fields: List()
   })),
+  // represents form to create/edit topic
   newTopic: new Todo,
+  // TODO: add 'updateTopic' store, or else update & create forms have conflict
   viewPage: new Todo,
   board: new Todo,
   viewTopic: new Todo,
@@ -117,11 +119,6 @@ export default function boardsReducer(state = initialState, action) {
     }
 
     case actions.FIND_SUCCESS: {
-
-      //console.log('> state.meta.queryString', state.meta.queryString);
-      //if (action.meta && action.meta.queryString) {
-      //  console.log('> action.meta.queryString', action.meta.queryString);
-      //}
 
       const newlist = action.payload.map((item) => {
         item.cid = getRandomString();
@@ -252,7 +249,7 @@ export default function boardsReducer(state = initialState, action) {
     case actions.CREATE:
       return state
         // lockform submit buttons etc.
-        .setIn(['formFields', 'loading'], true)
+       // .setIn(['formFields', 'loading'], true)
         .setIn(['form', 'meta', 'isSubmitting'], true)
         .deleteIn(['form', 'meta', 'error']);
 
@@ -260,7 +257,8 @@ export default function boardsReducer(state = initialState, action) {
     case actions.CREATE_SUCCESS:
       return state
         .update('list', list => list.unshift(Todo(action.payload)))
-        .setIn(['formFields', 'loading'], false);
+        //.setIn(['formFields', 'loading'], false)
+        ;
 
     case actions.CLEAN_FORM_GENERAL_ERRORS:
       return state
@@ -279,8 +277,6 @@ export default function boardsReducer(state = initialState, action) {
           for (let fieldName in action.payload.error.details.messages) {
             if (action.payload.error.details.messages.hasOwnProperty(fieldName)) {
               const message = action.payload.error.details.messages[fieldName];
-              //state[fieldName].asyncError = message.join('; ');
-              //state[fieldName].touched = true;
               errorDetails[fieldName] = message.join('; ');
             }
           }
@@ -288,18 +284,18 @@ export default function boardsReducer(state = initialState, action) {
           return state
             .setIn(['form', 'meta', 'errors'], Map(errorDetails))
             .setIn(['form', 'meta', 'isSubmitting'], false)
-            .setIn(['formFields', 'loading'], false);
+            //.setIn(['formFields', 'loading'], false);
 
         } else if (action.payload.error) {
           return state
             .setIn(['form', 'meta', 'error'], action.payload.error.message || 'Unknown Error!')
             .setIn(['form', 'meta', 'isSubmitting'], false)
-            .setIn(['formFields', 'loading'], false);
+            //.setIn(['formFields', 'loading'], false);
         } else {
           return state
             .setIn(['form', 'meta', 'error'], action.payload.message.length > 0 && action.payload.message || 'Unknown Error!')
             .setIn(['form', 'meta', 'isSubmitting'], false)
-            .setIn(['formFields', 'loading'], false);
+            //.setIn(['formFields', 'loading'], false);
         }
       } else {
         return state
@@ -353,9 +349,20 @@ export default function boardsReducer(state = initialState, action) {
 
       if (action.meta.topicId && state.viewTopic && state.viewTopic.id === action.meta.topicId) {
         return state
-          .setIn(['viewTopic', 'data', 'deletedYn'], 1)
+          .setIn(['viewTopic', 'data', 'deletedYn'], 0)
           .setIn(['viewTopic', 'meta', 'isDeleting'], false)
           .setIn(['viewTopic', 'meta', 'error'], action.payload.error.message);
+
+        // deleting from project's settings pagedd
+      } else if (action.meta.topicId && state.newTopic && state.newTopic.id === action.meta.topicId) {
+
+        return state
+          .setIn(['newTopic', 'data', 'deletedYn'], 0)
+          .setIn(['newTopic', 'meta', 'isDeleting'], false)
+          .setIn(['newTopic', 'meta', 'error'], (action.payload.error.message
+            ? action.payload.error.message
+            : (action.payload.message ? action.payload.message : 'ERROR')
+          ));
       }
       return state;
     }
