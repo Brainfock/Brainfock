@@ -67,7 +67,7 @@ export default class Issue extends Component {
         null
     )
 
-    const WrapperEl = topic.deletedYn ? 's' : 'span';
+    const WrapperEl = topic.deletedYn === 1 ? 's' : 'span';
     return (
       <div>
         <WrapperEl>
