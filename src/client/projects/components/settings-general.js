@@ -23,11 +23,18 @@ import mui from 'material-ui';
 import {Tabs, Tab} from 'react-bootstrap';
 
 import TopicPreview from '../../boards/boards.board.react';
+import ConfirmDialog from './ConfirmDialog';
 
-export default class Dashboard extends React.Component{
+export default class Dashboard extends React.Component {
 
-  render()
-  {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showDeletePrompt: false
+    }
+  }
+
+  render() {
     const {msg} = this.props;
     const isLoading = this.props.topic.loading==true;
 
@@ -116,15 +123,25 @@ export default class Dashboard extends React.Component{
           <hr />
           <h4>{msg.form.section.danger}:</h4>
 
+          <ConfirmDialog
+            ref="confirmDialog"
+            requireString="path/to/project"
+            onDelete={this.onDelete}
+            topic={this.props.topic}
+            deleteAction={this.props.actions.deleteTopic}
+            show={this.state.showDeletePrompt === true}
+            onDismiss={()=>{
+              this.setState({showDeletePrompt: false})
+            }}
+            />
 
-          <mui.RaisedButton label={msg.form.deleteItem.button} primary={true} onClick={this.askDelete} backgroundColor='#D64141' />
+          <mui.RaisedButton label={msg.form.deleteItem.button} primary={true} onClick={()=>{this.setState({showDeletePrompt: true})}} backgroundColor='#D64141' />
         </div>
       </div>
     );
   }
 
-  trySave()
-  {
+  trySave() {
     const {actions, topic} = this.props;
 
     let data = topic.toJS();
