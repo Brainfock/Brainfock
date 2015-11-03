@@ -51,10 +51,19 @@ module.exports = function(Topic) {
   };
 
   Topic.validate('contextTopicKey', function (err) {
-    if (!this.contextTopicId && (!this.contextTopicKey || this.contextTopicKey.trim() === '')) err();
-  }, {message: 'is required'});
+    console.log('> + this.contextTopicId' + this.contextTopicId)
+    if (!this.contextTopicId) {
+      if (!this.contextTopicKey || this.contextTopicKey.trim() === '') err();
+    }
+  }, {message: 'is required '});
 
-  Topic.validatesFormatOf('contextTopicKey', {with: /^[a-zA-Z\-]+$/})
+  Topic.validate('contextTopicKey', function (err) {
+    console.log('> + this.contextTopicId' + this.contextTopicId)
+    if (!this.contextTopicId) {
+      let result = /^[a-zA-Z\-]+$/.test(this.contextTopicKey);
+      if (!result)  err();
+    }
+  }, {message: 'only letters and `-` sign'});
 
   /**
    * Set `groupId` when topic is saved if `createGroup` is provided in `request`  as an alias to `TopicGroup.groupKey`
