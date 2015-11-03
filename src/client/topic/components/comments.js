@@ -31,11 +31,11 @@ var React = require('react'),
 var Item = require('./comments-list-item');
 
 // for At.js plugin:
-var $ = require('jquery');
-//require('caret.js');
-require('caret.js/dist/jquery.caret.min.js');
-//require('jquery.atwho');
-require('jquery.atwho/dist/js/jquery.atwho.js');
+//var $ = require('jquery');
+////require('caret.js');
+//require('caret.js/dist/jquery.caret.min.js');
+////require('jquery.atwho');
+//require('jquery.atwho/dist/js/jquery.atwho.js');
 
 /**
  * TopicComments
