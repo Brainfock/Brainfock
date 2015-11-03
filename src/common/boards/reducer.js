@@ -88,8 +88,7 @@ export default function boardsReducer(state = initialState, action) {
         .setIn(['meta', 'isFetching'], true)
         .deleteIn(['meta', 'error']); // reset list errors (e.g. there was problem fetchin sometihng and user switched lists)
 
-    case actions.FIND_ERROR:
-    {
+    case actions.FIND_ERROR: {
 
       if (action.meta.groupKey && (!state.meta.groupKey || (state.meta.groupKey
         && action.meta.groupKey !== state.meta.groupKey))) {
@@ -117,8 +116,7 @@ export default function boardsReducer(state = initialState, action) {
       }
     }
 
-    case actions.FIND_SUCCESS:
-    {
+    case actions.FIND_SUCCESS: {
 
       //console.log('> state.meta.queryString', state.meta.queryString);
       //if (action.meta && action.meta.queryString) {
@@ -165,8 +163,7 @@ export default function boardsReducer(state = initialState, action) {
       return state
         .setIn(['viewTopic', 'id'], action.payload);
 
-    case actions.LOAD_TOPIC_SUCCESS:
-    {
+    case actions.LOAD_TOPIC_SUCCESS: {
       // payload *may* be an array if we were looking for topic inside of another topic e.g. ``/api/topics/SomeTopic/topics/?filter...``
       const data = action.payload.length && action.payload.length > 0 ? action.payload[0] : action.payload;
       return state
@@ -176,8 +173,7 @@ export default function boardsReducer(state = initialState, action) {
     }
 
     // load all comments
-    case commentsActions.LOAD_COMMENTS_SUCCESS:
-    {
+    case commentsActions.LOAD_COMMENTS_SUCCESS: {
       const newlist = action.payload.map((item) => {
         item.cid = getRandomString();
         return new Comment(item);
@@ -190,7 +186,7 @@ export default function boardsReducer(state = initialState, action) {
     // post or catch new comment via sockets:
     case commentsActions.ADD_ONE_COMMENT:
       return state
-        .updateIn(['viewTopic', 'comments'], comments => comments.push(Comment(action.payload)))
+        .updateIn(['viewTopic', 'comments'], comments => comments.push(Comment(action.payload)));
 
     case actions.LOAD_TOPIC_GROUP:
       return state
@@ -198,10 +194,9 @@ export default function boardsReducer(state = initialState, action) {
         //.setIn(['board', 'group'],new TopicGroup())
         .set('group', new TopicGroup());
 
-    case actions.LOAD_TOPIC_GROUP_SUCCESS:
-    {
+    case actions.LOAD_TOPIC_GROUP_SUCCESS: {
       if (action.meta.groupKey && !state.groups.get(action.meta.groupKey)) {
-        state = state.setIn(['groups', action.meta.groupKey], new TopicGroup(action.payload))
+        state = state.setIn(['groups', action.meta.groupKey], new TopicGroup(action.payload));
       }
 
       return state
@@ -216,8 +211,7 @@ export default function boardsReducer(state = initialState, action) {
       return state
         .setIn(['meta', 'count'], action.payload.count);
 
-    case actions.LOAD_FILTERS_SUCCESS:
-    {
+    case actions.LOAD_FILTERS_SUCCESS: {
       const newlist = action.payload.filters.map((item) => {
         item.cid = getRandomString();
         return new (Record(item));
@@ -233,8 +227,7 @@ export default function boardsReducer(state = initialState, action) {
         .setIn(['formFields', 'loading'], true)
         ;
 
-    case actions.LOAD_FORM_FIELDS_SUCCESS:
-    {
+    case actions.LOAD_FORM_FIELDS_SUCCESS: {
       const newlist = action.payload.filters.map((item) => {
         item.cid = getRandomString();
         return new (Record(item));
@@ -250,8 +243,7 @@ export default function boardsReducer(state = initialState, action) {
     case actions.SET_NEW_TOPIC:
       return state.set('newTopic', action.payload);
 
-    case actions.SET_NEW_TOPIC_FIELD:
-    {
+    case actions.SET_NEW_TOPIC_FIELD: {
       const {name, value} = action.payload;
       return state.setIn(['newTopic', name], value)
         .deleteIn(['form', 'meta', 'errors', name]);
@@ -274,8 +266,7 @@ export default function boardsReducer(state = initialState, action) {
       return state
         .deleteIn(['form', 'meta', 'error']);
 
-    case actions.CREATE_ERROR:
-    {
+    case actions.CREATE_ERROR: {
 
       // TODO: review, cleanup:
       state.setIn(['newTopic', 'loading'], false);
@@ -349,8 +340,7 @@ export default function boardsReducer(state = initialState, action) {
         .setIn(['viewTopic', 'isFetching'], false)
         .setIn(['viewTopic', 'loading'], false);
 
-    case actions.DELETE_TOPIC:
-    {
+    case actions.DELETE_TOPIC: {
 
       if (action.meta.topicId && state.viewTopic && state.viewTopic.id === action.meta.topicId) {
         return state
@@ -359,8 +349,7 @@ export default function boardsReducer(state = initialState, action) {
       return state;
     }
 
-    case actions.DELETE_TOPIC_ERROR:
-    {
+    case actions.DELETE_TOPIC_ERROR: {
 
       if (action.meta.topicId && state.viewTopic && state.viewTopic.id === action.meta.topicId) {
         return state
@@ -371,8 +360,7 @@ export default function boardsReducer(state = initialState, action) {
       return state;
     }
 
-    case actions.DELETE_TOPIC_SUCCESS:
-    {
+    case actions.DELETE_TOPIC_SUCCESS: {
 
       if (action.meta.topicId && state.viewTopic && state.viewTopic.id === action.meta.topicId) {
         return state
@@ -381,9 +369,9 @@ export default function boardsReducer(state = initialState, action) {
           .setIn(['viewTopic', 'meta', 'isDeleting'], false)
           .setIn(['viewTopic', 'meta', 'error'], '')
           .update('list', list =>
-            list.update(list.findIndex(function (item) {
+            list.update(list.findIndex(function(item) {
               return item.id === action.meta.topicId;
-            }), function (v) {
+            }), function(v) {
               return v.set('deletedYn', 1);
             })
         );

@@ -38,7 +38,7 @@ export default class Issue extends Component {
   };
 
   static contextTypes = {
-    muiTheme: React.PropTypes.object.isRequired,
+    muiTheme: React.PropTypes.object.isRequired
   };
 
   constructor(props) {
@@ -65,7 +65,7 @@ export default class Issue extends Component {
       </span>
         :
         null
-    )
+    );
 
     const WrapperEl = topic.deletedYn === 1 ? 's' : 'span';
     return (
@@ -107,7 +107,7 @@ export default class Issue extends Component {
   /**
    * update status
    *
-   * @param e
+   * @param opName
    * @private
    */
   applyOperation(opName) {
@@ -134,7 +134,7 @@ export default class Issue extends Component {
         onClick={this.doDelete.bind(this)}
         primary
         ref='BTN_DELETE'
-        />,
+        />
     ];
 
     // TODO: make dynamic messages per type, like l20n.ctx.getSync(this.state.model.type.name + '_deleteDialog_MESSAGE') ?
@@ -155,7 +155,7 @@ export default class Issue extends Component {
     this.refs.deletePrompt.show();
     // focus on "Cancel" action by default
     if (this.refs.BTN_CANCEL) {
-      setTimeout(function () {
+      setTimeout(function() {
         this.refs.BTN_CANCEL.getDOMNode().focus();
       }.bind(this), 10);
     }
@@ -168,19 +168,14 @@ export default class Issue extends Component {
   doDelete() {
     this.props.topic_actions.deleteTopic(this.props.topic.id)
       .then(({error, payload}) => {
-        if (error) {
-          console.log('> error', error, payload)
-
-        } else {
+        if (!error) {
           this.handleCloseDialog();
           if (this.props.onDeleted) {
             this.props.onDeleted();
           }
         }
       })
-      .catch((rest)=> {
-        console.log('> catch', rest)
-      })
+      .catch((rest)=> {});
   }
 
   /**
@@ -189,11 +184,13 @@ export default class Issue extends Component {
    */
   comments() {
     if (this.props.topic.type && this.props.topic.type.commentsEnabled) {
-      return <Comments
-        topic={this.props.topic}
-        comments={this.props.topic.comments}
-        io={this.props.io}
-        actions={this.props.actions}/>
+      return (
+        <Comments
+          topic={this.props.topic}
+          comments={this.props.topic.comments}
+          io={this.props.io}
+          actions={this.props.actions}/>
+      );
     } else {
       return null;
     }
