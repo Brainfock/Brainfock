@@ -51,14 +51,12 @@ module.exports = function(Topic) {
   };
 
   Topic.validate('contextTopicKey', function (err) {
-    console.log('> + this.contextTopicId' + this.contextTopicId)
     if (!this.contextTopicId) {
       if (!this.contextTopicKey || this.contextTopicKey.trim() === '') err();
     }
   }, {message: 'is required '});
 
   Topic.validate('contextTopicKey', function (err) {
-    console.log('> + this.contextTopicId' + this.contextTopicId)
     if (!this.contextTopicId) {
       let result = /^[a-zA-Z\-]+$/.test(this.contextTopicKey);
       if (!result)  err();

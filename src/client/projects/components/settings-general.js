@@ -30,7 +30,7 @@ export default class Dashboard extends React.Component{
   {
     const {msg} = this.props;
     const isLoading = this.props.topic.loading==true;
-    console.log('isLoading', isLoading)
+
     return (
       <div>
         <div className="page-header left clearfix">
