@@ -5,7 +5,7 @@ import {Grid, Row, Col} from 'react-bootstrap';
 import mui from 'material-ui';
 
 if (process.env.IS_BROWSER)
-  require('./Login.styl');
+  require('./login.styl');
 
 export default class Login extends Component {
 
