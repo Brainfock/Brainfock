@@ -18,16 +18,17 @@
  * @link http://www.brainfock.com/
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
-import Model from './board';
+import ModelSchema from './model.js'
 
-import {Record, List, Map} from 'immutable';
+import {Record, Map} from 'immutable';
 export default Record({
   cid: '',
-  data: new (Model),
+  data: new ModelSchema,
   meta: new (Record({
     isSubmitting: false,
     isFetching: false,
+    isDeleting: false,
     error: '',
-    errors: new Map(),
-  })),
+    errors: new Map()
+  }))
 });

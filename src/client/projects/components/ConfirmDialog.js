@@ -44,7 +44,7 @@ export default class ConfirmDialog extends Component {
   renderDeleteDialog() {
 
     let disabled = false;
-    if (this.props.topic.loading === true) {
+    if (this.props.topic.meta.isFetching === true) {
       disabled = true;
     }
     let dialogActions = [
@@ -95,7 +95,7 @@ export default class ConfirmDialog extends Component {
   }
 
   doDelete() {
-    this.props.deleteAction(this.props.topic.id)
+    this.props.deleteAction(this.props.topic.data.id)
       .then(({error, payload}) => {
         if (!error) {
           this.handleCloseDialog();
