@@ -25,8 +25,7 @@ import {Tabs, Tab} from 'react-bootstrap';
 import PageWithNav from '../components/layout/page-with-nav';
 import GeneralSettings from './components/settings-general.js';
 
-export default class Dashboard extends React.Component{
-
+export default class Dashboard extends React.Component {
 
   componentWillMount() {
     this.props.topic_actions.setNewTopic(this.props.boards.board);
@@ -43,7 +42,10 @@ export default class Dashboard extends React.Component{
      */
     return (
       <div className="bfk-browse">
-        <GeneralSettings topic={newTopic} actions={topic_actions} msg={msg.topics} />
+        <GeneralSettings actions={topic_actions}
+                         isLoading={newTopic.meta.isSubmitting === true}
+                         msg={msg.topics}
+                         topic={newTopic} />
       </div>
     );
   }
@@ -70,7 +72,12 @@ export default class Dashboard extends React.Component{
 
         <Tabs defaultActiveKey={2} position="left" tabWidth={4} className="bf-tabs">
           <Tab eventKey={1} title="Info">
-            <GeneralSettings topic={newTopic} isLoading={formFields.loading==true} actions={topic_actions} msg={msg} />
+            <GeneralSettings
+              actions={topic_actions}
+              isLoading={newTopic.meta.isSubmitting === true}
+              msg={msg}
+              topic={newTopic}
+              />
           </Tab>
           <Tab eventKey={2} title="More...">More...</Tab>
         </Tabs>

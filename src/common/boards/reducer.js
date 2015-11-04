@@ -37,13 +37,14 @@ const InitialState = Record({
     fields: List()
   })),
   // represents form to create/edit topic
-  newTopic: new Todo,
+  newTopic: new FormRecord,
   // TODO: add 'updateTopic' store, or else update & create forms have conflict
-  viewPage: new Todo,
   board: new Todo,
   viewTopic: new Todo,
   group: new TopicGroup,
   groups: new Map(),
+
+  forms: new Map(),
 
   // `meta` represents meta state of a list
   meta: new (Record({
@@ -64,11 +65,10 @@ const initialState = new InitialState;
 
 // Note how JSON from server is revived to immutable record.
 const revive = (state) => initialState.merge({
-  list: state.list.map(todo => new Todo(todo)),
-  listFilters: state.listFilters.map(todo => (new Record(todo))),
-  newTopic: new Todo(state.newTopic),
-  viewPage: new Todo(state.viewPage || {}),
-  board: new Todo(),
+  list: state.list ? state.list.map(todo => new Todo(todo)) : List(),
+  listFilters: state.listFilters ? state.listFilters.map(todo => (new Record(todo))) : List(),
+  newTopic: new FormRecord,
+  board: new Todo(state.board || {}),
   viewTopic: new Todo({loading: false}),
   group: new TopicGroup
 });
@@ -149,7 +149,8 @@ export default function boardsReducer(state = initialState, action) {
       return state
         .set('board', new Todo(action.payload))
         .setIn(['board', 'isFetching'], false)
-        .setIn(['board', 'loading'], false);
+        .setIn(['board', 'loading'], false)
+        .setIn(['board', 'cid'], getRandomString());
 
     case actions.LOAD_TOPIC:
       return state
@@ -237,12 +238,31 @@ export default function boardsReducer(state = initialState, action) {
         ;
     }
 
-    case actions.SET_NEW_TOPIC:
-      return state.set('newTopic', action.payload);
+    case actions.SET_NEW_TOPIC: {
+      // TODO: find form in `forms` by CID and set it as active
+      if (action.payload.cid) {
+        if (state.forms.get(action.payload.cid)) {
+          // revive form
+          return state.set('newTopic', action.payload);
+        } else {
+          // create new form
+
+        }
+
+        //state.setIn(['groups', action.meta.groupKey], new TopicGroup(action.payload));
+
+      }
+
+      return state.set('newTopic', new FormRecord({data:action.payload}));
+      //return state.set('newTopic', 'data', action.payload);
+    }
 
     case actions.SET_NEW_TOPIC_FIELD: {
+      console.log('SET_NEW_TOPIC_FIELD', action)
       const {name, value} = action.payload;
-      return state.setIn(['newTopic', name], value)
+      return state.setIn(['newTopic', 'data', name], value)
+        // TODO: clean up errors in that `
+        .deleteIn(['newTopic', 'meta', 'errors', name])
         .deleteIn(['form', 'meta', 'errors', name]);
     }
 
@@ -267,7 +287,7 @@ export default function boardsReducer(state = initialState, action) {
     case actions.CREATE_ERROR: {
 
       // TODO: review, cleanup:
-      state.setIn(['newTopic', 'loading'], false);
+      state.setIn(['newTopic', 'meta', 'isSubmitting'], false);
 
       if (action.error === true) {
 
@@ -282,39 +302,98 @@ export default function boardsReducer(state = initialState, action) {
           }
 
           return state
+            .setIn(['newTopic', 'meta', 'errors'], Map(errorDetails))
+            .setIn(['newTopic', 'meta', 'isSubmitting'], false)
+            // TODO: review if we need to modify `form` here at all
             .setIn(['form', 'meta', 'errors'], Map(errorDetails))
             .setIn(['form', 'meta', 'isSubmitting'], false)
             //.setIn(['formFields', 'loading'], false);
 
         } else if (action.payload.error) {
           return state
+            .setIn(['newTopic', 'meta', 'error'], action.payload.error.message || 'Unknown Error!')
+            .setIn(['newTopic', 'meta', 'isSubmitting'], false)
+            // TODO: review if we need to modify `form` here at all
             .setIn(['form', 'meta', 'error'], action.payload.error.message || 'Unknown Error!')
             .setIn(['form', 'meta', 'isSubmitting'], false)
             //.setIn(['formFields', 'loading'], false);
         } else {
           return state
+            .setIn(['newTopic', 'meta', 'error'], action.payload.message.length > 0 && action.payload.message || 'Unknown Error!')
+            .setIn(['newTopic', 'meta', 'isSubmitting'], false)
+            // TODO: review if we need to modify `form` here at all
             .setIn(['form', 'meta', 'error'], action.payload.message.length > 0 && action.payload.message || 'Unknown Error!')
             .setIn(['form', 'meta', 'isSubmitting'], false)
             //.setIn(['formFields', 'loading'], false);
         }
       } else {
         return state
+          .setIn(['newTopic', 'meta', 'isSubmitting'], false)
           .setIn(['form', 'meta', 'isSubmitting'], false);
       }
     }
 
     case actions.SAVE:
       return state
-        .setIn(['newTopic', 'loading'], true);
+        .setIn(['newTopic', 'meta', 'isSubmitting'], true);
 
     case actions.SAVE_SUCCESS:
-      return state
-        .setIn(['newTopic', 'loading'], false);
+    {
+      if (state.board && state.board.id === state.newTopic.data.id) {
+        return state
+          .set('board', new Todo(state.newTopic.data))
+          .setIn(['newTopic', 'meta', 'isSubmitting'], false)
+          .setIn(['newTopic', 'meta', 'error'], '')
+          .setIn(['newTopic', 'meta', 'errors'], Map())
+      } else{
+        return
+        // TODO: update this topic in `list` as well!
+        state
+          .setIn(['newTopic', 'meta', 'isSubmitting'], false)
+          .setIn(['newTopic', 'meta', 'error'], '')
+          .setIn(['newTopic', 'meta', 'errors'], Map())
+      }
+    }
 
-    case actions.SAVE_ERROR:
-      return state
-        // TODO: isSubmitting rather
-        .setIn(['newTopic', 'loading'], false);
+    case actions.SAVE_ERROR: {
+      console.log('> SAVE ERROR', action)
+
+      if (action.error === true) {
+
+        if (action.payload.error && action.payload.error.details) {
+          let errorDetails = {};
+          // loop
+          for (let fieldName in action.payload.error.details.messages) {
+            if (action.payload.error.details.messages.hasOwnProperty(fieldName)) {
+              const message = action.payload.error.details.messages[fieldName];
+              errorDetails[fieldName] = message.join('; ');
+            }
+          }
+
+          return state
+            .setIn(['newTopic', 'meta', 'errors'], Map(errorDetails))
+            .setIn(['newTopic', 'meta', 'error'], '')
+            .setIn(['newTopic', 'meta', 'isSubmitting'], false)
+          //.setIn(['formFields', 'loading'], false);
+
+        } else if (action.payload.error) {
+          return state
+            .setIn(['newTopic', 'meta', 'error'], action.payload.error.message || 'Unknown Error!')
+            .setIn(['newTopic', 'meta', 'isSubmitting'], false)
+          //.setIn(['formFields', 'loading'], false);
+        } else {
+          return state
+            .setIn(['newTopic', 'meta', 'error'], action.payload.message.length > 0 && action.payload.message || 'Unknown Error!')
+            .setIn(['newTopic', 'meta', 'isSubmitting'], false)
+          //.setIn(['formFields', 'loading'], false);
+        }
+      } else {
+
+        return state
+          // TODO: isSubmitting rather
+          .setIn(['newTopic', 'meta', 'isSubmitting'], false);
+      }
+    }
 
 
     case actions.RUN_OPERATION:
@@ -354,7 +433,7 @@ export default function boardsReducer(state = initialState, action) {
           .setIn(['viewTopic', 'meta', 'error'], action.payload.error.message);
 
         // deleting from project's settings pagedd
-      } else if (action.meta.topicId && state.newTopic && state.newTopic.id === action.meta.topicId) {
+      } else if (action.meta.topicId && state.newTopic && state.newTopic.data.id === action.meta.topicId) {
 
         return state
           .setIn(['newTopic', 'data', 'deletedYn'], 0)

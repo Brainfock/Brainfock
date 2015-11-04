@@ -54,6 +54,9 @@ export default class CreateTopicForm extends Component {
   }
 
   componentDidMount() {
+
+    // TODO: create NEW topicForm instanc
+
     // set default values based on current route (workspace namespace) and container topic (e.g. project topic)
     if (this.props.params.namespace)
       this.props.actions.setNewTopicField({target:{
@@ -159,8 +162,8 @@ export default class CreateTopicForm extends Component {
         <SimpleFormFactory
           formScheme={this.props.formFields.fields}
           onChange={this.props.actions.setNewTopicField}
-          modelValues={this.props.newTopic}
-          form={this.props.form}
+          modelValues={this.props.newTopic.data}
+          form={this.props.newTopic}
           />
       </div>
     );
@@ -171,7 +174,11 @@ export default class CreateTopicForm extends Component {
     const {actions, newTopic} = this.props;
 
     // we need to call `.toJS()` ince `newTopic` is immutable
-    let data = newTopic.toJS();
+    const data = newTopic.toJS().data;
+    const data2 = newTopic.toJS();
+
+    console.log('> data::', data)
+    console.log('> data2::', data2)
 
     // normalize inputs from forms elements
     this.props.formFields.fields.forEach(function({type, name}) {
@@ -209,6 +216,7 @@ export default class CreateTopicForm extends Component {
   }
 
   handleDataSubmit(data) {
+
 
     const {actions, newTopic} = this.props;
 

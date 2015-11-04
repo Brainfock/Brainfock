@@ -36,7 +36,7 @@ export default class Dashboard extends React.Component {
 
   render() {
     const {msg} = this.props;
-    const isLoading = this.props.topic.loading==true;
+    const isLoading = this.props.topic.meta.isFetching==true;
 
     return (
       <div>
@@ -46,12 +46,18 @@ export default class Dashboard extends React.Component {
         <div className="container-fluid">
           <h4 style={{display:'none'}}>{msg.form.section.general}:</h4>
 
+          {this.props.topic.meta.error && this.props.topic.meta.error &&
+          <div className="alert alert-danger">
+             {this.props.topic.meta.error}
+             {this.props.topic.meta.isSubmitting &&
+             <span> <span className="fa fa-spin fa-circle-o-notch"></span></span>}
+          </div>}
           <mui.TextField
             name="summary"
             onChange={this.props.actions.setNewTopicField}
             hintText={msg.form.hint.summary}
-            errorText=""
-            value={this.props.topic.get('summary')}
+            errorText={this.props.topic.meta.errors && this.props.topic.meta.errors.get('summary') || ''}
+            value={this.props.topic.data.get('summary')}
             floatingLabelText={msg.form.label.summary}
             />
 
@@ -60,9 +66,9 @@ export default class Dashboard extends React.Component {
           <mui.TextField
             name="text"
             onChange={this.props.actions.setNewTopicField}
-            value={this.props.topic.get('text')}
+            value={this.props.topic.data.get('text')}
             hintText={msg.form.hint.text}
-            errorText=""
+            errorText={this.props.topic.meta.errors && this.props.topic.meta.errors.get('text') || ''}
             multiLine={true}
             floatingLabelText={msg.form.label.text}
             />
@@ -75,14 +81,14 @@ export default class Dashboard extends React.Component {
             <div className="col-md-push-6 col-md-6">
               <h5>Preview:</h5>
               <mui.Paper>
-                <TopicPreview isPreview todo={this.props.topic} />
+                <TopicPreview isPreview todo={this.props.topic.data} />
               </mui.Paper>
             </div>
 
             <div className="col-md-6 col-md-pull-6">
               <mui.TextField
                 name="logoIcon"
-                value={this.props.topic.get('logoIcon')}
+                value={this.props.topic.data.get('logoIcon')}
                 onChange={this.props.actions.setNewTopicField}
                 hintText={msg.form.hint.logoIcon}
                 floatingLabelText={msg.form.label.logoIcon}
@@ -91,7 +97,7 @@ export default class Dashboard extends React.Component {
 
               <mui.TextField
                 name="logoBackground"
-                value={this.props.topic.get('logoBackground')}
+                value={this.props.topic.data.get('logoBackground')}
                 onChange={this.props.actions.setNewTopicField}
                 hintText={msg.form.hint.logoBackground}
                 floatingLabelText={msg.form.label.logoBackground}
@@ -114,7 +120,7 @@ export default class Dashboard extends React.Component {
              }).bind(this)}
             value="1"
             label={msg.form.label.accessPrivate}
-            checked={this.props.topic.get('accessPrivateYn')==1}
+            checked={this.props.topic.data.get('accessPrivateYn')==1}
             />
 
           <mui.RaisedButton label={msg.form.button.save} primary={true} onClick={this.trySave.bind(this)}
@@ -144,7 +150,7 @@ export default class Dashboard extends React.Component {
   trySave() {
     const {actions, topic} = this.props;
 
-    let data = topic.toJS();
+    let data = topic.data.toJS();
     let put_data = {
       summary: data.summary,
       text: data.text,
@@ -157,8 +163,6 @@ export default class Dashboard extends React.Component {
     actions.save(data.id, put_data)
       .then(({error, payload}) => {
         if (error) {
-          alert('Error! Check console');
-          console.log(error);
           //focusInvalidField(this, payload);
         } else {
           // TODO: show some message that had been saved successfully

@@ -21,36 +21,14 @@
 
 import {Record, List, Map} from 'immutable';
 
-const ModelSchema = Record({
-  id: '',
-  workspaceId: '',
-  namespace: '',
-  summary: '',
-  text: '',
-  entityId: '',
-  contextTopicNum: '',
-  contextTopicKey: '',
-  contextTopicId: '',
-  typeId: '',
-  groupId: '',
-  dueDate: '',
-  accessPrivateYn: '',
-  logoIcon: '',
-  logoBackground: '',
-  updatedOn: '',
-  createdOn: '',
-  deletedYn: '',
-  // read-only, available via database view
-  wfStage: '',
-  wfStatus: '',
-})
+import ModelSchema from './model.js'
 
 export default Record({
   cid: '',
 
-  // TODO: move all model data properties under 'data' prop
   data: new (ModelSchema),
 
+  // TODO: cleanup?
   id: '',
   workspaceId: '',
   namespace: '',
