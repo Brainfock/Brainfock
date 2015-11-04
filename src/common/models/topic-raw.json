@@ -502,5 +502,21 @@
       "principalId": "$everyone",
       "permission": "DENY"
     }
+  ],
+  "coreAcls": [
+    {
+      "property": "deleteById",
+      "accessType": "*",
+      "permission": "ALLOW",
+      "principalType": "ROLE",
+      "principalId": "$owner"
+    },
+    {
+      "property": "deleteById",
+      "accessType": "*",
+      "permission": "ALLOW",
+      "principalType": "ROLE",
+      "principalId": "Admin"
+    }
   ]
 }
