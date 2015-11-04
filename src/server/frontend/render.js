@@ -90,7 +90,7 @@ function renderPage(store, renderProps, req) {
       <Html
         appCssHash={config.assetsHashes.appCss}
         bodyHtml={`<div id="app">${appHtml}</div>${scriptHtml}`}
-        googleAnalyticsId={config.googleAnalyticsId}
+        googleAnalyticsId={app.get('googleAnalyticsId')}
         isProduction={config.isProduction}
         title={DocumentTitle.rewind()}
         />
@@ -119,7 +119,7 @@ function renderPage(store, renderProps, req) {
       <Html
         appCssHash={config.assetsHashes.appCss}
         bodyHtml={`<div id="app">${appHtml}</div>${scriptHtml}`}
-        googleAnalyticsId={config.googleAnalyticsId}
+        googleAnalyticsId={app.get('googleAnalyticsId')}
         isProduction={config.isProduction}
         title={DocumentTitle.rewind()}
         />
