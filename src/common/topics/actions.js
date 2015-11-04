@@ -503,6 +503,22 @@ export function save(id, data) {
     payload: {
       promise: apiPut(fetch, endpoint, data)
         .catch(response => {
+          // decode validation error messages from server
+          if (!response) {
+            throw new Error('No response');
+          } else if (response.ok === false) return response.json();
+          else {
+            throw response;
+          }
+        })
+        .then(function (jsonResponce) {
+          if (jsonResponce.error) {
+            throw jsonResponce;
+          }
+          else
+            return jsonResponce;
+        }, function (response) {
+          // throw other errors (i.e. 50x) that don't have `.json()` available
           throw response;
         })
     }
@@ -554,9 +570,8 @@ export function deleteTopic(topicId) {
       topicId: topicId
     },
     payload: {
-
       promise: fetch(`/api/${endpoint}`, {
-        credentials: 'include', // accept cookies from server, for authentication
+        credentials: 'include', // send cookies to server for authentication
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
         method: 'DELETE',
       })
@@ -573,33 +588,8 @@ export function deleteTopic(topicId) {
           if (jsonResponce.error) throw jsonResponce;
           else return jsonResponce;
         }, (response) => {
-          // throw errors that don't have `.json()` available further
-          throw response;
-        }),
-      //
-      //promise: deleteApi(fetch, endpoint)
-      //  .catch(response => {
-      //    if (!response) throw new Error('No response');
-      //    else if (response.ok === false) return response.json();
-      //    else throw response;
-      //  })
-      //  .then((jsonResponce) => {
-      //    if (jsonResponce.error) throw jsonResponce;
-      //    else return jsonResponce;
-      //  }, (response) => {
-      //    // throw errors that don't have `.json()` available further
-      //    throw response;
-      //  })
-
-      //.then(response => {
-      //  if (response.status === 204) return response.json();
-      //  throw response;
-      //})
-      //.catch(response => {
-      //  response.text().then((text)=>{
-      //    throw text
-      //  });
-      //}),
+          throw new Error(response);
+        })
     }
   });
 }
