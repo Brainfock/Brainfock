@@ -44,7 +44,9 @@ const InitialState = Record({
   group: new TopicGroup,
   groups: new Map(),
 
+  //forms: new Map(),
   forms: new Map(),
+  formsRegistry: new Map(),
 
   // `meta` represents meta state of a list
   meta: new (Record({
@@ -70,6 +72,8 @@ const revive = (state) => initialState.merge({
   newTopic: new FormRecord,
   board: new Todo(state.board || {}),
   viewTopic: new Todo({loading: false}),
+  forms: new Map(),
+  formsRegistry: new Map(),
   group: new TopicGroup
 });
 
@@ -238,32 +242,49 @@ export default function boardsReducer(state = initialState, action) {
         ;
     }
 
+    case actions.PREPARE_NEW_TOPIC_FORM_DATA: {
+
+      // basically, create empty form data record if it's not present
+      // TODO: find form in `forms` by CID and set it as active
+
+      const contextId = action.payload.ownerTopicId > 0 ? action.payload.ownerTopicId : '0';
+
+      if(!state.getIn(['formsRegistry', contextId,  action.payload.groupKey])) {
+
+        const cid = getRandomString();
+
+        return state
+          .setIn(['formsRegistry', contextId,  action.payload.groupKey], cid)
+          .setIn(['forms', 'cid', cid], new FormRecord({cid: cid}));
+
+      } else {
+        return state;
+      }
+    }
+
     case actions.SET_NEW_TOPIC: {
       // TODO: find form in `forms` by CID and set it as active
-      if (action.payload.cid) {
-        if (state.forms.get(action.payload.cid)) {
-          // revive form
-          return state.set('newTopic', action.payload);
-        } else {
-          // create new form
-
-        }
-
-        //state.setIn(['groups', action.meta.groupKey], new TopicGroup(action.payload));
-
-      }
-
       return state.set('newTopic', new FormRecord({data:action.payload}));
-      //return state.set('newTopic', 'data', action.payload);
     }
 
     case actions.SET_NEW_TOPIC_FIELD: {
       console.log('SET_NEW_TOPIC_FIELD', action)
-      const {name, value} = action.payload;
-      return state.setIn(['newTopic', 'data', name], value)
-        // TODO: clean up errors in that `
-        .deleteIn(['newTopic', 'meta', 'errors', name])
-        .deleteIn(['form', 'meta', 'errors', name]);
+      const {name, value, cid} = action.payload;
+
+      if (cid) {
+        return state
+          .setIn(['forms', 'cid', cid, 'data', name], value)
+          .deleteIn(['forms', 'cid', cid, 'meta', 'errors', name])
+          // TODO: clean up:
+          .deleteIn(['newTopic', 'meta', 'errors', name])
+          .deleteIn(['form', 'meta', 'errors', name]);
+      } else {
+        // @deprecated
+        return state.setIn(['newTopic', 'data', name], value)
+          // TODO: clean up errors in that `
+          .deleteIn(['newTopic', 'meta', 'errors', name])
+          .deleteIn(['form', 'meta', 'errors', name]);
+      }
     }
 
     case actions.CREATE:
