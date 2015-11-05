@@ -55,6 +55,7 @@ export const LOAD_FORM_FIELDS_ERROR = 'TOPIC_LOAD_FORM_FIELDS_ERROR';
 
 export const SET_NEW_TOPIC = 'SET_NEW_TOPIC';
 export const SET_NEW_TOPIC_FIELD = 'SET_NEW_TOPIC_FIELD';
+export const PREPARE_NEW_TOPIC_FORM_DATA = 'PREPARE_NEW_TOPIC_FORM_DATA';
 export const CLEAN_FORM_GENERAL_ERRORS = 'TOPIC_CLEAN_FORM_GENERAL_ERRORS';
 export const CREATE = 'TOPIC_CREATE';
 export const CREATE_SUCCESS = 'TOPIC_CREATE_SUCCESS';
@@ -434,10 +435,21 @@ export function loadFormFields(group, contextTopicId) {
   });
 }
 
-export function setNewTopicField({target: {name, value}}) {
+export function findOrCreateForm(ownerTopicId, groupKey) {
+  return {
+    type: PREPARE_NEW_TOPIC_FORM_DATA,
+    payload: {
+      ownerTopicId: ownerTopicId > 0 ? ownerTopicId : 99999999,
+      groupKey: groupKey
+    }
+  };
+}
+
+
+export function setNewTopicField({target: {name, value}},{cid}) {
   return {
     type: SET_NEW_TOPIC_FIELD,
-    payload: {name, value}
+    payload: {name, value, cid}
   };
 }
 
