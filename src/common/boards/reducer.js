@@ -288,11 +288,19 @@ export default function boardsReducer(state = initialState, action) {
     }
 
     case actions.CREATE:
-      return state
-        // lockform submit buttons etc.
-       // .setIn(['formFields', 'loading'], true)
-        .setIn(['form', 'meta', 'isSubmitting'], true)
-        .deleteIn(['form', 'meta', 'error']);
+      if (action.meta.formCid) {
+        return state
+          .setIn(['forms', 'cid', action.meta.formCid, 'meta', 'isSubmitting'], true)
+          .deleteIn(['forms', 'cid', action.meta.formCid, 'meta', 'error']);
+      } else {
+        // TODO: cleamup:
+        // @deprecated:
+        return state
+          // lockform submit buttons etc.
+         // .setIn(['formFields', 'loading'], true)
+          .setIn(['form', 'meta', 'isSubmitting'], true)
+          .deleteIn(['form', 'meta', 'error']);
+      }
 
 
     case actions.CREATE_SUCCESS:
@@ -307,51 +315,86 @@ export default function boardsReducer(state = initialState, action) {
 
     case actions.CREATE_ERROR: {
 
-      // TODO: review, cleanup:
-      state.setIn(['newTopic', 'meta', 'isSubmitting'], false);
+      if (action.meta.formCid) {
 
-      if (action.error === true) {
-
+        const cid = action.meta.formCid;
         if (action.payload.error && action.payload.error.details) {
+
+          // error with details
           let errorDetails = {};
-          // loop
           for (let fieldName in action.payload.error.details.messages) {
             if (action.payload.error.details.messages.hasOwnProperty(fieldName)) {
               const message = action.payload.error.details.messages[fieldName];
               errorDetails[fieldName] = message.join('; ');
             }
           }
-
           return state
-            .setIn(['newTopic', 'meta', 'errors'], Map(errorDetails))
-            .setIn(['newTopic', 'meta', 'isSubmitting'], false)
-            // TODO: review if we need to modify `form` here at all
-            .setIn(['form', 'meta', 'errors'], Map(errorDetails))
-            .setIn(['form', 'meta', 'isSubmitting'], false)
-            //.setIn(['formFields', 'loading'], false);
-
+            .setIn(['forms', 'cid', cid, 'meta', 'errors'], Map(errorDetails))
+            .setIn(['forms', 'cid', cid, 'meta', 'isSubmitting'], false);
         } else if (action.payload.error) {
+
+          // non-detailed errror
           return state
-            .setIn(['newTopic', 'meta', 'error'], action.payload.error.message || 'Unknown Error!')
-            .setIn(['newTopic', 'meta', 'isSubmitting'], false)
-            // TODO: review if we need to modify `form` here at all
-            .setIn(['form', 'meta', 'error'], action.payload.error.message || 'Unknown Error!')
-            .setIn(['form', 'meta', 'isSubmitting'], false)
-            //.setIn(['formFields', 'loading'], false);
+            .setIn(['forms', 'cid', cid, 'meta', 'error'], action.payload.error.message || 'Unknown Error!')
+            .setIn(['forms', 'cid', cid, 'meta', 'isSubmitting'], false);
         } else {
+
+          // general error e.g. connection/fetch failed
           return state
-            .setIn(['newTopic', 'meta', 'error'], action.payload.message.length > 0 && action.payload.message || 'Unknown Error!')
-            .setIn(['newTopic', 'meta', 'isSubmitting'], false)
-            // TODO: review if we need to modify `form` here at all
-            .setIn(['form', 'meta', 'error'], action.payload.message.length > 0 && action.payload.message || 'Unknown Error!')
-            .setIn(['form', 'meta', 'isSubmitting'], false)
-            //.setIn(['formFields', 'loading'], false);
+            .setIn(['forms', 'cid', cid, 'meta', 'error'], action.payload.message.length > 0 && action.payload.message || 'Unknown Error!')
+            .setIn(['forms', 'cid', cid, 'meta', 'isSubmitting'], false);
         }
       } else {
-        return state
-          .setIn(['newTopic', 'meta', 'isSubmitting'], false)
-          .setIn(['form', 'meta', 'isSubmitting'], false);
+        console.warn('Deprecated action responce');
+
+        // TODO: if there is `cid` in mets
+        // TODO: review, cleanup:
+        state.setIn(['newTopic', 'meta', 'isSubmitting'], false);
+
+        if (action.error === true) {
+
+          if (action.payload.error && action.payload.error.details) {
+            let errorDetails = {};
+            // loop
+            for (let fieldName in action.payload.error.details.messages) {
+              if (action.payload.error.details.messages.hasOwnProperty(fieldName)) {
+                const message = action.payload.error.details.messages[fieldName];
+                errorDetails[fieldName] = message.join('; ');
+              }
+            }
+
+            return state
+              .setIn(['newTopic', 'meta', 'errors'], Map(errorDetails))
+              .setIn(['newTopic', 'meta', 'isSubmitting'], false)
+              // TODO: review if we need to modify `form` here at all
+              .setIn(['form', 'meta', 'errors'], Map(errorDetails))
+              .setIn(['form', 'meta', 'isSubmitting'], false)
+            //.setIn(['formFields', 'loading'], false);
+
+          } else if (action.payload.error) {
+            return state
+              .setIn(['newTopic', 'meta', 'error'], action.payload.error.message || 'Unknown Error!')
+              .setIn(['newTopic', 'meta', 'isSubmitting'], false)
+              // TODO: review if we need to modify `form` here at all
+              .setIn(['form', 'meta', 'error'], action.payload.error.message || 'Unknown Error!')
+              .setIn(['form', 'meta', 'isSubmitting'], false)
+            //.setIn(['formFields', 'loading'], false);
+          } else {
+            return state
+              .setIn(['newTopic', 'meta', 'error'], action.payload.message.length > 0 && action.payload.message || 'Unknown Error!')
+              .setIn(['newTopic', 'meta', 'isSubmitting'], false)
+              // TODO: review if we need to modify `form` here at all
+              .setIn(['form', 'meta', 'error'], action.payload.message.length > 0 && action.payload.message || 'Unknown Error!')
+              .setIn(['form', 'meta', 'isSubmitting'], false)
+            //.setIn(['formFields', 'loading'], false);
+          }
+        } else {
+          return state
+            .setIn(['newTopic', 'meta', 'isSubmitting'], false)
+            .setIn(['form', 'meta', 'isSubmitting'], false);
+        }
       }
+
     }
 
     case actions.SAVE:
