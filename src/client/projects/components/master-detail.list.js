@@ -38,8 +38,10 @@ import FetchActionError from '../../components/FetchActionError';
 export default class ProjectIssues extends Component {
 
   static propTypes = {
-    // "Context" of this topic; a link to {Topic} by contextTopicId. May be null for root views (e.g. list all projects, boards etc.)
     boards: React.PropTypes.object.isRequired,
+
+    // "Context" of this topic; a link to {Topic} by contextTopicId.
+    // Must be `null` for root views (e.g. list all projects, boards etc.)
     containerTopic: React.PropTypes.any,
     // React Component to render in details section
     detailsComponent: React.PropTypes.element,
@@ -151,13 +153,23 @@ export default class ProjectIssues extends Component {
       </h3>
     );
 
+    // prevent all children components to make unnecessary fetch requests to gather irrelevant data
+    if (this.props.containerTopic !== null && !this.props.containerTopic.id) {
+      return <h1><Loader /></h1>
+    }
+
     // don't show filter toggle button when details are disabled
     const detailsToggleIconClass = this.state.showDetails ? 'fa-info-circle fa-lg fa' : 'fa-info fa-lg fa';
+
+    const registryRootId = this.props.containerTopic && this.props.containerTopic.id || 99999999;
+    const formCid = this.props.boards.formsRegistry.getIn([registryRootId, this.props.groupKey]);
+    const formData = this.props.boards.forms.getIn(['cid', formCid]);
 
     const addItemForm = (
       <Form
         actions={this.props.topic_actions}
         containerStore={this.props.containerTopic}
+        formData={formData}
         formFields={formFields}
         form={this.props.boards.form}
         newTopic={newTopic}
@@ -198,8 +210,7 @@ export default class ProjectIssues extends Component {
             padding:9,
             width:38
           }}
-          tooltip="Toggle Details"
-          />
+          tooltip="Toggle Details"   />
 
         <ListActions
           addItemForm={addItemForm}
@@ -218,6 +229,7 @@ export default class ProjectIssues extends Component {
       <DocumentTitle title={this.props.boards.board.summary + ' - ' + this.props.boards.group.name}>
         <div className="bfk-browse">
           <div className="page-header clearfix">
+
             {ListActionsRendered}
 
             <mui.TextField
@@ -397,7 +409,6 @@ export default class ProjectIssues extends Component {
   timer = null;
 
   searchQueryChanged(e) {
-
     // TODO: call action for reduces to get latest value
     clearTimeout(this.timer);
     this.timer = setTimeout(this.applySearchQuery.bind(this), 400);
@@ -405,7 +416,6 @@ export default class ProjectIssues extends Component {
 
   applySearchQuery() {
 
-    console.log('> applySearchQuery');
     const newValue = this.refs.searchbox.getValue();
 
     //let currentQuery = Object.assign({}, this.props.location.query);
@@ -414,8 +424,7 @@ export default class ProjectIssues extends Component {
     if (newValue) {
       currentQuery['query'] = newValue;
     } else {
-      // reset query, e.g. "show all"
-      currentQuery['query'] = '';
+      currentQuery['query'] = ''; // reset query, e.g. "show all"
     }
 
     this.setState({searchQuery: newValue});
@@ -423,9 +432,7 @@ export default class ProjectIssues extends Component {
   }
 
   onKeyDown(e) {
-    ///const {actions, newTodo} = this.props;
-    if (e.key === 'Enter' /*&& newTodo.title.trim()*/)
+    if (e.key === 'Enter')
       this.applySearchQuery();
-    //actions.addTodo(newTodo);
   }
 };

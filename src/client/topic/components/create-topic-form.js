@@ -26,9 +26,10 @@ import Loader from '../../components/Loader';
 import SimpleFormFactory from '../../components/UISimpleFormFactory';
 
 /**
- * Create topic form component
+ * Create topic form
  *
- * @author sergii gamaiunov <Hello@webkadabra.com>
+ * @category client/components/smart
+ * @author sergii gamaiunov <hello@webkadabra.com>
  */
 export default class CreateTopicForm extends Component {
 
@@ -49,50 +50,72 @@ export default class CreateTopicForm extends Component {
   componentWillMount() {
     if (!this.props.formFields || (this.props.formFields && this.props.formFields.fields.size === 0)
       || (this.props.formFields.group !== this.props.topicGroup)) {
-      this.props.actions.loadFormFields(this.props.topicGroup, (this.props.containerStore ? this.props.containerStore.id : 0));
+
+      // load fields but provide form ID
+      this.props.actions.loadFormFields(this.props.topicGroup,
+        (this.props.containerStore ? this.props.containerStore.id : 0));
     }
+    // TODO: get form
+
+    if (!this.props.formData) {
+      this.props.actions.findOrCreateForm((this.props.containerStore ? this.props.containerStore.id : 0),
+        this.props.topicGroup);
+    }
+
+    //if (!this.props.formFields || (this.props.formFields && this.props.formFields.fields.size === 0)
+    //  || (this.props.formFields.group !== this.props.topicGroup)) {
+    //
+    //  // load fields but provide form ID
+    //  this.props.actions.loadFormFields(this.props.topicGroup,
+    //    (this.props.containerStore ? this.props.containerStore.id : 0));
+    //}
   }
 
-  componentDidMount() {
-
-    // TODO: create NEW topicForm instanc
-
+  setHiddenFieldsValues() {
     // set default values based on current route (workspace namespace) and container topic (e.g. project topic)
     if (this.props.params.namespace)
       this.props.actions.setNewTopicField({target:{
         name: 'namespace',
         value: this.props.params.namespace,
-      }});
+      }}, {cid: this.props.formData.cid});
     this.props.actions.setNewTopicField({target:{
       name: 'createGroup',
       value: this.props.topicGroup,
-    }});
+    }}, {cid: this.props.formData.cid});
+  }
+  componentDidMount() {
 
-    if (this.props.containerStore)
-      this.props.actions.setNewTopicField({target:{
-        name: 'contextTopicId',
-        value: [
-          // for `react-select` we must provide {Array} with {Object}s
-          {label:this.props.containerStore.summary,value:this.props.containerStore.id}
-        ]
-      }});
+    if (this.props.formData) {
+
+      this.setHiddenFieldsValues();
+
+      if (this.props.containerStore)
+        this.props.actions.setNewTopicField({target:{
+          name: 'contextTopicId',
+          value: [
+            // for `react-select` we must provide {Array} with {Object}s
+            {label:this.props.containerStore.summary,value:this.props.containerStore.id}
+          ]
+        }}, {cid: this.props.formData.cid});
+    }
   }
 
   componentWillReceiveProps(newProps) {
 
-    if (newProps.formFields && this.props.formFields !== newProps.formFields) {
+    if (this.props.formData && newProps.formFields && this.props.formFields !== newProps.formFields) {
+
+      this.setHiddenFieldsValues();
 
       // after we successfully loaded form fields from server - some of those fields may have had
       // default value sent by server as well, so quickly go over fields and set default values.
       newProps.formFields.fields.forEach((fieldScheme) => {
         if (fieldScheme.value && fieldScheme.name) {
-          console.log('> setNewTopicField')
           this.props.actions.setNewTopicField({
             target: {
               name: fieldScheme.name,
               value: fieldScheme.value
             }
-          });
+          }, {cid: this.props.formData.cid});
         }
       });
     }
@@ -120,17 +143,20 @@ export default class CreateTopicForm extends Component {
    * 3) after issue type is selected, system fetches form schema for this project & topic type
    */
   render() {
+    if (!this.props.formData) {
+      return <Loader noLabel />
+    }
     return (
       <form ref="frm" onSubmit={this.onFormSubmit.bind(this)} className="form-horizontal">
-        {this.props.form && this.props.form.meta.error
+        {this.props.formData && this.props.formData.meta.error
         && <div className="alert alert-danger">
-          <i onClick={this.props.actions.cleanErrorSummary} className="fa fa-times"></i> {this.props.form.meta.error}
+          <i onClick={this.props.actions.cleanErrorSummary} className="fa fa-times"></i> {this.props.formData.meta.error}
         </div>
         }
         {this.renderForm()}
         <br />
         <mui.Checkbox
-          defaultChecked={this.props.newTopic.accessPrivateYn}
+          defaultChecked={this.props.formData.data.accessPrivateYn}
           label='createForm_LABEL_access_private_yn'
           name="accessPrivateYn"
           onCheck={(function(event, isChecked){
@@ -139,7 +165,7 @@ export default class CreateTopicForm extends Component {
                     name: event.target.name,
                     value: isChecked
                   }
-                })
+                }, {cid: this.props.formData.cid})
                }).bind(this)}
           ref="accessSettings"
           value="1"
@@ -161,24 +187,23 @@ export default class CreateTopicForm extends Component {
       <div className="clearfix">
         <SimpleFormFactory
           formScheme={this.props.formFields.fields}
-          onChange={this.props.actions.setNewTopicField}
-          modelValues={this.props.newTopic.data}
-          form={this.props.newTopic}
+          _onChange={this.props.actions.setNewTopicField}
+          onChange={this.onChange.bind(this)}
+          modelValues={this.props.formData.data}
+          form={this.props.formData}
           />
       </div>
     );
   }
 
+  onChange(e) {
+    this.props.actions.setNewTopicField(e, {cid: this.props.formData.cid});
+  }
   onFormSubmit(e) {
 
-    const {actions, newTopic} = this.props;
+    const {actions, formData} = this.props;
 
-    // we need to call `.toJS()` ince `newTopic` is immutable
-    const data = newTopic.toJS().data;
-    const data2 = newTopic.toJS();
-
-    console.log('> data::', data)
-    console.log('> data2::', data2)
+    const data = formData.toJS().data;
 
     // normalize inputs from forms elements
     this.props.formFields.fields.forEach(function({type, name}) {
