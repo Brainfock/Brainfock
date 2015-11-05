@@ -48,15 +48,15 @@ export default class CreateTopicForm extends Component {
   };
 
   componentWillMount() {
+
     if (!this.props.formFields || (this.props.formFields && this.props.formFields.fields.size === 0)
       || (this.props.formFields.group !== this.props.topicGroup)) {
 
-      // load fields but provide form ID
       this.props.actions.loadFormFields(this.props.topicGroup,
         (this.props.containerStore ? this.props.containerStore.id : 0));
     }
-    // TODO: get form
 
+    // TODO: looks like it belongs to parent component
     if (!this.props.formData) {
       this.props.actions.findOrCreateForm((this.props.containerStore ? this.props.containerStore.id : 0),
         this.props.topicGroup);
@@ -89,6 +89,7 @@ export default class CreateTopicForm extends Component {
 
       this.setHiddenFieldsValues();
 
+      // FIXME: does not set context really
       if (this.props.containerStore)
         this.props.actions.setNewTopicField({target:{
           name: 'contextTopicId',
@@ -103,8 +104,6 @@ export default class CreateTopicForm extends Component {
   componentWillReceiveProps(newProps) {
 
     if (this.props.formData && newProps.formFields && this.props.formFields !== newProps.formFields) {
-
-      this.setHiddenFieldsValues();
 
       // after we successfully loaded form fields from server - some of those fields may have had
       // default value sent by server as well, so quickly go over fields and set default values.
@@ -199,10 +198,12 @@ export default class CreateTopicForm extends Component {
   onChange(e) {
     this.props.actions.setNewTopicField(e, {cid: this.props.formData.cid});
   }
+
   onFormSubmit(e) {
 
     const {actions, formData} = this.props;
 
+    const cid = formData.cid;
     const data = formData.toJS().data;
 
     // normalize inputs from forms elements
@@ -229,7 +230,8 @@ export default class CreateTopicForm extends Component {
     if (this.props.containerStore && !postData.contextTopicId)
       postData.contextTopicId = this.props.containerStore.id;
 
-    actions.create(postData)
+    //actions.create(postData)
+    actions.postTopicFormData(cid, postData)
       .then(({error, payload}) => {
         if (error) {
           // TODO: snackbar message?
@@ -240,9 +242,7 @@ export default class CreateTopicForm extends Component {
       });
   }
 
-  handleDataSubmit(data) {
-
-
+  /*handleDataSubmit(data) {
     const {actions, newTopic} = this.props;
 
     // normalize inputs from forms elements
@@ -278,6 +278,5 @@ export default class CreateTopicForm extends Component {
           // item added successfully
         }
       });
-
-  }
+  }*/
 }
