@@ -502,6 +502,51 @@ export function create(data) {
   });
 }
 
+/**
+ *
+ * @param cid
+ * @param data
+ * @returns {Function}
+ */
+export function postTopicFormData(cid, data) {
+
+  const endpoint = 'topics';
+
+  return ({fetch, validate}) => ({
+    type: [
+      CREATE,
+      CREATE_SUCCESS,
+      CREATE_ERROR
+    ],
+    meta: {
+      formCid: cid
+    },
+    payload: {
+      promise: validateForm(validate, data)
+        .then(() => apiPut(fetch, endpoint, data))
+        .catch(response => {
+          // decode validation error messages from server
+          if (!response) {
+            throw new Error('No response');
+          } else if (response.ok === false) return response.json();
+          else {
+            throw response;
+          }
+        })
+        .then(function (jsonResponce) {
+          if (jsonResponce.error) {
+            throw jsonResponce;
+          }
+          else
+            return jsonResponce;
+        }, function (response) {
+          // throw other errors (i.e. 50x) that don't have `.json()` available
+          throw response;
+        })
+    }
+  });
+}
+
 export function save(id, data) {
 
   const endpoint = 'topics/'+id;
