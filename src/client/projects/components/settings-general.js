@@ -37,7 +37,7 @@ export default class Dashboard extends React.Component {
   render() {
 
     const {msg} = this.props;
-    const isLoading = this.props.topic.meta.isFetching==true;
+    const isLoading = this.props.topic.meta.isFetching==true; // in some views, loading means "loading form scheme"
 
     return (
       <div>
@@ -55,7 +55,7 @@ export default class Dashboard extends React.Component {
           </div>}
           <mui.TextField
             name="summary"
-            onChange={this.props.actions.setNewTopicField}
+            onChange={this.onChange.bind(this)}
             hintText={msg.form.hint.summary}
             errorText={this.props.topic.meta.errors && this.props.topic.meta.errors.get('summary') || ''}
             value={this.props.topic.data.get('summary')}
@@ -66,7 +66,7 @@ export default class Dashboard extends React.Component {
 
           <mui.TextField
             name="text"
-            onChange={this.props.actions.setNewTopicField}
+            onChange={this.onChange.bind(this)}
             value={this.props.topic.data.get('text')}
             hintText={msg.form.hint.text}
             errorText={this.props.topic.meta.errors && this.props.topic.meta.errors.get('text') || ''}
@@ -90,7 +90,7 @@ export default class Dashboard extends React.Component {
               <mui.TextField
                 name="logoIcon"
                 value={this.props.topic.data.get('logoIcon')}
-                onChange={this.props.actions.setNewTopicField}
+                onChange={this.onChange.bind(this)}
                 hintText={msg.form.hint.logoIcon}
                 floatingLabelText={msg.form.label.logoIcon}
                 />
@@ -99,7 +99,7 @@ export default class Dashboard extends React.Component {
               <mui.TextField
                 name="logoBackground"
                 value={this.props.topic.data.get('logoBackground')}
-                onChange={this.props.actions.setNewTopicField}
+                onChange={this.onChange.bind(this)}
                 hintText={msg.form.hint.logoBackground}
                 floatingLabelText={msg.form.label.logoBackground}
                 />
@@ -112,16 +112,16 @@ export default class Dashboard extends React.Component {
           <mui.Checkbox
             name="accessPrivateYn"
             onCheck={(function(event, isChecked){
-              this.props.actions.setNewTopicField({
+              this.onChange({
                 target:{
                   name: event.target.name,
-                  value: isChecked
+                  value: isChecked ? 1 : 0
                 }
               })
              }).bind(this)}
             value="1"
             label={msg.form.label.accessPrivate}
-            checked={this.props.topic.data.get('accessPrivateYn') === 1}
+            checked={(this.props.topic.data.get('accessPrivateYn') === 1)}
             />
 
           <mui.RaisedButton label={msg.form.button.save} primary={true} onClick={this.trySave.bind(this)}
@@ -146,6 +146,10 @@ export default class Dashboard extends React.Component {
         </div>
       </div>
     );
+  }
+
+  onChange(e) {
+    this.props.actions.setNewTopicField(e, {id: this.props.topic.data.id});
   }
 
   onDelete() {

@@ -14,16 +14,51 @@ import {Tabs, Tab} from 'react-bootstrap';
 
 import PageWithNav from '../components/layout/page-with-nav';
 import GeneralSettings from './components/settings-general.js';
+import Loader from '../components/Loader.js'
 
 export default class Dashboard extends React.Component {
 
   componentWillMount() {
-    this.props.topic_actions.setNewTopic(this.props.boards.board);
+
+    //let boardId;
+    //if (this.props.boards.board.id) {
+    //  boardId = this.props.boards.board.id;
+    //} else {
+    //  boardId = this.props.params.board_id;
+    //}
+
+    if (process.env.IS_BROWSER === true && !this.props.boards.board.id) {
+      this.props.topic_actions.loadCurrent(this.props.params.board_id);
+    }
+
+    if (this.props.boards.board.id) {
+
+      const formData = this.props.boards.getIn(['forms', 'id', this.props.boards.board.id])
+
+      if (!formData) {
+        this.props.topic_actions.makeTopicUpdateFormRecord(this.props.boards.board.id, this.props.boards.board.toJS());
+      }
+    }
   }
 
-  render()
-  {
-    const {boards:{list, board, group, newTopic}, topic_actions, msg, history} = this.props;
+  componentWillUpdate() {
+    const formData = this.props.boards.getIn(['forms', 'id', this.props.boards.board.id])
+
+    if (!formData && this.props.boards.board.id) {
+      this.props.topic_actions.makeTopicUpdateFormRecord(this.props.boards.board.id, this.props.boards.board.toJS());
+    }
+  }
+  render() {
+
+    if (!this.props.boards.board.id) {
+      return <Loader />;
+    }
+
+    const formData = this.props.boards.getIn(['forms', 'id', this.props.boards.board.id])
+
+    if (!formData) {
+      return <Loader />;
+    }
 
     /*
      <PageWithNav  menuItems={this.menuItems()} {...this.props}>
@@ -32,11 +67,11 @@ export default class Dashboard extends React.Component {
      */
     return (
       <div className="bfk-browse">
-        <GeneralSettings actions={topic_actions}
-                         isLoading={newTopic.meta.isSubmitting === true}
-                         msg={msg.topics}
-                         topic={newTopic}
+        <GeneralSettings actions={this.props.topic_actions}
                          history={this.props.history}
+                         isLoading={formData.meta.isSubmitting === true}
+                         msg={this.props.msg.topics}
+                         topic={formData}
           />
       </div>
     );

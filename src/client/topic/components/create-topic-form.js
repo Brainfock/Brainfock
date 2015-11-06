@@ -41,6 +41,7 @@ export default class CreateTopicForm extends Component {
   static propTypes = {
     actions: React.PropTypes.any.isRequired,
     containerStore: React.PropTypes.any.isRequired,
+    formData: React.PropTypes.object,
     formFields: React.PropTypes.object,
     newTopic: React.PropTypes.any.isRequired,
     params: React.PropTypes.object.isRequired,
