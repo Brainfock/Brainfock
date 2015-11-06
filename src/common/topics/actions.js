@@ -447,6 +447,16 @@ export function findOrCreateForm(ownerTopicId, groupKey, initialValues) {
   };
 }
 
+export function makeTopicUpdateFormRecord(id, initialValues) {
+  return {
+    type: PREPARE_NEW_TOPIC_FORM_DATA,
+    payload: {
+      topicId: id,
+      initialValues
+    }
+  };
+}
+
 export function applyTopicFormDefaults(cid, data, overwrite=false) {
   return {
     type: APPLY_TOPIC_FORM_DEFAULTS,
@@ -458,10 +468,10 @@ export function applyTopicFormDefaults(cid, data, overwrite=false) {
   };
 }
 
-export function setNewTopicField({target: {name, value}},{cid}) {
+export function setNewTopicField({target: {name, value}},{cid, id}) {
   return {
     type: SET_NEW_TOPIC_FIELD,
-    payload: {name, value, cid}
+    payload: {name, value, cid, id}
   };
 }
 
@@ -569,6 +579,9 @@ export function save(id, data) {
       SAVE_SUCCESS,
       SAVE_ERROR
     ],
+    meta: {
+      topicId: id
+    },
     payload: {
       promise: apiPut(fetch, endpoint, data)
         .catch(response => {

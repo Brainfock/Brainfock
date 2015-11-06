@@ -259,21 +259,38 @@ export default function boardsReducer(state = initialState, action) {
       // basically, create empty form data record if it's not present
       // TODO: find form in `forms` by CID and set it as active
 
-      const contextId = action.payload.ownerTopicId > 0 ? action.payload.ownerTopicId : '0';
+      // instantiate update form
+      if (action.payload.topicId) {
+        if (!state.getIn(['forms', 'id', action.payload.topicId])) {
+          const cid = getRandomString();
+          return state
+            .setIn(['formsRegistry', 'cid',  cid], action.payload.topicId) // map `cid` to actual topic id in case we need it
+            .setIn(['forms', 'id', action.payload.topicId], new FormRecord({
+              cid: cid,
+              data: new ModelSchema(action.payload.initialValues || {})
+            }));
 
-      if (!state.getIn(['formsRegistry', contextId,  action.payload.groupKey])) {
-
-        const cid = getRandomString();
-
-        return state
-          .setIn(['formsRegistry', contextId,  action.payload.groupKey], cid)
-          .setIn(['forms', 'cid', cid], new FormRecord({
-            cid: cid,
-            data: new ModelSchema(action.payload.initialValues || {})
-          }));
-
+        } else {
+          return state;
+        }
       } else {
-        return state;
+
+        const contextId = action.payload.ownerTopicId > 0 ? action.payload.ownerTopicId : '0';
+
+        if (!state.getIn(['formsRegistry', contextId,  action.payload.groupKey])) {
+
+          const cid = getRandomString();
+
+          return state
+            .setIn(['formsRegistry', contextId,  action.payload.groupKey], cid)
+            .setIn(['forms', 'cid', cid], new FormRecord({
+              cid: cid,
+              data: new ModelSchema(action.payload.initialValues || {})
+            }));
+
+        } else {
+          return state;
+        }
       }
     }
 
@@ -284,7 +301,7 @@ export default function boardsReducer(state = initialState, action) {
 
     case actions.SET_NEW_TOPIC_FIELD: {
 
-      const {name, value, cid} = action.payload;
+      const {name, value, cid, id} = action.payload;
 
       if (cid) {
         return state
@@ -293,6 +310,10 @@ export default function boardsReducer(state = initialState, action) {
           // TODO: clean up:
           .deleteIn(['newTopic', 'meta', 'errors', name])
           .deleteIn(['form', 'meta', 'errors', name]);
+      } else if (id) {
+        return state
+          .setIn(['forms', 'id', id, 'data', name], value)
+          .deleteIn(['forms', 'id', id, 'meta', 'errors', name]);
       } else {
         // @deprecated
         return state.setIn(['newTopic', 'data', name], value)
@@ -419,33 +440,27 @@ export default function boardsReducer(state = initialState, action) {
 
     }
 
+
     case actions.SAVE:
       return state
-        .setIn(['newTopic', 'meta', 'isSubmitting'], true);
+        .setIn(['forms', 'id', action.meta.topicId, 'meta', 'isSubmitting'], true);
 
-    case actions.SAVE_SUCCESS:
-    {
-      if (state.board && state.board.id === state.newTopic.data.id) {
-        return state
-          .set('board', new Todo(state.newTopic.data))
-          .setIn(['newTopic', 'meta', 'isSubmitting'], false)
-          .setIn(['newTopic', 'meta', 'error'], '')
-          .setIn(['newTopic', 'meta', 'errors'], Map())
-      } else{
-        return
-        // TODO: update this topic in `list` as well!
-        state
-          .setIn(['newTopic', 'meta', 'isSubmitting'], false)
-          .setIn(['newTopic', 'meta', 'error'], '')
-          .setIn(['newTopic', 'meta', 'errors'], Map())
+    case actions.SAVE_SUCCESS: {
+      //  todo: clear form in `forms`
+      if (state.board && state.board.id === action.meta.topicId) {
+        state = state
+          // TODO: `board.data`
+          .set('board', new Todo(action.payload));
       }
+      return state
+        .setIn(['forms', 'id', action.meta.topicId, 'meta', 'isSubmitting'], false)
+        .setIn(['forms', 'id', action.meta.topicId, 'meta', 'error'], '')
+        .setIn(['forms', 'id', action.meta.topicId, 'meta', 'errors'], Map())
     }
 
     case actions.SAVE_ERROR: {
-      console.log('> SAVE ERROR', action)
 
       if (action.error === true) {
-
         if (action.payload.error && action.payload.error.details) {
           let errorDetails = {};
           // loop
@@ -457,27 +472,23 @@ export default function boardsReducer(state = initialState, action) {
           }
 
           return state
-            .setIn(['newTopic', 'meta', 'errors'], Map(errorDetails))
-            .setIn(['newTopic', 'meta', 'error'], '')
-            .setIn(['newTopic', 'meta', 'isSubmitting'], false)
-          //.setIn(['formFields', 'loading'], false);
+            .setIn(['forms', 'id', action.meta.topicId, 'meta', 'errors'], Map(errorDetails))
+            .setIn(['forms', 'id', action.meta.topicId, 'meta', 'error'], '')
+            .setIn(['forms', 'id', action.meta.topicId, 'meta', 'isSubmitting'], false)
 
         } else if (action.payload.error) {
           return state
-            .setIn(['newTopic', 'meta', 'error'], action.payload.error.message || 'Unknown Error!')
-            .setIn(['newTopic', 'meta', 'isSubmitting'], false)
-          //.setIn(['formFields', 'loading'], false);
+            .setIn(['forms', 'id', action.meta.topicId, 'meta', 'error'], action.payload.error.message || 'Unknown Error!')
+            .setIn(['forms', 'id', action.meta.topicId, 'meta', 'isSubmitting'], false)
         } else {
           return state
-            .setIn(['newTopic', 'meta', 'error'], action.payload.message.length > 0 && action.payload.message || 'Unknown Error!')
-            .setIn(['newTopic', 'meta', 'isSubmitting'], false)
-          //.setIn(['formFields', 'loading'], false);
+            .setIn(['forms', 'id', action.meta.topicId, 'meta', 'error'], action.payload.message.length > 0 && action.payload.message || 'Unknown Error!')
+            .setIn(['forms', 'id', action.meta.topicId, 'meta', 'isSubmitting'], false)
         }
       } else {
-
         return state
-          // TODO: isSubmitting rather
-          .setIn(['newTopic', 'meta', 'isSubmitting'], false);
+          .setIn(['forms', 'id', action.meta.topicId, 'meta', 'error'], 'Unknown Error!')
+          .setIn(['forms', 'id', action.meta.topicId, 'meta', 'isSubmitting'], false);
       }
     }
 
