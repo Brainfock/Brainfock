@@ -555,11 +555,11 @@ module.exports = function(app) {
   });
 
   /**
-   * createWikiPage ROLE
+   * $createWikiPage ROLE
    */
-  Role.registerResolver('createWikiPage', function(role, context, cb) {
+  Role.registerResolver('$createWikiPage', function(role, context, cb) {
 
-    console.log('[RBAC createWikiPage] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName + '`');
+    console.log('[RBAC $createWikiPage] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName + '`');
     const userId = context.accessToken.userId;
 
     const reject = () => process.nextTick(() => {
