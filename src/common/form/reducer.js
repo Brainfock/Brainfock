@@ -49,7 +49,6 @@ module.exports =  formReducer.plugin({
     switch (action.type) {
       case TOPIC_CREATE_ERROR:
         if (action.error === true) {
-          console.log(' >>>', action)
           if (action.payload.error && action.payload.error.details) {
 
             // loop
@@ -89,9 +88,8 @@ module.exports =  formReducer.plugin({
         } else {
           return state;
         }
-      case SET_NEW_TOPIC_FIELD:
-      {
-        console.log('> redux-form plugin:', action, state)
+
+      case SET_NEW_TOPIC_FIELD: {
         if (state[action.payload.name]) {
           state[action.payload.name].value = action.payload.value;
         } else {

@@ -1,9 +1,18 @@
+/**
+ * Brainfock - Community & Business Management Solution
+ * Copyright (c) 2015, Sergii Gamaiunov
+ *
+ * $$$LICENSE_HEADER$$$
+ *
+ * @link http://www.brainfock.org
+ * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
+ */
+
 import DocumentTitle from 'react-document-title';
 import Html from './html.react';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import config from '../config';
-import createLocation from 'history/lib/createLocation';
 import useragent from 'useragent';
 import {HOT_RELOAD_PORT} from '../../../webpack/constants';
 import {IntlProvider} from 'react-intl';
@@ -12,7 +21,6 @@ import {RoutingContext, match} from 'react-router';
 import serialize from 'serialize-javascript';
 import Promise from 'bluebird';
 import {configureStore} from '../../common';
-import {fromJS} from 'immutable';
 import {mapDispatchToProps} from '../../common';
 
 import createRoutes from '../../client/createRoutes.js';
@@ -20,13 +28,6 @@ import {createMemoryHistory} from 'history';
 
 import loopback from 'loopback';
 import app from '../main';
-
-/*export default function render(req, res, next) {
-  createStore(req, res)
-    .then((store, renderProps) => renderPage(store, renderProps, req, res, next))
-    .then(html => res.send(html))
-    .catch(next);
-}*/
 
 export default function render(req, res, next) {
   const ctx = loopback.getCurrentContext();
@@ -41,7 +42,7 @@ export default function render(req, res, next) {
   };
 
   // provide auth token id to client
-  if(currentUser) {
+  if (currentUser) {
     initialState.users.viewer.authToken = ctx.get('accessToken').id;
   }
 
@@ -80,24 +81,7 @@ export default function render(req, res, next) {
   });
 }
 
-function renderPage(store, renderProps, req) {
-  const clientState = store.getState();
-  const {headers, hostname} = req;
-  const appHtml = getAppHtml(store, renderProps);
-  const scriptHtml = getScriptHtml(clientState, headers, hostname);
-
-  return '<!DOCTYPE html>' + ReactDOMServer.renderToStaticMarkup(
-      <Html
-        appCssHash={config.assetsHashes.appCss}
-        bodyHtml={`<div id="app">${appHtml}</div>${scriptHtml}`}
-        googleAnalyticsId={app.get('googleAnalyticsId')}
-        isProduction={config.isProduction}
-        title={DocumentTitle.rewind()}
-        />
-    );
-}
-
-function fetchComponentData(dispatch, req, {components, location, params},{app, users}) {
+function fetchComponentData(dispatch, req, {components, location, params}, {app, users}) {
   const fetchActions = components.reduce((actions, component) => {
     return actions.concat(component.fetchAction || []);
   }, []);

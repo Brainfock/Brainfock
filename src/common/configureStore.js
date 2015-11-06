@@ -12,12 +12,7 @@ import {applyMiddleware, createStore} from 'redux';
 
 export default function configureStore({engine, initialState} = {}) {
 
-  // This is something like services in Angular, but without magic DI resolver,
-  // which is cool if you need it, but much better is design where DI resolver
-  // is not needed. Why DI container is not needed anymore? Remember, we are
-  // using dependency injection only for stuff with state (instances etc.).
-  // If app state is atomic aka at one place in whole app, we don't need DI
-  // container anymore. injectDependencies with custom factories is all we need.
+  // Inject services for actions.
   const dependenciesMiddleware = injectDependencies(
     {fetch},
     {validate}

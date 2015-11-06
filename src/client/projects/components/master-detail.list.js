@@ -1,21 +1,7 @@
 /**
- * Brainfock - community & issue management software
- * Copyright (c) 2015, Sergii Gamaiunov,  All rights reserved.
+ * Brainfock - Community & Business Management Solution
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @link http://www.brainfock.com/
+ * @link http://www.brainfock.org
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import React from 'react';
@@ -30,7 +16,6 @@ import ListActions from '../../components/UIListActions';
 import Form from '../../topic/components/create-topic-form';
 
 import ListView from '../../boards/boards.react';
-import ListViewItem from './issues-list-item';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import Filters from '../../components/UISimpleFilters';
 import FetchActionError from '../../components/FetchActionError';
@@ -45,6 +30,8 @@ export default class ProjectIssues extends Component {
     containerTopic: React.PropTypes.any,
     // React Component to render in details section
     detailsComponent: React.PropTypes.element,
+    // disable details panel
+    disableDetails: React.PropTypes.bool,
     // React Component to render is list is empty
     emptyListFallback: React.PropTypes.element,
     groupKey: React.PropTypes.string.isRequired,
@@ -155,7 +142,7 @@ export default class ProjectIssues extends Component {
 
     // prevent all children components to make unnecessary fetch requests to gather irrelevant data
     if (this.props.containerTopic !== null && !this.props.containerTopic.id) {
-      return <h1><Loader /></h1>
+      return <h1><Loader /></h1>;
     }
 
     // don't show filter toggle button when details are disabled
@@ -169,9 +156,9 @@ export default class ProjectIssues extends Component {
       <Form
         actions={this.props.topic_actions}
         containerStore={this.props.containerTopic}
+        form={this.props.boards.form}
         formData={formData}
         formFields={formFields}
-        form={this.props.boards.form}
         newTopic={newTopic}
         params={this.props.params}
         topicGroup={this.props.groupKey}
@@ -276,9 +263,9 @@ export default class ProjectIssues extends Component {
           <div className="clearfix" style={{position:'relative'}}>
             {this.props.boards.meta.error &&
             <FetchActionError
-              msg={this.props.msg}
-              meta={this.props.boards.meta}
               handleRetry={this.fetchData.bind(this)}
+              meta={this.props.boards.meta}
+              msg={this.props.msg}
               />}
             {content}
           </div>
@@ -297,7 +284,7 @@ export default class ProjectIssues extends Component {
 
     // show state of loading list
     if (this.props.boards.meta.isFetching === true &&
-      (!this.props.boards.list.size || this.props.boards.meta.groupKey != this.props.groupKey)) {
+      (!this.props.boards.list.size || this.props.boards.meta.groupKey !== this.props.groupKey)) {
       return (
         <h1><Loader asGlobal/></h1>
       );
@@ -314,17 +301,17 @@ export default class ProjectIssues extends Component {
       return (
         <div>
           {this.props.boards.meta.isFetching === true &&
-          <div style={{position:'absolute',width:'100%'}}><Loader noLabel/></div>}
+          <div style={{position:'absolute', width:'100%'}}><Loader noLabel/></div>}
           {this.renderList()}
         </div>
       );
     }
     return (
       <Grid fluid style={{
-        paddingLeft:0,
+        paddingLeft:0
       }}>
         {this.props.boards.meta.isFetching === true &&
-        <div style={{position:'absolute',width:'100%'}}><Loader noLabel/></div>}
+        <div style={{position:'absolute', width:'100%'}}><Loader noLabel/></div>}
         <Row>
           <Col md={rowWidth}>
             {this.renderList()}
@@ -386,13 +373,13 @@ export default class ProjectIssues extends Component {
     if (this.props.detailsComponent) {
       const Details = this.props.detailsComponent;
       return <Details
-        topic_actions={this.props.topic_actions}
-        io={this.props.io}
         actions={this.props.actions}
+        io={this.props.io}
         onDeleted={()=>{
           // TODO: close details panel?
         }.bind(this)}
         topic={this.props.boards.viewTopic}
+        topic_actions={this.props.topic_actions}
         />
     } else {
       return (

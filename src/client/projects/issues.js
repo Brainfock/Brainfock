@@ -35,10 +35,10 @@ export default class ProjectIssues extends Component {
     return (
       <MasterDetailsListView
         containerTopic={board}
-        listViewItem={ListViewItem}
-        emptyListFallback={ProjectsEmpty}
         detailsComponent={IssueView}
+        emptyListFallback={ProjectsEmpty}
         groupKey='issue'
+        listViewItem={ListViewItem}
         {...passProps}
         />
     );

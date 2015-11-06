@@ -26,10 +26,10 @@ let PageWithNav = require('../components/layout/page-with-nav');
 let Loader = require('../components/Loader');
 let AppContentCanvas = require('../components/layout/AppContentCanvas');
 
-class Layout extends Component{
+class Layout extends Component {
 
   componentDidMount() {
-    if(process.env.IS_BROWSER==true) {
+    if (process.env.IS_BROWSER === true) {
       // load info about CURRENT BOARD
       this.props.topic_actions.loadCurrent(this.props.params.board_id, this.props.params.namespace);
       this.props.actions.workspaceFindById(this.props.params.namespace);
@@ -75,11 +75,11 @@ class Layout extends Component{
             /*onMouseOver={function(e){e.target.style.background}}*/
             style={{
             //background:"rgb(245, 245, 245)",
-              margin:"0 -24px",
-              padding:"10px 24px",
+              margin:'0 -24px',
+              padding:'10px 24px',
               fontSize:14,
-              color:"#000",
-              lineHeight:'16px',
+              color:'#000',
+              lineHeight:'16px'
             }}>
             {this.props.boards.board.summary} {icon}</div>
         )
