@@ -384,10 +384,18 @@
     {
       "accessType": "*",
       "principalType": "ROLE",
-      "principalId": "topicEntityAccess",
+      "principalId": "$updateWikiPage",
       "permission": "ALLOW",
       "property": "updateAttributes"
     },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "updateAttributes"
+    },
+
     {
       "accessType": "*",
       "principalType": "ROLE",

@@ -614,6 +614,69 @@ module.exports = function(app) {
     }
   });
 
+  /**
+   * DRAFT
+   *
+   * @todo: do not allow updating locked topics
+   */
+  Role.registerResolver('$updateWikiPage', function (role, context, cb) {
+
+    const userId = context.accessToken.userId || null;
+    console.log('[RBAC $updateWikiPage] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName + ':' + context.modelId  + '`, user:' + userId);
+
+    console.log('>>', context.remotingContext.args.data);
+
+    const reject = () => process.nextTick(() => {
+      cb(null, false);
+    });
+
+    if (context.modelName !== 'WikiPage') {
+      return reject();
+    }
+
+    if (context.remotingContext.method.name === 'updateAttributes') {
+
+      // posting to global wiki
+      if (!context.remotingContext.args.data.contextEntityId) {
+    console.log('>root wiki')
+        Role.isInRole('$authenticated', context, (err, isAllowed) => {
+
+          // TODO: allow guest posts to root wiki via admin
+          if (!isAllowed) {
+
+            return reject();
+          } else {
+
+            // currently, acccess to context and workspace is checked in 'before save'
+            // find topic, check workspace access, then context access, then topic access
+            return cb(null, true);
+          }
+        });
+        //
+
+      } else {
+
+        Role.isInRole('$authenticated', context, (err, isAllowed) => {
+
+          if (!isAllowed) {
+
+            // TODO: allow to configure guest posting access per workspace (e.g. gather web form data)
+            return reject();
+          } else {
+
+            // TODO: check if it is a root wiki
+            // TODO: namespace wiki can allow guests to post
+            // TODO: we must validate if user can create pages in selected `context.remotingContext.args.data.contextEntityId` space
+            return cb(null, true);
+          }
+        });
+      }
+
+    } else {
+      return reject();
+    }
+  });
+
   Role.registerResolver('commentEntityAccess', function(role, context, cb) {
 
     console.log('[RBAC commentEntityAccess] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName);
