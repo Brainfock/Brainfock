@@ -35,6 +35,7 @@ export default class Dashboard extends React.Component {
   }
 
   render() {
+
     const {msg} = this.props;
     const isLoading = this.props.topic.meta.isFetching==true;
 
@@ -120,7 +121,7 @@ export default class Dashboard extends React.Component {
              }).bind(this)}
             value="1"
             label={msg.form.label.accessPrivate}
-            checked={this.props.topic.data.get('accessPrivateYn')==1}
+            checked={this.props.topic.data.get('accessPrivateYn') === 1}
             />
 
           <mui.RaisedButton label={msg.form.button.save} primary={true} onClick={this.trySave.bind(this)}
@@ -132,7 +133,7 @@ export default class Dashboard extends React.Component {
           <ConfirmDialog
             ref="confirmDialog"
             requireString="path/to/project"
-            onDelete={this.onDelete}
+            onDelete={this.onDelete.bind(this)}
             topic={this.props.topic}
             deleteAction={this.props.actions.deleteTopic}
             show={this.state.showDeletePrompt === true}
@@ -145,6 +146,11 @@ export default class Dashboard extends React.Component {
         </div>
       </div>
     );
+  }
+
+  onDelete() {
+    // TODO: post global notifiction e.g. `project deleted`
+    this.props.history.pushState(null, `/projects`);
   }
 
   trySave() {
