@@ -23,6 +23,7 @@ import * as actions from '../topics/actions';
 import * as commentsActions from '../comments/actions';
 import Todo from './board';
 import FormRecord from './form';
+import ModelSchema from './model.js'
 import TopicGroup from './topic-group';
 import Comment from '../comments/comment';
 import getRandomString from '../lib/getRandomString';
@@ -242,6 +243,16 @@ export default function boardsReducer(state = initialState, action) {
         ;
     }
 
+    case actions.APPLY_TOPIC_FORM_DEFAULTS: {
+      // set action.payload into form if defaults were not yet applied
+      if (!(state.getIn(['forms', 'cid', action.meta.formCid, 'defaultsApplied']) === true)) {
+        return state
+          .setIn(['forms', 'cid', action.meta.formCid, 'defaultsApplied'], true)
+          .setIn(['forms', 'cid', action.meta.formCid, 'defaultValues'], new ModelSchema(action.payload))
+          .mergeIn(['forms', 'cid', action.meta.formCid, 'data'], action.payload)
+      }
+    }
+
     case actions.PREPARE_NEW_TOPIC_FORM_DATA: {
 
       // basically, create empty form data record if it's not present
@@ -249,13 +260,16 @@ export default function boardsReducer(state = initialState, action) {
 
       const contextId = action.payload.ownerTopicId > 0 ? action.payload.ownerTopicId : '0';
 
-      if(!state.getIn(['formsRegistry', contextId,  action.payload.groupKey])) {
+      if (!state.getIn(['formsRegistry', contextId,  action.payload.groupKey])) {
 
         const cid = getRandomString();
 
         return state
           .setIn(['formsRegistry', contextId,  action.payload.groupKey], cid)
-          .setIn(['forms', 'cid', cid], new FormRecord({cid: cid}));
+          .setIn(['forms', 'cid', cid], new FormRecord({
+            cid: cid,
+            data: new ModelSchema(action.payload.initialValues || {})
+          }));
 
       } else {
         return state;
@@ -268,7 +282,7 @@ export default function boardsReducer(state = initialState, action) {
     }
 
     case actions.SET_NEW_TOPIC_FIELD: {
-      console.log('SET_NEW_TOPIC_FIELD', action)
+
       const {name, value, cid} = action.payload;
 
       if (cid) {
@@ -304,10 +318,17 @@ export default function boardsReducer(state = initialState, action) {
 
 
     case actions.CREATE_SUCCESS:
-      return state
-        .update('list', list => list.unshift(Todo(action.payload)))
-        //.setIn(['formFields', 'loading'], false)
-        ;
+      if (action.meta.formCid) {
+        return state
+          .setIn(['forms', 'cid', action.meta.formCid, 'meta', 'isSubmitting'], false)
+          .setIn(['forms', 'cid', action.meta.formCid, 'meta', 'errors'], Map())
+          .setIn(['forms', 'cid', action.meta.formCid, 'data', 'summary'], '')
+          .deleteIn(['forms', 'cid', action.meta.formCid, 'meta', 'error'], Map())
+          .update('list', list => list.unshift(Todo(action.payload)))
+      } else {
+        return state
+          .update('list', list => list.unshift(Todo(action.payload)));
+      }
 
     case actions.CLEAN_FORM_GENERAL_ERRORS:
       return state
