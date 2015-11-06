@@ -21,6 +21,7 @@
 
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
+import ReactDOM from 'react-dom';
 import {RaisedButton, Paper, FlatButton, Dialog} from 'material-ui';
 
 export default class ConfirmDialog extends Component {
@@ -85,7 +86,7 @@ export default class ConfirmDialog extends Component {
     // focus on "Cancel" action by default
     if (this.refs.BTN_CANCEL) {
       setTimeout(function() {
-        this.refs.BTN_CANCEL.getDOMNode().focus();
+        ReactDOM.findDOMNode(this.refs.BTN_CANCEL).focus();
       }.bind(this), 10);
     }
   }
@@ -99,8 +100,8 @@ export default class ConfirmDialog extends Component {
       .then(({error, payload}) => {
         if (!error) {
           this.handleCloseDialog();
-          if (this.props.onDeleted) {
-            this.props.onDeleted();
+          if (this.props.onDelete) {
+            this.props.onDelete();
           }
         }
       })
