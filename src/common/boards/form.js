@@ -24,6 +24,8 @@ import {Record, Map} from 'immutable';
 export default Record({
   cid: '',
   data: new ModelSchema,
+  defaultValues: new ModelSchema,
+  defaultsApplied: false,
   meta: new (Record({
     isSubmitting: false,
     isFetching: false,
