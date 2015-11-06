@@ -7,7 +7,6 @@ import createEngine from 'redux-storage/engines/localStorage';
 import createRoutes from './createRoutes';
 import {IntlProvider} from 'react-intl';
 import {Provider} from 'react-redux';
-import { Resolver } from "react-resolver";
 
 import injectTapEventPlugin from "react-tap-event-plugin";
 

@@ -20,7 +20,6 @@
  */
 import Component from 'react-pure-render/component';
 import DocumentTitle from 'react-document-title';
-var promisingagent = require('promisingagent');
 var React = require('react'),
   Router = require('react-router'),
   {Link, Navigation} = Router,
