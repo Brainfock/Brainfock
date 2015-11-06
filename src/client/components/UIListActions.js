@@ -26,6 +26,7 @@ var ListActions =  React.createClass({
 
   getDefaultProps: function() {
     return {
+      isLoading: false,
       actions: null,
       BUTTON_ACTION_LABEL: 'INVITE PEOPLE',
       BUTTON_SUBMIT_LABEL: 'BTN_CREATE',
@@ -47,18 +48,18 @@ var ListActions =  React.createClass({
       { text: this.props.msg.form.button.create, onClick: this.onFormSubmit }
     ];
 
-    if(this.props.formFields.loading==true) {
+    if(this.props.isLoading === true) {
       // disable all buttons while form is being processed
       dialogActions = [
         <mui.FlatButton
             label={this.props.msg.form.button.cancel}
-            secondary={true}
-            disabled={true}
+            secondary
+            disabled
             onTouchTap={this._onDialogCancel} />,
         <mui.FlatButton
             label={this.props.msg.form.button.create}
-            primary={true}
-            disabled={true}
+            primary
+            disabled
             onTouchTap={this.onFormSubmit} />
       ];
     }

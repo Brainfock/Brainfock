@@ -215,7 +215,7 @@ export default class ProjectIssues extends Component {
         <ListActions
           addItemForm={addItemForm}
           BUTTON_ACTION_LABEL={msg.list.addNew.button}
-          formFields={formFields}
+          isLoading={!formData || formData.meta.isSubmitting ? true : false}
           msg={msg}
           TITLE={titleMsg}
           />
@@ -230,7 +230,7 @@ export default class ProjectIssues extends Component {
         <div className="bfk-browse">
           <div className="page-header clearfix">
 
-            {ListActionsRendered}
+                {ListActionsRendered}
 
             <mui.TextField
               defaultValue={this.state.searchQuery}
@@ -408,7 +408,8 @@ export default class ProjectIssues extends Component {
 
   timer = null;
 
-  searchQueryChanged(e) {
+  searchQueryChanged() {
+
     // TODO: call action for reduces to get latest value
     clearTimeout(this.timer);
     this.timer = setTimeout(this.applySearchQuery.bind(this), 400);
