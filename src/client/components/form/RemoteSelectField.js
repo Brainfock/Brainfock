@@ -93,6 +93,12 @@ var RemoteSelectField = React.createClass({
   render () {
 
     const {...props} = this.props;
+
+    // this is a workaround for cases when we provide immutable value; `react-select` does not support immutable data
+    if (props.value && typeof props.value.toJS === 'function') {
+      props.value = props.value.toJS();
+    }
+
     if (this.props.endpoint) {
       props.asyncOptions = this.loadOptions;
     }
