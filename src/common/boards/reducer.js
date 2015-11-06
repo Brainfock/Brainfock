@@ -244,13 +244,14 @@ export default function boardsReducer(state = initialState, action) {
     }
 
     case actions.APPLY_TOPIC_FORM_DEFAULTS: {
-      // set action.payload into form if defaults were not yet applied
-      if (!(state.getIn(['forms', 'cid', action.meta.formCid, 'defaultsApplied']) === true)) {
+      if (action.meta.formCid.overwrite === true
+        || !(state.getIn(['forms', 'cid', action.meta.formCid, 'defaultsApplied']) === true)) {
         return state
           .setIn(['forms', 'cid', action.meta.formCid, 'defaultsApplied'], true)
           .setIn(['forms', 'cid', action.meta.formCid, 'defaultValues'], new ModelSchema(action.payload))
-          .mergeIn(['forms', 'cid', action.meta.formCid, 'data'], action.payload)
+          .mergeIn(['forms', 'cid', action.meta.formCid, 'data'], action.payload);
       }
+      return state;
     }
 
     case actions.PREPARE_NEW_TOPIC_FORM_DATA: {

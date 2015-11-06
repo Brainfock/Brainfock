@@ -447,13 +447,14 @@ export function findOrCreateForm(ownerTopicId, groupKey, initialValues) {
   };
 }
 
-export function applyTopicFormDefaults(cid, data) {
+export function applyTopicFormDefaults(cid, data, overwrite=false) {
   return {
     type: APPLY_TOPIC_FORM_DEFAULTS,
     payload: data,
     meta: {
-      formCid: cid
-    },
+      formCid: cid,
+      overwrite: overwrite
+    }
   };
 }
 
