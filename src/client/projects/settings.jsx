@@ -48,6 +48,13 @@ export default class Dashboard extends React.Component {
       this.props.topic_actions.makeTopicUpdateFormRecord(this.props.boards.board.id, this.props.boards.board.toJS());
     }
   }
+
+  componentWillReceiveProps(newProps) {
+    if(this.props.boards.board.id !== newProps.boards.board.id && newProps.boards.board.id) {
+      this.props.topic_actions.makeTopicUpdateFormRecord(newProps.boards.board.id, newProps.boards.board.toJS());
+    }
+  }
+
   render() {
 
     if (!this.props.boards.board.id) {
