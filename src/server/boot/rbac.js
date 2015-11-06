@@ -72,6 +72,8 @@ module.exports = function(app) {
   });*/
 
   /**
+   * check if user can create this topic
+   *
    * @todo: do not allow updating locked topics
    */
   Role.registerResolver('$createTopic', function (role, context, cb) {
@@ -83,9 +85,6 @@ module.exports = function(app) {
     }
 
     console.log('> $createTopic data', context.remotingContext.args.data);
-
-    // check if user can create this topic
-
 
     const userId = context.accessToken.userId || null;
 
@@ -559,142 +558,60 @@ module.exports = function(app) {
    * createWikiPage ROLE
    */
   Role.registerResolver('createWikiPage', function(role, context, cb) {
+
     console.log('[RBAC createWikiPage] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName + '`');
     const userId = context.accessToken.userId;
 
-    function reject() {
-      //console.log('[RBAC] Reject access to ['+context.modelName+'] operation `'+context.remotingContext.method.name+'`')
-      process.nextTick(function() {
-        cb(null, false);
-      });
-    }
+    const reject = () => process.nextTick(() => {
+      cb(null, false);
+    });
 
-    // if the target model is not project
-    if (context.modelName !== 'WikiPage'
-    ) {
-      //console.log('[RBAC] Model ['+context.modelName+'] is not supported by `topicEntityAccess` resolver')
+    if (context.modelName !== 'WikiPage') {
       return reject();
     }
 
     if (context.remotingContext.method.name === 'upsert') {
 
-      // TODO: we must validate if user can create pages in selected contextEntityId space
-      if (userId) {
-        let allowedEntities = [];
+      // posting to global wiki
+      if (!context.remotingContext.args.data.contextEntityId) {
 
-        app.models.EntityAccessAssign.find({where:{
-          authType:0,
-          authId:userId,
-        }},
-        function(err, data) {
-          if (err) {
-            //console.log('err:',err)
-            // apply base
-            context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
-              {where: {
-                or: [
-                  {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
-                  {accessPrivateYn: '0'}
-                ]
-                //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
-              }});
+        Role.isInRole('$authenticated', context, (err, isAllowed) => {
+
+          // TODO: allow guest posts to root wiki via admin
+          if (!isAllowed) {
+
+            return reject();
+          } else {
+
+            // currently, acccess to context and workspace is checked in 'before save'
+            // find topic, check workspace access, then context access, then topic access
             return cb(null, true);
           }
-
-          function final() {
-
-            if (allowedEntities.length > 0) {
-              context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
-                {where: {
-                  or: [
-                    {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
-                    {accessPrivateYn: '0'},
-                    {entityId:{inq:allowedEntities}}
-                  ]
-                  //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
-                }});
-            } else {
-              // base constraints: do not show private topics of other users:
-              context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
-                {where: {
-                  or: [
-                    {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
-                    {accessPrivateYn: '0'}
-                  ]
-                  //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
-                }});
-            }
-
-
-            //context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
-            //  {where: {
-            //    or: [
-            //      {entityId:{inq:allowedEntities}}
-            //    ]
-            //  }});
-            //console.log('context.remotingContext.args.filter:',context.remotingContext.args.filter);
-
-            return cb(null, true);
-          }
-          function populateValue($modelInstance, callback) {
-            allowedEntities.push($modelInstance.entity_id);
-            return callback();
-          }
-
-          let resCount = data.length;
-          let lopRes = [];
-          data.forEach(function(/*SettingsField model instance*/ item) {
-            populateValue(item, function() {
-              lopRes.push(1);
-              if (lopRes.length === (resCount)) {
-                return final();
-              }
-            });
-          });
         });
-      } else {
-        // base constraints: do not show private topics of other users:
-        context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
-          {where: {
-            accessPrivateYn: '0'
-            //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
-          }});
+        //
 
-        return cb(null, true);
+      } else {
+
+        Role.isInRole('$authenticated', context, (err, isAllowed) => {
+
+          if (!isAllowed) {
+
+            // TODO: allow to configure guest posting access per workspace (e.g. gather web form data)
+            return reject();
+          } else {
+
+            // TODO: check if it is a root wiki
+            // TODO: namespace wiki can allow guests to post
+            // TODO: we must validate if user can create pages in selected `context.remotingContext.args.data.contextEntityId` space
+            console.log('>>', context.remotingContext.args.data.contextEntityId);
+            return cb(null, true);
+          }
+        });
       }
 
-      //if(1==2 && context.remotingContext.args.filter.group) {
-      //  console.log('yes');
-      //  //app.models.TopicGroup.findOne({where:{groupKey:context.remotingContext.args.filter.group}},
-      //  //  function(err,groupInstance)
-      //  //  {
-      //  //    if (err) {
-      //  //      return reject();
-      //  //      //return callback(err);
-      //  //    }
-      //  //  //console.log('find method');
-      //  //  delete context.remotingContext.args.filter.group;
-      //  //    console.log('!!!!',context.remotingContext.args.filter);
-      //  //  context.remotingContext.args.filter.group_id = groupInstance.id;
-      //  //  context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
-      //  //    {where: {
-      //  //      or: [
-      //  //        {and: [{accessPrivateYn: "1", "ownerUserId": userId}]},
-      //  //        {accessPrivateYn: "0"}
-      //  //      ]
-      //  //      // TODO: add validationvia au
-      //  //      //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
-      //  //    }});
-      //  //  return cb(null, true);
-      //  //})
-      //} else {
-        //console.log('find method');
-
-      //}
-    }else {
+    } else {
       return reject();
     }
-
   });
 
   Role.registerResolver('commentEntityAccess', function(role, context, cb) {
