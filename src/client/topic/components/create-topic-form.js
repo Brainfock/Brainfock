@@ -19,6 +19,7 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Component from 'react-pure-render/component';
 
 import mui, {FlatButton} from 'material-ui';
@@ -39,9 +40,9 @@ export default class CreateTopicForm extends Component {
 
   static propTypes = {
     actions: React.PropTypes.any.isRequired,
-    newTopic: React.PropTypes.any.isRequired,
     containerStore: React.PropTypes.any.isRequired,
     formFields: React.PropTypes.object,
+    newTopic: React.PropTypes.any.isRequired,
     params: React.PropTypes.object.isRequired,
     // topic group to load form for, e.g. `issue` if we want to greate topic in group `issue`
     topicGroup: React.PropTypes.string.isRequired
@@ -59,64 +60,61 @@ export default class CreateTopicForm extends Component {
     // TODO: looks like it belongs to parent component
     if (!this.props.formData) {
       this.props.actions.findOrCreateForm((this.props.containerStore ? this.props.containerStore.id : 0),
-        this.props.topicGroup);
+        this.props.topicGroup, {
+          // initial values for new form
+          createGroup: this.props.topicGroup,
+          namespace: this.props.params.namespace
+        });
     }
 
-    //if (!this.props.formFields || (this.props.formFields && this.props.formFields.fields.size === 0)
-    //  || (this.props.formFields.group !== this.props.topicGroup)) {
-    //
-    //  // load fields but provide form ID
-    //  this.props.actions.loadFormFields(this.props.topicGroup,
-    //    (this.props.containerStore ? this.props.containerStore.id : 0));
-    //}
-  }
+    if (this.props.formData &&  this.props.formFields) {
 
-  setHiddenFieldsValues() {
-    // set default values based on current route (workspace namespace) and container topic (e.g. project topic)
-    if (this.props.params.namespace)
-      this.props.actions.setNewTopicField({target:{
-        name: 'namespace',
-        value: this.props.params.namespace,
-      }}, {cid: this.props.formData.cid});
-    this.props.actions.setNewTopicField({target:{
-      name: 'createGroup',
-      value: this.props.topicGroup,
-    }}, {cid: this.props.formData.cid});
-  }
-  componentDidMount() {
-
-    if (this.props.formData) {
-
-      this.setHiddenFieldsValues();
-
-      // FIXME: does not set context really
-      if (this.props.containerStore)
-        this.props.actions.setNewTopicField({target:{
-          name: 'contextTopicId',
-          value: [
-            // for `react-select` we must provide {Array} with {Object}s
-            {label:this.props.containerStore.summary,value:this.props.containerStore.id}
-          ]
-        }}, {cid: this.props.formData.cid});
+      // after we successfully loaded form fields from server - some of those fields may have had
+      // default value sent by server as well, so quickly go over fields and set default values.
+      this.applyDefaultFields(this.props.formFields.fields);
+    } else {
+      // in cases when user switched groupKey (e.g.) went from `projects` to `boards`)
+      /** @see componentWillReceiveProps */
     }
+  }
+
+  applyDefaultFields(fields, overwrite = false) {
+
+    let applyDefault = {}, hasContextField = false;
+    fields.forEach(({type, name, value}) => {
+      if (name === 'contextTopicId') {
+        hasContextField = true;
+      }
+      if (value && name) {
+        if (name === 'contextTopicId') {
+          hasContextField = true;
+        }
+        if (type === 'select') {
+          applyDefault[name] = [value]; // specially for `react-select`
+        } else {
+          applyDefault[name] = value;
+        }
+      }
+    });
+
+    if (this.props.containerStore) {
+
+      applyDefault['contextTopicId'] = hasContextField === true
+      ? this.props.containerStore.id
+      : [
+        // for `react-select` we must provide {Array} with {Object}s
+        {label: this.props.containerStore.summary, value: this.props.containerStore.id}
+      ]
+    }
+
+    this.props.actions.applyTopicFormDefaults(this.props.formData.cid, applyDefault, overwrite);
   }
 
   componentWillReceiveProps(newProps) {
 
     if (this.props.formData && newProps.formFields && this.props.formFields !== newProps.formFields) {
 
-      // after we successfully loaded form fields from server - some of those fields may have had
-      // default value sent by server as well, so quickly go over fields and set default values.
-      newProps.formFields.fields.forEach((fieldScheme) => {
-        if (fieldScheme.value && fieldScheme.name) {
-          this.props.actions.setNewTopicField({
-            target: {
-              name: fieldScheme.name,
-              value: fieldScheme.value
-            }
-          }, {cid: this.props.formData.cid});
-        }
-      });
+      this.applyDefaultFields(newProps.formFields.fields, true);
     }
   }
 
@@ -142,8 +140,10 @@ export default class CreateTopicForm extends Component {
    * 3) after issue type is selected, system fetches form schema for this project & topic type
    */
   render() {
-    if (!this.props.formData) {
-      return <Loader noLabel />
+    if (!this.props.formData || !this.props.formFields
+    || this.props.formData.loading === true
+    || this.props.formFields.group !== this.props.topicGroup) {
+      return <Loader noLabel />;
     }
     return (
       <form ref="frm" onSubmit={this.onFormSubmit.bind(this)} className="form-horizontal">
@@ -185,11 +185,10 @@ export default class CreateTopicForm extends Component {
     return (
       <div className="clearfix">
         <SimpleFormFactory
-          formScheme={this.props.formFields.fields}
-          _onChange={this.props.actions.setNewTopicField}
-          onChange={this.onChange.bind(this)}
-          modelValues={this.props.formData.data}
           form={this.props.formData}
+          formScheme={this.props.formFields.fields}
+          modelValues={this.props.formData.data}
+          onChange={this.onChange.bind(this)}
           />
       </div>
     );
@@ -237,46 +236,13 @@ export default class CreateTopicForm extends Component {
           // TODO: snackbar message?
           //focusInvalidField(this, payload);
         } else {
-          // item added successfully
+          const node = ReactDOM.findDOMNode(this);
+          if (!node) return;
+          let el = node.querySelector(`[name="summary"]`);
+          if (el) {
+            el.focus();
+          }
         }
       });
   }
-
-  /*handleDataSubmit(data) {
-    const {actions, newTopic} = this.props;
-
-    // normalize inputs from forms elements
-    this.props.formFields.fields.forEach(function ({type, name}) {
-      // `react-select` stores sigle value as an array too
-      if (type === 'select' && data[name]) {
-        if (data[name].length > 0 || data[name].value)
-          data[name] = data[name] ? (data[name].value ? data[name].value
-            : (data[name][0].value ? data[name][0].value : null)) : null;
-      }
-    });
-
-    let postData = {};
-    this.props.formFields.fields.forEach(function (field) {
-      postData[field.name] = data[field.name];
-    });
-
-    this.props.sysFields.forEach(function (field) {
-      if (field && typeof field !== undefined) {
-        postData[field] = data[field];
-      }
-    });
-
-    if (this.props.containerStore && !postData.contextTopicId)
-      postData.contextTopicId = this.props.containerStore.id;
-
-    actions.create(postData)
-      .then(({error, payload}) => {
-        if (error) {
-          alert('Error! Check console');
-          //focusInvalidField(this, payload);
-        } else {
-          // item added successfully
-        }
-      });
-  }*/
 }
