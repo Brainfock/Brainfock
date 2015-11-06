@@ -30,6 +30,7 @@ export default Record({
     isSubmitting: false,
     isFetching: false,
     isDeleting: false,
+    postedOn: '',
     error: '',
     errors: new Map()
   }))

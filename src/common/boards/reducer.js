@@ -307,6 +307,7 @@ export default function boardsReducer(state = initialState, action) {
         return state
           .setIn(['forms', 'cid', cid, 'data', name], value)
           .deleteIn(['forms', 'cid', cid, 'meta', 'errors', name])
+          .deleteIn(['forms', 'cid', cid, 'meta', 'postedOn'])
           // TODO: clean up:
           .deleteIn(['newTopic', 'meta', 'errors', name])
           .deleteIn(['form', 'meta', 'errors', name]);
@@ -343,6 +344,7 @@ export default function boardsReducer(state = initialState, action) {
       if (action.meta.formCid) {
         return state
           .setIn(['forms', 'cid', action.meta.formCid, 'meta', 'isSubmitting'], false)
+          .setIn(['forms', 'cid', action.meta.formCid, 'meta', 'postedOn'], new Date())
           .setIn(['forms', 'cid', action.meta.formCid, 'meta', 'errors'], Map())
           .setIn(['forms', 'cid', action.meta.formCid, 'data', 'summary'], '')
           .deleteIn(['forms', 'cid', action.meta.formCid, 'meta', 'error'], Map())

@@ -22,7 +22,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Component from 'react-pure-render/component';
 
-import mui, {FlatButton} from 'material-ui';
+import mui, {Snackbar} from 'material-ui';
 import Loader from '../../components/Loader';
 import SimpleFormFactory from '../../components/UISimpleFormFactory';
 
@@ -153,6 +153,30 @@ export default class CreateTopicForm extends Component {
           <i onClick={this.props.actions.cleanErrorSummary} className="fa fa-times"></i> {this.props.formData.meta.error}
         </div>
         }
+
+        {this.props.formData && this.props.formData.meta.isSubmitting
+        && <Snackbar
+          openOnMount
+          message="Saving..."
+          style={{
+            bottom: 0,
+            left:'30%'
+          }}
+          _action="undo"
+          autoHideDuration={0} /> }
+
+        {this.props.formData && this.props.formData.meta.postedOn
+        && <Snackbar
+          openOnMount
+          postedOn={this.props.formData.meta.postedOn}
+          message="Item created!"
+          style={{
+            top: 0,
+            left:'30%'
+          }}
+          // TODO: action to open item details
+          _action="undo"
+          autoHideDuration={3000} /> }
         {this.renderForm()}
         <br />
         <mui.Checkbox
