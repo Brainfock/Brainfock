@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
+import {IconButton} from 'material-ui';
 
 import ProjectsEmpty from '../components/boards.empty';
 import MasterDetailsListView from '../../projects/components/master-detail.list';
@@ -50,17 +51,23 @@ module.exports = React.createClass({
 
     return (
       <div>
-        <div className="breadcrumbs-bar" style={{
+        <div className="breadcrumbs-bar clearfix" style={{
           background: '#8982A2', // variants: 8C8D98, 7F8090, 7E848E, DAD9E6, FDFDFD
           padding: '5px 15px',
           margin: 0,
           color: '#fff'
         }}>
+          <div className="pull-right">
+            <IconButton iconClassName="fa fa-pencil" tooltip="Settings" iconStyle={{color: '#EFEFEF'}}
+              onClick={()=>{this.props.history.pushState(null,`/board/edit/${this.props.boards.board.id}`)}}/>
+          </div>
           {group &&
           <h4><Link to='/boards'
                     style={{color: '#EFEFEF',textDecoration:'underline'}}>{group.summary}</Link>
             > {this.props.boards.board.summary}</h4>}
         </div>
+
+
 
         <MasterDetailsListView
           {...passProps}
