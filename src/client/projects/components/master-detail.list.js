@@ -223,7 +223,7 @@ export default class ProjectIssues extends Component {
               defaultValue={this.state.searchQuery}
               hintText={this.state.searchQuery ? null : 'Search in text'}
               onChange={this.searchQueryChanged.bind(this)}
-              onKeyDown={::this.onKeyDown}
+              onKeyDown={this.onKeyDown.bind(this)}
               ref="searchbox"
               />
 

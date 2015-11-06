@@ -1,23 +1,3 @@
-/**
- * Brainfock - community & issue management software
- * Copyright (c) 2015, Sergii Gamaiunov (“Webkadabra”)  All rights reserved.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @link http://www.brainfock.com/
- * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
- */
 import React from 'react';
 import Component from 'react-pure-render/component';
 import mui from 'material-ui';
@@ -40,12 +20,13 @@ import RemoteSelectField from './form/RemoteSelectField';
 class Page extends Component{
 
   static propTypes = {
-    formScheme: React.PropTypes.any.isRequired,
     form: React.PropTypes.any.isRequired,
+    formScheme: React.PropTypes.any.isRequired,
     handleSubmit: React.PropTypes.func,
-    onChange: React.PropTypes.func.isRequired,
     modelValues: React.PropTypes.object,
-  }
+    onChange: React.PropTypes.func.isRequired,
+    primaryInputName: React.PropTypes.string
+  };
 
   render() {
     return this.renderForm();
@@ -78,7 +59,7 @@ class Page extends Component{
         name:fieldName,
         value:newValues
       }
-    })
+    });
   }
 
   /**
@@ -93,7 +74,12 @@ class Page extends Component{
         name:fieldName,
         value:newDate
       }
-    })
+    });
+  }
+
+  onKeyDown(e) {
+    if (e.key === 'Enter')
+      this.props.handleSubmit();
   }
 
   /**
@@ -102,52 +88,49 @@ class Page extends Component{
    * @param {Object} item
    * @returns {XML}
    */
-  renderItem(item)
-  {
+  renderItem(item) {
+
     const meta = this.props.form.meta;
+    let props = {name: item.name};
 
-    if (item.type == 'select' || item.type == 'multiselect') {
+    if (this.props.primaryInputName && this.props.primaryInputName === item.name) {
+      props.onKeyDown = this.onKeyDown.bind(this);
+    }
 
-      let props = {
-        name:item.name,
-        placeholder:item.label,
-        options:item.options || [],
-        style:{
-          width:'100%'
-        },
-        width:'100%'
-      };
+    if (item.type === 'select' || item.type === 'multiselect') {
+
+      props.placeholder = item.label;
+      props.options = item.options || [];
+      props.style = {width:'100%'};
+      props.width = '100%';
 
       if (meta.errors && meta.errors.get(item.name)) {
-        if (meta.isSubmitting == true) {
+        if (meta.isSubmitting === true) {
           props.errorText = <i className="fa fa-spin fa-cog"></i>;
         } else {
           props.errorText = meta.errors.get(item.name);
         }
       }
 
-      if(item.type == 'multiselect') {
-        props.multi = true;
-      }
+      if (item.type === 'multiselect') props.multi = true;
 
-      props.onChange=(function(newValue, newValues){
+      props.onChange = (function(newValue, newValues) {
         // in case of multiselect, pass `newValues` - form data has to be normalized before POSTing, see actions
         this.onReactSelectChange(newValue, newValues, item.name)}).bind(this);
 
-      if(this.props.modelValues && this.props.modelValues[item.name]){
+      if (this.props.modelValues && this.props.modelValues[item.name]) {
+
         props.value = this.props.modelValues[item.name];
       } else {
-        if(item.value) {
-          props.value = item.value;
-        }
+
+        if (item.value) props.value = item.value;
       }
 
-      // `value` must be set - `react-select` component assumes it is at least an empty {String}
-      if(!props.value) {
-        props.value = '';
-      }
+      // `react-select` does not like unset value, at least empty {String} is required
+      if (!props.value) props.value = '';
 
       let FilterComponent = Select;
+
       if (item.endpoint) {
         props.endpoint = item.endpoint;
         if (item.endpoint) {
@@ -161,31 +144,26 @@ class Page extends Component{
           <RemoteSelectField {...props} />
         </div>
       );
-    }
 
-    // text input
-    else if ('text' == item.type || 'textarea' == item.type) {
+    } else if ('text' === item.type || 'textarea' === item.type) {
 
-      let props = {
-        floatingLabelText:item.label + ':',
-        fullWidth: true,
-        hintText:item.description,
-        name:item.name,
-      };
+      props.floatingLabelText = item.label + ':';
+      props.hintText = item.description;
+      props.fullWidth = true;
 
       if (this.props.form.meta.errors && this.props.form.meta.errors.get(item.name)) {
         props.errorText = this.props.form.meta.errors.get(item.name);
       }
 
-      if('textarea' == item.type) {
-        props.multiLine=true;
+      if ('textarea' === item.type) {
+        props.multiLine = true;
       }
 
-      if(this.props.modelValues && this.props.modelValues[item.name]){
+      if (this.props.modelValues && this.props.modelValues[item.name]) {
         props.value = this.props.modelValues[item.name];
       } else {
         // preselected
-        if(item.value) {
+        if (item.value) {
           props.value = item.value;
         } else {
           props.value = '';
@@ -198,22 +176,17 @@ class Page extends Component{
           onChange={this.props.onChange}
           />
       );
-      return <div  style={{'width':'100%'}}>
-        {Filter}</div>;
-    }
-    // text input
-    else if('checkbox'==item.type)
-    {
-      let props = {
-        name:item.name,
-        label:item.label,
 
-      };
+      return (
+        <div  style={{'width':'100%'}}>
+          {Filter}
+        </div>
+      );
 
-      // checked
-      if(item.value==true) {
-        props.defaultChecked = true;
-      }
+    } else if ('checkbox' === item.type) {
+
+      props.label = item.label;
+      if (item.value === true) props.defaultChecked = true;
 
       return (
         <div  style={{'width':'100%'}}>
@@ -225,43 +198,40 @@ class Page extends Component{
                   name: event.target.name,
                   value: isChecked
                 }
-              })
+              });
              }).bind(this)}
             />
         </div>
       );
-    }
-    // datetime picker
-    else if('datetime'==item.type)
-    {
-      let props = {
-        name:item.name,
-        hintText:item.description,
-        floatingLabelText:item.label + ':',
 
-        style:{
-          width:'100%'
-        },
+    } else if ('datetime' === item.type) {
+
+      props.hintText = item.description;
+      props.floatingLabelText = item.label + ':';
+      props.style = {
+        width:'100%'
       };
-      if('textarea' == item.type) {
-        props.multiLine=true;
-      }
-      // preselected
-      if(item.value) {
-        props.defaultValue = item.value;
-      }
 
-      let Datepicker = <mui.DatePicker
-        {...props}
-        onChange={(function(nill, newDate){this.onDatepickerChange(newDate, item.name)}).bind(this)}
-        />;
+      if (item.value) props.defaultValue = item.value;
+
+      let Datepicker = (
+        <mui.DatePicker {...props}
+          onChange={(nill, newDate)=>{this.onDatepickerChange(newDate, item.name)}.bind(this)}
+        />
+      );
 
       // TODO: Add timepicker
       //let Timepicker = <mui.TimePicker  {...props}  />;
-      return <div  style={{'width':'100%'}}>
-        {Datepicker}</div>;
+      return (
+        <div  style={{'width':'100%'}}>
+          {Datepicker}
+        </div>
+      );
+
+    } else {
+      // unknown field
+      return null;
     }
-    return <span className="badge">{item.label}</span>
   }
 };
 

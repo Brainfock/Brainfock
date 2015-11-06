@@ -190,6 +190,8 @@ export default class CreateTopicForm extends Component {
           formScheme={this.props.formFields.fields}
           modelValues={this.props.formData.data}
           onChange={this.onChange.bind(this)}
+          primaryInputName='summary'
+          handleSubmit={this.onFormSubmit.bind(this)}
           />
       </div>
     );
