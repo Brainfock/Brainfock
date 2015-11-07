@@ -91,6 +91,7 @@ class Page extends Component {
           </div>
           <div className="footer">
             <Link to="/wiki/Special:Index">This Wiki Index</Link>
+            <span className="pull-right"> © Sergii Gamaiunov, powered by <a href="http://brainfock.org">Brainfock</a></span>
           </div>
         </div>
         </DocumentTitle>
