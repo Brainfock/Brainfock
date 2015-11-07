@@ -19,7 +19,6 @@ export default function createRoutes(getState) {
     }
   }
 
-  const AdminModule = (process.env.IS_BROWSER) ? require('react-router-proxy?!./modules/admin/components/AdminHome') : require('./modules/admin/components/AdminHome');
   const CreateWorkspace = (process.env.IS_BROWSER) ? require('react-router-proxy?!./workspace/create') : require('./workspace/create');
 
   return (
@@ -45,13 +44,7 @@ export default function createRoutes(getState) {
 
       <Route component={CreateWorkspace} path="/workspaces/create" />
 
-      <Route path="admin"
-             onEnter={requireAuth}
-             component={AdminModule}
-             childRoutes={[
-                require('./modules/admin/modules/users'),
-                //require('./modules/admin/routes/Course'),
-            ]}/>
+      <Route {...require('./modules/admin')} onEnter={requireAuth} />
 
       <Route {...require('./modules/workspace')} />
 
