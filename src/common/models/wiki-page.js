@@ -249,7 +249,7 @@ module.exports = function(WikiPage)
                 if (namespace !== item.namespace) {
                   namespace = item.namespace;
 
-                  return item.namespace ? `\n\n## ${item.namespace}\n\n` : ''
+                  return (item.namespace ? `\n\n## ${item.namespace}\n\n` : '')
                     + link;
                 } else {
                   return link;
