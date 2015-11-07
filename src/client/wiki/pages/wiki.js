@@ -90,7 +90,7 @@ class Page extends Component {
             </div>
           </div>
           <div className="footer">
-            <Link to="wiki_page" params={{uid: 'Special:Index'}}>This Wiki Index</Link>
+            <Link to="/wiki/Special:Index">This Wiki Index</Link>
           </div>
         </div>
         </DocumentTitle>
