@@ -113,33 +113,25 @@ module.exports = function(WikiPage)
   WikiPage.afterRemote( 'findOne', function( ctx, modelInstance, next) {
     if (modelInstance) {
 
-      if(modelInstance.namespace)
-        modelInstance.pageUid = modelInstance.namespace+':'+modelInstance.pageUid;
+      const cleanUid = modelInstance.pageUid;
 
-      // This does work:
-      marked(modelInstance.content, {
-        renderer: new marked.Renderer(),
-        gfm: true,
-        tables: true,
-        breaks: false,
-        pedantic: false,
-        sanitize: true,
-        smartLists: true,
-        smartypants: false
-      }, function(err, content) {
-        if (err) throw err;
+      // TODO: append special content: CATEGORY and INDEX
+      let parsers = []
 
-        modelInstance.contentRendered = content;
+      if (modelInstance.namespace === 'Special') {
+        if (cleanUid === 'Index') {
+          parsers.push(modelInstance.appendPagesIndex())
+        }
+        // TODO: `Category` special page
+      }
 
-        // get links
-        modelInstance.getWikiLinks(content, function(links) {
-          modelInstance.replaceWikiLinks(content, links, function(processedContent) {
-            modelInstance.contentRendered =  processedContent;
-            return next();
-          });
+      Promise.all(parsers)
+        .then(function() {
+          modelInstance.applyContentParsers(() => {
+            next();
+          })
+        })
 
-        });
-      });
     } else {
       //console.log('remotingContext:',ctx.remotingContext);
       ctx.instance = new WikiPage();
@@ -209,17 +201,60 @@ module.exports = function(WikiPage)
             callback(null, new WikiPage({
               namespace: filter.where.namespace,
               pageUid: filter.where.pageUid,
-              content: '<em>This page does not exist yet. Click "Edit" to create it</em>'
+              content: '*This page does not exist yet. Click "Edit" to create it*'
             }));
-            //callback(err,null);
           }
-
         }
       }]);
 
       return callback.promise;
     }
   });
+
+
+  /**
+   * append list of all pages that have same `contextEntityId` value
+   * @returns {bluebird|exports|module.exports}
+   */
+  WikiPage.prototype.appendPagesIndex = function() {
+
+    const modelInstance = this;
+    const where = {
+      contextEntityId: this.contextEntityId > 0 ? this.contextEntityId : 0
+    };
+
+    if (!modelInstance.contentRendered) {
+      modelInstance.contentRendered = modelInstance.content;
+    }
+
+    return new Promise(
+      function(resolve, reject) {
+        WikiPage.find({
+          where: where,
+          order: 'pageUid ASC'
+        }, function(err, foundPages) {
+
+          if(err || !foundPages) return resolve(null);
+
+          if (foundPages.length > 0) {
+            let links = foundPages.map(item => {
+              if (item && item.pageUid) {
+
+                return item.namespace
+                  ? `* [[${item.namespace}:${item.pageUid}]]`
+                  : `* [[${item.pageUid}]]`
+              }
+            });
+
+            if (links.length > 0) {
+              modelInstance.contentRendered += "\n" + links.join("\n");
+            }
+          }
+
+          return resolve();
+        });
+      });
+  }
 
   WikiPage.prototype.applyContentParsers = function (next)
   {
@@ -228,8 +263,11 @@ module.exports = function(WikiPage)
     if(modelInstance.namespace)
       modelInstance.pageUid = modelInstance.namespace+':'+modelInstance.pageUid;
 
+    if (!modelInstance.contentRendered) // content may be already prepended with some data, e.g. for `Special:Index` page
+      modelInstance.contentRendered = modelInstance.content;
+
     // This does work:
-    marked(modelInstance.content, {
+    marked(modelInstance.contentRendered, {
       renderer: new marked.Renderer(),
       gfm: true,
       tables: true,
