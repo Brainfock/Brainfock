@@ -312,30 +312,24 @@ module.exports = function(WikiPage)
    * @return object
    */
   WikiPage.prototype.getWikiLinks = function (content, originalCallback) {
-    var links = {};
-    //var matches = this.content.match(/\[\[(.*?)\]\]/g);
-    //let _regex = new RegExp(/\[\[(.*?)\]\]/, 'g');
-    let _regex = new RegExp(/\[\[(.*?)\]\]/gi);
 
-    var matches = content.match(_regex);
-    //var matches = this.content.match(_regex);
+    let links = {};
+    let _regex = new RegExp(/\[\[(.*?)\]\]/gi);
+    let matches = content.match(_regex);
 
     if(matches) {
 
       function async($fullMatch, callback) {
-//
-        var $contentMatch = $fullMatch.match(/\[\[(.*?)\]\]/i);
-        var $parts = $contentMatch[1].split('|');
-        var $first = $parts.shift();
-        if($parts.length>0)
-        {
+
+        let $contentMatch = $fullMatch.match(/\[\[(.*?)\]\]/i);
+        let $parts = $contentMatch[1].split('|');
+        let $first = $parts.shift();
+        if($parts.length>0) {
           links[$fullMatch] = {
             title: $parts.join ( '' ),
             wiki_uid: $first,
           };
-        }
-        else
-        {
+        } else {
           links[$fullMatch] = {
             title: $first,
             wiki_uid: $first,
@@ -348,17 +342,16 @@ module.exports = function(WikiPage)
         originalCallback(links)
       }
 
-      var results = [];
+      let results = [];
 
       matches.forEach(function(item) {
         async(item, function(result){
           results.push(result);
-          if(results.length == matches.length) {
+          if(results.length === matches.length) {
             final();
           }
         })
       });
-
 
     } else {
       return originalCallback();
@@ -374,16 +367,16 @@ module.exports = function(WikiPage)
   WikiPage.prototype.replaceWikiLinks = function (text, links, originalCallback) {
 
     var self = this;
+    if(links) {
 
-    if(links)
-    {
       function asyncReplace($fullMath, $pageData, callback) {
+
         let filter = {
           where: {
             context_entity_id: (self.context_entity_id ? self.context_entity_id : 0),
             pageUid: $pageData. wiki_uid
-          }
-          , limit: 1
+          },
+          limit: 1
         };
 
         if(filter.where.pageUid && filter.where.pageUid.indexOf( ':' ) !== -1) {
@@ -396,19 +389,25 @@ module.exports = function(WikiPage)
           return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
         };
 
+        RegExp.escape= function(s) {
+          return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        };
+
         app.models.WikiPage.find(filter, {}, function(err, foundPage) {
+
           if (err) {
             return callback();
-            //return callback(err);
           }
-          if (!foundPage || foundPage === []) {
+
+          const find = RegExp.escape($fullMath);
+
+          if (!foundPage || foundPage.length === 0) {
             // page is not found, but it's not a fatal error
-            text = text.replace($fullMath, '<a class="non-existing WkikLink" href="/wiki/'+$pageData. wiki_uid+'">'+$pageData. title+'</a>');
+            text = text.replace(new RegExp(find, 'g'), '<a class="non-existing WkikLink" href="/wiki/'+$pageData. wiki_uid+'">'+$pageData. title+'</a>');
             return callback();
-          }
-          else {
-            //let matcher = escapeReg($fullMath);
-            text = text.replace($fullMath, '<a class="WkikLink" href="/wiki/'+$pageData. wiki_uid+'">'+$pageData. title+'</a>');
+
+          } else {
+            text = text.replace(new RegExp(find, 'g'), '<a class="WkikLink" href="/wiki/'+$pageData. wiki_uid+'">'+$pageData. title+'</a>');
             return callback();
           }
         });
@@ -423,7 +422,7 @@ module.exports = function(WikiPage)
 
         asyncReplace(linkData, links[linkData], function(result){
           results.push(1);
-          if(results.length == (_keys.length)) {
+          if(results.length === (_keys.length)) {
             final();
           }
         });
