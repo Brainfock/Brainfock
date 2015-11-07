@@ -231,18 +231,29 @@ module.exports = function(WikiPage)
       function(resolve, reject) {
         WikiPage.find({
           where: where,
-          order: 'pageUid ASC'
+          order: 'namespace ASC, pageUid ASC'
         }, function(err, foundPages) {
 
           if(err || !foundPages) return resolve(null);
 
           if (foundPages.length > 0) {
+
+            let namespace = '';
             let links = foundPages.map(item => {
               if (item && item.pageUid) {
 
-                return item.namespace
-                  ? `* [[${item.namespace}:${item.pageUid}]]`
-                  : `* [[${item.pageUid}]]`
+                const link = item.namespace
+                  ? `* [[${item.namespace}:${item.pageUid}|${item.pageUid}]]`
+                  : `* [[${item.pageUid}]]`;
+
+                if (namespace !== item.namespace) {
+                  namespace = item.namespace;
+
+                  return item.namespace ? `\n\n## ${item.namespace}\n\n` : ''
+                    + link;
+                } else {
+                  return link;
+                }
               }
             });
 
