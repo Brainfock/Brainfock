@@ -158,10 +158,13 @@ export function find(type, query, contextTopicId, namespace) {
     endpoint += `workspaces/${namespace}/`
   }
 
-  if (contextTopicId) {
+  if (contextTopicId && contextTopicId !== '*') {
     endpoint += `topics/${contextTopicId}/topics/?filter[where][groupKey]=${type}`;
   } else {
     endpoint += 'topics/?filter[where][groupKey]='+type;
+    if (contextTopicId !== '*')
+      // exclude non-root items, e.g. boards of some project
+      endpoint += '&filter[where][contextTopicId]=null';
   }
 
   // include some additional info
