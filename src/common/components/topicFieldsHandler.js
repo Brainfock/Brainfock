@@ -32,7 +32,14 @@ export default class FieldsHandler {
           let propName = item.key+'FieldProps';
           if (item.key+'FieldProps' in FieldsHandler) {
             FieldsHandler[propName](item).then(function(res){
-              resolve(res);
+              if (res === null)
+                resolve({
+                  key: item.key,
+                  type: '__NOT_IMPLEMENTED__'
+                });
+              else {
+                resolve(res);
+              }
             })
           } else {
             resolve({
@@ -76,6 +83,50 @@ export default class FieldsHandler {
               value: data.contextTopic.id,
               label: data.contextTopic.summary
             }],
+            // use REST to get options (handles access control):
+            endpoint: '/api/topics/?filter[where][groupKey]='+parentGroup.groupKey,
+            endpointQueryString: 'filter[where][summary][like]'
+          });
+        } else {
+          resolve(null);
+        }
+      });
+      }
+    );
+  }
+
+  /**
+   * configure form field for `parentTopicId`
+   *
+   * @param data:
+   * @property contextTopic object
+   * @property group object
+   * @property group.parentGroup object
+   * @property group.parentGroup object
+   *
+   * @returns {Promise}
+   */
+  static parentTopicIdFieldProps(data) {
+
+    return new Promise(
+      function(resolve, reject) {
+
+        data.group.parentGroup(function(err,parentGroup){
+        if (err)
+          throw err;
+
+        if (parentGroup) {
+          resolve({
+            label: parentGroup.name,
+            // `name` is used for form inputs to identify model's attribute
+            name: data.key,
+            type: 'select', // todo: hasOne rather
+            // pre-populate default option
+            // TODO: preload more options? options loaded should be somewhat predicted to be actual for user to select
+            //options:[{
+            //  value: data.contextTopic.id,
+            //  label: data.contextTopic.summary
+            //}],
             // use REST to get options (handles access control):
             endpoint: '/api/topics/?filter[where][groupKey]='+parentGroup.groupKey,
             endpointQueryString: 'filter[where][summary][like]'
