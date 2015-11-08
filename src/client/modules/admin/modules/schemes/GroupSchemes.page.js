@@ -105,8 +105,8 @@ class Users extends Component {
           <TableRow>
             <TableHeaderColumn tooltip={msg.list.column.hint.id}>ID</TableHeaderColumn>
             <TableHeaderColumn tooltip={msg.list.column.hint.name}>{msg.list.column.label.name}</TableHeaderColumn>
-            <TableHeaderColumn tooltip={msg.list.column.hint.role}>{msg.list.column.label.role}</TableHeaderColumn>
-            <TableHeaderColumn tooltip={msg.list.column.hint.role}>{msg.list.column.label.role}</TableHeaderColumn>
+            <TableHeaderColumn>{msg.list.column.label.groups}</TableHeaderColumn>
+            <TableHeaderColumn>{msg.list.column.label.isDefault}</TableHeaderColumn>
           </TableRow>
         </TableHeader>
         <TableBody

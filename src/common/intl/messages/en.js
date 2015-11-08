@@ -222,11 +222,11 @@ export default {
         label: {
           name: 'Name',
           email: 'Email',
-          role: 'Access permission',
+          groups: 'Available Groups',
+          isDefault: 'System-wide default',
         },
         hint: {
           id: 'Unique user ID',
-          role: 'Access permission',
         }
       }
     },
