@@ -60,7 +60,13 @@
         }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "group": {
+      "type": "belongsTo",
+      "model": "TopicGroup",
+      "foreignKey": "topicGroupId"
+    }
+  },
   "acls": [
     {
       "accessType": "*",
