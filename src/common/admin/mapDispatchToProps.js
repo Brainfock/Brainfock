@@ -27,6 +27,7 @@ import * as wikiActions from '../wiki/actions';
 import * as topicActions from '../topics/actions';
 import * as commentsActions from '../comments/actions';
 import * as usersActions from '../users/actions';
+import * as groupSchemes from '../groupSchemes/actions.js';
 
 const actions = [
   appActions,
@@ -34,6 +35,7 @@ const actions = [
   wikiActions,
   commentsActions,
   usersActions,
+  groupSchemes,
 ];
 
 const topic_actions = [
