@@ -986,11 +986,15 @@ module.exports = function(Topic) {
           if (!groupInstance)
             return cb(null, []);
 
-          // TODO: allow to define `TopicGroupScheme` per context (parent) topic
+          let where = {};
+          if (contextTopic.groupSchemeId > 0) {
+            where.id = contextTopic.groupSchemeId;
+          } else {
+            where.isDefault = 1;
+          }
+
           Topic.app.models.TopicGroupScheme.findOne({
-            where:{
-              isDefault: 1
-            }
+            where: where
           },
           function(e1, TopicGroupScheme) {
             if (e1) throw e1;
