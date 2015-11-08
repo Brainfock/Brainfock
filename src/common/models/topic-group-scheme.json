@@ -61,7 +61,24 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "TopicGroupSchemeTypeSchemeMapping": {
+      "type": "hasMany",
+      "model": "TopicGroupSchemeTypeScheme",
+      "foreignKey": "topicGroupSchemeId",
+      "__scope": {
+        "where": {
+          "principalType": "USER"
+        }
+      }
+    },
+    "groups": {
+      "type": "hasMany",
+      "model": "TopicGroup",
+      "foreignKey": "topicGroupSchemeId",
+      "through": "TopicGroupSchemeTypeScheme"
+    }
+  },
   "acls": [
     {
       "accessType": "*",
