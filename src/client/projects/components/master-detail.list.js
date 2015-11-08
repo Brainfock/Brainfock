@@ -55,6 +55,7 @@ export default class ProjectIssues extends Component {
       count:0,
       filters:(props.location.query && props.location.query.filter ? props.location.query.filter : null),
       filtersOpen:false,
+      filterId:0,
       searchQuery:(props.location.query && props.location.query.query ? props.location.query.query : ''),
       showDetails: true,
       disableDetails: false
@@ -209,7 +210,7 @@ export default class ProjectIssues extends Component {
       </div>
     );
 
-    const iconButtonElement = <mui.IconButton iconClassName="fa fa-list-alt" tooltip="Filter presets"/>;
+
     const content = this.renderListContent();
 
     return (
@@ -217,7 +218,7 @@ export default class ProjectIssues extends Component {
         <div className="bfk-browse">
           <div className="page-header clearfix">
 
-                {ListActionsRendered}
+            {ListActionsRendered}
 
             <mui.TextField
               defaultValue={this.state.searchQuery}
@@ -227,33 +228,16 @@ export default class ProjectIssues extends Component {
               ref="searchbox"
               />
 
+            <div className="pull-left">
+              {this.renderfilterDropdownMenu()}
+            </div>
+
             {filterToggleButton}
 
             <Filters
               actions={this.props.topic_actions}
               containerStore={board}
               filters={listFilters}
-              header={
-               <div className="pull-left">
-                 <mui.IconMenu iconButtonElement={iconButtonElement}>
-                   <MenuItem onClick={
-                    function() {
-                      this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStatus][]=open`);
-                    }.bind(this)
-                   } primaryText="All open"/>
-                   <MenuItem onClick={
-                    function() {
-                      this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStatus][]=closed`);
-                    }.bind(this)
-                   } primaryText="All closed"/>
-                   <MenuItem onClick={
-                    function() {
-                      this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStage][]=Backlog`);
-                    }.bind(this)
-                   } primaryText="Backlog"/>
-                 </mui.IconMenu>
-               </div>
-             }
               onApply={this.onApplyFilters}
               preselected={this.props.location.query}
               ref="filters"
@@ -271,6 +255,51 @@ export default class ProjectIssues extends Component {
           </div>
         </div>
       </DocumentTitle>
+    );
+  }
+
+
+  /**
+   * @todo get list of filters via API: default filters per scheme's group
+   * @todo get list of user-defined filters via API for this list
+   * @returns {XML}
+   */
+  renderfilterDropdownMenu() {
+
+    const iconButtonElement = <mui.IconButton iconClassName="fa fa-list-alt" tooltip="Filter presets"/>;
+    return (
+      <mui.IconMenu iconButtonElement={iconButtonElement} openDirection={'bottom-right'}>
+        <MenuItem innerDivStyle={{fontWeight: this.state.filterId === 1 ? 600 : 400}} onClick={
+                    function() {
+                      this.setState({filterId:1});
+                      this.props.history.pushState(null, `${this.props.location.pathname}?filter[wfStatus][inq]=open&filter[wfStatus][inq]=progress`);
+                    }.bind(this)
+                   } primaryText="Open & in progress"/>
+        <MenuItem innerDivStyle={{fontWeight: this.state.filterId === 2 ? 600 : 400}} onClick={
+                    function() {
+                      this.setState({filterId:2});
+                      this.props.history.pushState(null, `${this.props.location.pathname}?filter[wfStatus][]=progress`);
+                    }.bind(this)
+                   } primaryText="All in progress"/>
+        <MenuItem innerDivStyle={{fontWeight: this.state.filterId === 3 ? 600 : 400}} onClick={
+                    function() {
+                      this.setState({filterId:3});
+                      this.props.history.pushState(null, `${this.props.location.pathname}?filter[wfStatus][]=open`);
+                    }.bind(this)
+                   } primaryText="All open"/>
+        <MenuItem innerDivStyle={{fontWeight: this.state.filterId === 4 ? 600 : 400}} onClick={
+                    function() {
+                      this.setState({filterId:4});
+                      this.props.history.pushState(null, `${this.props.location.pathname}?filter[wfStatus][]=closed`);
+                    }.bind(this)
+                   } primaryText="All closed"/>
+        <MenuItem innerDivStyle={{fontWeight: this.state.filterId === 5 ? 600 : 400}} onClick={
+                    function() {
+                      this.setState({filterId:5});
+                      this.props.history.pushState(null, `${this.props.location.pathname}?filter[wfStage][]=Backlog`);
+                    }.bind(this)
+                   } primaryText="Backlog"/>
+      </mui.IconMenu>
     );
   }
 
