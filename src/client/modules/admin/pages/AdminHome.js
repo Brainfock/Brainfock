@@ -68,7 +68,7 @@ class AdminHome extends Component {
 
                   <div className={classNAme}>
                     <div style={{textAlign:'center'}}>
-                      <Link to={`/admin/users`}><i className="fa fa-cogs fa-4x"></i>
+                      <Link to={`/admin/schemes`}><i className="fa fa-cogs fa-4x"></i>
                         <br />
                         <h3>Topic Schemes</h3></Link>
                       <p>Group & Type Schemes</p>

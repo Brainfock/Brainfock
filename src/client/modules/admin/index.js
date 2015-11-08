@@ -20,11 +20,13 @@ module.exports = {
   getChildRoutes(location, cb) {
     if (process.env.IS_BROWSER)
       require.ensure([], (require) => {[
-          cb(null, require('./modules/users'))
+          cb(null, require('./modules/users')),
+          cb(null, require('./modules/schemes')),
       ]})
     else
       cb(null, [
         require('./modules/users'),
+        require('./modules/schemes'),
       ]);
   },
 }
