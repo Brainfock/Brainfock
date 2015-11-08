@@ -87,7 +87,7 @@ class Layout extends Component {
       {route: `/${this.props.params.namespace}/${this.props.boards.board.contextTopicKey}/issues`, text: 'Issues'},
       {
         route: `/${this.props.params.namespace}/${this.props.boards.board.contextTopicKey}/boards`,
-        text: 'Discussion Boards'
+        text: 'Discussions'
       },
       // what about other menuss & modules?
       // Like agile or scrum boards, custom reports?
