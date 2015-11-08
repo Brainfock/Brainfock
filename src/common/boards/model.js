@@ -30,6 +30,7 @@ export default Record({
   contextTopicNum: '',
   contextTopicKey: '',
   contextTopicId: '',
+  parentTopicId: '',
   typeId: '',
   groupId: '',
   dueDate: '',
