@@ -78,7 +78,7 @@
   },
   "TopicGroupScheme": {
     "dataSource": "db",
-    "public": false
+    "public": true
   },
   "TopicGroupSchemeTypeScheme": {
     "dataSource": "db",
