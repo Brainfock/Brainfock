@@ -158,13 +158,19 @@ module.exports = function(Workspace) {
     if (modelInstance) {
       if (ctx.req.query && ctx.req.query.filter && ctx.req.query.filter.extra && ctx.req.query.filter.extra.hasOwnProperty('operations')) {
         // lookup operations based && next()
-        modelInstance.getOperations(function(err, operations) {
-          if (err) return next(err);
-          modelInstance.operations = operations;
-          return next();
-        });
+
+       // modelInstance.applyContentParsers(() => {
+          modelInstance.getOperations(function(err, operations) {
+            if (err) return next(err);
+            modelInstance.operations = operations;
+            return next();
+          });
+        //});
+
       } else {
-        return next();
+        //modelInstance.applyContentParsers(() => {
+          return next();
+        //});
       }
     } else {
       return next();
