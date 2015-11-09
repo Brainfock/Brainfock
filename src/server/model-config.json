@@ -155,5 +155,15 @@
   "EntityWorkflowOperation": {
     "dataSource": "db",
     "public": false
+  },
+  "EntityMenu": {
+    "dataSource": "db",
+    "public": true
+  },
+  "EntityMenuItem": {
+    "dataSource": "db",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
   }
 }
