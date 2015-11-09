@@ -49,7 +49,8 @@ export default class Login extends Component {
           <Row>
             <Col sm={6} smOffset={3} xs={6} xsOffset={2}>
               <div className="headline">
-                <h1>{msg.legend}</h1>
+                <h1 className="brand" title={`Powered by Brainfock ${VERSION}`}>Brainfock</h1>
+                <h2>{msg.legend}</h2>
                 </div>
               <Paper>
                 <div className="formWrapper clearfix" >
