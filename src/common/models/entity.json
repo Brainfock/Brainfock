@@ -168,6 +168,13 @@
       "principalId": "$everyone",
       "permission": "ALLOW",
       "property": "wikiPages"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$entityReadAccess",
+      "permission": "ALLOW",
+      "property": "__get__menu"
     }
   ],
   "methods": []
