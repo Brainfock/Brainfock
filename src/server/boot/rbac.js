@@ -276,6 +276,72 @@ module.exports = function(app) {
   });
 
   /**
+   * `$entityReadAccess` role resolver
+   */
+  Role.registerResolver('$entityReadAccess', function(role, context, cb) {
+
+    const userId = context.accessToken.userId;
+    console.log('[RBAC $entityMenuAccess] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName + '`, user:' + userId);
+    function reject() {
+      process.nextTick(function() {
+        cb(null, false);
+      });
+    }
+    if (context.modelName !== 'Entity') {
+      console.log('[RBAC] Model [' + context.modelName + '] is not supported by `$entityMenuAccess` resolver');
+      return reject();
+    }
+
+    let allowedEntities = [];
+
+    const afterFindCb = function(err, Topic) {
+
+      if (err || !Topic)
+        return reject();
+
+      if (Topic.accessPrivateYn !== 1 || Topic.ownerUserId === userId)
+        return cb(null, true);
+
+      if (userId) {
+
+        let whereFilter = {
+          authType:0,
+          authId:userId
+        };
+        if (context.modelName === 'Entity') {
+          whereFilter.entityId = Topic.id;
+        } else {
+          whereFilter.entityId = Topic.entityId;
+        }
+        // TODO: ACL to test if current user ($everyone, guest etc.) can access this operation
+        app.models.EntityAccessAssign.findOne({where:whereFilter},
+
+          function(err, data) {
+            if (err || !data) {
+              return cb(null, false);
+            }
+            return cb(null, true);
+          });
+      } else {
+        return cb(null, false);
+      }
+    };
+
+    if (context.modelId) {
+      /* when api request is like /api/someModel/findOne/123 */
+      console.log('[RBAC] Lookup with `findById`, model id:', context.modelId);
+      context.model.findById(context.modelId, afterFindCb);
+    } else if (context.remotingContext.args.filter) {
+      /* when api request is like /api/wikiPage/findOne/?filter[where][pageUid]=SomeWikiPage */
+      console.log('[RBAC] Lookup with `findOne`, model id:', context.remotingContext.args);
+      context.model.findOne(context.remotingContext.args.filter, afterFindCb);
+    } else {
+      return cb(null, false);
+    }
+
+  });
+
+  /**
    * topicEntityAccess ROLE
    */
   Role.registerResolver('topicEntityAccess', function(role, context, cb) {
