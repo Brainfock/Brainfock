@@ -5,6 +5,22 @@
     "schema": "brainfock_node",
     "table": "topic"
   },
+  "coreAcls": [
+    {
+      "property": "deleteById",
+      "accessType": "*",
+      "permission": "ALLOW",
+      "principalType": "ROLE",
+      "principalId": "$owner"
+    },
+    {
+      "property": "deleteById",
+      "accessType": "*",
+      "permission": "ALLOW",
+      "principalType": "ROLE",
+      "principalId": "Admin"
+    }
+  ],
   "properties": {
     "id": {
       "type": "Number",
@@ -488,6 +504,7 @@
       "_selectable": true
     }
   },
+  "validations": [],
   "relations": {
     "owner": {
       "type": "belongsTo",
@@ -503,20 +520,5 @@
       "permission": "DENY"
     }
   ],
-  "coreAcls": [
-    {
-      "property": "deleteById",
-      "accessType": "*",
-      "permission": "ALLOW",
-      "principalType": "ROLE",
-      "principalId": "$owner"
-    },
-    {
-      "property": "deleteById",
-      "accessType": "*",
-      "permission": "ALLOW",
-      "principalType": "ROLE",
-      "principalId": "Admin"
-    }
-  ]
+  "methods": []
 }

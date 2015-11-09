@@ -1,33 +1,18 @@
 {
   "name": "Member",
-  "_base": "User",
   "base": "PersistedModel",
   "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
+  "_base": "User",
   "mysql": {
     "schema": "brainfock_node",
     "table": "user"
   },
-  "options": {
-    "validateUpsert": true
-  },
-  "relations":{
-    "roleMappings": {
-      "type": "hasMany",
-      "model": "RoleMapping",
-      "foreignKey": "principalId",
-      "scope": {
-        "where": {
-          "principalType": "USER"
-        }
-      }
-    },
-    "roles": {
-      "type": "hasMany",
-      "model": "Role",
-      "foreignKey": "principalId",
-      "through": "RoleMapping"
-    }
-  },
+  "hidden": [
+    "password"
+  ],
   "properties": {
     "realm": {
       "type": "string"
@@ -51,12 +36,41 @@
       "type": "string",
       "required": true
     },
-    "emailVerified": "boolean",
-    "verificationToken": "string",
-    "status": "string",
-    "created": "date",
-    "lastUpdated": "date"
+    "emailVerified": {
+      "type": "boolean"
+    },
+    "verificationToken": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "created": {
+      "type": "date"
+    },
+    "lastUpdated": {
+      "type": "date"
+    }
   },
-  "hidden": ["password"],
-  "acls": []
+  "validations": [],
+  "relations": {
+    "roleMappings": {
+      "type": "hasMany",
+      "model": "RoleMapping",
+      "foreignKey": "principalId",
+      "scope": {
+        "where": {
+          "principalType": "USER"
+        }
+      }
+    },
+    "roles": {
+      "type": "hasMany",
+      "model": "Role",
+      "foreignKey": "principalId",
+      "through": "RoleMapping"
+    }
+  },
+  "acls": [],
+  "methods": []
 }

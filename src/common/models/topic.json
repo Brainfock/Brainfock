@@ -16,6 +16,16 @@
       "deletedYn": "0"
     }
   },
+  "baseAcls": [
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "_principalId": "createTopicAccess",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "updateAttributes"
+    }
+  ],
   "properties": {
     "id": {
       "type": "Number",
@@ -693,31 +703,21 @@
       "property": "upsert"
     },
     {
-      "COMMENT": "owner can update topic",
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$owner",
       "permission": "ALLOW",
-      "property": "updateAttributes"
+      "property": "updateAttributes",
+      "COMMENT": "owner can update topic"
     },
     {
-      "COMMENT": "Operation is same as updating a topic",
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$updateTopic",
       "permission": "ALLOW",
-      "property": "runOperation"
+      "property": "runOperation",
+      "COMMENT": "Operation is same as updating a topic"
     }
   ],
-  "baseAcls": [
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "_principalId": "createTopicAccess",
-      "principalId": "$authenticated",
-      "permission": "ALLOW",
-      "property": "updateAttributes"
-    }
-  ],
-  "methods": {}
+  "methods": []
 }

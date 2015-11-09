@@ -138,20 +138,20 @@
       "property": "count"
     },
     {
-      "_comment": "This operation's permissions are controlled by afterRemote hook",
       "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "ALLOW",
-      "property": "findOne"
+      "property": "findOne",
+      "_comment": "This operation's permissions are controlled by afterRemote hook"
     },
     {
-      "_comment": "This operation's permissions are controlled by afterRemote hook",
       "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "ALLOW",
-      "property": "findById"
+      "property": "findById",
+      "_comment": "This operation's permissions are controlled by afterRemote hook"
     },
     {
       "accessType": "*",
@@ -161,12 +161,12 @@
       "property": "__get__topics"
     },
     {
-      "_comment": "See additional accell validation control inside operation body",
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "ALLOW",
-      "property": "__findByKey__topics"
+      "property": "__findByKey__topics",
+      "_comment": "See additional accell validation control inside operation body"
     },
     {
       "accessType": "*",
@@ -197,12 +197,12 @@
       "property": "__count__topics__topics"
     },
     {
-      "_comment": "principal sohuld be of lower level e.g. `createWorkspace`",
       "principalType": "ROLE",
       "principalId": "Admin",
       "permission": "ALLOW",
-      "property": "create"
+      "property": "create",
+      "_comment": "principal sohuld be of lower level e.g. `createWorkspace`"
     }
   ],
-  "methods": {}
+  "methods": []
 }
