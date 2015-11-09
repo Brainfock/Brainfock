@@ -326,6 +326,9 @@ module.exports = function(app) {
           }
 
           function final() {
+
+            // TODO: add validation of either empty CONTEXT topic id or in list of accessibles
+
             if (allowedEntities.length > 0) {
               context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
                 {where: {
@@ -377,8 +380,12 @@ module.exports = function(app) {
         });
       } else {
 
-
         // base constraints: do not show private topics of other users:
+
+        // TODO: add validation of either empty CONTEXT topic id or in list of accessibles
+        // 1. get ids of all root context topic IDs
+        // 2. apply into query like entity_id
+
         context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
           {where: {
             accessPrivateYn: '0'
@@ -389,8 +396,7 @@ module.exports = function(app) {
         return cb(null, true);
       }
 
-      //if(1==2 && context.remotingContext.args.filter.group) {
-      //  console.log('yes');
+      //if(context.remotingContext.args.filter.group) {
       //  //app.models.TopicGroup.findOne({where:{groupKey:context.remotingContext.args.filter.group}},
       //  //  function(err,groupInstance)
       //  //  {
