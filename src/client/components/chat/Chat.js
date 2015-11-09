@@ -54,7 +54,7 @@ export default class ChatWidget extends Component {
           }}
           />
 
-        <LeftNav ref="sideBar" openRight docked={false} tyle={{
+        <LeftNav ref="sideBar" openRight docked={false} style={{
             position: 'relative',
           }}>
           <MenuItem index={0}>Speak up!</MenuItem>
