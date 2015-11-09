@@ -7,8 +7,6 @@ import {ButtonToolbar, Overlay, Popover, Grid, Row, Col} from 'react-bootstrap';
 
 import Logout from '../auth/logout.react';
 import Loader from '../components/Loader.js';
-import FormFactory from '../components/UISimpleFormFactory.js';
-import FormScheme from '../../common/components/FormScheme.js';
 
 export default class Me extends Component {
 
