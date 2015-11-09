@@ -1,13 +1,9 @@
 /**
  * Brainfock - Community & Business Management Solution
- * Copyright (c) 2015, Sergii Gamaiunov
- *
- * $$$LICENSE_HEADER$$$
  *
  * @link http://www.brainfock.org
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
-
 import React from 'react';
 import mui from 'material-ui';
 import {Tabs, Tab} from 'react-bootstrap';

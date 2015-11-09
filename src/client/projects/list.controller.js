@@ -4,7 +4,6 @@
  * @link http://www.brainfock.org
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
-
 import React from 'react';
 import Component from 'react-pure-render/component';
 

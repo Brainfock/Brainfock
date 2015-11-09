@@ -1,11 +1,7 @@
 /**
- * Brainfock - business & community management software
- * Copyright (c) 2015, Sergii Gamaiunov
+ * Brainfock - Community & Business Management Solution
  *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @link http://www.brainfock.org/
+ * @link http://www.brainfock.org
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 var React = require('react');

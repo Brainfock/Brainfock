@@ -1,13 +1,9 @@
 /**
  * Brainfock - Community & Business Management Solution
- * Copyright (c) 2015, Sergii Gamaiunov
- *
- * $$$LICENSE_HEADER$$$
  *
  * @link http://www.brainfock.org
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
-
 import DocumentTitle from 'react-document-title';
 import Html from './html.react';
 import React from 'react';

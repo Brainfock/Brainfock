@@ -1,8 +1,7 @@
 /**
- * Brainfock - community & issue management software
- * Copyright (c) 2015, Sergii Gamaiunov (“Webkadabra”)  All rights reserved.
+ * Brainfock - Community & Business Management Solution
  *
- * @link http://www.brainfock.com/
+ * @link http://www.brainfock.org
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import {createStore, combineReducers} from 'redux';

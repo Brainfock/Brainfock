@@ -4,7 +4,6 @@
  * @link http://www.brainfock.org
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
-
 import * as authActions from '../auth/actions';
 import * as actions from '../users/actions';
 import GroupSchemeRecord from './groupScheme.record.js';

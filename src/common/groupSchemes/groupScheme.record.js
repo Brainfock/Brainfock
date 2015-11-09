@@ -4,7 +4,6 @@
  * @link http://www.brainfock.org
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
-
 import {Record, List} from 'immutable';
 
 const GroupSchemeRecord = Record({
