@@ -53,8 +53,7 @@ export default function createRoutes(getState) {
         { /*  <Route component={require('./projects/topic.js')} path="/:namespace/:board_id-:id" />*/ }
         <Route component={require('./projects/dashboard')} path="/:namespace/:board_id"  />
         <Route component={require('./projects/issues')} path="/:namespace/:board_id/issues" />
-        /* View topic in a group by topic num (ordered) */
-        <Route component={require('./projects/topic.js')} path="/:namespace/:board_id/:group_key/:id" />
+
         <Route component={require('./projects/boards')} path="/:namespace/:board_id/boards" />
         <Route component={require('./projects/issues')} path="/:namespace/:board_id/milestones" />
         <Route component={require('./projects/issues')} path="/:namespace/:board_id/deals" />
@@ -62,6 +61,16 @@ export default function createRoutes(getState) {
         <Route component={require('./projects/settings')} path="/:namespace/:board_id/settings" />
         /* e.g. 'version', 'component', 'milestone' */
         <Route component={require('./projects/settings')} path="/:namespace/:board_id/settings/g/:group" />
+
+        /* LIST TOPICS, e.g. view issues, opportunities, courses, lectures */
+        { /*<Route component={require('./projects/issues.js')} path="/:namespace/:board_id/:group_key" /> */ }
+        <Route component={require('./projects/list.controller.js')} path="/:namespace/:board_id/:groupKey" />
+        /* View topic in a group by topic num (ordered) */
+        <Route component={require('./projects/topic.js')} path="/:namespace/:board_id/:group_key/:id" />
+
+        /* LIST TOPICS, e.g. view issues, opportunities, courses, lectures */
+
+
         {/* <Route component={require('./projects/menuItem')} path="/:namespace/:root_board_id/g/:group_key" /> */}
         {/* <Route component={require('./projects/menuItem')} path="/:namespace/:root_board_id/g/:group_key/i/:item_id" /> */}
       </Route>
