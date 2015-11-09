@@ -24,7 +24,46 @@ import loopback from 'loopback';
 import FieldTypes from '../components/topicFields';
 import FieldsHandler from '../components/topicFieldsHandler.js';
 
+//import marked from 'marked';
+//marked.setOptions({
+//  renderer: new marked.Renderer(),
+//  gfm: true,
+//  tables: true,
+//  breaks: false,
+//  pedantic: false,
+//  sanitize: true,
+//  smartLists: true,
+//  smartypants: false
+//});
+
 module.exports = function(Topic) {
+
+  //Topic.prototype.applyContentParsers = function (next)
+  //{
+  //  const modelInstance = this;
+  //
+  //
+  //  // This does work:
+  //  marked(modelInstance.summary, function(err, content) {
+  //
+  //    if (err) return next(err);
+  //
+  //    modelInstance.summary = content;
+  //
+  //    return next();
+  //  });
+  //}
+
+  //Topic.afterRemote( 'findOne', function( ctx, modelInstance, next) {
+  //  if (modelInstance) {
+  //    // TODO: apply on client rather
+  //    //modelInstance.applyContentParsers(() => {
+  //      next();
+  //    //});
+  //  } else {
+  //    return next();
+  //  }
+  //});
 
   Topic.validatesPresenceOf('typeId', 'groupId', 'workspaceId', 'summary');
 
