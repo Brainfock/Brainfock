@@ -26,9 +26,8 @@ export const FIND_SUCCESS = 'FIND_USERS_SUCCESS';
 export const FIND_ERROR = 'FIND_USERS_ERROR';
 
 export function findUsers(includes, query) {
-  let endpoint = '';
 
-  endpoint += 'members/?'+includes;
+  let endpoint = 'members/?'+includes;
 
   if(query) {
     endpoint += '&'+toQueryString({filter:{where:query}},false);
