@@ -156,7 +156,7 @@ export default class FieldsHandler {
       function(resolve, reject) {
 
         resolve({
-          label: 'Related Issues',
+          label: 'File under',
           name: 'parentTopicId',
           type: 'select', // todo: belongsTo rather
           // todo: pre-load options (not full list, tops 100); this has to take into account topic access, of course
