@@ -39,14 +39,18 @@ export default class Todo extends Component {
     }
 
     let rightAvatar;
-    if(!this.props.isPreview) {
-      rightAvatar = (
-        <div className="stats">
-          <span className="unread prop">{todo.countActiveTopics}</span>
-          topics
-        </div>
-      );
-    }
+
+    // TODO: this should display cound of total open (biz status) items that have this topic as `contextTopicId` and
+    // are in main gorup for this topic's `GroupScheme`, so for projects we'll see open issues, for sales - open deals etc.
+
+    //if(!this.props.isPreview) {
+    //  rightAvatar = (
+    //    <div className="stats">
+    //      <span className="unread prop">{todo.countActiveTopics}</span>
+    //      topics
+    //    </div>
+    //  );
+    //}
 
     return <mui.ListItem
       primaryText={<div>{todo.summary}{privacyIcon}</div>}
