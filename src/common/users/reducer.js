@@ -2,7 +2,8 @@ import * as authActions from '../auth/actions';
 import * as actions from '../users/actions';
 import User from './user';
 import CurrentUser from './currentUser';
-import {List, Range, Record} from 'immutable';
+import ChangePasswordForm from './changePassword.form.js';
+import {List, Range, Record, Map} from 'immutable';
 import getRandomString from '../lib/getRandomString';
 
 const InitialState = Record({
@@ -14,7 +15,8 @@ const InitialState = Record({
   listMeta: new (Record({
     isFetching: true,
     count: 0,
-  }))
+  })),
+  forms: new Map()
 });
 const initialState = new InitialState;
 
@@ -48,8 +50,7 @@ export default function usersReducer(state = initialState, action) {
     case actions.FIND_ERROR:
       return state.setIn(['listMeta', 'isFetching'], false)
 
-    case actions.FIND_SUCCESS:
-    {
+    case actions.FIND_SUCCESS: {
       const newlist = action.payload.map((item) => {
         item.cid = getRandomString();
         return new User(item);
@@ -61,6 +62,21 @@ export default function usersReducer(state = initialState, action) {
         ;
     }
 
+    case actions.SETUP_USER_UPDATE_FORM: {
+      if (!state.getIn(['forms', 'id', action.payload.userId, action.payload.formKey])) {
+        return state
+          .setIn(['forms', 'id', action.payload.userId, action.payload.formKey], new (ChangePasswordForm))
+      } else {
+        return state;
+      }
+    }
+    case actions.SET_USER_UPDATE_FORM_FIELD: {
+      const {name, value, userId, formKey} = action.payload;
+      return state
+        .setIn(['forms', 'id', userId, formKey, 'data', name], value)
+        .deleteIn(['forms', 'id', userId, formKey, 'meta', 'errors', name])
+        .deleteIn(['forms', 'id', userId, formKey, 'meta', 'postedOn'])
+    }
   }
 
   return state;
