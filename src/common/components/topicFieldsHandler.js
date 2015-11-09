@@ -35,7 +35,7 @@ export default class FieldsHandler {
               if (res === null)
                 resolve({
                   key: item.key,
-                  type: '__NOT_IMPLEMENTED__'
+                  type: '__NO_DATA__'
                 });
               else {
                 resolve(res);
@@ -135,6 +135,38 @@ export default class FieldsHandler {
           resolve(null);
         }
       });
+      }
+    );
+  }
+
+  /**
+   * configure form field for `parentTopicId`
+   *
+   * @param data:
+   * @property contextTopic object
+   * @property group object
+   * @property group.parentGroup object
+   * @property group.parentGroup object
+   *
+   * @returns {Promise}
+   */
+  static contextTopicParentIdFieldProps(data) {
+
+    return new Promise(
+      function(resolve, reject) {
+
+        resolve({
+          label: 'Related Issues',
+          name: 'parentTopicId',
+          type: 'select', // todo: belongsTo rather
+          // todo: pre-load options (not full list, tops 100); this has to take into account topic access, of course
+          options:[],
+          endpoint: `/api/topics?filter[where][groupKey]=${data.group.groupKey}`,
+          // todo: add topicType IDs into filter query and only show topics that have type with enabled sub-topic option
+          endpointIncludeValues: [
+            {'workspaceId': 'filter[where][workspaceId]='}
+          ]
+        });
       }
     );
   }
