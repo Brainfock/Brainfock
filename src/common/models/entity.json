@@ -120,6 +120,12 @@
       "type": "hasMany",
       "model": "WikiPage",
       "foreignKey": "entity_id"
+    },
+    "menu": {
+      "type": "hasMany",
+      "model": "EntityMenuItem",
+      "foreignKey": "entity_id",
+      "through": "EntityMenu"
     }
   },
   "acls": [
@@ -164,5 +170,5 @@
       "property": "wikiPages"
     }
   ],
-  "methods": {}
+  "methods": []
 }
