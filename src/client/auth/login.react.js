@@ -3,6 +3,7 @@ import React, {PropTypes} from 'react';
 import focusInvalidField from '../lib/focusInvalidField';
 import {Grid, Row, Col} from 'react-bootstrap';
 import mui, {Paper} from 'material-ui';
+import {Link} from 'react-router';
 
 if (process.env.IS_BROWSER)
   require('./login.styl');
@@ -51,7 +52,7 @@ export default class Login extends Component {
                 <h1>{msg.legend}</h1>
                 </div>
               <Paper>
-                <div className="formWrapper" >
+                <div className="formWrapper clearfix" >
                   <form onSubmit={::this.onFormSubmit}>
                     <fieldset disabled={form.disabled}>
                       <mui.TextField
@@ -74,11 +75,15 @@ export default class Login extends Component {
                         disabled={form.disabled}
                         label={msg.button.login}
                         primary
+                        fullWidth
                         type="submit"
                         />
                       {form.error &&
                       <span className="error-message">{form.error.message}</span>}
                     </fieldset>
+                    <div className="reset-link">
+                      <Link to="/auth/reset">Reset lost password</Link>
+                    </div>
                   </form>
                 </div>
               </Paper>
