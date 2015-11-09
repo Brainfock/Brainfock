@@ -133,8 +133,26 @@ class Page extends Component{
 
       if (item.endpoint) {
         props.endpoint = item.endpoint;
-        if (item.endpoint) {
+        if (item.endpointQueryString) {
           props.endpointQueryString = item.endpointQueryString;
+        }
+        if (item.endpointIncludeValues) {
+
+          for (let includeSettings of item.endpointIncludeValues) {
+            for (let prop in includeSettings) {
+
+              if (this.props.form.data[prop]) {
+
+                const filterValue = this.props.form.data[prop].length > 0
+                  ? this.props.form.data[prop][0].value
+                  : this.props.form.data[prop][0];
+
+                props.endpoint += '&'+includeSettings[prop]+filterValue;
+              }
+            }
+          }
+
+          props.endpointIncludeValues = item.endpointIncludeValues;
         }
         FilterComponent = RemoteSelectField;
       }
