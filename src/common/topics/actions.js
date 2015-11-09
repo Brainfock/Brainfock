@@ -678,3 +678,26 @@ export function deleteTopic(topicId) {
     }
   });
 }
+
+export const FETCH_ENTITY_MENU = 'FETCH_ENTITY_MENU';
+export const FETCH_ENTITY_MENU_SUCCESS = 'FETCH_ENTITY_MENU_SUCCESS';
+export const FETCH_ENTITY_MENU_ERROR = 'FETCH_ENTITY_MENU_ERROR';
+
+export function fetchEntityMenu(id) {
+
+  let endpoint = `entities/${id}/menu`;
+
+  return ({fetch, validate}) => ({
+    type: [
+      FETCH_ENTITY_MENU,
+      FETCH_ENTITY_MENU_SUCCESS,
+      FETCH_ENTITY_MENU_ERROR
+    ],
+    payload: {
+      promise:  getApi(fetch, endpoint)
+        .catch(response => {
+          throw response;
+        })
+    }
+  });
+}
