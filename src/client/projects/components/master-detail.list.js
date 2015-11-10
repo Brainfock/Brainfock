@@ -371,6 +371,7 @@ export default class ProjectIssues extends Component {
         history={this.props.history}
         itemComponent={this.props.listViewItem}
         list={this.props.boards.list}
+        location={this.props.location}
         msg={this.props.msg.todos}
         params={this.props.params}
         topicGroupKey={groupKey}
