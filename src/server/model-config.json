@@ -52,6 +52,14 @@
     "dataSource": "db",
     "public": true
   },
+  "Term": {
+    "dataSource": "db",
+    "public": true
+  },
+  "TermValue": {
+    "dataSource": "db",
+    "public": true
+  },
   "Topic": {
     "dataSource": "db",
     "public": true
