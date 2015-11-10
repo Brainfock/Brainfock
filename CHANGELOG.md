@@ -4,6 +4,9 @@ Changelog
 Summary of most notable changes in Brainfock project code. Changelog entries usually are split into `Features`, `Fixes` and `Style tweaks` sections.
 When makes sense, items in these section may be subdivided by application component (e.g. `Server`, `API`, `iOS Client`).
 
+## 06 Nov Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.24.0:
+
+## 01 Nov Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.23.0:
 
 ## 29 Oct Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.22.0:
 * Add admin module
