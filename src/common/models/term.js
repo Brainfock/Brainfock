@@ -1,3 +1,74 @@
+/**
+ * Brainfock - Community & Business Management Solution
+ *
+ * @link http://www.brainfock.org
+ * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
+ */
+import loopback from 'loopback';
+import {mergeQuery} from 'loopback-datasource-juggler/lib/utils';
+import app from '../../server/main';
+
 module.exports = function(Term) {
 
+  Term.prepareFormOptions = function(key, limit, cb) {
+    Term.findOne({where:{
+      key: key
+    }}, function(err, termInstance) {
+
+      if (err) return cb(err, []);
+
+      if (!termInstance) return cb(null, []);
+
+      const context = loopback.getCurrentContext();
+      let filter;
+
+      if (context.get('http').req.query && context.get('http').req.query.filter) {
+        filter = mergeQuery({where:{
+          termId: termInstance.id,
+        }}, context.get('http').req.query.filter);
+      } else {
+        filter = {where:{
+          termId: termInstance.id,
+        }};
+      }
+
+      Term.app.models.TermValue.find(filter, (err, data) => {
+        if (err) return cb(null, []);
+        if (!data) return cb(null, []);
+
+        return cb(null, data.map(({id, value}) => {
+          return {
+            value: id,
+            label: value
+          }
+        }));
+      })
+
+    });
+  }
+
+  /**
+   * API endpoint `api/terms/values/:key`
+   *
+   * @param id
+   * @param cb
+   * @private
+   */
+  Term.__findByKey__labels = function(key, cb) {
+    Term.prepareFormOptions(key, 1000, cb);
+  };
+
+  /**
+   * REST API endpoint `api/terms/values/:key`
+   */
+  Term.remoteMethod(
+    '__findByKey__labels',
+    {
+      accepts: [
+        {arg: 'key', type: 'string', http: {source: 'path'}, required: true},
+      ],
+      http: {verb: 'get', path: '/values/:key'},
+      returns: {arg: 'topic', type: 'Array', root: true}
+    }
+  );
 };
