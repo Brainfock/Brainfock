@@ -6,108 +6,127 @@
  */
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
-import mui from 'material-ui';
+import {Link} from 'react-router';
+import mui, {Styles, Avatar, IconButton} from 'material-ui';
+import {OverlayTrigger, Tooltip} from 'react-bootstrap';
+const Colors = Styles.Colors;
 
 export default class Todo extends Component {
 
   static propTypes = {
-    actions: PropTypes.object.isRequired,
-    followItemOnClick: PropTypes.object,
-    history: PropTypes.object,
-    params: PropTypes.object.isRequired,
+    group: PropTypes.object,
+    actions: PropTypes.object,
     todo: PropTypes.object.isRequired,
-    topicGroupKey: PropTypes.string.isRequired,
-    viewTopic: PropTypes.object
-  };
-
-  static defaultProps = {
-    followItemOnClick: true
-  };
+    isPreview: PropTypes.bool
+  }
 
   render() {
+    const {actions, todo} = this.props;
 
-    const {todo} = this.props;
+    const color = Colors[todo.logoBackground];
+    const icon = "fa "+todo.logoIcon;
 
-    let {icon, notice} = '';
-    let style = {};
-
+    let privacyIcon;
     if (todo.accessPrivateYn) {
-      icon = (<i className="fa fa-eye-slash"></i>);
+      privacyIcon = (
+        <span>
+          <IconButton iconClassName="fa fa-eye-slash"
+                      tooltip="Private & Invisible"
+                      style={{
+              marginTop:'-25px',
+              height:'16px'
+            }}
+                      iconStyle={{
+              height:'16px',
+              fontSize:'19px',
+            }}
+            />
+        </span>
+      );
     }
 
-    if (this.props.viewTopic && this.props.viewTopic.id === todo.id) {
-      style = {background: 'rgb(243, 243, 243)'};
+    let rightAvatar;
+
+    if (todo.workspace) {
+
+      let currentQuery = this.props.location.query;
+      if (currentQuery['filter'])
+        currentQuery['filter'].workspaceId = todo.workspace.id;
+      else
+        currentQuery = {filter: {workspaceId: todo.workspace.id}};
+
+      const tooltip = (
+        <Tooltip>Show only items in this workspace</Tooltip>
+      );
+      rightAvatar = ( <div className="">
+          <OverlayTrigger placement="top" overlay={tooltip} id="listTooltip">
+            <span className='label label-info'
+              onClick={(e)=>{
+                e.preventDefault();
+                e.stopPropagation();
+                this.props.history.replaceState(null, this.props.location.pathname, currentQuery)
+              }}>{todo.workspace.name}
+            </span>
+          </OverlayTrigger>
+        </div>
+        );
     }
 
-    if (todo.deletedYn === 1) {
-      style.opacity = 0.2;
-      // TODO: add l18n
-      notice = '(item is deleted) ';
-    }
+    // TODO: this should display cound of total open (biz status) items that have this topic as `contextTopicId` and
+    // are in main gorup for this topic's `GroupScheme`, so for projects we'll see open issues, for sales - open deals etc.
 
-    return (
-      <div style={style}>
-        <mui.ListItem
-          onClick={this._onClick.bind(this)}
-          onDoubleClick={this._onDblClick.bind(this)}
-          primaryText={
-            <div>
-              <div className="pull-left" style={{marginRight:5}}>
-                <div className="stats" style={{marginRight:5, width:'100%'}}>
-                  <div className="prop" style={{width:'100%'}}>
-                    {todo.contextTopicKey || todo.contextTopicNum}
-                  </div>
-                </div>
-                <div className="label label-default" style={{width:'100%'}}>{todo.wfStage}</div>
-              </div>
-              {icon}
-              {notice}
-              {todo.summary}
-              <span className="label label-info pull-right">{todo.type && todo.type.name}</span>
-            </div>
-            }
-          secondaryText={todo.text}
-          secondaryTextLines={2}
-          >
-          {this.confirmDialog()}
-        </mui.ListItem>
-      </div>
-    );
+    //if(!this.props.isPreview) {
+    //  rightAvatar = (
+    //    <div className="stats">
+    //      <span className="unread prop">{todo.countActiveTopics}</span>
+    //      topics
+    //    </div>
+    //  );
+    //}
+
+    return <mui.ListItem
+      primaryText={<div>{todo.summary}{privacyIcon}</div>}
+      secondaryText={todo.text}
+      onClick={this._onClick.bind(this)}
+      rightAvatar={rightAvatar}
+      leftAvatar={<Avatar icon={<span className={icon}/>} backgroundColor={color} />}
+      > {this.confirmDialog()}
+    </mui.ListItem>
   }
 
   confirmDialog() {
 
-    let dialogActions = [
+    var dialogActions = [
       <mui.FlatButton
         label='BTN_CANCEL'
-        onClick={this._onDialogCancel}
+        secondary={true}
         onTouchTap={this._onDialogCancel}
+        onClick={this._onDialogCancel}
         ref="BTN_CANCEL"
-        secondary
         />,
-      {text: 'BTN_DELETE', onClick: this.delete}
+      { text:'BTN_DELETE', onClick: this.delete }
     ];
 
-    return (
-      <mui.Dialog actions={dialogActions} ref='confirmDialog' title='projects_deleteDialog_TITLE'>
-        <p>Are you sure you want to delete this item? </p>
-      </mui.Dialog>
-    );
+    var Dialog = <mui.Dialog title='projects_deleteDialog_TITLE' ref="confirmDialog" actions={dialogActions}>
+      <p>Are you sure you want to delete this project? </p>
+    </mui.Dialog>
+
+    return Dialog;
   }
 
   _onClick() {
-    if (this.props.todo.deletedYn === 1) {
+    if(this.props.isPreview === true) {
+      alert('This is a preview :)');
       return;
     }
-    if (this.props.followItemOnClick) {
-      this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/${this.props.topicGroupKey}/${this.props.todo.contextTopicNum}`);
-    } else {
-      this.props.actions.setCurrentTopicMarker(this.props.todo.id);
-      this.props.actions.loadTopic(this.props.todo.id);
-    }
-  }
 
-  _onDblClick() {
-    this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/${this.props.topicGroupKey}/${this.props.todo.contextTopicNum}`);
+    let link = this.props.group.permalink;
+    let replaced = link.replace(/:topic_key/g, this.props.todo.contextTopicKey);
+    replaced = replaced.replace(/:id/g, this.props.todo.id);
+    replaced = replaced.replace(/:board_key/g, this.props.params.key);
+    replaced = replaced.replace(/:context_id/g, this.props.todo.contextTopicId);
+    replaced = replaced.replace(/:namespace/g, this.props.todo.workspace && this.props.todo.workspace.namespace || this.props.todo.namespace);
+
+    this.props.history.pushState(null, replaced);
   }
 }
