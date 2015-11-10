@@ -2,7 +2,7 @@
   "name": "Brainfock",
   "description": "Brainfock business management & CMS software.",
   "author": "Sergii Gamaiunov <hello@webkadabra.com>",
-  "version": "0.25.0-dev.2",
+  "version": "0.26.0",
   "contributors": [],
   "main": "src/server/main",
   "private": true,
