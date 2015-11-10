@@ -26,6 +26,7 @@ export default Record({
   updatedOn: '',
   createdOn: '',
   deletedYn: '',
+  priority: '',
 
   // for POST only (not a model field)
   createGroup:'',

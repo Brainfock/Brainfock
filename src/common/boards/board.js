@@ -33,6 +33,7 @@ export default Record({
   updatedOn:'',
   createdOn:'',
   deletedYn: '',
+  priority: '',
   // read-only, available via database view
   wfStage:'',
   wfStatus:'',
