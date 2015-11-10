@@ -7,9 +7,9 @@
 import {apiGet, apiPost} from '../lib/services';
 import {toQueryString} from '../utils/model.js';
 
-export const FIND = 'FIND_USERS';
-export const FIND_SUCCESS = 'FIND_USERS_SUCCESS';
-export const FIND_ERROR = 'FIND_USERS_ERROR';
+export const FIND = 'FIND_SCHEMES_PENDING';
+export const FIND_SUCCESS = 'FIND_SCHEMES_SUCCESS';
+export const FIND_ERROR = 'FIND_SCHEMES_ERROR';
 
 export function findGroupSchemes(includes, query) {
   let endpoint = '';
@@ -21,11 +21,7 @@ export function findGroupSchemes(includes, query) {
   }
 
   return ({fetch, validate}) => ({
-    type: [
-      FIND,
-      FIND_SUCCESS,
-      FIND_ERROR
-    ],
+    type: 'FIND_SCHEMES',
     payload: {
       promise:  apiGet(fetch, endpoint)
         .catch(response => {

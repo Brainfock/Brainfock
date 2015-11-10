@@ -20,7 +20,7 @@ export default class ProjectsIndex extends Component {
         containerTopic={null}
         disableDetails
         emptyListFallback={ProjectsEmpty}
-        listViewItem={ListViewItem}
+        _listViewItem={ListViewItem}
         groupKey='project'
         {...passProps}
         />

@@ -6,11 +6,11 @@
  */
 import {apiPost, apiGet} from '../lib/services';
 
-export const CREATE = 'WORKSPACE_SAVE';
+export const CREATE = 'WORKSPACE_SAVE_PENDING';
 export const CREATE_ERROR = 'WORKSPACE_SAVE_ERROR';
 export const CREATE_SUCCESS = 'WORKSPACE_SAVE_SUCCESS';
 
-export const FIND_ONE = 'WORKSPACE_FIND_ONE';
+export const FIND_ONE = 'WORKSPACE_FIND_ONE_PENDING';
 export const FIND_ONE_SUCCESS = 'WORKSPACE_FIND_ONE_SUCCESS';
 export const FIND_ONE_ERROR = 'WORKSPACE_FIND_ONE_ERROR';
 
@@ -27,11 +27,7 @@ export function postWorkspace(fields) {
   const endpoint = 'workspaces';
 
   return ({fetch, validate}) => ({
-    type: [
-      CREATE,
-      CREATE_SUCCESS,
-      CREATE_ERROR
-    ],
+    type: 'WORKSPACE_SAVE',
     payload: {
       promise: apiPost(fetch, endpoint, fields)
         .catch(response => {
@@ -68,11 +64,7 @@ export function workspaceFindById(id) {
   const endpoint = `workspaces/${id}`;
 
   return ({fetch}) => ({
-    type: [
-      FIND_ONE,
-      FIND_ONE_SUCCESS,
-      FIND_ONE_ERROR
-    ],
+    type: 'WORKSPACE_FIND_ONE',
     payload: {
       promise: apiGet(fetch, endpoint)
         .catch(response => {
@@ -109,11 +101,7 @@ export function fetchWorkspaceHomepage(data) {
   const endpoint = `workspaces/${id}?` + query.join('&');
 
   return ({fetch, validate}) => ({
-    type: [
-      FIND_ONE,
-      FIND_ONE_SUCCESS,
-      FIND_ONE_ERROR
-    ],
+    type: 'WORKSPACE_FIND_ONE',
     payload: {
       promise: apiGet(fetch, endpoint, host)
         .catch(response => {

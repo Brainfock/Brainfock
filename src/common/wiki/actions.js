@@ -4,10 +4,10 @@
  * @link http://www.brainfock.org
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
-export const FIND = 'WIKI_FIND';
+export const FIND = 'WIKI_FIND_PENDING';
 export const FIND_ERROR = 'WIKI_FIND_ERROR';
 export const FIND_SUCCESS = 'WIKI_FIND_SUCCESS';
-export const SAVE = 'WIKI_SAVE';
+export const SAVE = 'WIKI_SAVE_PENDING';
 export const SAVE_ERROR = 'WIKI_SAVE_ERROR';
 export const SAVE_SUCCESS = 'WIKI_SAVE_SUCCESS';
 export const SET_EDIT_WIKI_FIELD = 'SET_EDIT_WIKI_FIELD';
@@ -68,11 +68,7 @@ export function fetchContextPage(data) {
   let endpoint =  'wikiPages/findOne?'+ query.join('&');
   console.log("ENDPOINT", endpoint);
   return ({fetch, validate}) => ({
-    type: [
-      FIND,
-      FIND_SUCCESS,
-      FIND_ERROR
-    ],
+    type: 'WIKI_FIND',
     payload: {
       promise:  getApi(fetch, endpoint, host)
         .catch(response => {
@@ -84,11 +80,7 @@ export function fetchContextPage(data) {
 
 export function findContextPage(context_id, uid) {
   return ({fetch, validate}) => ({
-    type: [
-      FIND,
-      FIND_SUCCESS,
-      FIND_ERROR
-    ],
+    type: 'WIKI_FIND',
     payload: {
       promise:  getApi(fetch, 'wikiPages/findOne?filter[where][contextEntityId]='+context_id+'&filter[where][pageUid]='+uid)
         .catch(response => {
@@ -151,11 +143,7 @@ export function saveWikiChanges(id, fields) {
   }
 
   return ({fetch, validate}) => ({
-    type: [
-      SAVE,
-      SAVE_SUCCESS,
-      SAVE_ERROR
-    ],
+    type: 'SAVE_WIKI',
     payload: {
       promise: post(fetch, endpoint, fields)
         .catch(response => {

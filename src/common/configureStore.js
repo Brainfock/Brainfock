@@ -20,7 +20,9 @@ export default function configureStore({engine, initialState} = {}) {
 
   const middleware = [
     dependenciesMiddleware,
-    promiseMiddleware
+    promiseMiddleware({
+      promiseTypeSuffixes: ['PENDING', 'SUCCESS', 'ERROR']
+    })
   ];
 
   // TODO: Add storage example.

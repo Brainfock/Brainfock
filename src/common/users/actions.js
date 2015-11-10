@@ -7,14 +7,15 @@
 import {apiGet, apiPost, apiPut} from '../lib/services';
 import {toQueryString} from '../utils/model.js';
 
-export const FIND = 'FIND_USERS';
+export const FIND = 'FIND_USERS_PENDING';
 export const FIND_SUCCESS = 'FIND_USERS_SUCCESS';
 export const FIND_ERROR = 'FIND_USERS_ERROR';
 
 export const SETUP_USER_UPDATE_FORM = 'SETUP_USER_UPDATE_FORM';
 
 export const SET_USER_UPDATE_FORM_FIELD = 'SET_USER_UPDATE_FORM_FIELD';
-export const SAVE_USER_UPDATE_FORM = 'SAVE_USER_UPDATE_FORM';
+
+export const SAVE_USER_UPDATE_FORM = 'SAVE_USER_UPDATE_FORM_PENDING';
 export const SAVE_USER_UPDATE_FORM_SUCCESS = 'SAVE_USER_UPDATE_FORM_SUCCESS';
 export const SAVE_USER_UPDATE_FORM_ERROR = 'SAVE_USER_UPDATE_FORM_ERROR';
 
@@ -27,11 +28,7 @@ export function findUsers(includes, query) {
   }
 
   return ({fetch, validate}) => ({
-    type: [
-      FIND,
-      FIND_SUCCESS,
-      FIND_ERROR
-    ],
+    type: 'FIND_USERS',
     payload: {
       promise:  apiGet(fetch, endpoint)
         .catch(response => {
@@ -64,11 +61,7 @@ export function saveUserUpdateForm(id, formKey, data) {
   const endpoint = `users/${id}`;
 
   return ({fetch, validate}) => ({
-    type: [
-      SAVE_USER_UPDATE_FORM,
-      SAVE_USER_UPDATE_FORM_SUCCESS,
-      SAVE_USER_UPDATE_FORM_ERROR
-    ],
+    type: 'SAVE_USER_UPDATE_FORM',
     meta: {
       topicId: id
     },

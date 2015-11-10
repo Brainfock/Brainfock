@@ -6,36 +6,36 @@
  */
 import {apiGet, apiPost, apiPut} from '../lib/services';
 
-export const FIND = 'TOPIC_FIND';
+export const FIND = 'TOPIC_FIND_PENDING';
 export const FIND_SUCCESS = 'TOPIC_FIND_SUCCESS';
 export const FIND_ERROR = 'TOPIC_FIND_ERROR';
 
-export const FIND_ONE = 'TOPIC_FIND_ONE';
-export const FIND_ONE_SUCCESS = 'TOPIC_FIND_SUCCESS_ONE';
-export const FIND_ONE_ERROR = 'TOPIC_FIND_ERROR_ONE';
+export const FIND_ONE = 'TOPIC_FIND_ONE_PENDING';
+export const FIND_ONE_SUCCESS = 'TOPIC_FIND_ONE_SUCCESS';
+export const FIND_ONE_ERROR = 'TOPIC_FIND_ONE_ERROR';
 
-export const LOAD_TOPIC = 'LOAD_TOPIC';
+export const LOAD_TOPIC = 'LOAD_TOPIC_PENDING';
 export const LOAD_TOPIC_SUCCESS = 'LOAD_TOPIC_SUCCESS';
 export const LOAD_TOPIC_ERROR = 'LOAD_TOPIC_ERROR';
 
-export const LOAD_TOPIC_GROUP = 'LOAD_TOPIC_GROUP';
+export const LOAD_TOPIC_GROUP = 'LOAD_TOPIC_GROUP_PENDING';
 export const LOAD_TOPIC_GROUP_SUCCESS = 'LOAD_TOPIC_GROUP_SUCCESS';
 export const LOAD_TOPIC_GROUP_ERROR = 'LOAD_TOPIC_GROUP_ERROR';
 
 export const SET_EDIT_FIELD = 'TOPIC_SET_EDIT_FIELD';
-export const SAVE = 'TOPIC_SAVE';
+export const SAVE = 'TOPIC_SAVE_PENDING';
 export const SAVE_ERROR = 'TOPIC_SAVE_ERROR';
 export const SAVE_SUCCESS = 'TOPIC_SAVE_SUCCESS';
 
-export const COUNT = 'TOPIC_COUNT';
+export const COUNT = 'TOPIC_COUNT_PENDING';
 export const COUNT_SUCCESS = 'TOPIC_COUNT_SUCCESS';
 export const COUNT_ERROR = 'TOPIC_COUNT_ERROR';
 
-export const LOAD_FILTERS = 'TOPIC_LOAD_FILTERS';
+export const LOAD_FILTERS = 'TOPIC_LOAD_FILTERS_PENDING';
 export const LOAD_FILTERS_SUCCESS = 'TOPIC_LOAD_FILTERS_SUCCESS';
 export const LOAD_FILTERS_ERROR = 'TOPIC_LOAD_FILTERS_ERROR';
 
-export const LOAD_FORM_FIELDS = 'TOPIC_LOAD_FORM_FIELDS';
+export const LOAD_FORM_FIELDS = 'TOPIC_LOAD_FORM_FIELDS_PENDING';
 export const LOAD_FORM_FIELDS_SUCCESS = 'TOPIC_LOAD_FORM_FIELDS_SUCCESS';
 export const LOAD_FORM_FIELDS_ERROR = 'TOPIC_LOAD_FORM_FIELDS_ERROR';
 
@@ -44,7 +44,8 @@ export const SET_NEW_TOPIC_FIELD = 'SET_NEW_TOPIC_FIELD';
 export const PREPARE_NEW_TOPIC_FORM_DATA = 'PREPARE_NEW_TOPIC_FORM_DATA';
 export const APPLY_TOPIC_FORM_DEFAULTS = 'APPLY_TOPIC_FORM_DEFAULTS';
 export const CLEAN_FORM_GENERAL_ERRORS = 'TOPIC_CLEAN_FORM_GENERAL_ERRORS';
-export const CREATE = 'TOPIC_CREATE';
+
+export const CREATE = 'TOPIC_CREATE_PENDING';
 export const CREATE_SUCCESS = 'TOPIC_CREATE_SUCCESS';
 export const CREATE_ERROR = 'TOPIC_CREATE_ERROR';
 export const SET_CURRENT_TOPIC = 'TOPIC_SET_CURRENT_TOPIC';
@@ -164,11 +165,7 @@ export function find(type, query, contextTopicId, namespace) {
   }
 
   return ({fetch, validate}) => ({
-    type: [
-      FIND,
-      FIND_SUCCESS,
-      FIND_ERROR
-    ],
+    type: 'TOPIC_FIND',
     meta: {
       groupKey: type,
       queryString: queryString
@@ -211,11 +208,7 @@ export function count(group, query, contextTopicId, namespace) {
   }
 
   return ({fetch, validate}) => ({
-    type: [
-      COUNT,
-      COUNT_SUCCESS,
-      COUNT_ERROR
-    ],
+    type: 'TOPIC_COUNT',
     payload: {
       promise: getApi(fetch, endpoint)
         .catch(response => {
@@ -234,11 +227,7 @@ export function loadCurrent(id, namespace) {
   endpoint += 'topics/'+id ;
 
   return ({fetch, validate}) => ({
-    type: [
-      FIND_ONE,
-      FIND_ONE_SUCCESS,
-      FIND_ONE_ERROR
-    ],
+    type: 'TOPIC_FIND_ONE',
     payload: {
       promise:  getApi(fetch, endpoint)
         .catch(response => {
@@ -253,11 +242,7 @@ export function loadTopic(id) {
   let endpoint = 'topics/'+id+'?filter[include][1][type]&filter[include][2][author]&filter[extra][operations]' ;
 
   return ({fetch, validate}) => ({
-    type: [
-      LOAD_TOPIC,
-      LOAD_TOPIC_SUCCESS,
-      LOAD_TOPIC_ERROR
-    ],
+    type: 'LOAD_TOPIC',
     payload: {
       promise:  getApi(fetch, endpoint)
         .catch(response => {
@@ -285,11 +270,7 @@ export function loadContextGroupTopicByNum(contextTopicId, groupKey, topicNum) {
     endpoint += `&filter[where][contextTopicNum]=${topicNum}` ;
 
   return ({fetch, validate}) => ({
-    type: [
-      LOAD_TOPIC,
-      LOAD_TOPIC_SUCCESS,
-      LOAD_TOPIC_ERROR
-    ],
+    type: 'LOAD_TOPIC',
     payload: {
       promise:  getApi(fetch, endpoint)
         .catch(response => {
@@ -317,11 +298,7 @@ export function loadNamespaceTopicByNum(namespace, ownerTopicKeyOrId, groupKey, 
   //  endpoint += `&filter[where][contextTopicNum]=${topicNum}` ;
 
   return ({fetch, validate}) => ({
-    type: [
-      LOAD_TOPIC,
-      LOAD_TOPIC_SUCCESS,
-      LOAD_TOPIC_ERROR
-    ],
+    type: 'LOAD_TOPIC',
     payload: {
       promise:  getApi(fetch, endpoint)
         .catch(response => {
@@ -348,11 +325,7 @@ export function loadTopicGroup(name) {
   let endpoint = `topicGroups/findOne?filter[where][group_key]=${name}` ;
 
   return ({fetch, validate}) => ({
-    type: [
-      LOAD_TOPIC_GROUP,
-      LOAD_TOPIC_GROUP_SUCCESS,
-      LOAD_TOPIC_GROUP_ERROR
-    ],
+    type: 'LOAD_TOPIC_GROUP',
     meta: {
       groupKey: name
     },
@@ -384,11 +357,7 @@ export function loadFilters(group, query, contextTopicId) {
   }
 
   return ({fetch, validate}) => ({
-    type: [
-      LOAD_FILTERS,
-      LOAD_FILTERS_SUCCESS,
-      LOAD_FILTERS_ERROR
-    ],
+    type: 'TOPIC_LOAD_FILTERS',
     payload: {
       promise:  getApi(fetch, endpoint)
         .catch(response => {
@@ -407,11 +376,7 @@ export function loadFormFields(group, contextTopicId) {
   }
 
   return ({fetch, validate}) => ({
-    type: [
-      LOAD_FORM_FIELDS,
-      LOAD_FORM_FIELDS_SUCCESS,
-      LOAD_FORM_FIELDS_ERROR
-    ],
+    type: 'TOPIC_LOAD_FORM_FIELDS',
     payload: {
       promise:  getApi(fetch, endpoint)
         .catch(response => {
@@ -482,11 +447,7 @@ export function create(data) {
   const endpoint = 'topics';
 
   return ({fetch, validate}) => ({
-    type: [
-      CREATE,
-      CREATE_SUCCESS,
-      CREATE_ERROR
-    ],
+    type: 'TOPIC_CREATE',
     payload: {
       promise: validateForm(validate, data)
         .then(() => apiPut(fetch, endpoint, data))
@@ -524,11 +485,7 @@ export function postTopicFormData(cid, data) {
   const endpoint = 'topics';
 
   return ({fetch, validate}) => ({
-    type: [
-      CREATE,
-      CREATE_SUCCESS,
-      CREATE_ERROR
-    ],
+    type: 'TOPIC_CREATE',
     meta: {
       formCid: cid
     },
@@ -563,11 +520,7 @@ export function save(id, data) {
   const endpoint = 'topics/'+id;
 
   return ({fetch, validate}) => ({
-    type: [
-      SAVE,
-      SAVE_SUCCESS,
-      SAVE_ERROR
-    ],
+    type: 'TOPIC_SAVE',
     meta: {
       topicId: id
     },
@@ -596,7 +549,7 @@ export function save(id, data) {
   });
 }
 
-export const RUN_OPERATION = 'TOPIC_RUN_OPERATION';
+export const RUN_OPERATION = 'TOPIC_RUN_OPERATION_PENDING';
 export const RUN_OPERATION_SUCCESS = 'TOPIC_RUN_OPERATION_SUCCESS';
 export const RUN_OPERATION_ERROR = 'TOPIC_RUN_OPERATION_ERROR';
 
@@ -605,11 +558,7 @@ export function runOperation(topicId, operation) {
   const endpoint = `topics/${topicId}/runOperation`;
 
   return ({fetch, validate}) => ({
-    type: [
-      RUN_OPERATION,
-      RUN_OPERATION_SUCCESS,
-      RUN_OPERATION_ERROR
-    ],
+    type: 'TOPIC_RUN_OPERATION',
     payload: {
       promise: apiPost(fetch, endpoint, {operation:operation})
         .catch(response => {
@@ -623,7 +572,7 @@ export function runOperation(topicId, operation) {
   });
 }
 
-export const DELETE_TOPIC = 'DELETE_TOPIC';
+export const DELETE_TOPIC = 'DELETE_TOPIC_PENDING';
 export const DELETE_TOPIC_SUCCESS = 'DELETE_TOPIC_SUCCESS';
 export const DELETE_TOPIC_ERROR = 'DELETE_TOPIC_ERROR';
 
@@ -632,11 +581,7 @@ export function deleteTopic(topicId) {
   const endpoint = `rawTopics/${topicId}`;
 
   return ({fetch, validate}) => ({
-    type: [
-      DELETE_TOPIC,
-      DELETE_TOPIC_SUCCESS,
-      DELETE_TOPIC_ERROR
-    ],
+    type: 'DELETE_TOPIC',
     meta: {
       topicId: topicId
     },
@@ -665,7 +610,7 @@ export function deleteTopic(topicId) {
   });
 }
 
-export const FETCH_ENTITY_MENU = 'FETCH_ENTITY_MENU';
+export const FETCH_ENTITY_MENU = 'FETCH_ENTITY_MENU_PENDING';
 export const FETCH_ENTITY_MENU_SUCCESS = 'FETCH_ENTITY_MENU_SUCCESS';
 export const FETCH_ENTITY_MENU_ERROR = 'FETCH_ENTITY_MENU_ERROR';
 
@@ -674,11 +619,7 @@ export function fetchEntityMenu(id) {
   let endpoint = `entities/${id}/menu`;
 
   return ({fetch, validate}) => ({
-    type: [
-      FETCH_ENTITY_MENU,
-      FETCH_ENTITY_MENU_SUCCESS,
-      FETCH_ENTITY_MENU_ERROR
-    ],
+    type: 'FETCH_ENTITY_MENU',
     payload: {
       promise:  getApi(fetch, endpoint)
         .catch(response => {

@@ -1,7 +1,7 @@
-export const LOGIN = 'LOGIN';
+export const LOGIN = 'LOGIN_PENDING';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGOUT = 'LOGOUT';
+export const LOGOUT = 'LOGOUT_PENDING';
 export const LOGOUT_ERROR = 'LOGOUT_ERROR';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const SET_FORM_FIELD = 'SET_FORM_FIELD';
@@ -35,11 +35,7 @@ export function setFormField({target: {name, value}}) {
 
 export function login(fields) {
   return ({fetch, validate}) => ({
-    type: [
-      LOGIN,
-      LOGIN_SUCCESS,
-      LOGIN_ERROR
-    ],
+    type: 'LOGIN',
     payload: {
       promise: validateForm(validate, fields)
         .then(() => post(fetch, 'users/login?include=user', fields))
@@ -63,11 +59,7 @@ export function login(fields) {
 
 export function logout(token) {
   return ({fetch, validate}) => ({
-    type: [
-      LOGOUT,
-      LOGOUT_SUCCESS,
-      LOGOUT_ERROR
-    ],
+    type: 'LOGOUT',
     payload: {
       promise: fetch(`/api/users/logout?access_token=${token}`, {
         method: 'post',
