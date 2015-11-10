@@ -8,6 +8,9 @@ import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import mui from 'material-ui';
 
+import {Styles} from 'material-ui';
+const Colors = Styles.Colors;
+
 export default class Todo extends Component {
 
   static propTypes = {
@@ -45,6 +48,24 @@ export default class Todo extends Component {
       notice = '(item is deleted) ';
     }
 
+    let priorityLabel;
+
+    if(todo.priority && todo.priority.labelConfig) {
+      try {
+        const labelConfig = JSON.parse(todo.priority.labelConfig);
+        let labelStyle = {};
+        if (labelConfig.bg) {
+          if (Colors[labelConfig.bg]) {
+            labelStyle.backgroundColor = Colors[labelConfig.bg];
+          } else if (labelConfig.bg.charAt(0) === '#') {
+            labelStyle.backgroundColor = labelConfig.bg;
+          }
+        }
+        priorityLabel = <span style={labelStyle} className="label label-info pull-right">{todo.priority.value}</span>;
+
+      } catch (e) {}
+    }
+
     return (
       <div style={style}>
         <mui.ListItem
@@ -63,6 +84,7 @@ export default class Todo extends Component {
               {icon}
               {notice}
               {todo.summary}
+              {priorityLabel}
               <span className="label label-info pull-right">{todo.type && todo.type.name}</span>
             </div>
             }
