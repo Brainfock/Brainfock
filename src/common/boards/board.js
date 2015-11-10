@@ -39,6 +39,11 @@ export default Record({
   wfStatus:'',
 
   // included via relations
+  priority: new (Record({
+    id: '',
+    value: '',
+    labelConfig: ''
+  })),
   type: {},
   workspace: new (Record({
     id: '',
