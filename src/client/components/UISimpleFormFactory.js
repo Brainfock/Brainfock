@@ -1,3 +1,9 @@
+/**
+ * Brainfock - Community & Business Management Solution
+ *
+ * @link http://www.brainfock.org
+ * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
+ */
 import React from 'react';
 import Component from 'react-pure-render/component';
 import mui from 'material-ui';
@@ -5,7 +11,6 @@ import Select from 'react-select';
 
 import Loader from './Loader';
 import RemoteSelectField from './form/RemoteSelectField';
-
 /**
  * Simple factory to build basic forms' UIs;
  *
@@ -97,6 +102,12 @@ class Page extends Component{
       props.onKeyDown = this.onKeyDown.bind(this);
     }
 
+    if (this.props.modelValues && this.props.modelValues[item.name]) {
+      props.value = this.props.modelValues[item.name];
+    } else {
+      if (item.value) props.value = item.value;
+    }
+
     if (item.type === 'select' || item.type === 'multiselect') {
 
       props.placeholder = item.label;
@@ -117,14 +128,6 @@ class Page extends Component{
       props.onChange = (function(newValue, newValues) {
         // in case of multiselect, pass `newValues` - form data has to be normalized before POSTing, see actions
         this.onReactSelectChange(newValue, newValues, item.name)}).bind(this);
-
-      if (this.props.modelValues && this.props.modelValues[item.name]) {
-
-        props.value = this.props.modelValues[item.name];
-      } else {
-
-        if (item.value) props.value = item.value;
-      }
 
       // `react-select` does not like unset value, at least empty {String} is required
       if (!props.value) props.value = '';
@@ -151,7 +154,6 @@ class Page extends Component{
               }
             }
           }
-
           props.endpointIncludeValues = item.endpointIncludeValues;
         }
         FilterComponent = RemoteSelectField;
@@ -175,17 +177,6 @@ class Page extends Component{
 
       if ('textarea' === item.type) {
         props.multiLine = true;
-      }
-
-      if (this.props.modelValues && this.props.modelValues[item.name]) {
-        props.value = this.props.modelValues[item.name];
-      } else {
-        // preselected
-        if (item.value) {
-          props.value = item.value;
-        } else {
-          props.value = '';
-        }
       }
 
       let Filter = (
