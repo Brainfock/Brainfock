@@ -4,6 +4,7 @@
  * @link http://www.brainfock.org
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
+import app from '../../server/main';
 /**
  * Helper to populate options for UI form scheme of topics based on field key (name)
  *
@@ -103,7 +104,7 @@ export default class FieldsHandler {
 
         if (parentGroup) {
           resolve({
-            label: parentGroup.name,
+            label: `File under ${parentGroup.name}`,
             // `name` is used for form inputs to identify model's attribute
             name: data.key,
             type: 'select', // todo: hasOne rather
@@ -285,14 +286,27 @@ export default class FieldsHandler {
   static priorityFieldProps(data) {
     return new Promise(
       function (resolve, reject) {
-        resolve({
-          label: 'Priority',
-          name: data.key,
-          type: 'select',
-          // todo: pre-load options (not full list, tops 100); this has to take into account topic access, of course
-          options:[],
-          endpoint: `/api/topics/${data.contextTopic.id}/labels`,
-        });
+
+        if (!process.env.IS_BROWSER) {
+          app.models.Term.prepareFormOptions('priority', 1000, (err, options) => {
+
+            resolve({
+              label: 'Priority',
+              name: data.key,
+              type: 'select',
+              options: options,
+            });
+          })
+        } else {
+
+          resolve({
+            label: 'Priority',
+            name: data.key,
+            type: 'select',
+            options:[],
+            endpoint: `/api/terms/values/priority`,
+          });
+        }
       }
     )
   }
