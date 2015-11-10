@@ -8,6 +8,7 @@ import React from 'react';
 import Component from 'react-pure-render/component';
 
 import ProjectsEmpty from './components/projects-empty';
+import ListViewItem from './components/project-list-item';
 import MasterDetailsListView from './components/master-detail.list';
 
 export default class ProjectsIndex extends Component {
@@ -19,6 +20,7 @@ export default class ProjectsIndex extends Component {
         containerTopic={null}
         disableDetails
         emptyListFallback={ProjectsEmpty}
+        listViewItem={ListViewItem}
         groupKey='project'
         {...passProps}
         />
