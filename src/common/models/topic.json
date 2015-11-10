@@ -14,7 +14,10 @@
     "order": "updatedOn DESC",
     "where": {
       "deletedYn": "0"
-    }
+    },
+    "include": [
+      "priority"
+    ]
   },
   "baseAcls": [
     {
@@ -428,17 +431,17 @@
       },
       "_selectable": true
     },
-    "priority": {
+    "priorityId": {
       "type": "Number",
       "required": false,
       "length": null,
-      "precision": 3,
+      "precision": 10,
       "scale": 0,
       "mysql": {
-        "columnName": "priority",
-        "dataType": "tinyint",
+        "columnName": "priority_id",
+        "dataType": "int",
         "dataLength": null,
-        "dataPrecision": 3,
+        "dataPrecision": 10,
         "dataScale": 0,
         "nullable": "Y"
       },
@@ -609,6 +612,11 @@
       "type": "belongsTo",
       "model": "Topic",
       "foreignKey": "contextTopicId"
+    },
+    "priority": {
+      "type": "belongsTo",
+      "model": "TermValue",
+      "foreignKey": "priorityId"
     }
   },
   "acls": [
