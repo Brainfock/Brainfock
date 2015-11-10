@@ -20,9 +20,11 @@ import {
 import {
   AppCanvas,
   AppBar,
+  DropDownMenu,
   Styles,
   Avatar,
-  RaisedButton
+  RaisedButton,
+  TextField
 } from 'material-ui';
 
 import './app.styl';
@@ -30,12 +32,12 @@ import '../../less/main.less';
 
 import {mapDispatchToProps, mapStateToProps} from '../../common';
 import AppSideNav from './components/app-left-nav';
+import Chat from '../components/chat/Chat';
 
 const ThemeManager = Styles.ThemeManager;
 const DefaultRawTheme = Styles.LightRawTheme;
 
-@connect(mapStateToProps, mapDispatchToProps)
-class App extends Component {
+export class App extends Component {
 
   static propTypes = {
     actions: PropTypes.object.isRequired,
@@ -114,10 +116,8 @@ class App extends Component {
 
     newMuiTheme.appBar.color = '#FBFBFB';
     newMuiTheme.appBar.textColor = '#3E3E3E';
-    newMuiTheme.appBar.height = 58;
 
     newMuiTheme.raisedButton.primaryColor = '#4b8cf7';
-    newMuiTheme.rawTheme.spacing.desktopKeylineIncrement = 58;
 
     this.setState({
       muiTheme: newMuiTheme
@@ -140,7 +140,7 @@ class App extends Component {
           <Avatar
             onClick={e => this.setState({target: e.target, showUserMenu: !this.state.showUserMenu})}
             >
-              {viewer.username.charAt(0)}
+            {viewer.username.charAt(0)}
           </Avatar>
 
           <Overlay
@@ -163,7 +163,7 @@ class App extends Component {
                     <span>{msg.app.header.user.welcome} <strong>{viewer.username}</strong> ({viewer.email})</span>
                   </Col>
                 </Row>
-                </Grid>
+              </Grid>
               <hr />
               <RaisedButton
                 label="Sign out"
@@ -195,6 +195,27 @@ class App extends Component {
         </div>
       );
     }
+    let menuItems = [
+      { payload: '1', text: 'Never' },
+      { payload: '2', text: 'Every Night' },
+      { payload: '3', text: 'Weeknights' },
+      { payload: '4', text: 'Weekends' },
+      { payload: '5', text: 'Weekly' },
+    ];
+
+    /*title={
+     <div>
+     <h3 style={{
+     margin:0,
+     padding:0,
+     lineHeight:`${this.state.muiTheme.appBar.height}px`,
+     }}>
+     Brainfock
+     <DropDownMenu menuItems={menuItems} />
+
+     <TextField style={{position:'absolute',left:'37%'}}/>
+     </h3>
+     </div>} */
 
     // todo: looks like we may remove `onLeftIconButtonTouchTap` event
     return (
@@ -207,13 +228,17 @@ class App extends Component {
           pathname={pathname}
           style={{borderBottom:'1px solid #E0E0E0'}}
           title="Brainfock"
+          _title={<DropDownMenu menuItems={menuItems} />}
           zDepth={0}
-          />
+          >
+        </AppBar>
         <AppSideNav ref="leftNav" {...this.props} />
+
         <div style={{
           paddingTop:this.state.muiTheme.rawTheme.spacing.desktopKeylineIncrement
         }}>
-        {React.cloneElement(children, props)}
+          {/* <Chat  /> */}
+          {React.cloneElement(children, props)}
         </div>
       </AppCanvas>
     );
@@ -223,6 +248,7 @@ class App extends Component {
     if (this.refs.leftNav)
       this.refs.leftNav.toggle();
   }
-}
+};
 
-export default App;
+@connect(mapStateToProps, mapDispatchToProps)
+export default class extends App{};
