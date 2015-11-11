@@ -43,6 +43,22 @@
       },
       "_selectable": true
     },
+    "labelConfig": {
+      "type": "String",
+      "required": false,
+      "length": 255,
+      "precision": null,
+      "scale": null,
+      "mysql": {
+        "columnName": "label_config",
+        "dataType": "blob",
+        "dataLength": 255,
+        "dataPrecision": null,
+        "dataScale": null,
+        "nullable": "Y"
+      },
+      "_selectable": true
+    },
     "summary": {
       "type": "String",
       "required": false,
