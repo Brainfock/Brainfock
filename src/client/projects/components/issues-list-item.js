@@ -35,7 +35,7 @@ export default class Todo extends Component {
     let style = {};
 
     if (todo.accessPrivateYn) {
-      icon = (<i className="fa fa-eye-slash"></i>);
+      icon = (<i className="fa fa-eye-slash" style={{marginRight:5}}></i>);
     }
 
     if (this.props.viewTopic && this.props.viewTopic.id === todo.id) {
@@ -54,14 +54,20 @@ export default class Todo extends Component {
       try {
         const labelConfig = JSON.parse(todo.priority.labelConfig);
         let labelStyle = {};
+            labelStyle.marginRight = 5;
+            labelStyle.fontWeight = 500;
+            labelStyle.fontSize = '.85em';
         if (labelConfig.bg) {
           if (Colors[labelConfig.bg]) {
-            labelStyle.backgroundColor = Colors[labelConfig.bg];
+            labelStyle._backgroundColor = Colors[labelConfig.bg];
+            labelStyle.color = Colors[labelConfig.bg];
           } else if (labelConfig.bg.charAt(0) === '#') {
-            labelStyle.backgroundColor = labelConfig.bg;
+            labelStyle._backgroundColor = labelConfig.bg;
+            labelStyle.color = labelConfig.bg;
           }
         }
-        priorityLabel = <span style={labelStyle} className="label label-info pull-right">{todo.priority.value}</span>;
+        //priorityLabel = <span style={labelStyle} className="label label-info">{todo.priority.value}</span>;
+        priorityLabel = <span style={labelStyle} >{todo.priority.value}</span>;
 
       } catch (e) {}
     }
@@ -72,6 +78,19 @@ export default class Todo extends Component {
           onClick={this._onClick.bind(this)}
           onDoubleClick={this._onDblClick.bind(this)}
           primaryText={
+            <div>
+              <div className="stats pull-right">
+                <div className="prop">
+                  {todo.contextTopicKey || todo.contextTopicNum}
+                </div>
+              </div>
+              {icon}
+              {notice}
+              {todo.summary}
+
+              </div>
+            }
+          _primaryText={
             <div>
               <div className="pull-left" style={{marginRight:5}}>
                 <div className="stats" style={{marginRight:5, width:'100%'}}>
@@ -88,8 +107,30 @@ export default class Todo extends Component {
               <span className="label label-info pull-right">{todo.type && todo.type.name}</span>
             </div>
             }
-          secondaryText={todo.text}
-          secondaryTextLines={2}
+          _primaryText={
+            <div>
+              <div className="pull-left" style={{marginRight:5}}>
+                <div className="stats" style={{marginRight:5, width:'100%'}}>
+                  <div className="prop" style={{width:'100%'}}>
+                    {todo.contextTopicKey || todo.contextTopicNum}
+                  </div>
+                </div>
+
+              </div>
+              {icon}
+              {notice}
+              {todo.summary}
+
+            </div>
+            }
+          secondaryText={<span>
+            {todo.text}
+            {todo.text && <br />}
+            {priorityLabel}
+            <span className="label label-info">{todo.type && todo.type.name}</span>
+            <span style={{fontSize: '.88em',color:'#333', fontWeight:600}}> - {todo.wfStage}</span>
+          </span>}
+          secondaryTextLines={(todo.text ? 2 : 1)}
           >
           {this.confirmDialog()}
         </mui.ListItem>
