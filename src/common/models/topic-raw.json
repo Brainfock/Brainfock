@@ -359,14 +359,14 @@
       },
       "_selectable": true
     },
-    "priority": {
+    "priorityId": {
       "type": "Number",
       "required": false,
       "length": null,
       "precision": 3,
       "scale": 0,
       "mysql": {
-        "columnName": "priority",
+        "columnName": "priority_id",
         "dataType": "tinyint",
         "dataLength": null,
         "dataPrecision": 3,
