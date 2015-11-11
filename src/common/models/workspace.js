@@ -58,6 +58,41 @@ module.exports = function(Workspace) {
       });
   }
 
+  /**
+   * Get IDs of all workspaces available for user to read
+   * @todo add workspaces that user explicitly assigned to
+   * @param userId
+   * @returns {Promise}
+   */
+  Workspace.getSecuredWorkspacesIdsForUser = function(userId) {
+    return new Promise(
+      function(resolve, reject) {
+        let ids = [];
+        let where = {};
+        if (userId) {
+          where = {
+            or: [
+              {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
+              {accessPrivateYn: '0'}
+            ]
+          };
+        } else {
+          where = {
+            accessPrivateYn: '0'
+          }
+        }
+        Workspace.find({where: where}, function(err, data) {
+          if (err || !data) return resolve([]);
+
+          data.forEach(item => {
+            ids.push(item.id)
+          });
+          // TODO: add workspaces that user explicitly assigned to
+          resolve(ids);
+        });
+      });
+  }
+
   Workspace.on('attached', function() {
     Workspace.nestRemoting('topics');
 
