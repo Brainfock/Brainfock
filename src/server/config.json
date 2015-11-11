@@ -38,6 +38,8 @@
     "reservedNamespace": [
       "admin",
       "auth",
+      "login",
+      "signup",
       "boards",
       "create",
       "projects",
