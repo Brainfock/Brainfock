@@ -86,7 +86,7 @@ export default class Todo extends Component {
 
     if(todo.priority) {
       let labelStyle = Object.assign({
-        marginRight: 5,
+        marginRight: todo.priority.value ? 5 : 0,
         fontWeight: 500,
         fontSize: '.85em',
         color: Colors.grey900
@@ -160,10 +160,10 @@ export default class Todo extends Component {
             }
           secondaryText={<span>
           {priorityLabel}
-            {typeLabel}
-            <span style={{fontSize: '.88em',color:'#333', fontWeight:600}}> - {todo.wfStage}</span>
-            {todo.text && <br />}
-            {todo.text}
+          {typeLabel}
+          <span style={{fontSize: '.88em',color:'#333', fontWeight:600}}>— {todo.wfStage}</span>
+          {todo.text && <br />}
+          {todo.text}
 
           </span>}
           secondaryTextLines={(todo.text ? 2 : 1)}
