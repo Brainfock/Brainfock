@@ -27,6 +27,38 @@ export default class Todo extends Component {
     followItemOnClick: true
   };
 
+  /**
+   * `ava` - avatar url
+   * `bg` - label background color code or image URL
+   * `icn` -CSS selector for Font Awesome icon (or any CSS icon)
+   * `fg` - icon color, if icon is present
+   * `clr` - label color (e.g. no other values are present - paint text)
+   *
+   * @param possibleConfig
+   * @returns {{}}
+   */
+  configureLabel(possibleConfig) {
+    let labelStyle = {};
+    if (possibleConfig) {
+      try {
+        const labelConfig = JSON.parse(possibleConfig);
+        if (labelConfig.bg) {
+          if (Colors[labelConfig.bg]) {
+            labelStyle.backgroundColor = Colors[labelConfig.bg]
+            labelStyle.padding = '2px 3px 2px 3px';
+            labelStyle.borderRadius = '3px';
+          }
+        }
+        if (labelConfig.clr) {
+          if (Colors[labelConfig.clr]) {
+            labelStyle.color= Colors[labelConfig.clr]
+          }
+        }
+      } catch (e) {}
+    }
+    return labelStyle;
+  }
+
   render() {
 
     const {todo} = this.props;
@@ -50,26 +82,25 @@ export default class Todo extends Component {
 
     let priorityLabel;
 
-    if(todo.priority && todo.priority.labelConfig) {
-      try {
-        const labelConfig = JSON.parse(todo.priority.labelConfig);
-        let labelStyle = {};
-            labelStyle.marginRight = 5;
-            labelStyle.fontWeight = 500;
-            labelStyle.fontSize = '.85em';
-        if (labelConfig.bg) {
-          if (Colors[labelConfig.bg]) {
-            labelStyle._backgroundColor = Colors[labelConfig.bg];
-            labelStyle.color = Colors[labelConfig.bg];
-          } else if (labelConfig.bg.charAt(0) === '#') {
-            labelStyle._backgroundColor = labelConfig.bg;
-            labelStyle.color = labelConfig.bg;
-          }
-        }
-        //priorityLabel = <span style={labelStyle} className="label label-info">{todo.priority.value}</span>;
-        priorityLabel = <span style={labelStyle} >{todo.priority.value}</span>;
+    if(todo.priority) {
+      let labelStyle = Object.assign({
+        marginRight: 5,
+        fontWeight: 500,
+        fontSize: '.85em',
+        color: Colors.grey900
+      }, this.configureLabel(todo.priority.labelConfig));
+      priorityLabel = <span style={labelStyle} >{todo.priority.value}</span>;
+    }
 
-      } catch (e) {}
+    let typeLabel = '';
+    if(todo.type && todo.type.name) {
+      let labelStyle = Object.assign({
+        marginRight: 5,
+        fontWeight: 500,
+        fontSize: '.85em',
+        color: Colors.grey900
+      }, this.configureLabel(todo.type.labelConfig));
+      typeLabel = <span style={labelStyle} >{todo.type.name}</span>;
     }
 
     return (
@@ -79,6 +110,8 @@ export default class Todo extends Component {
           onDoubleClick={this._onDblClick.bind(this)}
           primaryText={
             <div>
+              {todo.parent && todo.parent.id && <span><span className="label label-primary">{todo.parent.summary}</span><br /></span>}
+
               <div className="stats pull-right">
                 <div className="prop">
                   {todo.contextTopicKey || todo.contextTopicNum}
@@ -124,11 +157,12 @@ export default class Todo extends Component {
             </div>
             }
           secondaryText={<span>
-            {todo.text}
-            {todo.text && <br />}
-            {priorityLabel}
-            <span className="label label-info">{todo.type && todo.type.name}</span>
+          {priorityLabel}
+            {typeLabel}
             <span style={{fontSize: '.88em',color:'#333', fontWeight:600}}> - {todo.wfStage}</span>
+            {todo.text && <br />}
+            {todo.text}
+
           </span>}
           secondaryTextLines={(todo.text ? 2 : 1)}
           >
