@@ -64,7 +64,9 @@ export default class Todo extends Component {
     const {todo} = this.props;
 
     let {icon, notice} = '';
-    let style = {};
+    let style = {
+      borderBottom: `1px solid ${Colors.grey200}`
+    };
 
     if (todo.accessPrivateYn) {
       icon = (<i className="fa fa-eye-slash" style={{marginRight:5}}></i>);
