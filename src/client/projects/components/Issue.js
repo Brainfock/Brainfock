@@ -72,7 +72,9 @@ export default class Issue extends Component {
           {topic &&
           <h2 style={{fontWeight:800}}>
             {!this.props.isBirdview &&
-            <span className="stats">
+            <span
+              className="stats"
+              title={`ID ${topic.id}`}>
               <span style={{
               fontSize: '14pt',
               margin: '0 5px 0px 0px',
