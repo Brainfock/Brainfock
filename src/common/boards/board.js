@@ -44,6 +44,7 @@ export default Record({
     value: '',
     labelConfig: ''
   })),
+  parent: new (ModelSchema),
   type: {},
   workspace: new (Record({
     id: '',

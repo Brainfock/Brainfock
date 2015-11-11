@@ -157,6 +157,7 @@ export function find(type, query, contextTopicId, namespace) {
   // include some additional info
   endpoint += '&filter[include][0][type]';
   endpoint += '&filter[include][1][workspace]';
+  endpoint += '&filter[include][2][parent]';
 
   let queryString;
   if (query) {

@@ -613,6 +613,11 @@
       "model": "Topic",
       "foreignKey": "contextTopicId"
     },
+    "parent": {
+      "type": "belongsTo",
+      "model": "Topic",
+      "foreignKey": "parentTopicId"
+    },
     "priority": {
       "type": "belongsTo",
       "model": "TermValue",
