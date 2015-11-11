@@ -26,7 +26,7 @@ export default Record({
   updatedOn: '',
   createdOn: '',
   deletedYn: '',
-  priority: '',
+  priorityId: '',
 
   // for POST only (not a model field)
   createGroup:'',
@@ -34,4 +34,12 @@ export default Record({
   // read-only, available via database view
   wfStage: '',
   wfStatus: '',
+
+  // included via relations
+  priority: new (Record({
+    id: '',
+    value: '',
+    labelConfig: ''
+  })),
+  type: {},
 });

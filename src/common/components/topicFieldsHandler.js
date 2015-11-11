@@ -283,7 +283,7 @@ export default class FieldsHandler {
     )
   }
 
-  static priorityFieldProps(data) {
+  static priorityIdFieldProps(data) {
     return new Promise(
       function (resolve, reject) {
 
