@@ -318,8 +318,7 @@ module.exports = function(Topic) {
         Topic.app.models.Topic.findOne({
           where:{
             contextTopicKey: ctx.instance.contextTopicKey,
-            workspaceId: ctx.instance.workspaceId,
-            groupId: ctx.instance.groupId
+            workspaceId: ctx.instance.workspaceId
           }
         }, function(err, existingTopic) {
           if (err) throw err;
@@ -646,6 +645,9 @@ module.exports = function(Topic) {
   };
 
   Topic.promiseUserAccess = function(topicWhere, userId) {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('> Topic.promiseUserAccess topicWhere', topicWhere)
+    }
     return new Promise(
       function(resolve, reject) {
         Topic.findOne({where:topicWhere}, function(err, instance) {
