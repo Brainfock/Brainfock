@@ -14,29 +14,32 @@ export default class FieldsHandler {
   static populateFormField(item) {
     return new Promise(
       function (resolve, reject) {
-        if (1==1) {
-
-          let propName = item.key+'FieldProps';
-          if (item.key+'FieldProps' in FieldsHandler) {
-            FieldsHandler[propName](item).then(function(res){
-              if (res === null)
-                resolve({
-                  key: item.key,
-                  type: '__NO_DATA__'
-                });
-              else {
-                resolve(res);
-              }
-            })
+        const isDebug = process.env.NODE_ENV === 'development';
+        let propName = item.key+'FieldProps';
+        if (item.key+'FieldProps' in FieldsHandler) {
+          FieldsHandler[propName](item).then(function(res){
+            if (!isDebug)
+              return resolve(res);
+            if (res === null)
+              resolve({
+                key: item.key,
+                type: '__NO_DATA__'
+              });
+            else {
+              resolve(res);
+            }
+          })
+        } else {
+          if (!isDebug) {
+            return resolve(null);
           } else {
             resolve({
               key: item.key,
               type: '__NOT_IMPLEMENTED__'
             });
           }
-        } else {
-          reject({error:'Error'}); // failure
         }
+
       });
   }
 
@@ -217,11 +220,15 @@ export default class FieldsHandler {
   static contextTopicKeyFieldProps(data) {
     return new Promise(
       function(resolve, reject) {
-        resolve({
-          label: data.name,
-          name: data.key,
-          type: 'text'
-        });
+        if (data.contextTopic) {
+          resolve(null);
+        } else {
+          resolve({
+            label: data.name,
+            name: data.key,
+            type: 'text'
+          });
+        }
       }
     );
   }
