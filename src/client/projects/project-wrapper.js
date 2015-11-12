@@ -51,13 +51,11 @@ class Layout extends Component {
     if (this.props.boards.board.accessPrivateYn) {
       icon = (<i className="fa fa-eye-slash"></i>);
     }
-
     return [
       {
         route: `/${this.props.workspace.active.data.namespace}/${this.props.boards.board.contextTopicKey}`,
         text: (
           <div
-            /*onMouseOver={function(e){e.target.style.background}}*/
             style={{
             //background:"rgb(245, 245, 245)",
               margin:'0 -24px',
@@ -69,7 +67,11 @@ class Layout extends Component {
             {this.props.boards.board.summary} {icon}</div>
         )
       },
-      {route: `/${this.props.params.namespace}/${this.props.boards.board.contextTopicKey}/issues`, text: 'Issues'},
+      {route: `/${this.props.params.namespace}/${this.props.boards.board.contextTopicKey}/issues`, text: 'Issues',
+      routes: [
+        `/${this.props.params.namespace}/${this.props.params.board_id}/${this.props.params.group_key}/${this.props.params.id}`
+      ]
+      },
       {
         route: `/${this.props.params.namespace}/${this.props.boards.board.contextTopicKey}/boards`,
         text: 'Discussions'

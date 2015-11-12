@@ -103,14 +103,12 @@ var PageWithNav = React.createClass({
         // see if any *one* route is valid
         for (var i2 = currentItem.routes.length - 1; i2 >= 0; i2--) {
           let _routeName = currentItem.routes[i2];
-          if (this.props.history.isActive(_routeName, (currentItem.params?currentItem.params:[]))) return i;
-
+          if (this.props.history.isActive(_routeName)) {return i};
         }
       }
-      if (currentItem.route && this.props.history.isActive(currentItem.route, (currentItem.params?currentItem.params:[]))) return i;
+      if (currentItem.route && this.props.history.isActive(currentItem.route)) return i;
     };
   },
-
 
   _onMenuItemClick(e, index, payload) {
     this.props.history.pushState(null, payload.route);
@@ -127,6 +125,7 @@ var PageWithNav = React.createClass({
             <mui.Menu
               menuItems={this.props.menuItems}
               onItemTap={this._onMenuItemClick}
+              multiple
               ref="menuItems"
               selectedIndex={this._getSelectedIndex()}
               zDepth={0}

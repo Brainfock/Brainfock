@@ -94,8 +94,6 @@ export default class AppLeftNav extends Component {
    * @private
    */
   _getSelectedIndex() {
-    // turn this off until we can make it so clicking active link still does the navigation
-    return;
 
     let currentItem;
     for (let i = menuItems.length - 1; i >= 0; i--) {
@@ -105,7 +103,7 @@ export default class AppLeftNav extends Component {
         // see if any *one* route is valid
         for (let i2 = currentItem.routes.length - 1; i2 >= 0; i2--) {
           let _routeName = currentItem.routes[i2];
-          if (this.props.history.isActive(_routeName, (currentItem.params ? currentItem.params : []))) return i;
+          if (this.props.history.isActive(_routeName)) {return i};
 
         }
       }
