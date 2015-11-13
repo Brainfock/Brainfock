@@ -294,6 +294,108 @@ module.exports = function(Workspace) {
   };
 
   /**
+   * Find children of topic `topicNum` in `nTopicId` context
+   * API: /:namespace/topics/:nTopicId/topics/:groupKey/:topicNum/topics
+   *
+   * @param id
+   * @param groupKey
+   * @param cb
+   * @private
+   */
+  Workspace.__findByKey__topics__topics = function(namespace, nTopicId, groupKey, topicNum, cb) {
+
+    const currentUser = loopback.getCurrentContext().get('currentUser');
+    const userId = currentUser ? currentUser.id : null;
+
+    Workspace.findOne({where:{
+      namespace: namespace
+    }}, function(err, wspcInstance) {
+
+      if (err) throw err;
+
+      if (!wspcInstance) return cb(null, []);
+
+      wspcInstance.checkUserAccess(userId, function(err, isAllowed) {
+
+        if(err) return cb(err, null);
+        if(!isAllowed) {
+          let e = new Error('Authorization Required');
+          e.status = e.statusCode = 401;
+          e.code = 'AUTHORIZATION_REQUIRED';
+          return cb(e, null);
+        } else {
+          // find context (owner) topic
+          Workspace.app.models.Topic.findOne({where:{
+            workspaceId: wspcInstance.id,
+            contextTopicKey: nTopicId
+          }}, function(err, ownerTopicInstance) {
+
+            if (err) throw err;
+            if (!ownerTopicInstance)
+              return cb(null, []);
+            ownerTopicInstance.checkUserAccess(userId, function(err, isAllowed) {
+
+              if (err) return cb(err, null);
+              if (!isAllowed) {
+                let e = new Error('Authorization Required');
+                e.status = e.statusCode = 401;
+                e.code = 'AUTHORIZATION_REQUIRED';
+                return cb(e, null);
+              } else {
+
+                const context = loopback.getCurrentContext();
+                Workspace.app.models.Topic.findOne({where:{
+                  groupKey: groupKey,
+                  workspaceId: wspcInstance.id,
+                  contextTopicId: ownerTopicInstance.id,
+                  contextTopicNum: topicNum
+                }}, function(err, topicInstance) {
+
+                  if (err) return cb(err, []);
+                  if (!topicInstance) return cb(new Error('Not found'), []);
+
+                  topicInstance.checkUserAccess(userId, function(err, isAllowed) {
+
+                    if (err) return cb(err, null);
+                    if (!isAllowed) {
+                      let e = new Error('Authorization Required');
+                      e.status = e.statusCode = 401;
+                      e.code = 'AUTHORIZATION_REQUIRED';
+                      return cb(e, null);
+                    } else {
+
+
+                      // Finally, find topics
+
+                      let filter;
+                      if (context.get('http').req.query && context.get('http').req.query.filter) {
+                        filter = mergeQuery({where:{
+                          workspaceId: wspcInstance.id,
+                          parentTopicId: topicInstance.id
+                        }}, context.get('http').req.query.filter);
+                      } else {
+                        filter = {where:{
+                          workspaceId: wspcInstance.id,
+                          parentTopicId: topicInstance.id
+                        }};
+                      }
+
+                      Workspace.app.models.Topic.find(filter, (err, data) => {
+                        if (err) return cb(err, null);
+                        cb(null, data);
+                      });
+                    }
+                  });
+                });
+              }
+            });
+          });
+        }
+      });
+    });
+  };
+
+  /**
    * REST API endpoint `api/topics/:contextTopicKey/formFields`
    */
   Workspace.remoteMethod(
@@ -306,6 +408,24 @@ module.exports = function(Workspace) {
         {arg: 'topicNum', type: 'any', http: {source: 'path'}, required: true}
       ],
       http: {verb: 'get', path: '/:namespace/topics/:nTopicId/topics/:groupKey/:topicNum'},
+      returns: {arg: 'topic', type: 'Array', root: true}
+    }
+  );
+
+
+  /**
+   * REST API endpoint `/:namespace/topics/:nTopicId/topics/:groupKey/:topicNum/topics`
+   */
+  Workspace.remoteMethod(
+    '__findByKey__topics__topics',
+    {
+      accepts: [
+        {arg: 'namespace', type: 'any', http: {source: 'path'}, required: true},
+        {arg: 'nTopicId', type: 'any', http: {source: 'path'}, required: true},
+        {arg: 'groupKey', type: 'string', http: {source: 'path'}, required: true},
+        {arg: 'topicNum', type: 'any', http: {source: 'path'}, required: true}
+      ],
+      http: {verb: 'get', path: '/:namespace/topics/:nTopicId/topics/:groupKey/:topicNum/topics'},
       returns: {arg: 'topic', type: 'Array', root: true}
     }
   );

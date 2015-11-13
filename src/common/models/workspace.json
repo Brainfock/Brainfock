@@ -171,6 +171,14 @@
     {
       "accessType": "*",
       "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "__findByKey__topics__topics",
+      "_comment": "See additional accell validation control inside operation body"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
       "principalId": "wspcTopicAccess",
       "permission": "ALLOW",
       "property": "__findById__topics"
