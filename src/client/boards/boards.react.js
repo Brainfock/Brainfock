@@ -20,19 +20,47 @@ export default class List extends Component {
 
   render() {
     const {children, ...passProps} = this.props;
+    const Item = this.props.itemComponent;
 
     if (!this.props.list.size) return (
       <p>{this.props.msg.emptyList}</p>
     );
 
-    const Item = this.props.itemComponent;
+    const groupBy = this.props.location.query.groupBy;
+    if (groupBy) {
+      let shadowCollection = [];
+      let shadowCollectionGroups = [];
+      this.props.list.forEach((item)=>{
+        if (item[groupBy]) {
+          if (!shadowCollection[item[groupBy].id]) {
+            shadowCollection[item[groupBy].id] = [];
+            shadowCollectionGroups[item[groupBy].id] = item[groupBy];
+          }
+          shadowCollection[item[groupBy].id].push(item);
+        }
+      });
 
-    return (
-      <div>
-        {this.props.list.map(todo =>
-          <Item key={todo.id} todo={todo} {...passProps} />
-        )}
-      </div>
-    );
+      return (
+        <div>
+          {shadowCollectionGroups.map((collection, idx) =>
+            <div>
+              <h3 style={{paddingLeft:25}}>{collection.name || collection.summary}:</h3>
+              {shadowCollection[idx].length && shadowCollection[idx].map(todo =>
+                  <Item key={todo.id} todo={todo} {...passProps} />
+              )}
+            </div>
+          )}
+        </div>
+      );
+    } else {
+
+      return (
+        <div>
+          {this.props.list.map(todo =>
+            <Item key={todo.id} todo={todo} {...passProps} />
+          )}
+        </div>
+      );
+    }
   }
 }
