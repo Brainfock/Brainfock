@@ -108,6 +108,7 @@ export default class FieldsHandler {
         if (parentGroup) {
           resolve({
             label: `File under ${parentGroup.name}`,
+            label: `Select category`,
             // `name` is used for form inputs to identify model's attribute
             name: data.key,
             type: 'select', // todo: hasOne rather
@@ -118,7 +119,8 @@ export default class FieldsHandler {
             //  label: data.contextTopic.summary
             //}],
             // use REST to get options (handles access control):
-            endpoint: '/api/topics/?filter[where][groupKey]='+parentGroup.groupKey,
+            endpoint: '/api/topics/?filter[where][groupKey]='+parentGroup.groupKey
+            + '&filter[where][contextTopicId]='+data.contextTopic.id,
             endpointQueryString: 'filter[where][summary][like]'
           });
         } else {
@@ -151,7 +153,8 @@ export default class FieldsHandler {
           type: 'select', // todo: belongsTo rather
           // todo: pre-load options (not full list, tops 100); this has to take into account topic access, of course
           options:[],
-          endpoint: `/api/topics?filter[where][groupKey]=${data.group.groupKey}`,
+          endpoint: `/api/topics?filter[where][groupKey]=${data.group.groupKey}`
+          + '&filter[where][contextTopicId]='+data.contextTopic.id,
           // todo: add topicType IDs into filter query and only show topics that have type with enabled sub-topic option
           endpointIncludeValues: [
             {'workspaceId': 'filter[where][workspaceId]='}
