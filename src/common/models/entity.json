@@ -175,6 +175,13 @@
       "principalId": "$entityReadAccess",
       "permission": "ALLOW",
       "property": "__get__menu"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$entityReadAccess",
+      "permission": "ALLOW",
+      "property": "__get__comments"
     }
   ],
   "methods": []
