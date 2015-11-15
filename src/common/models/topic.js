@@ -845,7 +845,6 @@ module.exports = function(Topic) {
         if (!groupInstance)
           return cb(null, []);
 
-
         // TODO: allow to define `TopicGroupScheme` per context (parent) topic
         Topic.app.models.TopicGroupScheme.findOne({
           where:{
@@ -983,7 +982,18 @@ module.exports = function(Topic) {
                             })
                               .then(function(moreData) {
                                 dataDone.unshift(moreData);
-                                return cb(null, dataDone);
+                                // workspace is required for roots
+                                FieldsHandler.workspaceIdFieldProps({
+                                  group: groupInstance,
+                                  contextTopic: null,
+                                  key: 'workspaceId',
+                                  isRequired: 1
+                                })
+                                  .then(function(moreData) {
+                                    dataDone.unshift(moreData);
+
+                                    return cb(null, dataDone);
+                                  });
                               });
                           });
                       });
@@ -1138,6 +1148,9 @@ module.exports = function(Topic) {
                         Promise
                           .all(_screenFields.map(FieldsHandler.populateFormField))
                           .then(function(dataDone) {
+
+                            let dataFiltered = dataDone.filter(function(n){ return n !== undefined && n !== null });
+
                             // manually add "group" and "type" select fields, re-using already populated data
                             FieldsHandler.typeIdFieldProps({
                               group: groupInstance,
@@ -1151,8 +1164,8 @@ module.exports = function(Topic) {
                               }
                             })
                               .then(function(moreData) {
-                                dataDone.unshift(moreData);
-                                return cb(null, dataDone);
+                                dataFiltered.unshift(moreData);
+                                return cb(null, dataFiltered);
                               });
                           });
                       });
