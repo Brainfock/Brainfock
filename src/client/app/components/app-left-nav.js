@@ -16,12 +16,12 @@ var menuItems = [
     // matching any of these routes will make this link "active"
     //routes: ['projects','project'],
     // actual router route:
-    route: '/projects',
+    route: '/projects?groupBy=workspace',
     params:{},
     text: 'Projects',
   },
   // { route: '/issues', params:{}, text: 'Issues' },
-  { route: '/boards', params:{}, text: 'Boards' },
+  { route: '/boards?groupBy=workspace', params:{}, text: 'Boards' },
   { route: '/wiki/Homepage', params:{uid:'Index'}, text: 'Wiki' },
   { type: mui.MenuItem.Types.SUBHEADER, text: 'Resources' },
   // Link to Brainfock guides in global wiki:
