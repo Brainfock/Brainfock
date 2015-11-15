@@ -29,14 +29,17 @@ export default class List extends Component {
     const groupBy = this.props.location.query.groupBy;
     if (groupBy) {
       let shadowCollection = [];
+      let looseCollection = [];
       let shadowCollectionGroups = [];
       this.props.list.forEach((item)=>{
-        if (item[groupBy]) {
+        if (item[groupBy] && item[groupBy].id) {
           if (!shadowCollection[item[groupBy].id]) {
             shadowCollection[item[groupBy].id] = [];
             shadowCollectionGroups[item[groupBy].id] = item[groupBy];
           }
           shadowCollection[item[groupBy].id].push(item);
+        } else {
+          looseCollection.push(item);
         }
       });
 
@@ -44,12 +47,21 @@ export default class List extends Component {
         <div>
           {shadowCollectionGroups.map((collection, idx) =>
             <div>
-              <h3 style={{paddingLeft:25}}>{collection.name || collection.summary}:</h3>
+              <h3 style={{paddingLeft:15}}>{collection.name || collection.summary || collection.label || collection.value}:</h3>
               {shadowCollection[idx].length && shadowCollection[idx].map(todo =>
                   <Item key={todo.id} todo={todo} {...passProps} />
               )}
             </div>
           )}
+          {looseCollection.length > 0 &&
+            <div>
+              <hr />
+              <h3 style={{paddingLeft:15}}>Uncategorized:</h3>
+              {looseCollection.map(todo =>
+                  <Item key={todo.id} todo={todo} {...passProps} />
+              )}
+            </div>
+          }
         </div>
       );
     } else {
