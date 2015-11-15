@@ -33,6 +33,7 @@ import '../../less/main.less';
 import {mapDispatchToProps, mapStateToProps} from '../../common';
 import AppSideNav from './components/app-left-nav';
 import Chat from '../components/chat/Chat';
+import QuickAdd from './components/QuickAdd';
 
 const ThemeManager = Styles.ThemeManager;
 const DefaultRawTheme = Styles.LightRawTheme;
@@ -238,6 +239,7 @@ export class App extends Component {
           paddingTop:this.state.muiTheme.rawTheme.spacing.desktopKeylineIncrement
         }}>
           {/* <Chat  /> */}
+          <QuickAdd />
           {React.cloneElement(children, props)}
         </div>
       </AppCanvas>
