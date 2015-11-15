@@ -45,6 +45,14 @@ export default class List extends Component {
 
       return (
         <div>
+          {looseCollection.length > 0 &&
+            <div>
+              {looseCollection.map(todo =>
+                  <Item key={todo.id} todo={todo} {...passProps} />
+              )}
+              {shadowCollectionGroups.length > 0 && <h4 style={{paddingLeft:15}}>Subcategories:</h4>}
+            </div>
+          }
           {shadowCollectionGroups.map((collection, idx) =>
             <div>
               <h3 style={{paddingLeft:15}}>{collection.name || collection.summary || collection.label || collection.value}:</h3>
@@ -53,15 +61,7 @@ export default class List extends Component {
               )}
             </div>
           )}
-          {looseCollection.length > 0 &&
-            <div>
-              <hr />
-              <h3 style={{paddingLeft:15}}>Uncategorized:</h3>
-              {looseCollection.map(todo =>
-                  <Item key={todo.id} todo={todo} {...passProps} />
-              )}
-            </div>
-          }
+
         </div>
       );
     } else {
