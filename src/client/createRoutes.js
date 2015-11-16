@@ -52,11 +52,13 @@ export default function createRoutes(getState) {
       <Route component={require('./projects/project-wrapper')}  >
         { /*  <Route component={require('./projects/topic.js')} path="/:namespace/:board_id-:id" />*/ }
         <Route component={require('./projects/dashboard')} path="/:namespace/:board_id"  />
-        <Route component={require('./projects/issues')} path="/:namespace/:board_id/issues" />
 
+        /* routes superseeded by `list.controller.js` */
+        { /*<Route component={require('./projects/issues')} path="/:namespace/:board_id/issues" />
         <Route component={require('./projects/boards')} path="/:namespace/:board_id/boards" />
         <Route component={require('./projects/issues')} path="/:namespace/:board_id/milestones" />
-        <Route component={require('./projects/issues')} path="/:namespace/:board_id/deals" />
+        <Route component={require('./projects/issues')} path="/:namespace/:board_id/deals" /> */ }
+
         <Route component={require('./projects/users')} path="/:namespace/:board_id/users" />
         <Route component={require('./projects/settings')} path="/:namespace/:board_id/settings" />
         /* e.g. 'version', 'component', 'milestone' */
@@ -64,7 +66,12 @@ export default function createRoutes(getState) {
 
         /* LIST TOPICS, e.g. view issues, opportunities, courses, lectures */
         { /*<Route component={require('./projects/issues.js')} path="/:namespace/:board_id/:group_key" /> */ }
+        <Route component={require('./projects/discussions.controller.js')} path="/:namespace/:board_id/discussions" />
+        <Route component={require('./projects/boards.controller.js')} path="/:namespace/:board_id/discussions" />
         <Route component={require('./projects/list.controller.js')} path="/:namespace/:board_id/:groupKey" />
+
+        <Route component={require('./projects/browse.controller.js')} path="/:namespace/:board_id/:groupKey/:sub_board_num/:slug/browse" />
+        <Route component={require('./projects/browse.controller.js')} path="/:namespace/:board_id/:groupKey/:sub_board_num/browse" />
         /* View topic in a group by topic num (ordered) */
         <Route component={require('./projects/topic.js')} path="/:namespace/:board_id/:group_key/:id" />
 
