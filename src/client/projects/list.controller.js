@@ -14,17 +14,32 @@ import IssueView from './components/Issue';
 
 export default class ProjectIssues extends Component {
 
+  /**
+   * resolve group (key) to load topics for, taking into account plurals form of gorup name,
+   * e.g. `brainfock/issues` will resolve group key `issue`
+   * @returns {*}
+   */
+  resolveGroupKey() {
+    if (this.props.params.groupKey.substr(-1) === 's') {
+      return this.props.params.groupKey.substr(0, this.props.params.groupKey.length-1)
+    } else {
+      return this.props.params.groupKey;
+    }
+  }
+
   render() {
     const {board, meta, listFilters, newTopic, formFields} = this.props.boards;
     const msg = this.props.msg.topics;
     const {children, ...passProps} = this.props;
+    const {location: {pathname}} = this.props;
     return (
       <MasterDetailsListView
         containerTopic={board}
         detailsComponent={IssueView}
         emptyListFallback={ProjectsEmpty}
-        groupKey={this.props.params.groupKey}
+        groupKey={this.resolveGroupKey()}
         listViewItem={ListViewItem}
+        pathname={pathname}
         {...passProps}
         />
     );
