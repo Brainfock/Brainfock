@@ -714,6 +714,31 @@ module.exports = function(Topic) {
   };
 
   /**
+   * get primary keys of all public root topics (helper method for ACLS)
+   * @param workspaces {Array} list of public workspaces to save some queries
+   * @returns {Promise}
+   */
+  Topic.getPublicContextTopicIds = function(workspaces) {
+    return new Promise(
+      function(resolve, reject) {
+        let ids = [];
+        let where = {};
+        where = {
+          workspaceId: { inq: workspaces },
+          accessPrivateYn: '0'
+        };
+        Topic.find({where: where}, function(err, data) {
+          if (err || !data) return resolve([]);
+
+          data.forEach(item => {
+            ids.push(item.id)
+          });
+          resolve(ids);
+        });
+      });
+  }
+
+  /**
    *
    * @param id
    * @param groupKey
