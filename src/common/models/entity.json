@@ -176,6 +176,13 @@
       "principalId": "$entityReadAccess",
       "permission": "ALLOW",
       "property": "__get__comments"
+    },
+    {
+      "accessType": "WRITE",
+      "principalType": "ROLE",
+      "principalId": "$entityReadAccess",
+      "permission": "ALLOW",
+      "property": "__create__comments"
     }
   ],
   "methods": []
