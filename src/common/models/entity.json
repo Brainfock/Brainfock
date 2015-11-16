@@ -136,12 +136,6 @@
       "permission": "DENY"
     },
     {
-      "accessType": "*",
-      "principalType": "ROLE",
-      "principalId": "topicEntityAccess",
-      "permission": "ALLOW"
-    },
-    {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "topicEntityAccess",
