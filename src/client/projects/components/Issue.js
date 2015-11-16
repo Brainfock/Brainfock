@@ -184,7 +184,7 @@ export default class Issue extends Component {
    * @returns {XML}
    */
   comments() {
-    if (this.props.topic.type && this.props.topic.type.commentsEnabled) {
+    if (this.props.topic.type && this.props.topic.type.commentsEnabled && !this.props.topic.loading) {
       return (
         <Comments
           topic={this.props.topic}
