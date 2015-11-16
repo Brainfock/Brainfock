@@ -266,14 +266,14 @@ module.exports = function(app) {
   Role.registerResolver('$entityReadAccess', function(role, context, cb) {
 
     const userId = context.accessToken.userId;
-    console.log('[RBAC $entityMenuAccess] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName + '`, user:' + userId);
+    console.log('[RBAC $entityReadAccess] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName + '`, user:' + userId);
     function reject() {
       process.nextTick(function() {
         cb(null, false);
       });
     }
     if (context.modelName !== 'Entity') {
-      console.log('[RBAC] Model [' + context.modelName + '] is not supported by `$entityMenuAccess` resolver');
+      console.log('[RBAC] Model [' + context.modelName + '] is not supported by `$entityReadAccess` resolver');
       return reject();
     }
 
@@ -445,16 +445,19 @@ module.exports = function(app) {
                 }
               });
           } else {
-            // base constraints: do not show private topics of other users:
-            // TODO: add validation of either empty CONTEXT topic id or in list of accessibles
-            // 1. get ids of all root context topic IDs
-            // 2. apply into query like entity_id
-            context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
-              {where: {
-                accessPrivateYn: '0',
-                workspaceId: { inq: ids }
-              }});
-            return cb(null, true);
+            app.models.Topic.getPublicContextTopicIds(ids)
+              .then(topicsIds => {
+                context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
+                  // allow either public roots or public issues in public contexts
+                  {where: {
+                    workspaceId: { inq: ids },
+                    or: [
+                      {and: [{accessPrivateYn: '0', contextTopicId: null}]},
+                      {and: [{accessPrivateYn: '0', contextTopicId: {inq: topicsIds}}]},
+                    ]
+                  }});
+                return cb(null, true);
+              })
           }
         })
 
@@ -567,13 +570,19 @@ module.exports = function(app) {
                 });
               });
           } else {
-            // base constraints: do not show private topics of other users:
-            context.remotingContext.args = mergeQuery(context.remotingContext.args,
-              {where: {
-                accessPrivateYn: '0',
-                workspaceId: { inq: ids }
-              }});
-            return cb(null, true);
+            app.models.Topic.getPublicContextTopicIds(ids)
+              .then(topicsIds => {
+                context.remotingContext.args = mergeQuery(context.remotingContext.args,
+                  // allow either public roots or public issues in public contexts
+                  {where: {
+                    workspaceId: { inq: ids },
+                    or: [
+                      {and: [{accessPrivateYn: '0', contextTopicId: null}]},
+                      {and: [{accessPrivateYn: '0', contextTopicId: {inq: topicsIds}}]},
+                    ]
+                  }});
+                return cb(null, true);
+              })
           }
         });
 
