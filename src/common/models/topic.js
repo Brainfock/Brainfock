@@ -866,7 +866,7 @@ module.exports = function(Topic) {
         include: ['parentGroup']
       },
       function(groupErr, groupInstance) {
-        if (groupErr) throw groupErr;
+        if (groupErr) return cb(groupErr);
         if (!groupInstance)
           return cb(null, []);
 
@@ -876,9 +876,8 @@ module.exports = function(Topic) {
             isDefault: 1
           }
         },
-        function(e1, TopicGroupScheme) {
-          if (e1) throw e1;
-
+        function(err, TopicGroupScheme) {
+          if (err) return cb(err);
           if (!TopicGroupScheme)
             return cb(null, []);
 
@@ -888,9 +887,8 @@ module.exports = function(Topic) {
               topicGroupSchemeId: TopicGroupScheme.id,
               topicGroupId: groupInstance.id
             }
-          }, function(e2, TopicGroupSchemeTypeScheme) {
-            if (e2) throw e2;
-
+          }, function(err, TopicGroupSchemeTypeScheme) {
+            if (err) return cb(err);
             if (!TopicGroupSchemeTypeScheme)
               return cb(null, []);
 
@@ -900,9 +898,8 @@ module.exports = function(Topic) {
             // TODO: allow to define different topic_type_scheme per parent context (so, project can have own)
 
             Topic.app.models.TopicTypeScheme.findById(TopicGroupSchemeTypeScheme.topicTypeSchemeId,
-              function(typeErr, typeSchemeInstance) {
-                if (typeErr) throw typeErr;
-
+              function(err, typeSchemeInstance) {
+                if (err) return cb(err);
                 if (!typeSchemeInstance)
                   return cb(null, []);
 
@@ -919,9 +916,8 @@ module.exports = function(Topic) {
                     'topicType'
                   ]
 
-                }, function(typeSchemeTypeMapErr, types) {
-                  if (typeSchemeTypeMapErr) throw typeSchemeTypeMapErr;
-
+                }, function(err, types) {
+                  if (err) return cb(err);
                   if (!types || types.length === 0)
                     return cb(new Error('No topic types defined for scheme ' + typeSchemeInstance.id), []);
 
@@ -945,10 +941,8 @@ module.exports = function(Topic) {
                     where:{
                       groupId: groupInstance.id
                     }
-                  }, function(ScreenSchemeErr, ScreenScheme) {
-
-                    if (ScreenSchemeErr) throw ScreenSchemeErr;
-
+                  }, function(err, ScreenScheme) {
+                    if (err) return cb(err);
                     if (!ScreenScheme)
                       return cb(null, []);
 
@@ -962,9 +956,7 @@ module.exports = function(Topic) {
                         'screen'
                       ]
                     }, function(err, ScreenSchemeTopicTypeScreenMap) {
-
-                      if (err) throw err;
-
+                      if (err) return cb(err);
                       if (!ScreenSchemeTopicTypeScreenMap)
                         return cb(null, []);
 
@@ -973,9 +965,8 @@ module.exports = function(Topic) {
                       Screen.screenFields({
                         // provides values to be available at `field.field()`
                         include:['field']
-                      }, function(screenFieldsErr, screenFields) {
-                        if (screenFieldsErr) throw screenFieldsErr;
-
+                      }, function(err, screenFields) {
+                        if (err) return cb(err);
                         if (!screenFields)
                           return cb(null, []);
 
@@ -1032,8 +1023,7 @@ module.exports = function(Topic) {
 
     } else {
       Topic.findOne({where:{id:id}}, function(err, contextTopic) {
-
-        if (err) throw err;
+        if (err) return cb(err);
         if (!contextTopic)
           return cb(null, []);
 
@@ -1043,8 +1033,8 @@ module.exports = function(Topic) {
           },
           include: ['parentGroup']
         },
-        function(groupErr, groupInstance) {
-          if (groupErr) throw groupErr;
+        function(err, groupInstance) {
+          if (err) return cb(err);
           if (!groupInstance)
             return cb(null, []);
 
@@ -1058,8 +1048,8 @@ module.exports = function(Topic) {
           Topic.app.models.TopicGroupScheme.findOne({
             where: where
           },
-          function(e1, TopicGroupScheme) {
-            if (e1) throw e1;
+          function(err, TopicGroupScheme) {
+            if (err) return cb(err);
 
             if (!TopicGroupScheme)
               return cb(null, []);
@@ -1070,8 +1060,8 @@ module.exports = function(Topic) {
                 topicGroupSchemeId: TopicGroupScheme.id,
                 topicGroupId: groupInstance.id
               }
-            }, function(e2, TopicGroupSchemeTypeScheme) {
-              if (e2) throw e2;
+            }, function(err, TopicGroupSchemeTypeScheme) {
+              if (err) return cb(err);
 
               if (!TopicGroupSchemeTypeScheme)
                 return cb(null, []);
@@ -1082,8 +1072,8 @@ module.exports = function(Topic) {
               // TODO: allow to define different topic_type_scheme per parent context (so, project can have own)
 
               Topic.app.models.TopicTypeScheme.findById(TopicGroupSchemeTypeScheme.topicTypeSchemeId,
-              function(typeErr, typeSchemeInstance) {
-                if (typeErr) throw typeErr;
+              function(err, typeSchemeInstance) {
+                if (err) return cb(err);
 
                 if (!typeSchemeInstance)
                   return cb(null, []);
@@ -1101,8 +1091,8 @@ module.exports = function(Topic) {
                     'topicType'
                   ]
 
-                }, function(typeSchemeTypeMapErr, types) {
-                  if (typeSchemeTypeMapErr) throw typeSchemeTypeMapErr;
+                }, function(err, types) {
+                  if (err) return cb(err);
 
                   if (!types || types.length === 0)
                     return cb(new Error('No topic types defined for scheme ' + typeSchemeInstance.id), []);
@@ -1127,9 +1117,8 @@ module.exports = function(Topic) {
                     where:{
                       groupId: groupInstance.id
                     }
-                  }, function(ScreenSchemeErr, ScreenScheme) {
-
-                    if (ScreenSchemeErr) throw ScreenSchemeErr;
+                  }, function(err, ScreenScheme) {
+                    if (err) return cb(err);
 
                     if (!ScreenScheme)
                       return cb(null, []);
@@ -1144,8 +1133,7 @@ module.exports = function(Topic) {
                         'screen'
                       ]
                     }, function(err, ScreenSchemeTopicTypeScreenMap) {
-
-                      if (err) throw err;
+                      if (err) return cb(err);
 
                       if (!ScreenSchemeTopicTypeScreenMap)
                         return cb(null, []);
@@ -1155,8 +1143,8 @@ module.exports = function(Topic) {
                       Screen.screenFields({
                         // provides values to be available at `field.field()`
                         include:['field']
-                      }, function(screenFieldsErr, screenFields) {
-                        if (screenFieldsErr) throw screenFieldsErr;
+                      }, function(err, screenFields) {
+                        if (err) return cb(err);
 
                         if (!screenFields)
                           return cb(null, []);
@@ -1209,16 +1197,15 @@ module.exports = function(Topic) {
   Topic.runOperation = function(id, operation, cb) {
 
     Topic.findOne({where:{id:id}}, function(err, contextTopic) {
-
-      if (err) throw err;
+      if (err) return cb(err);
       if (!contextTopic)
         return cb(null, []);
 
       const currentUser = loopback.getCurrentContext().get('currentUser');
 
       Topic.app.models.WorkflowOperation.findById(operation,
-        function(err2, WorkflowOperation) {
-          if (err2) throw err2;
+        function(err, WorkflowOperation) {
+          if (err) return cb(err);
           if (!WorkflowOperation)
             return cb(null, []);
 
@@ -1239,14 +1226,13 @@ module.exports = function(Topic) {
               include:['workflow']
             }, function(err, WorkflowSchemeTopicTypeWorkflow) {
               if (err) return cb(err);
-
               contextTopic.getOperations(function(err, operations) {
                 if (err) return cb(err);
 
                 if (operations.filter((e) => e.id === operation).length > 0) {
                   // operation is allowed
                   Topic.beginTransaction('READ COMMITTED', function(err, tx) {
-                    if (err) throw err;
+                    if (err) return cb(err);
                     // Now we have a transaction (tx)
                     Topic.app.models.EntityWorkflowOperation.create({
                       workflowOperationId: WorkflowOperation.id,
@@ -1255,8 +1241,7 @@ module.exports = function(Topic) {
                       inStageId: contextTopic.workflowStageId,
                       outStageId: WorkflowOperation.outgoingStageId
                     }, {transaction: tx}, function(err, savedRecord) {
-                      if (err) throw err;
-
+                      if (err) return cb(err);
                       // update topic
                       contextTopic.updateAttributes({
                         workflowStageId: WorkflowOperation.outgoingStageId
@@ -1265,10 +1250,9 @@ module.exports = function(Topic) {
                       function(err, updatedContextTopic) {
                         if (err) return cb(err);
                         tx.commit(function(err) {
-                          if (err) throw err;
+                          if (err) return cb(err);
                           updatedContextTopic.reload(function(err, updatedContextTopic) {
                             if (err) return cb(err);
-
                             updatedContextTopic.getOperations(function(err, operations) {
                               if (err) return cb(err);
                               updatedContextTopic.operations = operations;
