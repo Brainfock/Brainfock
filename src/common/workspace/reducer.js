@@ -11,6 +11,10 @@ import {List, Range, Record} from 'immutable';
 
 const InitialState = Record({
   list: List(),
+  listMeta: new (Record({
+    isFetching: true,
+    count: 0,
+  })),
   listFilters: List(),
   formFields: new (Record({
     loading: false,
@@ -67,6 +71,25 @@ export default function spacesReducer(state = initialState, action) {
             errors: List()
           }))
         }));
+
+    case actions.FIND:
+      return state
+        .setIn(['listMeta', 'isFetching'], true)
+        .update('list', list => list.clear());
+
+    case actions.FIND_ERROR:
+      return state.setIn(['listMeta', 'isFetching'], false)
+
+    case actions.FIND_SUCCESS: {
+      const newlist = action.payload.map((item) => {
+        return new Model({cid: getRandomString(), data: item});
+      });
+      return state
+        .update('list', list => list.clear())
+        .update('list', list => list.push(...newlist))
+        .setIn(['listMeta', 'isFetching'], false)
+        ;
+    }
   }
 
   return state;

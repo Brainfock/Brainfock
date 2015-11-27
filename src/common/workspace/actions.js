@@ -110,3 +110,27 @@ export function fetchWorkspaceHomepage(data) {
     }
   });
 }
+
+export const FIND = 'FIND_WORKSPACES_PENDING';
+export const FIND_SUCCESS = 'FIND_WORKSPACES_SUCCESS';
+export const FIND_ERROR = 'FIND_WORKSPACES_ERROR';
+
+export function findWorkspaces(includes, query) {
+
+  let endpoint = 'workspaces/?'+includes;
+
+  if(query) {
+    endpoint += '&'+toQueryString({filter:{where:query}},false);
+  }
+
+  return ({fetch, validate}) => ({
+    type: 'FIND_WORKSPACES',
+    payload: {
+      promise:  apiGet(fetch, endpoint)
+        .catch(response => {
+          throw response;
+        })
+    }
+  });
+}
+
