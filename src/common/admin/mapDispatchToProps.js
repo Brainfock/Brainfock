@@ -14,6 +14,7 @@ import * as topicActions from '../topics/actions';
 import * as commentsActions from '../comments/actions';
 import * as usersActions from '../users/actions';
 import * as groupSchemes from '../groupSchemes/actions.js';
+import * as workspaceActions from '../workspace/actions';
 
 const actions = [
   appActions,
@@ -22,6 +23,7 @@ const actions = [
   commentsActions,
   usersActions,
   groupSchemes,
+  workspaceActions
 ];
 
 const topic_actions = [

@@ -63,7 +63,7 @@ class AdminHome extends Component {
 
                   <div className={classNAme}>
                     <div style={{textAlign:'center'}}>
-                      <Link to={`/admin/users`}><i className="fa fa-sitemap fa-4x"></i>
+                      <Link to={`/admin/workspaces`}><i className="fa fa-sitemap fa-4x"></i>
                         <br />
                         <h3>Workspaces</h3></Link>
                       <p>Manage Workspaces</p>

@@ -19,6 +19,7 @@ module.exports = {
 
   childRoutes: [
     require('./modules/users'),
+    require('./modules/workspaces'),
     require('./modules/schemes'),
   ]
 }
