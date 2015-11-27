@@ -110,6 +110,11 @@
   },
   "validations": [],
   "relations": {
+    "owner": {
+      "type": "belongsTo",
+      "model": "User",
+      "foreignKey": "ownerUserId"
+    },
     "topics": {
       "type": "hasMany",
       "model": "Topic",
