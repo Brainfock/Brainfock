@@ -82,8 +82,16 @@ export default class Todo extends Component {
       notice = '(item is deleted) ';
     }
 
-    let priorityLabel;
+    let contextLabel;
+    if(todo.contextTopic.id) {
+      contextLabel = <span className='label label-default' style={{marginRight:3}}>
+        {todo.workspace.name && <span>{todo.workspace.name} &rarr; </span>}
+        {todo.contextTopic.summary}</span>;
+    } else if(todo.workspace) {
+      contextLabel = <span className='label label-default' style={{marginRight:3}}>{todo.workspace.name}</span>;
+    }
 
+    let priorityLabel;
     if(todo.priority) {
       let labelStyle = Object.assign({
         marginRight: todo.priority.value ? 5 : 0,
@@ -134,59 +142,27 @@ export default class Todo extends Component {
           primaryText={
             <div>
               {parentLink}
-
+ {(todo.contextTopicKey || todo.contextTopicNum) &&
               <div className="stats pull-right">
                 <div className="prop">
                   {todo.contextTopicKey || todo.contextTopicNum}
                 </div>
-              </div>
+              </div>}
               {icon}
               {notice}
               {todo.summary}
 
               </div>
-            }
-          _primaryText={
-            <div>
-              <div className="pull-left" style={{marginRight:5}}>
-                <div className="stats" style={{marginRight:5, width:'100%'}}>
-                  <div className="prop" style={{width:'100%'}}>
-                    {todo.contextTopicKey || todo.contextTopicNum}
-                  </div>
-                </div>
-                <div className="label label-default" style={{width:'100%'}}>{todo.wfStage}</div>
-              </div>
-              {icon}
-              {notice}
-              {todo.summary}
-              {priorityLabel}
-              <span className="label label-info pull-right">{todo.type && todo.type.name}</span>
-            </div>
-            }
-          _primaryText={
-            <div>
-              <div className="pull-left" style={{marginRight:5}}>
-                <div className="stats" style={{marginRight:5, width:'100%'}}>
-                  <div className="prop" style={{width:'100%'}}>
-                    {todo.contextTopicKey || todo.contextTopicNum}
-                  </div>
-                </div>
-
-              </div>
-              {icon}
-              {notice}
-              {todo.summary}
-
-            </div>
             }
           secondaryText={<span>
-          {priorityLabel}
-          {typeLabel}
-          <span style={{fontSize: '.88em',color:'#333', fontWeight:600}}>— {todo.wfStage}</span>
-          {todo.text && <br />}
-          {todo.text}
+            {contextLabel}
+            {priorityLabel}
+            {typeLabel}
+            <span style={{fontSize: '.88em',color:'#333', fontWeight:600}}>— {todo.wfStage}</span>
+            {todo.text && <br />}
+            {todo.text}
 
-          </span>}
+            </span>}
           secondaryTextLines={(todo.text ? 2 : 1)}
           >
           {this.confirmDialog()}
