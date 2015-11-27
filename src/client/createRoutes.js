@@ -28,6 +28,8 @@ export default function createRoutes(getState) {
       <Route component={Me} onEnter={requireAuth} path="me" />
       <Route component={Todos} path="todos" />
 
+      <Route component={require('./issues/index.js')} path="tasks"/>
+
       <Route component={require('./boards/index.js')} path="boards"/>
       <Route component={require('./boards/pages/board.js')} path="/board/:board_id">
         <Route component={require('./boards/pages/topic.js')} path="/board/:board_id/topic/:id" />
