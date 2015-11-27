@@ -348,6 +348,34 @@ export function loadTopicGroup(name) {
   });
 }
 
+export function loadTopicGroupBoard(name) {
+ // workspaces/sandbox/topics/demosand/topics/board/3
+  // http://localhost:3000/api/workspaces/sandbox/topics/demosand/topics/board/3
+  let endpoint = `topicGroups/findOne?filter[where][group_key]=${name}` ;
+
+  return ({fetch, validate}) => ({
+    type: 'LOAD_TOPIC_GROUP',
+    meta: {
+      groupKey: name
+    },
+    payload: {
+      promise: apiGet(fetch, endpoint)
+        .then(function(value) {
+          if (value.error) {
+            throw value.error;
+          }
+          else
+            return value;
+        }, function(reason) {
+          // rejection
+        })
+        .catch(response => {
+          throw response;
+        })
+    }
+  });
+}
+
 export function loadFilters(group, query, contextTopicId) {
 
   let endpoint;
