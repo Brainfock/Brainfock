@@ -5,11 +5,13 @@
  * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import React from 'react';
-import ListViewItem from '../projects/components/issues-list-item';
+
+
 import ProjectsEmpty from '../boards/components/boards.empty';
 import MasterDetailsListView from '../projects/components/master-detail.list';
 import ListView from '../projects/components/plain.list';
 let PageWithNav = require('../components/layout/page-with-nav');
+import TaskListItem from './components/task-list-item.js';
 
 const views = {
   'master.detail': MasterDetailsListView,
@@ -46,7 +48,7 @@ module.exports = React.createClass({
         browseAll
         emptyListFallback={ProjectsEmpty}
         groupKey='issue'
-        listViewItem={ListViewItem}
+        listViewItem={TaskListItem}
         groupBy={this.props.location.query && this.props.location.query.groupBy}
         {...passProps}
         />
