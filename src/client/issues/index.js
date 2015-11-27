@@ -69,6 +69,10 @@ module.exports = React.createClass({
     }
     return [
       {
+        route: `/tasks/`,
+        text: 'All tasks',
+      },
+      {
         route: `/tasks/?filter[wfStatus][inq]=open&filter[wfStatus][inq]=progress`,
         text: 'Open & in Progress',
       },
