@@ -41,7 +41,9 @@ module.exports = React.createClass({
 
     const {children, ...passProps} = this.props;
     return (
-    <PageWithNav  menuItems={this.menuItems()}>
+    <PageWithNav
+      history={this.props.history}
+      menuItems={this.menuItems()}>
       <View
         containerTopic={null}
         disableDetails_
@@ -60,14 +62,30 @@ module.exports = React.createClass({
    * @todo i18n
    * @returns {*[]}
    */
-    menuItems() {
-
+  menuItems() {
     let icon;
     if (this.props.boards.board.accessPrivateYn) {
       icon = (<i className="fa fa-eye-slash"></i>);
     }
     return [
-
+      {
+        route: `/tasks/?filter[wfStatus][inq]=open&filter[wfStatus][inq]=progress`,
+        text: 'Open & in Progress',
+      },
+      {
+        route: `/tasks/?filter[isStarred]=1`,
+        text: 'Starred',
+      },
+      {
+        route: `/tasks/?filter[status]=draft`,
+        text: 'Drafts',
+      },
+      {
+        text: <div style={{
+          fontSize:'11px',
+          color: '#CECECE'
+        }}><b>Please, notice</b>: menu is WIP</div>
+      }
     ];
   }
 });
