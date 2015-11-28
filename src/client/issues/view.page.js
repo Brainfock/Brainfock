@@ -11,6 +11,7 @@ var mui = require('material-ui');
 var bs = require('react-bootstrap'),
   {Nav, NavItem, ButtonToolbar, ButtonGroup, Button, Glyphicon,  TabbedArea, TabPane, DropdownButton, MenuItem} = bs;
 
+import Issue from '../projects/components/Issue.js'
 var Loader = require('../components/Loader');
 var AppContentCanvas = require('../components/layout/AppContentCanvas');
 /**
@@ -78,14 +79,12 @@ class ViewTaskPage extends Component {
           </h4>
         </div>
         <div style={style} className="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
-          <DropdownButton className="pull-right" eventKey={3} title="">
-            {operaitons}
-          </DropdownButton>
-          {this.props.boards.viewTopic && <h2 style={{fontWeight:800}}>{this.props.boards.viewTopic.summary}</h2>}
-          {this.renderContent()}
-          <div style={{paddingTop:this.context.muiTheme.rawTheme.spacing.desktopGutter}}>
-            {this.comments()}
-          </div>
+          <Issue
+            actions={this.props.actions}
+            io={this.props.io}
+            topic={this.props.boards.viewTopic}
+            topic_actions={this.props.topic_actions}
+            />
         </div>
       </div>
     );
@@ -141,28 +140,5 @@ class ViewTaskPage extends Component {
      /></AppContentCanvas>*/
   }
 
-  renderContent() {
-
-    const viewTopic = this.props.boards.viewTopic;
-
-    if (viewTopic.loading == true) {
-      return <AppContentCanvas header={
-        <h4 className="pull-left"><Loader /></h4>
-      }/>
-    }
-
-    return (
-      <mui.Card>
-        <mui.CardHeader
-          title={viewTopic.author && <b>{viewTopic.author.username}</b>}
-          subtitle={viewTopic.createdOn}
-          avatar={viewTopic.author.username && <mui.Avatar>{viewTopic.author.username.charAt(0)}</mui.Avatar>}/>
-
-        {this.props.boards.viewTopic.text
-        && <mui.CardText>{this.props.boards.viewTopic.text}</mui.CardText>}
-      </mui.Card>
-    )
-
-  }
 }
 export default ViewTaskPage;
