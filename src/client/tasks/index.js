@@ -12,6 +12,7 @@ import MasterDetailsListView from '../projects/components/master-detail.list';
 import ListView from '../projects/components/plain.list';
 let PageWithNav = require('../components/layout/page-with-nav');
 import TaskListItem from './components/task-list-item.js';
+import IssueView from '../projects/components/Issue.js'
 
 const views = {
   'master.detail': MasterDetailsListView,
@@ -49,6 +50,7 @@ module.exports = React.createClass({
         disableDetails_
         browseAll
         emptyListFallback={ProjectsEmpty}
+        detailsComponent={IssueView}
         groupKey='issue'
         listViewItem={TaskListItem}
         groupBy={this.props.location.query && this.props.location.query.groupBy}
