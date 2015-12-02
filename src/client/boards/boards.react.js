@@ -11,7 +11,8 @@ export default class List extends Component {
     group: React.PropTypes.isRequired,
     itemComponent: React.PropTypes.element,
     list: React.PropTypes.isRequired,
-    msg: React.PropTypes.object.isRequired
+    msg: React.PropTypes.object.isRequired,
+    groupBy: React.PropTypes.string,
   };
 
   static defaultProps = {
@@ -26,7 +27,7 @@ export default class List extends Component {
       <p>{this.props.msg.emptyList}</p>
     );
 
-    const groupBy = this.props.location.query.groupBy;
+    const groupBy = this.props.groupBy;
     if (groupBy) {
       let shadowCollection = [];
       let looseCollection = [];

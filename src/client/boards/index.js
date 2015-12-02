@@ -43,6 +43,7 @@ module.exports = React.createClass({
         disableDetails
         emptyListFallback={ProjectsEmpty}
         groupKey='board'
+        groupBy={this.props.location.query && this.props.location.query.groupBy}
         {...passProps}
         />
     );
