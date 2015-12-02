@@ -57,6 +57,7 @@ export default Record({
   owner: {},
   author: {},
   comments: List(),
+  menu: List(),
 
   // included via `extra` filters
   operations: List(),

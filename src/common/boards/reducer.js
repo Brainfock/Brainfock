@@ -424,9 +424,7 @@ export default function boardsReducer(state = initialState, action) {
             .setIn(['form', 'meta', 'isSubmitting'], false);
         }
       }
-
     }
-
 
     case actions.SAVE:
       return state
@@ -547,6 +545,17 @@ export default function boardsReducer(state = initialState, action) {
         );
       }
       return state;
+    }
+
+    case actions.FETCH_TOPIC_MENU_SUCCESS: {
+      if (action.meta.topicId) {
+        const newMenu = action.payload.map((item) => {
+          return new (Record(item));
+        });
+        return state
+          .updateIn(['board', 'menu'], list => list.clear())
+          .updateIn(['board', 'menu'], list => list.push(...newMenu));
+      }
     }
   }
 

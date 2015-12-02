@@ -659,3 +659,25 @@ export function fetchEntityMenu(id) {
     }
   });
 }
+
+export const FETCH_TOPIC_MENU = 'FETCH_TOPIC_MENU_PENDING';
+export const FETCH_TOPIC_MENU_SUCCESS = 'FETCH_TOPIC_MENU_SUCCESS';
+export const FETCH_TOPIC_MENU_ERROR = 'FETCH_TOPIC_MENU_ERROR';
+
+export function fetchTopicMenu(id, namespace) {
+
+  let endpoint = `workspaces/${namespace}/topics/${id}/menu`;
+
+  return ({fetch, validate}) => ({
+    type: 'FETCH_TOPIC_MENU',
+    meta: {
+      topicId: id
+    },
+    payload: {
+      promise:  getApi(fetch, endpoint)
+        .catch(response => {
+          throw response;
+        })
+    }
+  });
+}
