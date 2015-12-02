@@ -70,16 +70,17 @@ module.exports = function(Topic) {
     if (!this.typeId || !(this.typeId > 0)) err();
   }, {message: 'is required'});
 
-  Topic.validate('contextTopicId', contextTopicIdcustomValidator, {message: 'is required'});
-  function contextTopicIdcustomValidator(err) {
-    if (this.contextTopicId === 0) err();
-  };
+  //Topic.validate('contextTopicId', contextTopicIdcustomValidator, {message: 'is required'});
+  //function contextTopicIdcustomValidator(err) {
+  //  if (this.contextTopicId === 0) err();
+  //};
 
-  Topic.validate('contextTopicKey', function (err) {
-    if (!this.contextTopicId) {
-      if (!this.contextTopicKey || this.contextTopicKey.trim() === '') err();
-    }
-  }, {message: 'is required '});
+  // TODO: require key only if no context id and gorup IS ROOT
+  //Topic.validate('contextTopicKey', function (err) {
+  //  if (!this.contextTopicId) {
+  //    if (!this.contextTopicKey || this.contextTopicKey.trim() === '') err();
+  //  }
+  //}, {message: 'is required '});
 
   Topic.validate('contextTopicKey', function (err) {
     if (!this.contextTopicId) {
@@ -846,7 +847,6 @@ module.exports = function(Topic) {
     });
   };
 
-
   /**
    * Load form fields for topic screen. Currently, supports default (create) screen only
    *
@@ -870,16 +870,22 @@ module.exports = function(Topic) {
         if (!groupInstance)
           return cb(null, []);
 
-        // TODO: allow to define `TopicGroupScheme` per context (parent) topic
+
+        /* concept: 1. get DEFAULT workspace per user (e.g. last WSP user user) that has this group available
+                    2. build fields based on WSP group scheme?
+        */
+        // look for default group scheme for groupInstance.id group
         Topic.app.models.TopicGroupScheme.findOne({
           where:{
-            isDefault: 1
+            isDefault: 1,
+            rootGroupId: groupInstance.id,
           }
         },
         function(err, TopicGroupScheme) {
           if (err) return cb(err);
-          if (!TopicGroupScheme)
+          if (!TopicGroupScheme) {
             return cb(null, []);
+          }
 
           // find effective `TypeScheme` for this group in `TopicGroupScheme`
           Topic.app.models.TopicGroupSchemeTypeScheme.findOne({
@@ -892,7 +898,7 @@ module.exports = function(Topic) {
             if (!TopicGroupSchemeTypeScheme)
               return cb(null, []);
 
-            // find effective `TypeScheme` for this group in `TopicGroupScheme` `````
+            // find effective `TypeScheme` for this group in `TopicGroupScheme`
 
             // Find DEFAULT topic type scheme for this group
             // TODO: allow to define different topic_type_scheme per parent context (so, project can have own)
@@ -956,63 +962,128 @@ module.exports = function(Topic) {
                         'screen'
                       ]
                     }, function(err, ScreenSchemeTopicTypeScreenMap) {
+                      let Screen;
                       if (err) return cb(err);
-                      if (!ScreenSchemeTopicTypeScreenMap)
-                        return cb(null, []);
+                      if (!ScreenSchemeTopicTypeScreenMap) {
+                        // then use ScreenScheme.defaultScreenId
+                        Topic.app.models.Screen.findById(ScreenScheme.defaultScreenId,
+                          (err, DefaultScreen) => {
+                            if (err) return cb(err);
+                            if (!DefaultScreen) return cb(null, []);
 
-                      const Screen = ScreenSchemeTopicTypeScreenMap.screen();
+                            DefaultScreen.screenFields({
+                              // provides values to be available at `field.field()`
+                              include:['field']
+                            }, function(err, screenFields) {
+                              if (err) return cb(err);
+                              if (!screenFields)
+                                return cb(null, []);
 
-                      Screen.screenFields({
-                        // provides values to be available at `field.field()`
-                        include:['field']
-                      }, function(err, screenFields) {
-                        if (err) return cb(err);
-                        if (!screenFields)
-                          return cb(null, []);
-
-                        let _screenFields = screenFields.map(field => {
-                          let fieldConfig = field.field().__data;
-                          return {
-                            group: groupInstance,
-                            contextTopic: null,
-                            ...fieldConfig
-                          };
-                        });
-
-                        Promise
-                          .all(_screenFields.map(FieldsHandler.populateFormField))
-                          .then(function(dataDone) {
-                            // manually add "group" and "type" select fields, re-using already populated data
-                            // TODO: select first
-                            // isRequired
-                            FieldsHandler.typeIdFieldProps({
-                              group: groupInstance,
-                              contextTopic: null,
-                              key: 'typeId',
-                              options: TypeOptions,
-                              isRequired: 1,
-                              value: {
-                                value: DefaultType.id,
-                                label: DefaultType.name
-                              }
-                            })
-                              .then(function(moreData) {
-                                dataDone.unshift(moreData);
-                                // workspace is required for roots
-                                FieldsHandler.workspaceIdFieldProps({
+                              let _screenFields = screenFields.map(field => {
+                                let fieldConfig = field.field().__data;
+                                return {
                                   group: groupInstance,
                                   contextTopic: null,
-                                  key: 'workspaceId',
-                                  isRequired: 1
-                                })
-                                  .then(function(moreData) {
-                                    dataDone.unshift(moreData);
-
-                                    return cb(null, dataDone);
-                                  });
+                                  ...fieldConfig
+                                };
                               });
+
+                              Promise
+                                .all(_screenFields.map(FieldsHandler.populateFormField))
+                                .then(function(dataDone) {
+                                  // manually add "group" and "type" select fields, re-using already populated data
+                                  // TODO: select first
+                                  // isRequired
+                                  FieldsHandler.typeIdFieldProps({
+                                    group: groupInstance,
+                                    contextTopic: null,
+                                    key: 'typeId',
+                                    options: TypeOptions,
+                                    isRequired: 1,
+                                    value: {
+                                      value: DefaultType.id,
+                                      label: DefaultType.name
+                                    }
+                                  })
+                                    .then(function(moreData) {
+                                      dataDone.unshift(moreData);
+                                      // workspace is required for roots
+                                      FieldsHandler.workspaceIdFieldProps({
+                                        group: groupInstance,
+                                        contextTopic: null,
+                                        key: 'workspaceId',
+                                        isRequired: 1
+                                      })
+                                        .then(function(moreData) {
+                                          dataDone.unshift(moreData);
+
+                                          return cb(null, dataDone);
+                                        });
+                                    });
+                                })
+                                .catch(e => {
+                                  return cb(null, []);
+                                })
+                            });
+                        });
+                      } else {
+                        // use type-specific screen (advanced):
+                        Screen = ScreenSchemeTopicTypeScreenMap.screen();
+                        Screen.screenFields({
+                          // provides values to be available at `field.field()`
+                          include:['field']
+                        }, function(err, screenFields) {
+                          if (err) return cb(err);
+                          if (!screenFields)
+                            return cb(null, []);
+
+                          let _screenFields = screenFields.map(field => {
+                            let fieldConfig = field.field().__data;
+                            return {
+                              group: groupInstance,
+                              contextTopic: null,
+                              ...fieldConfig
+                            };
                           });
-                      });
+
+                          Promise
+                            .all(_screenFields.map(FieldsHandler.populateFormField))
+                            .then(function(dataDone) {
+                              // manually add "group" and "type" select fields, re-using already populated data
+                              // TODO: select first
+                              // isRequired
+                              FieldsHandler.typeIdFieldProps({
+                                group: groupInstance,
+                                contextTopic: null,
+                                key: 'typeId',
+                                options: TypeOptions,
+                                isRequired: 1,
+                                value: {
+                                  value: DefaultType.id,
+                                  label: DefaultType.name
+                                }
+                              })
+                                .then(function(moreData) {
+                                  dataDone.unshift(moreData);
+                                  // workspace is required for roots
+                                  FieldsHandler.workspaceIdFieldProps({
+                                    group: groupInstance,
+                                    contextTopic: null,
+                                    key: 'workspaceId',
+                                    isRequired: 1
+                                  })
+                                    .then(function(moreData) {
+                                      dataDone.unshift(moreData);
+
+                                      return cb(null, dataDone);
+                                    });
+                                });
+                            })
+                            .catch(e => {
+                              return cb(null, []);
+                            })
+                        });
+                      }
                     });
                   });
                 });
@@ -1133,55 +1204,106 @@ module.exports = function(Topic) {
                         'screen'
                       ]
                     }, function(err, ScreenSchemeTopicTypeScreenMap) {
+
                       if (err) return cb(err);
+                      if (!ScreenSchemeTopicTypeScreenMap) {
+                        // then use ScreenScheme.defaultScreenId
+                        Topic.app.models.Screen.findById(ScreenScheme.defaultScreenId,
+                          (err, DefaultScreen) => {
+                            if (err) return cb(err);
+                            if (!DefaultScreen) return cb(null, []);
 
-                      if (!ScreenSchemeTopicTypeScreenMap)
-                        return cb(null, []);
+                            DefaultScreen.screenFields({
+                              // provides values to be available at `field.field()`
+                              include:['field']
+                            }, function(err, screenFields) {
+                              if (err) return cb(err);
+                              if (!screenFields)
+                                return cb(null, []);
 
-                      const Screen = ScreenSchemeTopicTypeScreenMap.screen();
+                              let _screenFields = screenFields.map(field => {
+                                let fieldConfig = field.field().__data;
+                                return {
+                                  group: groupInstance,
+                                  contextTopic: null,
+                                  ...fieldConfig
+                                };
+                              });
 
-                      Screen.screenFields({
-                        // provides values to be available at `field.field()`
-                        include:['field']
-                      }, function(err, screenFields) {
-                        if (err) return cb(err);
+                              Promise
+                                .all(_screenFields.map(FieldsHandler.populateFormField))
+                                .then(function(dataDone) {
+                                  // manually add "group" and "type" select fields, re-using already populated data
+                                  // TODO: select first
+                                  // isRequired
+                                  FieldsHandler.typeIdFieldProps({
+                                    group: groupInstance,
+                                    contextTopic: null,
+                                    key: 'typeId',
+                                    options: TypeOptions,
+                                    isRequired: 1,
+                                    value: {
+                                      value: DefaultType.id,
+                                      label: DefaultType.name
+                                    }
+                                  })
+                                    .then(function(moreData) {
+                                      dataDone.unshift(moreData);
+                                      // workspace is required for roots
+                                      return cb(null, dataDone);
+                                    });
+                                })
+                                .catch(e => {
+                                  return cb(null, []);
+                                })
+                            });
+                          });
+                      } else {
+                        const Screen = ScreenSchemeTopicTypeScreenMap.screen();
 
-                        if (!screenFields)
-                          return cb(null, []);
+                        Screen.screenFields({
+                          // provides values to be available at `field.field()`
+                          include:['field']
+                        }, function(err, screenFields) {
+                          if (err) return cb(err);
 
-                        let _screenFields = screenFields.map(field => {
-                          let fieldConfig = field.field().__data;
-                          return {
-                            group: groupInstance,
-                            contextTopic: contextTopic,
-                            ...fieldConfig
-                          };
-                        });
+                          if (!screenFields)
+                            return cb(null, []);
 
-                        Promise
-                          .all(_screenFields.map(FieldsHandler.populateFormField))
-                          .then(function(dataDone) {
-
-                            let dataFiltered = dataDone.filter(function(n){ return n !== undefined && n !== null });
-
-                            // manually add "group" and "type" select fields, re-using already populated data
-                            FieldsHandler.typeIdFieldProps({
+                          let _screenFields = screenFields.map(field => {
+                            let fieldConfig = field.field().__data;
+                            return {
                               group: groupInstance,
                               contextTopic: contextTopic,
-                              key: 'typeId',
-                              options: TypeOptions,
-                              isRequired: 1,
-                              value: {
-                                value: DefaultType.id,
-                                label: DefaultType.name
-                              }
-                            })
-                              .then(function(moreData) {
-                                dataFiltered.unshift(moreData);
-                                return cb(null, dataFiltered);
-                              });
+                              ...fieldConfig
+                            };
                           });
-                      });
+
+                          Promise
+                            .all(_screenFields.map(FieldsHandler.populateFormField))
+                            .then(function(dataDone) {
+
+                              let dataFiltered = dataDone.filter(function(n){ return n !== undefined && n !== null });
+
+                              // manually add "group" and "type" select fields, re-using already populated data
+                              FieldsHandler.typeIdFieldProps({
+                                group: groupInstance,
+                                contextTopic: contextTopic,
+                                key: 'typeId',
+                                options: TypeOptions,
+                                isRequired: 1,
+                                value: {
+                                  value: DefaultType.id,
+                                  label: DefaultType.name
+                                }
+                              })
+                                .then(function(moreData) {
+                                  dataFiltered.unshift(moreData);
+                                  return cb(null, dataFiltered);
+                                });
+                            });
+                        });
+                      }
                     });
                   });
                 });
