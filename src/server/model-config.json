@@ -92,6 +92,10 @@
     "dataSource": "db",
     "public": false
   },
+  "TopicMenuItem": {
+    "dataSource": "db",
+    "public": false
+  },
   "SettingsField": {
     "dataSource": "db",
     "public": true
