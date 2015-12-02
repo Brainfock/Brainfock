@@ -45,6 +45,7 @@ export default Record({
     labelConfig: ''
   })),
   parent: new (ModelSchema),
+  contextTopic: new (ModelSchema),
   type: {},
   workspace: new (Record({
     id: '',
