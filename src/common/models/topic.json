@@ -622,6 +622,11 @@
       "type": "belongsTo",
       "model": "TermValue",
       "foreignKey": "priorityId"
+    },
+    "menuItems": {
+      "type": "hasMany",
+      "model": "TopicMenuItem",
+      "foreignKey": "topicId"
     }
   },
   "acls": [
