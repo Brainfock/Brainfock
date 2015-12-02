@@ -623,7 +623,7 @@
       "model": "TermValue",
       "foreignKey": "priorityId"
     },
-    "menuItems": {
+    "menu": {
       "type": "hasMany",
       "model": "TopicMenuItem",
       "foreignKey": "topicId"

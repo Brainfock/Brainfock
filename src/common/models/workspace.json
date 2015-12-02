@@ -191,6 +191,13 @@
     {
       "accessType": "*",
       "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "__get__topics__menu"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
       "principalId": "wspcTopicsList",
       "permission": "ALLOW",
       "property": "__get__topics__topics"
