@@ -21,19 +21,27 @@ export default class FieldsHandler {
             if (!isDebug)
               return resolve(res);
             if (res === null)
-              resolve({
+              return resolve({
                 key: item.key,
                 type: '__NO_DATA__'
               });
             else {
-              resolve(res);
+              return resolve(res);
             }
           })
+          .catch(e => {
+              if (isDebug)
+                console.log('>> error, ', e)
+              return resolve({
+                key: item.key,
+                type: '__NO_DATA__'
+              });
+            })
         } else {
           if (!isDebug) {
             return resolve(null);
           } else {
-            resolve({
+            return resolve({
               key: item.key,
               type: '__NOT_IMPLEMENTED__'
             });

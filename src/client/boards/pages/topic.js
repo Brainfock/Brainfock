@@ -1,6 +1,5 @@
 import React from 'react';
 import {Link} from 'react-router';
-
 var mui = require('material-ui');
 var bs = require('react-bootstrap'),
   {Nav, NavItem, ButtonToolbar, ButtonGroup, Button, Glyphicon,  TabbedArea, TabPane, DropdownButton, MenuItem} = bs;
@@ -69,7 +68,6 @@ var Issues = React.createClass({
       if (!this.props.boards.groups.has(this.props.groupKey))
         this.props.topic_actions.loadTopicGroup('board')
           .then(()=> {
-            console.log(">> LOADED");
             //this.props.topic_actions.loadTopicGroup('board')
           })
 

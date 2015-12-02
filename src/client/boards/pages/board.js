@@ -67,8 +67,6 @@ module.exports = React.createClass({
             > {this.props.boards.board.summary}</h4>}
         </div>
 
-
-
         <MasterDetailsListView
           {...passProps}
           containerTopic={this.props.boards.board}
