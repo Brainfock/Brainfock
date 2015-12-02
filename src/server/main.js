@@ -13,6 +13,14 @@ app.start = function() {
   return server;
 };
 
+// @see https://github.com/callemall/material-ui/pull/2172#issuecomment-157404901
+app.use(function(req, res, next) {
+  GLOBAL.navigator = {
+    userAgent: req.headers['user-agent']
+  }
+  next();
+});
+
 app.use(loopback.cookieParser("SECRET"));
 
 var bodyParser= require('body-parser');
