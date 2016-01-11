@@ -54,9 +54,10 @@ class Layout extends Component {
     }
     console.log(">>menu", this.props.boards.board.menu)
 
+    const homeUrl = `/${this.props.workspace.active.data.namespace}/${this.props.boards.board.contextTopicKey}`;
     let menu = [
       {
-        route: `/${this.props.workspace.active.data.namespace}/${this.props.boards.board.contextTopicKey}`,
+        route: homeUrl,
         text: (
           <div
             style={{
@@ -74,7 +75,7 @@ class Layout extends Component {
     //if(this.props.boards.board.menu.size && this.props.boards.board.menu.size > 0) {
       this.props.boards.board.menu.forEach(item => {
         menu.push({
-          route: item.link,
+          route: (item.link.charAt(0) !== '/' ? homeUrl + '/' + item.link : item.link),
           text: item.label,
         })
       })
