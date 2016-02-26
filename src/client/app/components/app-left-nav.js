@@ -21,7 +21,9 @@ var menuItems = [
     text: 'Projects',
   },
   // { route: '/issues', params:{}, text: 'Issues' },
-  { route: '/boards?groupBy=workspace', params:{}, text: 'Boards' },
+  { route: '/tasks', params:{}, text: 'Tasks' },
+  { route: '/boards?groupBy=workspace', params:{}, text: 'Discussions' },
+  { route: '/opportunities', params:{}, text: 'Opportunities' },
   { route: '/wiki/Homepage', params:{uid:'Index'}, text: 'Wiki' },
   { type: mui.MenuItem.Types.SUBHEADER, text: 'Resources' },
   // Link to Brainfock guides in global wiki:

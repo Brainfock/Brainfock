@@ -627,6 +627,11 @@
       "type": "hasMany",
       "model": "TopicMenuItem",
       "foreignKey": "topicId"
+    },
+    "wikiPages": {
+      "type": "hasMany",
+      "model": "WikiPage",
+      "foreignKey": "entity_id"
     }
   },
   "acls": [

@@ -1091,7 +1091,7 @@ module.exports = function(Topic) {
           });
         });
       });
-
+    // for context:
     } else {
       Topic.findOne({where:{id:id}}, function(err, contextTopic) {
         if (err) return cb(err);

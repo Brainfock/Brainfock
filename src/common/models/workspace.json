@@ -198,6 +198,20 @@
     {
       "accessType": "*",
       "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "__findById__topics__wikiPages"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "__get__topics__wikiPages"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
       "principalId": "wspcTopicsList",
       "permission": "ALLOW",
       "property": "__get__topics__topics"
