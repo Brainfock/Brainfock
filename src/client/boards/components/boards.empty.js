@@ -8,8 +8,6 @@ import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import {RaisedButton, Paper} from 'material-ui';
 
-import Form from '../../topic/components/create-topic-form';
-
 export default class ProjectsEmpty extends Component {
 
   static propTypes = {
