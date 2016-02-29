@@ -11,6 +11,7 @@ import OperationsDropdown from './OperationsDropdown.js';
 import Loader from '../../components/Loader.js';
 import Comments from '../../topic/components/comments';
 import {FormattedDate} from 'react-intl';
+import {TextField} from 'material-ui';
 
 export default class Issue extends Component {
 
@@ -69,8 +70,23 @@ export default class Issue extends Component {
             handleOperation={this.applyOperation.bind(this)}
             onSelectDelete={this.showDeletePrompt.bind(this)}
             />
+
+
           {topic &&
-          <h2 style={{fontWeight:800}}>
+            this.state.showForm &&
+          <TextField
+            value={topic.summary}
+            />}
+
+          {topic &&
+          this.state.showForm &&
+          <a href={'#'} onClick={()=>{this.setState({'showForm': false})}}>[save]</a>}
+
+          {topic &&
+          <h2 style={{
+          fontWeight:800,
+            display: (this.state.showForm == false ? 'inline' : 'none')
+          }}>
             {!this.props.isBirdview &&
             <span
               className="stats"
@@ -83,10 +99,13 @@ export default class Issue extends Component {
              }}
                     className="prop">#{topic.contextTopicNum}</span></span>}
             {topic.summary}
+            <a href={'#'} onClick={()=>{this.setState({'showForm': true})}}>[edit]</a>
             <span className="label label-primary ">
               {topic.wfStage}
             </span>
-          </h2>}</WrapperEl>
+          </h2>}
+
+        </WrapperEl>
         <Card>
           <CardHeader
             avatar={topic.author.username && <Avatar>{topic.author.username.charAt(0)}</Avatar>}
