@@ -22,6 +22,7 @@ export default class ProjectsIndex extends Component {
         emptyListFallback={ProjectsEmpty}
         listViewItem={ListViewItem}
         groupKey='project'
+        groupBy={this.props.location.query && this.props.location.query.groupBy}
         {...passProps}
         />
     );
