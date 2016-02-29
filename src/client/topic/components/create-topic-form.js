@@ -11,6 +11,7 @@ import Component from 'react-pure-render/component';
 import mui, {Snackbar} from 'material-ui';
 import Loader from '../../components/Loader';
 import SimpleFormFactory from '../../components/UISimpleFormFactory';
+import SelectField from '../../components/form/RemoteSelectField.js';
 
 /**
  * Create topic form
@@ -26,6 +27,7 @@ export default class CreateTopicForm extends Component {
 
   static propTypes = {
     actions: React.PropTypes.any.isRequired,
+    topic_actions: React.PropTypes.any.isRequired,
     containerStore: React.PropTypes.any.isRequired,
     formData: React.PropTypes.object,
     formFields: React.PropTypes.object,
@@ -37,16 +39,20 @@ export default class CreateTopicForm extends Component {
 
   componentWillMount() {
 
+    if (!this.props.workspace.list.size) {
+      this.props.actions.findWorkspaces();
+    }
+
     if (!this.props.formFields || (this.props.formFields && this.props.formFields.fields.size === 0)
       || (this.props.formFields.group !== this.props.topicGroup)) {
 
-      this.props.actions.loadFormFields(this.props.topicGroup,
+      this.props.topic_actions.loadFormFields(this.props.topicGroup,
         (this.props.containerStore ? this.props.containerStore.id : 0));
     }
 
     // TODO: looks like it belongs to parent component
     if (!this.props.formData) {
-      this.props.actions.findOrCreateForm((this.props.containerStore ? this.props.containerStore.id : 0),
+      this.props.topic_actions.findOrCreateForm((this.props.containerStore ? this.props.containerStore.id : 0),
         this.props.topicGroup, {
           // initial values for new form
           createGroup: this.props.topicGroup,
@@ -94,7 +100,7 @@ export default class CreateTopicForm extends Component {
       ]
     }
 
-    this.props.actions.applyTopicFormDefaults(this.props.formData.cid, applyDefault, overwrite);
+    this.props.topic_actions.applyTopicFormDefaults(this.props.formData.cid, applyDefault, overwrite);
   }
 
   componentWillReceiveProps(newProps) {
@@ -136,7 +142,7 @@ export default class CreateTopicForm extends Component {
       <form ref="frm" onSubmit={this.onFormSubmit.bind(this)} className="form-horizontal">
         {this.props.formData && this.props.formData.meta.error
         && <div className="alert alert-danger">
-          <i onClick={this.props.actions.cleanErrorSummary} className="fa fa-times"></i> {this.props.formData.meta.error}
+          <i onClick={this.props.topic_actions.cleanErrorSummary} className="fa fa-times"></i> {this.props.formData.meta.error}
         </div>
         }
 
@@ -170,7 +176,7 @@ export default class CreateTopicForm extends Component {
           label='createForm_LABEL_access_private_yn'
           name="accessPrivateYn"
           onCheck={(function(event, isChecked){
-                this.props.actions.setNewTopicField({
+                this.props.topic_actions.setNewTopicField({
                   target:{
                     name: event.target.name,
                     value: isChecked
@@ -190,9 +196,24 @@ export default class CreateTopicForm extends Component {
    * @returns {XML}
    */
   renderForm() {
-    if (!this.props.formFields.fields) {
+    if (!this.props.formFields.fields || this.props.workspace.list.size === 0) {
       return <Loader />;
     }
+    if (1===2 && !this.props.containerStore) {
+
+      let wspOptions = this.props.workspace.list.map(item => { return {
+        label: item.data.name,
+        value: item.data.id
+      }});
+      console.log('> wspOptions', wspOptions)
+      //SelectField
+
+      return <div className="clearfix">Select Workspace
+        <br />
+        <SelectField options={wspOptions.toJS()} label={'Workspace'} value='' />
+      </div>
+    } else {
+
     return (
       <div className="clearfix">
         <SimpleFormFactory
@@ -205,15 +226,16 @@ export default class CreateTopicForm extends Component {
           />
       </div>
     );
+    }
   }
 
   onChange(e) {
-    this.props.actions.setNewTopicField(e, {cid: this.props.formData.cid});
+    this.props.topic_actions.setNewTopicField(e, {cid: this.props.formData.cid});
   }
 
   onFormSubmit(e) {
 
-    const {actions, formData} = this.props;
+    const {topic_actions, formData} = this.props;
 
     const cid = formData.cid;
     const data = formData.toJS().data;
@@ -243,7 +265,7 @@ export default class CreateTopicForm extends Component {
       postData.contextTopicId = this.props.containerStore.id;
 
     //actions.create(postData)
-    actions.postTopicFormData(cid, postData)
+    topic_actions.postTopicFormData(cid, postData)
       .then(({error, payload}) => {
         if (error) {
           // TODO: snackbar message?
