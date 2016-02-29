@@ -1,3 +1,6 @@
+/**
+ * @deprecated file
+ */
 import React from 'react';
 import mui from 'material-ui';
 import {Tabs, Tab} from 'react-bootstrap';
