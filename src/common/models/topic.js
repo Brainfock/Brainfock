@@ -393,7 +393,7 @@ module.exports = function(Topic) {
     if (ctx.isNewInstance === true && !ctx.instance.contextTopicId) {
       Topic.app.models.TopicMenuItem.create({
         topicId: ctx.instance.id,
-        link: 'wiki',
+        link: 'wiki/Homepage',
         label: 'Wiki'
       }, function(err, relation) {
         if (err) {
