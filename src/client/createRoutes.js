@@ -10,6 +10,9 @@ import {IndexRoute, Route} from 'react-router';
 import Wiki from './wiki/pages/wiki';
 import WikiEdit from './wiki/pages/edit';
 
+import ProjectWiki from './projects/wiki/wiki-page';
+import ProjectWikiEdit from './projects/wiki/wiki-edit';
+
 export default function createRoutes(getState) {
 
   function requireAuth(nextState, replaceState) {
@@ -64,6 +67,9 @@ export default function createRoutes(getState) {
         <Route component={require('./projects/boards')} path="/:namespace/:board_id/boards" />
         <Route component={require('./projects/issues')} path="/:namespace/:board_id/milestones" />
         <Route component={require('./projects/issues')} path="/:namespace/:board_id/deals" /> */ }
+
+        <Route component={ProjectWiki} path="/:namespace/:board_id/wiki/:uid" />
+        <Route component={ProjectWikiEdit} path="/:namespace/:board_id/wiki/:uid/edit" />
 
         <Route component={require('./projects/users')} path="/:namespace/:board_id/users" />
         <Route component={require('./projects/settings')} path="/:namespace/:board_id/settings" />
