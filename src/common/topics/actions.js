@@ -73,7 +73,7 @@ const deleteApi = (fetch, endpoint) =>
     credentials: 'include', // accept cookies from server, for authentication
   })
     .then(response => {
-      if (response.status === 204) return response.json();
+      if (response.status === 200) return response.json();
       throw response;
     });
 
@@ -623,7 +623,7 @@ export function deleteTopic(topicId) {
         method: 'DELETE',
       })
         .then(response => {
-          if (response.status === 204) return true;
+          if (response.status === 200) return true;
           throw response;
         })
         .catch(response => {

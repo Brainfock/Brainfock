@@ -56,7 +56,7 @@ const revive = (state) => initialState.merge({
   list: state.list ? state.list.map(todo => new Todo(todo)) : List(),
   listFilters: state.listFilters ? state.listFilters.map(todo => (new Record(todo))) : List(),
   newTopic: new FormRecord,
-  board: new Todo(state.board || {}),
+  board: new Todo,
   viewTopic: new Todo({loading: false}),
   forms: new Map(),
   formsRegistry: new Map(),
@@ -130,14 +130,17 @@ export default function boardsReducer(state = initialState, action) {
 
     case actions.FIND_ONE:
       return state
-        .set('board', {'isFetching': true})
-        .set('board', {'loading': true});
+        .setIn(['board', 'isFetching'], true)
+        .setIn(['board', 'loading'], true);
     // todo: board.meta.isFetching - if fetching form serer
     // todo: board.meta.isLoaded - if model has been loaded (redundant if we have id)
 
     case actions.FIND_ONE_SUCCESS:
+
       return state
-        .set('board', new Todo(action.payload))
+        //.set('board', new Todo(action.payload))
+        .setIn(['board', 'data'], new ModelSchema(action.payload || {}))
+        .setIn(['board', 'id'], action.payload.id)
         .setIn(['board', 'isFetching'], false)
         .setIn(['board', 'loading'], false)
         .setIn(['board', 'cid'], getRandomString());
@@ -435,7 +438,8 @@ export default function boardsReducer(state = initialState, action) {
       if (state.board && state.board.id === action.meta.topicId) {
         state = state
           // TODO: `board.data`
-          .set('board', new Todo(action.payload));
+          .setIn(['board', 'data'], new Todo(action.payload))
+          .setIn(['board', 'id'], action.payload.id);
       }
       return state
         .setIn(['forms', 'id', action.meta.topicId, 'meta', 'isSubmitting'], false)
