@@ -51,12 +51,13 @@ module.exports = function(Topic) {
   //  }
   //});
 
-  Topic.validatesPresenceOf('typeId', 'groupId', 'workspaceId', 'summary');
-
-  Topic.validate('typeId', typeIdcustomValidator, {message: 'Type is required'});
   function typeIdcustomValidator(err) {
     if (!this.typeId || !(this.typeId > 0)) err();
   };
+
+  Topic.validatesPresenceOf('typeId', 'groupId', 'workspaceId', 'summary');
+
+  Topic.validate('typeId', typeIdcustomValidator, {message: 'Type is required'});
 
   Topic.validate('workspaceId', function (err) {
     if (!this.workspaceId || !(this.workspaceId > 0)) err();
@@ -142,7 +143,7 @@ module.exports = function(Topic) {
 
           if (!groupScheme)
             return next(new Error('Can not find default group scheme!'));
-
+          //console.log('>> appy default group scheme')
           ctx.instance.groupSchemeId = groupScheme.id;
           next();
         });
@@ -377,6 +378,40 @@ module.exports = function(Topic) {
           if (err) throw err;
           next();
         });
+      });
+    } else {
+      next();
+    }
+  });
+
+  /**
+   * build simple menu for new root topics
+   * @todo build topic menu based on available features
+   */
+  Topic.observe('after save', function updateTimestamp(ctx, next) {
+    // after model has been saved, we have to pass model's ID back to entity registry:
+    if (ctx.isNewInstance === true && !ctx.instance.contextTopicId) {
+      Topic.app.models.TopicMenuItem.create({
+        topicId: ctx.instance.id,
+        link: 'wiki',
+        label: 'Wiki'
+      }, function(err, relation) {
+        if (err) {
+          throw err;
+        } else {
+          Topic.app.models.TopicMenuItem.create({
+            topicId: ctx.instance.id,
+            link: 'issues',
+            label: 'Issues'
+          }, function(err, relation) {
+            if (err) {
+              throw err;
+            }
+            else {
+              next();
+            }
+          });
+        }
       });
     } else {
       next();
