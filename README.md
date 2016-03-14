@@ -1,10 +1,10 @@
 [![Brainfock](https://brainfock.files.wordpress.com/2014/11/logo_greenhex_trans.png?w=250)](http://brainfock.org)
 
-## Business and Community Management Solution
+## Brainfock — Business and Community Management Solution
 
 Written in universal JavaScript, NodeJS server with Loopback, ReactJS client with everything.
 
-Copyright (C) 2015 Sergii Gamaiunov <[@SergiiGama](https://twitter.com/SergiiGama)>
+Copyright (C) 2015-2016 Sergii Gamaiunov <[@SergiiGama](https://twitter.com/SergiiGama)>
 
 > Brainfock is a modern web-based CMF started out as task & project management tool and ended up as something that angels might have crafted. It  will help you manage projects, project's tasks, deals, contacts, run community (discussion boards), manage documents like Wiki & much more. WIP, however!
 
