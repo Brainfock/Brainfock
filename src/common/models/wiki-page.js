@@ -195,7 +195,7 @@ module.exports = function(WikiPage)
             callback(null, new WikiPage({
               namespace: filter.where.namespace,
               pageUid: filter.where.pageUid,
-              contextEntityId: filter.where.contextEntityId,
+              contextEntityId: filter.where.contextEntityId > 0 ? filter.where.contextEntityId : 0,
               content: ''
             }));
           } else {
@@ -204,7 +204,7 @@ module.exports = function(WikiPage)
               namespace: filter.where.namespace,
               pageUid: filter.where.pageUid,
               content: '*This page does not exist yet. Click "Edit" to create it*',
-              contextEntityId: filter.where.contextEntityId,
+              contextEntityId: filter.where.contextEntityId > 0 ? filter.where.contextEntityId : 0,
             }));
           }
         }
