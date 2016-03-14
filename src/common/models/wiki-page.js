@@ -120,6 +120,7 @@ module.exports = function(WikiPage)
 
       if (modelInstance.namespace === 'Special') {
         if (cleanUid === 'Index') {
+          console.log('>> modelInstance.contextEntityId', modelInstance);
           parsers.push(modelInstance.appendPagesIndex())
         }
         // TODO: `Category` special page
@@ -194,6 +195,7 @@ module.exports = function(WikiPage)
             callback(null, new WikiPage({
               namespace: filter.where.namespace,
               pageUid: filter.where.pageUid,
+              contextEntityId: filter.where.contextEntityId,
               content: ''
             }));
           } else {
@@ -201,7 +203,8 @@ module.exports = function(WikiPage)
             callback(null, new WikiPage({
               namespace: filter.where.namespace,
               pageUid: filter.where.pageUid,
-              content: '*This page does not exist yet. Click "Edit" to create it*'
+              content: '*This page does not exist yet. Click "Edit" to create it*',
+              contextEntityId: filter.where.contextEntityId,
             }));
           }
         }
@@ -222,7 +225,7 @@ module.exports = function(WikiPage)
     const where = {
       contextEntityId: this.contextEntityId > 0 ? this.contextEntityId : 0
     };
-
+console.log('>> INDEX where',where)
     if (!modelInstance.contentRendered) {
       modelInstance.contentRendered = modelInstance.content;
     }
