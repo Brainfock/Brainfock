@@ -21,18 +21,28 @@ import Loader from '../../../components/Loader.js';
 
   render() {
 
-    const {children, ...props} = this.props;
-    if (children) {
-      return React.cloneElement(children, props);
-    }
-
-    const className = "col-xs-6 col-sm-3";
-
     const workspace = this.props.workspace.active;
-
     if (workspace.meta.isFetching || !workspace.data.id) {
       return <Loader noLabel/>
     }
+
+    const {children, ...props} = this.props;
+    if (children) {
+      return (
+        <div>
+          <div className="container-fluid">
+            <div className="row">
+              <div style={{padding:'0 25px'}}>
+                <h1>{workspace.data.name}</h1>
+              </div>
+            </div>
+            <div className="row">{React.cloneElement(children, props)} </div>
+          </div>
+        </div>
+      )
+    }
+
+    const className = "col-xs-6 col-sm-3";
 
     return (
       <div>
@@ -42,6 +52,7 @@ import Loader from '../../../components/Loader.js';
               <h1>{workspace.data.name}</h1>
             </div>
           </div>
+          <hr/>
           <div className="row">
 
             <div className={className}>

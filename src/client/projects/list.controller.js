@@ -34,7 +34,7 @@ export default class ProjectIssues extends Component {
     const {location: {pathname}} = this.props;
     return (
       <MasterDetailsListView
-        containerTopic={board}
+        containerTopic={board.data || /* @deprecated since `board.data` */ board }
         detailsComponent={IssueView}
         emptyListFallback={ProjectsEmpty}
         groupKey={this.resolveGroupKey()}

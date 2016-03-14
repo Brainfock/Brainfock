@@ -28,7 +28,7 @@ export default class Dashboard extends React.Component {
     return (
       <div>
         <div className="page-header left clearfix">
-          <h3>{msg.form.section.main}</h3>
+          <h3>{msg.form.section.main} <sup>(id: {this.props.topic.data.get('id')})</sup></h3>
         </div>
         <div className="container-fluid">
           <h4 style={{display:'none'}}>{msg.form.section.general}:</h4>

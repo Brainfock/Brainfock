@@ -41,7 +41,10 @@ export default class ProjectIssues extends Component {
     location: React.PropTypes.object.isRequired,
     msg: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired,
-    topic_actions: React.PropTypes.object.isRequired
+    topic_actions: React.PropTypes.object.isRequired,
+    pathname: React.PropTypes.any,
+    groupBy: React.PropTypes.string,
+    browseAll: React.PropTypes.bool,
   };
 
   static contextTypes = {
@@ -66,10 +69,20 @@ export default class ProjectIssues extends Component {
 
     if (process.env.IS_BROWSER === true) { // or get an infinite loop
 
+      // sub_board_id this.props.browseBoardNum
       const groupKey = this.props.groupKey;
-      this.props.topic_actions.count(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
-      this.props.topic_actions.find(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
-      this.props.topic_actions.loadFilters(groupKey, {}, this.props.params.board_id);
+      if (this.props.browseBoardNum) {
+        // load group scheme - so to know what are we about to list (what group)
+        // get list of available columns (TODO)
+        //
+        // loadTopicSubBoard()
+        // load()
+      } else {
+
+        this.props.topic_actions.count(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
+        this.props.topic_actions.find(groupKey, this.state.filters, (this.props.browseAll ? '*' : this.props.params.board_id), this.props.params.namespace);
+        this.props.topic_actions.loadFilters(groupKey, {}, this.props.params.board_id);
+      }
 
       if (!this.props.boards.group || this.props.boards.group.groupKey !== groupKey) {
         this.props.topic_actions.loadTopicGroup(groupKey);
@@ -85,7 +98,10 @@ export default class ProjectIssues extends Component {
 
     if (process.env.IS_BROWSER === true) {
 
-      if (`${newProps.location.search}` !== `${this.props.location.search}`) {
+      console.log('> will update', this.props, newProps.location)
+      console.log('> will update grp ',  newProps.groupKey, this.props.groupKey)
+      if (`${newProps.location.search}` !== `${this.props.location.search}`
+      || (newProps.groupKey && this.props.groupKey  && newProps.groupKey != this.props.groupKey )) {
 
         let query = {};
         if (this.state.searchQuery) {
@@ -94,8 +110,8 @@ export default class ProjectIssues extends Component {
           query.summary = {like: queryString};
         }
         let filter = Object.assign(query, newProps.location.query.filter);
-        this.props.topic_actions.count(this.props.groupKey, filter, this.props.params.board_id, this.props.params.namespace);
-        this.props.topic_actions.find(this.props.groupKey, filter, this.props.params.board_id, this.props.params.namespace);
+        this.props.topic_actions.count(newProps.groupKey, filter, newProps.params.board_id, newProps.params.namespace);
+        this.props.topic_actions.find(newProps.groupKey, filter, (newProps.browseAll ? '*' : newProps.params.board_id), newProps.params.namespace);
       }
     }
   }
@@ -155,7 +171,9 @@ export default class ProjectIssues extends Component {
 
     const addItemForm = (
       <Form
-        actions={this.props.topic_actions}
+        workspace={this.props.workspace}
+        actions={this.props.actions}
+        topic_actions={this.props.topic_actions}
         containerStore={this.props.containerTopic}
         form={this.props.boards.form}
         formData={formData}
@@ -328,7 +346,7 @@ export default class ProjectIssues extends Component {
 
     if (this.props.disableDetails === true) {
       return (
-        <div>
+        <div style={{paddingLeft:10}}>
           {this.props.boards.meta.isFetching === true &&
           <div style={{position:'absolute', width:'100%'}}><Loader noLabel/></div>}
           {this.renderList()}
@@ -376,6 +394,7 @@ export default class ProjectIssues extends Component {
         params={this.props.params}
         topicGroupKey={groupKey}
         viewTopic={this.props.boards.viewTopic}
+        groupBy={this.props.groupBy}
         />
     );
   }

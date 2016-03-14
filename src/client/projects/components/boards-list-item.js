@@ -104,27 +104,6 @@ export default class Todo extends Component {
       }, this.configureLabel(todo.type.labelConfig));
       typeLabel = <span style={labelStyle} >{todo.type.name}</span>;
     }
-    let parentLink = '';
-    if (todo.parent) {
-
-      let currentQuery = this.props.location.query;
-      if (currentQuery['filter'])
-        currentQuery['filter'].parentTopicId = todo.parent.id;
-      else
-        currentQuery = {filter: {parentTopicId: todo.parent.id}};
-
-      parentLink = ( <div className="">
-
-            <span className='label label-info'
-                  onClick={(e)=>{
-                e.preventDefault();
-                e.stopPropagation();
-                this.props.history.pushState(null, this.props.location.pathname, currentQuery)
-              }}>{todo.parent.summary}
-            </span>
-        </div>
-      );
-    }
 
     return (
       <div style={style}>
@@ -133,11 +112,9 @@ export default class Todo extends Component {
           onDoubleClick={this._onDblClick.bind(this)}
           primaryText={
             <div>
-              {parentLink}
-
               <div className="stats pull-right">
                 <div className="prop">
-                  {todo.contextTopicKey || todo.contextTopicNum}
+                  123 topics, 321 posts
                 </div>
               </div>
               {icon}

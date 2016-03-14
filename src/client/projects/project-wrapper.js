@@ -49,12 +49,12 @@ class Layout extends Component {
   menuItems() {
 
     let icon;
-    if (this.props.boards.board.accessPrivateYn) {
+    if (this.props.boards.board.data.accessPrivateYn) {
       icon = (<i className="fa fa-eye-slash"></i>);
     }
     console.log(">>menu", this.props.boards.board.menu)
 
-    const homeUrl = `/${this.props.workspace.active.data.namespace}/${this.props.boards.board.contextTopicKey}`;
+    const homeUrl = `/${this.props.workspace.active.data.namespace}/${this.props.boards.board.data.contextTopicKey}`;
     let menu = [
       {
         route: homeUrl,
@@ -68,7 +68,7 @@ class Layout extends Component {
               color:'#000',
               lineHeight:'16px'
             }}>
-            {this.props.boards.board.summary} {icon}</div>
+            {this.props.boards.board.data.summary} {icon}</div>
         )
       },
     ];
@@ -81,13 +81,13 @@ class Layout extends Component {
       })
    // }
 
-    menu.push({route: `/${this.props.params.namespace}/${this.props.boards.board.contextTopicKey}/users`, text: 'Users'})
-    menu.push({route: `/${this.props.params.namespace}/${this.props.boards.board.contextTopicKey}/settings`, text: 'Settings'})
+    menu.push({route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/users`, text: 'Users'})
+    menu.push({route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/settings`, text: 'Settings'})
 
     return menu;
     return [
       {
-        route: `/${this.props.workspace.active.data.namespace}/${this.props.boards.board.contextTopicKey}`,
+        route: `/${this.props.workspace.active.data.namespace}/${this.props.boards.board.data.contextTopicKey}`,
         text: (
           <div
             style={{
@@ -98,17 +98,17 @@ class Layout extends Component {
               color:'#000',
               lineHeight:'16px'
             }}>
-            {this.props.boards.board.summary} {icon}</div>
+            {this.props.boards.board.data.summary} {icon}</div>
         )
       },
       {
-        route: `/${this.props.params.namespace}/${this.props.boards.board.contextTopicKey}/issues`, text: 'Issues',
+        route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/issues`, text: 'Issues',
         routes: [
           `/${this.props.params.namespace}/${this.props.params.board_id}/issue/${this.props.params.id}`,
         ]
       },
       {
-        route: `/${this.props.params.namespace}/${this.props.boards.board.contextTopicKey}/boards`,
+        route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/boards`,
         text: 'Discussion Boards',
         routes: [
           `/${this.props.params.namespace}/${this.props.params.board_id}/board/${this.props.params.id}`,
@@ -116,7 +116,7 @@ class Layout extends Component {
         ]
       },
       {
-        route: `/${this.props.params.namespace}/${this.props.boards.board.contextTopicKey}/discussions`,
+        route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/discussions`,
         text: 'Discussions',
         routes: [
           `/${this.props.params.namespace}/${this.props.params.board_id}/board/${this.props.params.id}`,
@@ -125,8 +125,8 @@ class Layout extends Component {
       },
       // what about other menuss & modules?
       // Like agile or scrum boards, custom reports?
-      {route: `/${this.props.params.namespace}/${this.props.boards.board.contextTopicKey}/users`, text: 'Users'},
-      {route: `/${this.props.params.namespace}/${this.props.boards.board.contextTopicKey}/settings`, text: 'Settings'},
+      {route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/users`, text: 'Users'},
+      {route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/settings`, text: 'Settings'},
     ];
   }
 };

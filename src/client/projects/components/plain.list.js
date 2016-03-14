@@ -120,7 +120,9 @@ export default class ProjectIssues extends Component {
 
     const addItemForm = (
       <Form
-        actions={this.props.topic_actions}
+        actions={this.props.actions}
+        topic_actions={this.props.topic_actions}
+        workspace={this.props.workspace}
         containerStore={this.props.containerTopic}
         formFields={formFields}
         newTopic={newTopic}

@@ -32,7 +32,7 @@ export default class Dashboard extends React.Component {
       const formData = this.props.boards.getIn(['forms', 'id', this.props.boards.board.id])
 
       if (!formData) {
-        this.props.topic_actions.makeTopicUpdateFormRecord(this.props.boards.board.id, this.props.boards.board.toJS());
+        this.props.topic_actions.makeTopicUpdateFormRecord(this.props.boards.board.id, this.props.boards.board.data.toJS());
       }
     }
   }
