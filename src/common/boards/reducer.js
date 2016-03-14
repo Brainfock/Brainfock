@@ -220,6 +220,8 @@ export default function boardsReducer(state = initialState, action) {
 
     case actions.LOAD_FORM_FIELDS_SUCCESS: {
       const newlist = action.payload.filters.map((item) => {
+        if (item === null)
+          item = {};
         item.cid = getRandomString();
         return new (Record(item));
       });
