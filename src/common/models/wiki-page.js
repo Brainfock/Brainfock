@@ -367,69 +367,95 @@ module.exports = function(WikiPage)
   WikiPage.prototype.replaceWikiLinks = function (text, links, originalCallback) {
 
     var self = this;
-    if(links) {
 
-      function asyncReplace($fullMath, $pageData, callback) {
+    function replaceWikiLinks(contextTopic) {
+      let baseLink;
+      if (contextTopic !== null) {
+        baseLink = `/${contextTopic.namespace}/${contextTopic.contextTopicKey}/wiki/`;
+      } else {
+        baseLink = '/wiki/';
+      }
 
-        let filter = {
-          where: {
-            context_entity_id: (self.context_entity_id ? self.context_entity_id : 0),
-            pageUid: $pageData. wiki_uid
-          },
-          limit: 1
-        };
+      if(links) {
 
-        if(filter.where.pageUid && filter.where.pageUid.indexOf( ':' ) !== -1) {
-          let findBy = filter.where.pageUid.split(':');
-          filter.where.namespace = findBy[0];
-          filter.where.pageUid = findBy[1];
+        function asyncReplace($fullMath, $pageData, callback) {
+
+          let filter = {
+            where: {
+              contextEntityId: (self.contextEntityId ? self.contextEntityId : 0),
+              pageUid: $pageData. wiki_uid
+            },
+            limit: 1
+          };
+
+          if(filter.where.pageUid && filter.where.pageUid.indexOf( ':' ) !== -1) {
+            let findBy = filter.where.pageUid.split(':');
+            filter.where.namespace = findBy[0];
+            filter.where.pageUid = findBy[1];
+          }
+
+          var escapeReg = function(s) {
+            return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+          };
+
+          RegExp.escape= function(s) {
+            return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+          };
+
+          app.models.WikiPage.find(filter, {}, function(err, foundPage) {
+
+            if (err) {
+              return callback();
+            }
+
+            const find = RegExp.escape($fullMath);
+
+            if (!foundPage || foundPage.length === 0) {
+              // page is not found, but it's not a fatal error
+              text = text.replace(new RegExp(find, 'g'), '<a class="non-existing WkikLink" href="'+baseLink+$pageData. wiki_uid+'">'+$pageData. title+'</a>');
+              return callback();
+
+            } else {
+              text = text.replace(new RegExp(find, 'g'), '<a class="WkikLink" href="'+baseLink+$pageData. wiki_uid+'">'+$pageData. title+'</a>');
+              return callback();
+            }
+          });
+        }
+        function final() {
+          originalCallback(text)
         }
 
-        var escapeReg = function(s) {
-          return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-        };
+        var results = [];
+        let _keys = Object.keys(links);
+        Object.keys(links).forEach(function (linkData, index) {
 
-        RegExp.escape= function(s) {
-          return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-        };
-
-        app.models.WikiPage.find(filter, {}, function(err, foundPage) {
-
-          if (err) {
-            return callback();
-          }
-
-          const find = RegExp.escape($fullMath);
-
-          if (!foundPage || foundPage.length === 0) {
-            // page is not found, but it's not a fatal error
-            text = text.replace(new RegExp(find, 'g'), '<a class="non-existing WkikLink" href="/wiki/'+$pageData. wiki_uid+'">'+$pageData. title+'</a>');
-            return callback();
-
-          } else {
-            text = text.replace(new RegExp(find, 'g'), '<a class="WkikLink" href="/wiki/'+$pageData. wiki_uid+'">'+$pageData. title+'</a>');
-            return callback();
-          }
+          asyncReplace(linkData, links[linkData], function(result){
+            results.push(1);
+            if(results.length === (_keys.length)) {
+              final();
+            }
+          });
         });
       }
-      function final() {
+      else {
         originalCallback(text)
       }
+    }
 
-      var results = [];
-      let _keys = Object.keys(links);
-      Object.keys(links).forEach(function (linkData, index) {
-
-        asyncReplace(linkData, links[linkData], function(result){
-          results.push(1);
-          if(results.length === (_keys.length)) {
-            final();
+    if (self.contextEntityId) {
+      WikiPage.app.models.Topic.findOne({where:{
+          entityId: self.contextEntityId
+        }},
+        function(err,data)
+        {
+          if (err || !data) {
+            replaceWikiLinks(null);
+          } else {
+            replaceWikiLinks(data);
           }
         });
-      });
-    }
-    else {
-      originalCallback(text)
+    } else {
+      replaceWikiLinks(null);
     }
   }
 };
