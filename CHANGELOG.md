@@ -4,8 +4,20 @@ Changelog
 Summary of most notable changes in Brainfock project code. Changelog entries usually are split into `Features`, `Fixes` and `Style tweaks` sections.
 When makes sense, items in these section may be subdivided by application component (e.g. `Server`, `API`, `iOS Client`).
 
+## 15 Mar 2016; Sergii Gamaiunov <hello@webkadabra.com> v0.26.0:
+* Add customizable terms to topics/issues (priority etc.)
+* Improve tests stack
+* Improve access control & security
+* Add full Wiki support for context topics (projects etc.)
+* Add simple workspaces management page to admin module
+* Add dynamic & customizable menu for context topics (projects etc.)
 
-## 29 Oct Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.22.0:
+## 10 Nov 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.25.0:
+## 06 Nov 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.24.0:
+
+## 01 Nov 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.23.0:
+
+## 29 Oct 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.22.0:
 * Add admin module
 
   Module takes advantage of require.ensure and does not load module files unless client requested them.
@@ -38,7 +50,7 @@ When makes sense, items in these section may be subdivided by application compon
 * Loader component: Add option to render line-progress bar only, without `loading` label
 * Add server data fetch for workspace homepage, fired by @fetch decorator and is isomorphic
 
-## 25 Oct Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.21.0:
+## 25 Oct 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.21.0:
 
 * Modify `baseUrl` app config property to store full base url with protocol and trailing slash
 * Modify server-side rendering and re-factor stack
@@ -87,7 +99,7 @@ When makes sense, items in these section may be subdivided by application compon
 * Add linear progress bar and align `loading` placeholder to the center
 
 
-## 20 Oct Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.20.0:
+## 20 Oct 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.20.0:
 
 ### Features
 * Allow to change topic status via workflow operations.
@@ -129,7 +141,7 @@ When makes sense, items in these section may be subdivided by application compon
 * Switch back to `material-ui` and dump temporary `material-ui-io` package.
 * ... and many smaller fixes
 
-## 13 Oct Sept 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.19.0:
+## 13 Oct 2015; Sergii Gamaiunov <hello@webkadabra.com> v0.19.0:
 
 ### Features
 
