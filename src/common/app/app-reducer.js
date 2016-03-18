@@ -9,7 +9,10 @@ import * as topicActions from '../topics/actions';
 import {Record} from 'immutable';
 
 const InitialState = Record({
-  baseUrl: ''
+  baseUrl: '',
+  activeSectionId: '',
+  activeSectionLabel: '',
+  activeSubSectionLabel: '',
 });
 const initialState = new InitialState;
 
@@ -19,6 +22,11 @@ export default function authReducer(state = initialState, action) {
   switch (action.type) {
     case actions.APP_SET_BASEURL: {
       return state.set('baseUrl', action.payload);
+    }
+    case actions.APP_SET_ACTIVE_SECTION: {
+      return state
+        .set('activeSectionLabel', action.payload.label)
+        .set('activeSubSectionLabel', action.payload.subLabel);
     }
     case topicActions.LOAD_TOPIC_GROUP_ERROR: {
       const error = action.payload.message ? action.payload.message : null;
