@@ -13,6 +13,9 @@ import MasterDetailsListView from './components/master-detail.list';
 
 export default class ProjectsIndex extends Component {
 
+  componentWillMount() {
+    this.props.actions.appSetActiveSectionLabel('Projects');
+  }
   render() {
     const {children, ...passProps} = this.props;
     return (

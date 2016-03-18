@@ -21,7 +21,8 @@ import {fetchContextPage} from '../../../common/wiki/actions';
 @fetch(fetchContextPage)
 class Page extends Component {
 
-  componentWillMount(props)  {
+  componentWillMount() {
+    this.props.actions.appSetActiveSectionLabel('Wiki');
     if (this.props.params.uid
       && (!this.props.wiki.viewPage.pageUid || this.props.wiki.viewPage.pageUid !== this.props.params.uid)) {
       this.props.actions.findContextPage(0, this.props.params.uid);

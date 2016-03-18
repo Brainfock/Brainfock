@@ -13,8 +13,13 @@ let AppContentCanvas = require('../components/layout/AppContentCanvas');
 
 class Layout extends Component {
 
+  updateAppSectionLabels(props) {
+    this.props.actions.appSetActiveSectionLabel(props.workspace.active.data.name,  props.boards.board.data.summary);
+  }
   componentDidMount() {
     if (process.env.IS_BROWSER === true) {
+      this.updateAppSectionLabels(this.props);
+
       // load info about CURRENT BOARD
       this.props.topic_actions.loadCurrent(this.props.params.board_id, this.props.params.namespace);
       this.props.topic_actions.fetchTopicMenu(this.props.params.board_id, this.props.params.namespace);
@@ -23,6 +28,19 @@ class Layout extends Component {
      // this.props.topic_actions.find(this.props.groupKey || 'board_topic', {},this.props.params.board_id);
     }
   }
+
+  componentWillReceiveProps(newProps) {
+    if(this.props.workspace.active.data.name !== newProps.workspace.active.data.name) {
+      this.updateAppSectionLabels(newProps);
+    }
+  }
+
+  componentWillUpdate(newProps) {
+    if(this.props.workspace.active.data.name !== newProps.workspace.active.data.name) {
+      this.updateAppSectionLabels(newProps);
+    }
+  }
+
 
   render () {
 
@@ -52,7 +70,6 @@ class Layout extends Component {
     if (this.props.boards.board.data.accessPrivateYn) {
       icon = (<i className="fa fa-eye-slash"></i>);
     }
-    console.log(">>menu", this.props.boards.board.menu)
 
     const homeUrl = `/${this.props.workspace.active.data.namespace}/${this.props.boards.board.data.contextTopicKey}`;
     let menu = [

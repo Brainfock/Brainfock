@@ -15,6 +15,10 @@ import {Paper} from 'material-ui';
 @connect(mapStateToProps, mapAdminDispatchToProps)
 class AdminHome extends Component {
 
+  componentWillMount() {
+    this.props.actions.appSetActiveSectionLabel('Admin');
+  }
+
   render() {
     const classNAme="col-xs-6 col-sm-3";
 

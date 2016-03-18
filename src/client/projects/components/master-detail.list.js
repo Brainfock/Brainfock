@@ -232,7 +232,7 @@ export default class ProjectIssues extends Component {
     const content = this.renderListContent();
 
     return (
-      <DocumentTitle title={this.props.boards.board.summary + ' - ' + this.props.boards.group.name}>
+      <DocumentTitle title={board.summary + ' - ' + this.props.boards.group.name}>
         <div className="bfk-browse">
           <div className="page-header clearfix">
 

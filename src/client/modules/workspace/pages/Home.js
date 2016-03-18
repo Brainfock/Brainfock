@@ -19,6 +19,10 @@ import Loader from '../../../components/Loader.js';
  */
 @fetch(fetchWorkspaceHomepage) class WorkspaceHome extends Component {
 
+  componentWillMount() {
+    this.props.actions.appSetActiveSectionLabel(this.props.workspace.active.data.name || 'Workspaces');
+  }
+
   render() {
 
     const workspace = this.props.workspace.active;

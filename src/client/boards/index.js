@@ -19,6 +19,7 @@ const views = {
 module.exports = React.createClass({
 
   componentWillMount() {
+    this.props.actions.appSetActiveSectionLabel('Discussion Boards');
     if (process.env.IS_BROWSER === true) {
       this.props.topic_actions.loadTopicGroup('board');
       //this.props.topic_actions.find('project', {}/*, this.props.parentModel*/);

@@ -25,6 +25,7 @@ export default class Me extends Component {
   }
 
   componentWillMount() {
+    this.props.actions.appSetActiveSectionLabel('My Account');
 
     const {users: {viewer}, actions} = this.props;
 

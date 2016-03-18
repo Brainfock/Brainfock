@@ -34,6 +34,7 @@ export default class Page extends Component{
   }
 
   componentWillMount() {
+    this.props.actions.appSetActiveSectionLabel('Wiki');
     if (process.env.IS_BROWSER) {
       if (this.props.params.uid) {
         this.props.actions.findContextPage(0, this.props.params.uid);

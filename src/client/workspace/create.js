@@ -15,6 +15,10 @@ class AsynchronousBlurValidation extends Component {
     location: PropTypes.object
   };
 
+  componentWillMount() {
+    this.props.actions.appSetActiveSectionLabel('Workspaces');
+  }
+
   render() {
     return (
       <AsynchronousBlurValidationForm

@@ -134,6 +134,11 @@ export class App extends Component {
 
     let rightElement;
 
+
+    let sectionTitle = this.props.app.activeSectionLabel || 'Brainfock';
+    if (this.props.app.activeSectionLabel && this.props.app.activeSubSectionLabel) {
+      sectionTitle = `${this.props.app.activeSectionLabel} » ${this.props.app.activeSubSectionLabel}`
+    }
     if (viewer && viewer.username) {
       // TODO: use avatar instead when available
       rightElement = (
@@ -228,7 +233,10 @@ export class App extends Component {
           onLeftIconButtonTouchTap={this._onLeftIconButtonTouchTap.bind(this)}
           pathname={pathname}
           style={{borderBottom:'1px solid #E0E0E0'}}
-          title="Brainfock"
+          title={this.props.workspace.active.data.name}
+          title={this.props.app.activeSectionLabel || 'Brainfock'}
+          title={sectionTitle}
+          __title="Brainfock"
           _title={<DropDownMenu menuItems={menuItems} />}
           zDepth={0}
           >
