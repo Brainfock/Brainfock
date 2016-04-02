@@ -1,8 +1,11 @@
 /**
- * Brainfock - Community & Business Management Solution
+ * Brainfock, <http://www.brainfock.org>
  *
- * @link http://www.brainfock.org
- * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
+ * Copyright (C) 2015-present Sergii Gamaiunov <hello@webkadabra.com>
+ * All rights reserved.
+ *
+ * This source code is licensed under the GPL-style license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import {mergeQuery} from 'loopback-datasource-juggler/lib/utils';
 import loopback from 'loopback';
@@ -411,6 +414,27 @@ module.exports = function(Topic) {
               next();
             }
           });
+        }
+      });
+    } else {
+      next();
+    }
+  });
+
+  /**
+   *
+   */
+  Topic.observe('after save', function updateTimestamp(ctx, next) {
+    if (ctx.isNewInstance === true) {
+      Topic.app.models.UserTopic.create({
+        topicId: ctx.instance.id,
+        userId: ctx.instance.ownerUserId,
+      }, function(err, relation) {
+        if (err) {
+          return next(err);
+        } else {
+          // TODO: add topic to every user
+          next();
         }
       });
     } else {

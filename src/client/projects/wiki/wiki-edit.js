@@ -1,8 +1,11 @@
 /**
- * Brainfock - Community & Business Management Solution
+ * Brainfock, <http://www.brainfock.org>
  *
- * @link http://www.brainfock.org
- * @copyright Copyright (c) 2016 Sergii Gamaiunov <hello@webkadabra.com>
+ * Copyright (C) 2015-present Sergii Gamaiunov <hello@webkadabra.com>
+ * All rights reserved.
+ *
+ * This source code is licensed under the GPL-style license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React, {PropTypes} from 'react';
 import Component from 'react-pure-render/component';

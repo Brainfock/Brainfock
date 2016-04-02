@@ -1,11 +1,11 @@
 /**
- * Brainfock - Community & Business Management Solution
+ * Brainfock, <http://www.brainfock.org>
  *
- * Copyright (c) 2015-present, Sergii Gamaiunov <hello@webkadabra.com>
+ * Copyright (C) 2015-present Sergii Gamaiunov <hello@webkadabra.com>
  * All rights reserved.
  *
- * @link http://www.brainfock.org
- * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
+ * This source code is licensed under the GPL-style license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 export const APP_SET_BASEURL = 'APP_SET_BASEURL';
 export const APP_SET_ACTIVE_SECTION = 'APP_SET_ACTIVE_SECTION';

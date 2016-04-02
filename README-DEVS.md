@@ -1,4 +1,6 @@
-# Este.js
+[![Brainfock](https://brainfock.files.wordpress.com/2014/11/logo_greenhex_trans.png?w=250)](http://brainfock.org)
+
+## Brainfock — Developer Readme
 
 Choosing dev stack is a diligent process, but look no more! Brainfock uses great [Este.js](https://github.com/este/este) dev stack
 made by Daniel Steigerwald, twitter.com/steida, @grabbou and the community. To find most recent Este version and documentation, please, star & follow Este Github

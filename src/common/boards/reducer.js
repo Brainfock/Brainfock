@@ -1,8 +1,12 @@
 /**
- * Brainfock - Community & Business Management Solution
+ * Part of Brainfock.
+ * Copyright (C) 2015-present Sergii Gamaiunov <hello@webkadabra.com>
+ * All rights reserved.
+ *
+ * This source code is licensed under the GPL-style license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @link http://www.brainfock.org
- * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
  */
 import * as actions from '../topics/actions';
 import * as commentsActions from '../comments/actions';

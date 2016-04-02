@@ -1,22 +1,11 @@
 /**
- * Brainfock - community & issue management software
- * Copyright (c) 2015, Sergii Gamaiunov (“Webkadabra”)  All rights reserved.
+ * Brainfock, <http://www.brainfock.org>
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Copyright (C) 2015-present Sergii Gamaiunov <hello@webkadabra.com>
+ * All rights reserved.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @link http://www.brainfock.com/
- * @copyright Copyright (c) 2015 Sergii Gamaiunov <hello@webkadabra.com>
+ * This source code is licensed under the GPL-style license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import React from 'react'
 import {Link} from 'react-router'
