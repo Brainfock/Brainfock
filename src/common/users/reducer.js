@@ -77,6 +77,47 @@ export default function usersReducer(state = initialState, action) {
         .deleteIn(['forms', 'id', userId, formKey, 'meta', 'errors', name])
         .deleteIn(['forms', 'id', userId, formKey, 'meta', 'postedOn'])
     }
+
+    case actions.SAVE_USER_CREATE_FORM: {
+      const {userId, formKey} = action.meta;
+      return state
+        .setIn(['forms', 'id', userId, formKey, 'meta', 'isSubmitting'], true);
+    }
+    case actions.SAVE_USER_CREATE_FORM_SUCCESS: {
+      const {userId, formKey} = action.meta;
+      return state
+        .setIn(['forms', 'id', userId, formKey, 'meta', 'error'], '')
+        .setIn(['forms', 'id', userId, formKey, 'meta', 'isSubmitting'], false);
+    }
+    case actions.SAVE_USER_CREATE_FORM_ERROR: {
+      const {userId, formKey} = action.meta;
+      if (action.payload.error && action.payload.error.details) {
+
+        // error with details
+        let errorDetails = {};
+        for (let fieldName in action.payload.error.details.messages) {
+          if (action.payload.error.details.messages.hasOwnProperty(fieldName)) {
+            const message = action.payload.error.details.messages[fieldName];
+            errorDetails[fieldName] = message.join('; ');
+          }
+        }
+        return state
+          .setIn(['forms', 'id', userId, formKey, 'meta', 'errors'], Map(errorDetails))
+          .setIn(['forms', 'id', userId, formKey, 'meta', 'isSubmitting'], false);
+      } else if (action.payload.error) {
+
+        // non-detailed errror
+        return state
+          .setIn(['forms', 'id', userId, formKey, 'meta', 'error'], action.payload.error.message || 'Unknown Error!')
+          .setIn(['forms', 'id', userId, formKey, 'meta', 'isSubmitting'], false);
+      } else {
+
+        // general error e.g. connection/fetch failed
+        return state
+          .setIn(['forms', 'id', userId, formKey, 'meta', 'error'], action.payload.message.length > 0 && action.payload.message || 'Unknown Error!')
+          .setIn(['forms', 'id', userId, formKey, 'meta', 'isSubmitting'], false);
+      }
+    }
   }
 
   return state;

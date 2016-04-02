@@ -12,6 +12,8 @@ import {Record, Map} from 'immutable';
 export default Record({
   cid: '',
   data: new  (Record({
+    username: '',
+    email: '',
     password: '',
     confirmPassword: '',
     currentPassword: '',

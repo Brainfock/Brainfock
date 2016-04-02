@@ -176,11 +176,9 @@ export default {
         save: 'Save',
       },
       label: {
-        accessPrivate: 'Available to invited users only',
-        summary: 'Summary (name)',
-        text: 'Project description',
-        logoIcon: 'Project icon',
-        logoBackground: 'Project background color',
+        email: 'Email',
+        username: 'Username',
+        password: 'Password',
       },
       hint: {
         summary: 'Try to keep it short',

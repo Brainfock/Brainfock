@@ -22,6 +22,10 @@ export const SAVE_USER_UPDATE_FORM = 'SAVE_USER_UPDATE_FORM_PENDING';
 export const SAVE_USER_UPDATE_FORM_SUCCESS = 'SAVE_USER_UPDATE_FORM_SUCCESS';
 export const SAVE_USER_UPDATE_FORM_ERROR = 'SAVE_USER_UPDATE_FORM_ERROR';
 
+export const SAVE_USER_CREATE_FORM = 'SAVE_USER_CREATE_FORM_PENDING';
+export const SAVE_USER_CREATE_FORM_SUCCESS = 'SAVE_USER_CREATE_FORM_SUCCESS';
+export const SAVE_USER_CREATE_FORM_ERROR = 'SAVE_USER_CREATE_FORM_ERROR';
+
 export function findUsers(includes, query) {
 
   let endpoint = 'members/?'+includes;
@@ -59,6 +63,13 @@ export function setUserUpdateFormField({target: {name, value}}, userId, formKey)
   };
 }
 
+export function setUserCreateFormField({target: {name, value}}, userId, formKey) {
+  return {
+    type: SET_USER_UPDATE_FORM_FIELD,
+    payload: {name, value, userId, formKey}
+  };
+}
+
 export function saveUserUpdateForm(id, formKey, data) {
 
   const endpoint = `users/${id}`;
@@ -70,6 +81,42 @@ export function saveUserUpdateForm(id, formKey, data) {
     },
     payload: {
       promise: apiPut(fetch, endpoint, data)
+        .catch(response => {
+          // decode validation error messages from server
+          if (!response) {
+            throw new Error('No response');
+          } else if (response.ok === false) return response.json();
+          else {
+            throw response;
+          }
+        })
+        .then(function (jsonResponce) {
+          if (jsonResponce.error) {
+            throw jsonResponce;
+          }
+          else
+            return jsonResponce;
+        }, function (response) {
+          // throw other errors (i.e. 50x) that don't have `.json()` available
+          throw response;
+        })
+    }
+  });
+}
+
+
+export function saveUserCreateForm(id, formKey, data) {
+
+  const endpoint = `users`;
+
+  return ({fetch, validate}) => ({
+    type: 'SAVE_USER_CREATE_FORM',
+    meta: {
+      userId: id,
+      formKey,
+    },
+    payload: {
+      promise: apiPost(fetch, endpoint, data)
         .catch(response => {
           // decode validation error messages from server
           if (!response) {

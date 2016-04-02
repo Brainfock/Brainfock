@@ -17,6 +17,11 @@ import UserAvatar from '../../../../../users/components/Avatar';
 import Component from 'react-pure-render/component';
 
 import {Utils} from 'material-ui';
+import RaisedButton from 'material-ui/lib/raised-button';
+import FlatButton from 'material-ui/lib/flat-button';
+import Dialog from 'material-ui/lib/dialog';
+import CreateUserForm from './create-user-form.js';
+import {CircularProgress} from 'material-ui';
 const Events = Utils.Events;
 
 class Users extends Component {
@@ -39,6 +44,7 @@ class Users extends Component {
       displayRowCheckbox: false,
       tableHeight: `300px`,
       deviceHeight: 300,
+      open: false,
     };
   }
   componentWillMount() {
@@ -76,6 +82,54 @@ class Users extends Component {
     Events.off(window, 'resize', this._updateDeviceWidth.bind(this));
   }
 
+  handleOpen = () => {
+    this.setState({open: true});
+  };
+
+  handleClose = () => {
+    this.setState({open: false});
+  };
+
+  renderUserForm() {
+    const formData = this.props.users.getIn(['forms', 'id', -1, 'create']);
+
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        secondary={true}
+        onTouchTap={this.handleClose}
+        disabled={formData && formData.meta.isSubmitting === true}
+        />,
+      <FlatButton
+        label={(formData && formData.meta.isSubmitting === true ? 'Saving...' : "Submit")}
+        primary={true}
+        disabled={formData && formData.meta.isSubmitting === true}
+        onTouchTap={(e)=>{
+                      this.props.actions.saveUserCreateForm(-1, 'create', formData.data)
+                      }.bind(this)}
+        />,
+    ];
+
+    let loader;
+    if (formData && formData.meta.isSubmitting === true) {
+      loader =  <CircularProgress  size={0.5}/>;
+    }
+    return (
+      <div>
+        <Dialog
+          title="Create new user account"
+          actions={actions}
+          modal={true}
+          open={this.state.open}
+          >
+          {loader}
+          <CreateUserForm actions={this.props.actions} users={this.props.users} msg={this.props.msg} />
+
+          <br />
+        </Dialog>
+      </div>
+    );
+  }
   render() {
 
     const {children, ...props} = this.props;
@@ -106,8 +160,11 @@ class Users extends Component {
           onRowSelection={this._onRowSelection}>
           <TableHeader enableSelectAll={this.state.enableSelectAll} displaySelectAll={false}>
             <TableRow>
-              <TableHeaderColumn colSpan="5" tooltip='Super Header' style={{textAlign: 'center'}}>
-                <h4>User management</h4>
+              <TableHeaderColumn colSpan="5" tooltip='Super Header' >
+                <div className="pull-right">
+                  <RaisedButton label="Create User" onTouchTap={this.handleOpen}  /></div>
+                <h4 style={{textAlign: 'center'}}>User management</h4>
+                {this.renderUserForm()}
               </TableHeaderColumn>
             </TableRow>
             <TableRow>
