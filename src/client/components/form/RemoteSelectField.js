@@ -19,7 +19,8 @@ var RemoteSelectField = React.createClass({
     label: React.PropTypes.string,
     endpoint:React.PropTypes.string,
     options:React.PropTypes.array,
-    endpointQueryString:React.PropTypes.string
+    endpointQueryString:React.PropTypes.string,
+    formatCallback: React.PropTypes.callback,
   },
   loadOptions (input, callback) {
 
@@ -42,6 +43,12 @@ var RemoteSelectField = React.createClass({
     }
 
 
+          let formatCallback = this.props.formatCallback
+            ? this.props.formatCallback
+            : item => { return {
+            value:(item.value || item.id),
+            label:(item.label || item.summary || item.name),
+          }}
     this.timer=setTimeout(function() {
       fetch(endpoint.join('&'), {
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
@@ -55,10 +62,9 @@ var RemoteSelectField = React.createClass({
           throw response;
         })
         .then(function(response) {
-          let resp= response.map(item => { return {
-            value:(item.value || item.id),
-            label:(item.label || item.summary || item.name),
-          }});
+
+          let resp = response.map(formatCallback);
+
           return callback(null, {
             options:resp || [],
             complete: false
