@@ -200,6 +200,13 @@
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "ALLOW",
+      "property": "__get__topics__members"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
       "property": "__findById__topics__wikiPages"
     },
     {
