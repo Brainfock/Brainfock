@@ -632,6 +632,17 @@
       "type": "hasMany",
       "model": "WikiPage",
       "foreignKey": "entity_id"
+    },
+    "members": {
+      "type": "hasMany",
+      "model": "UserTopic",
+      "foreignKey": "topic_id"
+    },
+    "users": {
+      "type": "hasMany",
+      "model": "User",
+      "foreignKey": "topic_id",
+      "through": "UserTopic"
     }
   },
   "acls": [
