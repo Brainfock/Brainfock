@@ -62,7 +62,7 @@
     "isomorphic-fetch": "^2.1.1",
     "less": "^2.5.1",
     "less-loader": "^2.0.0",
-    "loopback": "^2.22.2",
+    "loopback": "^2.27.0",
     "loopback-boot": "^2.12.2",
     "loopback-connector-mysql": "^2.2.0",
     "loopback-datasource-juggler": "^2.40.1",
