@@ -38,10 +38,11 @@ Stay tuned for updates and definitely hit me up with a quick shouts  [@SergiiGam
 
 Tech summary
 --------------------------
-* React.js
-* Node.js' NPM, Webpack & Bower
-* [Loopback](http://loopback.io/)
-* Google's Material Design guidelines (utilizing powerful <http://material-ui.com>)
+- React.js + Redux
+- Node.js' NPM, Webpack & Bower
+- [Loopback](http://loopback.io/)
+- Google's Material Design guidelines (utilizing powerful <http://material-ui.com>)
+- Universal JavaScript dev stack for browser, server, mobile.
 
 Please, follow [SETUP.md](/SETUP.md) for in-depth information about used technologies and stack, setup and development.
 

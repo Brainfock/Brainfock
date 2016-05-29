@@ -3,19 +3,8 @@
 ## Brainfock — Developer Readme
 Copyright (C) 2015-present Sergii Gamaiunov <[@SergiiGama](https://twitter.com/SergiiGama)>
 
-## Prerequisites
-
-Install [node.js](http://nodejs.org) (v4 is required).
-
-If you are using different node versions on your machine, use `nvm` to manage them.
-
-You may also need to upgrade `npm` to 3.x
-```shell
-npm install -g npm@3.x
-```
 
 ## Techniques
-
 - Universal JavaScript dev stack for browser, server, mobile.
 - Functional works: App state snapshots, time travel, hot reload everything.
 - [React](http://facebook.github.io/react/) with server side rendering on [expressjs](http://expressjs.com/) backend.
@@ -30,6 +19,18 @@ npm install -g npm@3.x
 - Simple yet powerfull sync/async validation based on [chriso/validator.js](https://github.com/chriso/validator.js)
 - LESS, SASS, Stylus, or plain CSS with [autoprefixer](https://github.com/postcss/autoprefixer).
 - Long Term Caching through file hashes.
+
+
+## Prerequisites
+
+Install [node.js](http://nodejs.org) (v4 is required).
+
+If you are using different node versions on your machine, use `nvm` to manage them.
+
+You may also need to upgrade `npm` to 3.x
+```shell
+npm install -g npm@3.x
+```
 
 ## Installing
 
