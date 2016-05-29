@@ -1,38 +1,7 @@
 [![Brainfock](https://brainfock.files.wordpress.com/2014/11/logo_greenhex_trans.png?w=250)](http://brainfock.org)
 
 ## Brainfock — Developer Readme
-
-Choosing dev stack is a diligent process, but look no more! Brainfock uses great [Este.js](https://github.com/este/este) dev stack
-made by Daniel Steigerwald, twitter.com/steida, @grabbou and the community. To find most recent Este version and documentation, please, star & follow Este Github
-
-> The most complete React/Flux dev stack and starter kit for universal functional web apps. Forget about [evil frameworks](http://tomasp.net/blog/2015/library-frameworks/), learn laser focused libraries and patterns instead.
-
-## At a glance
-
-Este universe is organized into several folders, each of them contains its own package.json.
-
-#### @este/universal
-
-This is umbrella package to help you working with different targets.
-You should not install any dependencies here. The only dependencies that are included in that
-package are eslint and its parsers so it's easier to work with Atom/SublimeText.
-
-This package contains several scripts that are here to help you with development, but since they are just wrappers
-to the underlaying `web/` and `native/` tasks, it's not required to use them. See Dev and CI tasks section.
-
-#### @este/common
-
-Este common is a package that contains Flux (Redux) implementation, actions, reducers and universal logic that works
-across all targets. You should not install any React-specific or target-specific dependencies here to make this
-package fully cross-platform.
-
-#### @este/web
-
-This package contains previous Este/web and comes with both client and server.
-
-#### @este/native
-
-This package contains previous Este/native and comes with React Native iOS & Android implementations.
+Copyright (C) 2015-present Sergii Gamaiunov <[@SergiiGama](https://twitter.com/SergiiGama)>
 
 ## Prerequisites
 
@@ -65,8 +34,8 @@ npm install -g npm@3.x
 ## Installing
 
 ```shell
-git clone https://github.com/este/este.git este-app
-cd este-app
+git clone https://github.com/Brainfock/Brainfock.git brainfock
+cd brainfock
 npm install
 ```
 
@@ -83,7 +52,7 @@ setup for production, you need to set `NODE_ENV=production` and (optionally) set
 ## Start Development
 
 - run `npm run web-start-dev`
-- point your browser to [localhost:8000](http://localhost:8000)
+- point your browser to [localhost:3000](http://localhost:3000)
 - build something beautiful
 
 ## Dev Tasks
@@ -94,26 +63,29 @@ setup for production, you need to set `NODE_ENV=production` and (optionally) set
 
 ## Prod Tasks
 
-- `npm run web-start` just run app, remember to set NODE_ENV=production and others environment variables.
+- `npm run start` just run app, remember to set NODE_ENV=production and others environment variables.
 
 ## Documentation
 
-So you decided to give a chance to this web stack, but where is documentation? Code is documentation itself as it illustrates various patterns, but for start you should read something about [React.js](http://facebook.github.io/react/). Then you should learn [what is the Flux
-application architecture](https://medium.com/brigade-engineering/what-is-the-flux-application-architecture-b57ebca85b9e). Now refresh you JavaScript knowledge about "new" JavaScript - [learn ES6](https://babeljs.io/docs/learn-es6/). This stack uses [immutable.js](http://facebook.github.io/immutable-js/) and class-less design for a [good reason](https://github.com/facebook/immutable-js/#the-case-for-immutability). Check this nice short [video](https://www.youtube.com/watch?v=5yHFTN-_mOo), wouldn't be possible with classic OOP classes everywhere approach. Functional programming is a next (current) big thing, read [why](https://medium.com/javascript-scene/the-dao-of-immutability-9f91a70c88cd). [Express.js](http://expressjs.com/) is used on the [Node.js](http://nodejs.org/api/) based server. Application is [universal](https://medium.com/@mjackson/universal-javascript-4761051b7ae9), so we can share code between browser, server, mobile, whatever easily. Congrats, you're Este.js expert level 1 now :-)
+Choosing dev stack is a diligent process, but look no more! Brainfock uses great [Este.js](https://github.com/este/este) dev stack
+made by Daniel Steigerwald, twitter.com/steida, @grabbou and the community.
+
+> The most complete React/Flux dev stack and starter kit for universal functional web apps. Forget about [evil frameworks](http://tomasp.net/blog/2015/library-frameworks/), learn laser focused libraries and patterns instead.
+
+Code is documentation itself as it illustrates various patterns, but for start you should read something about [React.js](http://facebook.github.io/react/). Then you should learn [what is the Flux
+application architecture](https://medium.com/brigade-engineering/what-is-the-flux-application-architecture-b57ebca85b9e). Now refresh you JavaScript knowledge about "new" JavaScript - [learn ES6](https://babeljs.io/docs/learn-es6/). This stack uses [immutable.js](http://facebook.github.io/immutable-js/) and class-less design for a [good reason](https://github.com/facebook/immutable-js/#the-case-for-immutability). Check this nice short [video](https://www.youtube.com/watch?v=5yHFTN-_mOo), wouldn't be possible with classic OOP classes everywhere approach. Functional programming is a next (current) big thing, read [why](https://medium.com/javascript-scene/the-dao-of-immutability-9f91a70c88cd).
+[Loopback.io](http://loopback.io/) is used on the [Node.js](http://nodejs.org/api/) based server. Application is [universal](https://medium.com/@mjackson/universal-javascript-4761051b7ae9), so we can share code between browser, server, mobile, whatever easily. Congrats, you're Brainfock expert level 1 now :-)
 
 ## Links
 
-- [wiki: Recommended React Components](https://github.com/steida/este/wiki/Recommended-React-Components)
-- [wiki: Recommended Sublime Text 3 Packages](https://github.com/steida/este/wiki/Recommended-Sublime-Text-3-settings)
-- [twitter.com/estejs](https://twitter.com/estejs)
-- [github.com/enaqx/awesome-react](https://github.com/enaqx/awesome-react)
+- [Brainfock Wiki](http://brainfock.org/wiki/BFK_Guide)
 
 ## Windows
 
 Use this if you are using JEST or another library, which has to be compiled.
 
 - Install Python - Install version 2.7 of Python and add it to your path or/and create a PYTHONPATH environment variable.
-- Install Visual Studio (Express Edition is fine) - We will need this for some of modules that are compiled when we are installing Este. [Download VS Express](https://www.visualstudio.com/en-us/products/visual-studio-express-vs.aspx), get one of the versions that has C++ - Express 2013 for Windows Desktop for example.
+- Install Visual Studio (Express Edition is fine) - We will need this for some of modules that are compiled when we are installing Brainfock. [Download VS Express](https://www.visualstudio.com/en-us/products/visual-studio-express-vs.aspx), get one of the versions that has C++ - Express 2013 for Windows Desktop for example.
 - Set Visual Studio Version Flags - We need to tell node-gyp (something that is used for compiling addons) what version of Visual Studio we want to compile with. You can do this either through an environment variable GYP_MSVS_VERSION. If you are using Express, you have to say GYP_MSVS_VERSION=2013e.
 
 Thanks to [Ryanlanciaux](http://ryanlanciaux.github.io/blog/2014/08/02/using-jest-for-testing-react-components-on-windows/)
@@ -146,31 +118,14 @@ being released.
 #### Why does the CSS flicker when starting the app/refreshing it?
 In dev mode, webpack loads all the style inline, which makes them hot reloadable. This behaviour disappears in production mode (`NODE_ENV=production npm web-start`).
 
-#### Does Hapi/SailJS/Restify/Rails work with Este? Do you have any example app for this framework?
-Yes it does. Este is agnostic of what you use in your backend and is completely decoupled from the API. It uses an Express app for server-side rendering, but you can use anything for your API. The only benefit that an Express API has is that it can simply be `use()` by the main app, like any other middleware.
+#### Do you have any live example?
+You bet! There is an official demo, check it out at <http://brainfock.org>.
 
-#### Is it possible use XXX library with Este?
-Yes. Este makes little assumptions about your stack, and passing every bit of needed info through props. This is not a framework, nothing prevents you from picking the bits you're interested in.
-
-#### Do you have any other example apps using Este?
-Right now, there are little open sourced apps on the web (if you have any example, feel free to send a PR, or tip us on Gitter). You can have a look at the other repositories of the [este organization](http://github.com/este). You might for instance find some interesting stuff in [este-firebase](https://github.com/este/este-firebase/).
-
-#### Why Este is pure and why we have to pass data through props?
+#### Why Brainfock is pure and why we have to pass data through props?
 Pure means no side effects. Programming without side effects rocks. It allows us to hot reload everything and testing is much easier as well. When component renders only data passed through props, [shouldComponentUpdate](https://facebook.github.io/react/docs/component-specs.html#updating-shouldcomponentupdate) can be implemented [only once](https://github.com/este/este/blob/d08556dd1e4d57b4c0e605e3395ce6af9963910e/src/client/components/component.react.js#L14) per whole app. One can say it's verbose, but it isn't. It's explicit. And remember, we have to pass only data going to be rendered. Actions have access to app state.
-
-## Training
-- [learn-reactjs.com](http://www.learn-reactjs.com)
-- [javascript-skoleni.cz](http://javascript-skoleni.cz)
-- [DzejEs.cz](http://www.dzejes.cz) - czech articles about Este
 
 ## Notes
 
-- Este.js dev stack works on OSX, Linux, and Windows.
-- As a rule of thumb, Este.js supports all evergreen browsers plus last two pieces of IE.
-- Support Este.js development via Bitcoin - [daniel.steigerwald.cz/#donate-estejs](http://daniel.steigerwald.cz/#donate-estejs)
-
-## Credit
-
-<img alt="Este.js" src="https://cloud.githubusercontent.com/assets/66249/6515278/de638916-c388-11e4-8754-184f5b11e770.jpeg" width="200">
-
-made by Daniel Steigerwald, [twitter.com/steida](https://twitter.com/steida), @grabbou and the community
+- Brainfock dev stack works on OSX, Linux, and Windows.
+- As a rule of thumb, Brainfock supports all evergreen browsers plus last two pieces of IE.
+- Support Brainfock development via Bitcoin - 16oPNMcwhxEz3HMn6wkpa4HfnQUsTY6FKr

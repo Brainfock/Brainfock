@@ -4,7 +4,7 @@
 
 Written in universal JavaScript, NodeJS server with Loopback, ReactJS client with everything.
 
-Copyright (C) 2015-2016 Sergii Gamaiunov <[@SergiiGama](https://twitter.com/SergiiGama)>
+Copyright (C) 2015-present Sergii Gamaiunov [@SergiiGama](https://twitter.com/SergiiGama)
 
 > Brainfock is a modern web-based CMF started out as task & project management tool and ended up as something that angels might have crafted. It  will help you manage projects, project's tasks, deals, contacts, run community (discussion boards), manage documents like Wiki & much more. WIP, however!
 
@@ -39,19 +39,16 @@ Stay tuned for updates and definitely hit me up with a quick shouts  [@SergiiGam
 Tech summary
 --------------------------
 * React.js
-* Google's Material Design guidelines (utilizing powerful <http://material-ui.com>)
 * Node.js' NPM, Webpack & Bower
 * [Loopback](http://loopback.io/)
+* Google's Material Design guidelines (utilizing powerful <http://material-ui.com>)
 
 Please, follow [SETUP.md](/SETUP.md) for in-depth information about used technologies and stack, setup and development.
 
-
 Installation
 --------------------------
-```
-Please, see SETUP.md for details
-```
 
+> Please, see [SETUP.md](/SETUP.md)  for details
 
 Contribution & support
 --------------------------
@@ -92,6 +89,7 @@ Currently evaluating, most likely AGPL v3
 ## Credit
 
 Sergii Gamaiunov, [@SergiiGama](https://twitter.com/SergiiGama), <hello@webkadabra.com>
+Daniel Steigerwald, [@steida](https://twitter.com/steida)
 
 ** Authors **
 
