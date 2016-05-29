@@ -342,7 +342,7 @@ export default function boardsReducer(state = initialState, action) {
           .setIn(['forms', 'cid', action.meta.formCid, 'meta', 'errors'], Map())
           .setIn(['forms', 'cid', action.meta.formCid, 'data', 'summary'], '')
           .deleteIn(['forms', 'cid', action.meta.formCid, 'meta', 'error'], Map())
-          .update('list', list => list.unshift(Todo(action.payload)))
+          .update('list', list => list.unshift(Todo(action.payload)));
       } else {
         return state
           .update('list', list => list.unshift(Todo(action.payload)));
