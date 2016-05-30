@@ -79,7 +79,7 @@ Todo
 
 License
 --------------------------
-Currently evaluating, most likely AGPL v3
+Brainfock is released under GNU Affero General Public License, see [LICENSE.md](/LICENSE.md). 
 
 ## Notes
 
