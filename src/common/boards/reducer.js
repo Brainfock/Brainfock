@@ -12,7 +12,7 @@ import * as actions from '../topics/actions';
 import * as commentsActions from '../comments/actions';
 import Todo from './board';
 import FormRecord from './form';
-import ModelSchema from './model.js'
+import ModelSchema from './model.js';
 import TopicGroup from './topic-group';
 import Comment from '../comments/comment';
 import getRandomString from '../lib/getRandomString';
@@ -416,7 +416,7 @@ export default function boardsReducer(state = initialState, action) {
               .setIn(['newTopic', 'meta', 'isSubmitting'], false)
               // TODO: review if we need to modify `form` here at all
               .setIn(['form', 'meta', 'error'], action.payload.error.message || 'Unknown Error!')
-              .setIn(['form', 'meta', 'isSubmitting'], false)
+              .setIn(['form', 'meta', 'isSubmitting'], false);
             //.setIn(['formFields', 'loading'], false);
           } else {
             return state
@@ -424,7 +424,7 @@ export default function boardsReducer(state = initialState, action) {
               .setIn(['newTopic', 'meta', 'isSubmitting'], false)
               // TODO: review if we need to modify `form` here at all
               .setIn(['form', 'meta', 'error'], action.payload.message.length > 0 && action.payload.message || 'Unknown Error!')
-              .setIn(['form', 'meta', 'isSubmitting'], false)
+              .setIn(['form', 'meta', 'isSubmitting'], false);
             //.setIn(['formFields', 'loading'], false);
           }
         } else {
@@ -450,7 +450,7 @@ export default function boardsReducer(state = initialState, action) {
       return state
         .setIn(['forms', 'id', action.meta.topicId, 'meta', 'isSubmitting'], false)
         .setIn(['forms', 'id', action.meta.topicId, 'meta', 'error'], '')
-        .setIn(['forms', 'id', action.meta.topicId, 'meta', 'errors'], Map())
+        .setIn(['forms', 'id', action.meta.topicId, 'meta', 'errors'], Map());
     }
 
     case actions.SAVE_ERROR: {
@@ -469,16 +469,16 @@ export default function boardsReducer(state = initialState, action) {
           return state
             .setIn(['forms', 'id', action.meta.topicId, 'meta', 'errors'], Map(errorDetails))
             .setIn(['forms', 'id', action.meta.topicId, 'meta', 'error'], '')
-            .setIn(['forms', 'id', action.meta.topicId, 'meta', 'isSubmitting'], false)
+            .setIn(['forms', 'id', action.meta.topicId, 'meta', 'isSubmitting'], false);
 
         } else if (action.payload.error) {
           return state
             .setIn(['forms', 'id', action.meta.topicId, 'meta', 'error'], action.payload.error.message || 'Unknown Error!')
-            .setIn(['forms', 'id', action.meta.topicId, 'meta', 'isSubmitting'], false)
+            .setIn(['forms', 'id', action.meta.topicId, 'meta', 'isSubmitting'], false);
         } else {
           return state
             .setIn(['forms', 'id', action.meta.topicId, 'meta', 'error'], action.payload.message.length > 0 && action.payload.message || 'Unknown Error!')
-            .setIn(['forms', 'id', action.meta.topicId, 'meta', 'isSubmitting'], false)
+            .setIn(['forms', 'id', action.meta.topicId, 'meta', 'isSubmitting'], false);
         }
       } else {
         return state
