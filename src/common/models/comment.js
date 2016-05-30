@@ -1,7 +1,14 @@
-var marked = require('marked');
-var app = require('../../server/main');
-var loopback = require('loopback');
-
+/**
+ * Brainfock, <http://www.brainfock.org>
+ *
+ * Copyright (C) 2015-present Sergii Gamaiunov <hello@webkadabra.com>
+ * All rights reserved.
+ *
+ * This source code is licensed under the GPL-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+const marked = require('marked');
+const loopback = require('loopback');
 
 module.exports = function(Comment) {
 
@@ -20,49 +27,34 @@ module.exports = function(Comment) {
 
   Comment.observe('before save', function updateTimestamp(ctx, next) {
 
-    var context = loopback.getCurrentContext();
-
-    var currentUser = context && context.get('currentUser');
-
-
-    var currentIP;
+    let context = loopback.getCurrentContext();
+    let currentUser = context && context.get('currentUser');
+    let currentIP;
     try {
       currentIP = context.get('http').req.ip;
-    } catch(err) {
+    } catch (err) {
       // see https://github.com/tjanczuk/iisnode/issues/94
-      console.log(
-        'Could not determine client ip'
-      );
+      console.log('Could not determine client ip'); // eslint-disable-line no-console, no-undef
     }
 
-
     if (ctx.instance) {
-      if (ctx.isNewInstance==true) {
-
+      if (ctx.isNewInstance === true) {
         ctx.instance.authorIp = currentIP || '0.0.0.0';
         ctx.instance.deleted = 0;
         ctx.instance.createdOn = new Date();
-        if(currentUser) {
+        if (currentUser) {
           ctx.instance.authorId = currentUser.id;
         }
-      }
-      else {
+      } else {
         ctx.instance.updatedOn = new Date();
         ctx.instance.authorIp = '127.0.0.1';
       }
-      //ctx.instance.updated = new Date();
-    } else {
-
-      //ctx.data.updated = new Date();
     }
     next();
   });
 
-
-
-  Comment.afterRemote( 'find', function( ctx, data, next) {
-    if(ctx.result) {
-
+  Comment.afterRemote('find', function(ctx, data, next) {
+    if (ctx.result) {
       function populateValue($modelInstance, callback) {
 
         marked($modelInstance.text, {
@@ -76,34 +68,28 @@ module.exports = function(Comment) {
           smartypants: false
         }, function(err, content) {
           if (err) throw err;
-
           $modelInstance.contentRendered = content;
-
           return callback();
         });
-
       }
 
       let resCount = data.length;
       let lopRes = [];
-      ctx.result.forEach(function(/*SettingsField model instance*/ item){
-        populateValue(item, function(result){
+      ctx.result.forEach(function(/* SettingsField model instance */ item) {
+        populateValue(item, function(result) {
           lopRes.push(1);
-          if(lopRes.length == (resCount)) {
+          if (lopRes.length == (resCount)) {
             next();
           }
         });
-      })
+      });
     } else {
       return next();
     }
   });
 
-  Comment.afterRemote( 'create', function( ctx, modelInstance, next) {
-
+  Comment.afterRemote('create', function(ctx, modelInstance, next) {
     if (modelInstance) {
-
-      // This does work:
       marked(modelInstance.text, {
         renderer: new marked.Renderer(),
         gfm: true,
@@ -114,12 +100,10 @@ module.exports = function(Comment) {
         smartLists: true,
         smartypants: false
       }, function(err, content) {
+
         if (err) throw err;
-
         modelInstance.contentRendered = content;
-
-        Comment.app.io.sockets.in('comments-'+modelInstance.entityId).emit('new-comment', {data: modelInstance.__data});
-
+        Comment.app.io.sockets.in('comments-' + modelInstance.entityId).emit('new-comment', {data: modelInstance.__data});
         return next();
       });
     } else {

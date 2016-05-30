@@ -1,21 +1,25 @@
 /**
- * Brainfock - Community & Business Management Solution
+ * Brainfock, <http://www.brainfock.org>
  *
- * @link http://www.brainfock.org
- * @copyright Copyright (c) 2016 Sergii Gamaiunov <hello@webkadabra.com>
+ * Copyright (C) 2015-present Sergii Gamaiunov <hello@webkadabra.com>
+ * All rights reserved.
+ *
+ * This source code is licensed under the GPL-style license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 import app from '../../../server/main';
+
 /**
  * @author sergii gamaiunov <hello@webkadabra.com>
  */
 export default class FeaturesHandler {
   static populateFormField(item) {
     return new Promise(
-      function (resolve, reject) {
+      function(resolve, reject) {
         const isDebug = process.env.NODE_ENV === 'development';
-        let propName = item.key+'FieldProps';
-        if (item.key+'FieldProps' in FeaturesHandler) {
-          FeaturesHandler[propName](item).then(function(res){
+        let propName = item.key + 'FieldProps';
+        if (item.key + 'FieldProps' in FeaturesHandler) {
+          FeaturesHandler[propName](item).then(function(res) {
             if (!isDebug)
               return resolve(res);
             if (res === null)
@@ -28,24 +32,20 @@ export default class FeaturesHandler {
             }
           })
             .catch(e => {
-              if (isDebug)
-                console.log('>> error, ', e)
+              if (isDebug) console.log('>> error, ', e); // eslint-disable-line no-console, no-undef
               return resolve({
                 key: item.key,
                 type: '__NO_DATA__'
               });
-            })
-        } else {
-          if (!isDebug) {
-            return resolve(null);
-          } else {
-            return resolve({
-              key: item.key,
-              type: '__NOT_IMPLEMENTED__'
             });
-          }
+        } else if (!isDebug) {
+          return resolve(null);
+        } else {
+          return resolve({
+            key: item.key,
+            type: '__NOT_IMPLEMENTED__'
+          });
         }
-
       });
   }
 
@@ -63,10 +63,8 @@ export default class FeaturesHandler {
   static contextTopicIdFieldProps(data) {
     return new Promise(
       function(resolve, reject) {
-        data.group.parentGroup(function(err,parentGroup){
-          if (err)
-            throw err;
-
+        data.group.parentGroup(function(err, parentGroup) {
+          if (err) return reject(err);
           if (parentGroup) {
             resolve({
               label: parentGroup.name,
@@ -80,7 +78,7 @@ export default class FeaturesHandler {
                 label: data.contextTopic.summary
               }],
               // use REST to get options (handles access control):
-              endpoint: '/api/topics/?filter[where][groupKey]='+parentGroup.groupKey,
+              endpoint: '/api/topics/?filter[where][groupKey]=' + parentGroup.groupKey,
               endpointQueryString: 'filter[where][summary][like]'
             });
           } else {
@@ -107,26 +105,24 @@ export default class FeaturesHandler {
     return new Promise(
       function(resolve, reject) {
 
-        data.group.parentGroup(function(err,parentGroup){
-          if (err)
-            throw err;
-
+        data.group.parentGroup(function(err, parentGroup) {
+          if (err) return reject(err);
           if (parentGroup) {
             resolve({
-              label: `File under ${parentGroup.name}`,
+              //label: `File under ${parentGroup.name}`,
               label: `Select category`,
               // `name` is used for form inputs to identify model's attribute
               name: data.key,
               type: 'select', // todo: hasOne rather
               // pre-populate default option
-              // TODO: preload more options? options loaded should be somewhat predicted to be actual for user to select
+              // TODO: preload more options? options loaded should be somewhat predicted to be relative for user to select (e.g. those where user participating more)
               //options:[{
               //  value: data.contextTopic.id,
               //  label: data.contextTopic.summary
               //}],
               // use REST to get options (handles access control):
-              endpoint: '/api/topics/?filter[where][groupKey]='+parentGroup.groupKey
-              + '&filter[where][contextTopicId]='+data.contextTopic.id,
+              endpoint: '/api/topics/?filter[where][groupKey]=' + parentGroup.groupKey
+              + '&filter[where][contextTopicId]=' + data.contextTopic.id,
               endpointQueryString: 'filter[where][summary][like]'
             });
           } else {
@@ -181,7 +177,7 @@ export default class FeaturesHandler {
           options:[],
           // use REST to get options (handles access control):
           endpoint: '/api/workspaces?',
-          endpointQueryString: 'filter[where][name][like]',
+          endpointQueryString: 'filter[where][name][like]'
         });
       }
     );
@@ -196,7 +192,7 @@ export default class FeaturesHandler {
           name: data.key,
           type: 'select', // todo: hasOne rather
           options:data.options || [],
-          value: data.value || null,
+          value: data.value || null
         });
       }
     );
@@ -204,7 +200,7 @@ export default class FeaturesHandler {
 
   static summaryFieldProps(data) {
     return new Promise(
-      function (resolve, reject) {
+      function(resolve, reject) {
         resolve({
           label: 'Summary',
           name: data.key,
@@ -251,76 +247,74 @@ export default class FeaturesHandler {
           type: 'select', // todo: hasOne rather
           // todo: pre-load options (not full list, tops 100); this has to take into account topic access, of course
           options:[],
-          endpoint: `/api/topics/${data.contextTopic.id}/participants`,
+          endpoint: `/api/topics/${data.contextTopic.id}/participants`
         });
       }
-    )
+    );
   }
 
-  static linked_issuesFieldProps(data) {
+  static linked_issuesFieldProps(data) { // eslint-disable-line camelcase
     return new Promise(
-      function (resolve, reject) {
+      function(resolve, reject) {
         resolve({
           label: 'Related Issues',
           name: data.key,
           type: 'multiselect', // todo: hasMany rather
           // todo: pre-load options (not full list, tops 100); this has to take into account topic access, of course
           options:[],
-          endpoint: `/api/topics?filter[where][groupKey]=${data.group.groupKey}`,
+          endpoint: `/api/topics?filter[where][groupKey]=${data.group.groupKey}`
         });
       }
-    )
+    );
   }
 
   static dueDateFieldProps(data) {
     return new Promise(
-      function (resolve, reject) {
+      function(resolve, reject) {
         resolve({
           label: 'Due Date',
           name: data.key,
-          type: 'datetime',
+          type: 'datetime'
         });
       }
-    )
+    );
   }
 
   static labelsFieldProps(data) {
     return new Promise(
-      function (resolve, reject) {
+      function(resolve, reject) {
         resolve({
           label: 'Labels',
           name: data.key,
           type: 'multiselect', // todo: hasMany rather
           // todo: pre-load options (not full list, tops 100); this has to take into account topic access, of course
           options:[],
-          endpoint: `/api/topics/${data.contextTopic.id}/labels`,
+          endpoint: `/api/topics/${data.contextTopic.id}/labels`
         });
       }
-    )
+    );
   }
 
   static priorityIdFieldProps(data) {
     return new Promise(
-      function (resolve, reject) {
-
+      function(resolve, reject) {
         if (!process.env.IS_BROWSER) {
           app.models.Term.prepareFormOptions('priority', 1000, (err, options) => {
-
+            if (err) return reject(err);
             resolve({
               label: 'Priority',
               name: data.key,
               type: 'select',
-              options: options,
+              options: options
             });
-          })
+          });
         } else {
-
           resolve({
             label: 'Priority',
             name: data.key,
             type: 'select',
             options:[],
-            endpoint: `/api/terms/values/priority`,
+            endpoint: `/api/terms/values/priority`
           });
         }
       }

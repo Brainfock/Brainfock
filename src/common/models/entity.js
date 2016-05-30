@@ -1,4 +1,13 @@
-var marked = require('marked');
+/**
+ * Brainfock, <http://www.brainfock.org>
+ *
+ * Copyright (C) 2015-present Sergii Gamaiunov <hello@webkadabra.com>
+ * All rights reserved.
+ *
+ * This source code is licensed under the GPL-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+const marked = require('marked');
 
 module.exports = function(Entity) {
 
@@ -11,10 +20,9 @@ module.exports = function(Entity) {
   //});
 
 
-  Entity.afterRemote( '*.__get__comments', function( ctx, data, next) {
-    if(ctx.result && ctx.result.length>0) {
+  Entity.afterRemote('*.__get__comments', function(ctx, data, next) {
+    if (ctx.result && ctx.result.length > 0) {
       function populateValue($modelInstance, callback) {
-
         marked($modelInstance.text, {
           renderer: new marked.Renderer(),
           gfm: true,
@@ -28,60 +36,56 @@ module.exports = function(Entity) {
           if (err) throw err;
 
           $modelInstance.contentRendered = content;
-
           return callback();
         });
-
       }
-
       let resCount = data.length;
       let lopRes = [];
-      ctx.result.forEach(function(/*SettingsField model instance*/ item){
-        populateValue(item, function(result){
+      ctx.result.forEach(function(/*SettingsField model instance*/ item) {
+        populateValue(item, function(result) {
           lopRes.push(1);
-          if(lopRes.length == (resCount)) {
+          if (lopRes.length == (resCount)) {
             next();
           }
         });
-      })
+      });
     } else {
       return next();
     }
-  })
+  });
 
   /**
    * format comment text & include `user` relation data
    */
-  Entity.afterRemote( '*.__create__comments', function( ctx, modelInstance, next) {
+  Entity.afterRemote('*.__create__comments', function(ctx, modelInstance, next) {
 
     if (modelInstance) {
-        marked(modelInstance.text, {
-          renderer: new marked.Renderer(),
-          gfm: true,
-          tables: true,
-          breaks: false,
-          pedantic: false,
-          sanitize: true,
-          smartLists: true,
-          smartypants: false
-        }, function(err, content) {
+      marked(modelInstance.text, {
+        renderer: new marked.Renderer(),
+        gfm: true,
+        tables: true,
+        breaks: false,
+        pedantic: false,
+        sanitize: true,
+        smartLists: true,
+        smartypants: false
+      },
+        function(err, content) {
           if (err) throw err;
-
           modelInstance.contentRendered = content;
-
-          modelInstance.user(function(err, user) {
-            if (err) return next(err);
-            // we can not modify properties of relations directly via `modelInstance.user=[Object]`:
-            modelInstance.__data.user = user;
-            Entity.app.io.sockets.in('comments-'+modelInstance.entity_id).emit('new-comment', {data: modelInstance});
-
-            next(err);
-          });
+          modelInstance.user(
+            function(err, user) {
+              if (err) return next(err);
+              // we can not modify properties of relations directly via `modelInstance.user=[Object]`:
+              modelInstance.__data.user = user;
+              Entity.app.io.sockets.in('comments-' + modelInstance.entity_id).emit('new-comment', {data: modelInstance});
+              next(err);
+            });
         });
     } else {
       return next();
     }
-  })
+  });
 
   /**
    * check if user has access to entity
@@ -91,32 +95,31 @@ module.exports = function(Entity) {
    * @param {function} cb
    * @returns {*}
    */
-  Entity.prototype.checkUserAccess=function(userId, cb) {
-    if(this.accessPrivateYn == 0) {
+  Entity.prototype.checkUserAccess = function(userId, cb) {
+    if (this.accessPrivateYn === 0) {
       return cb(null, true);
     }
-    if(!userId) {
+    if (!userId) {
       return cb(null, false);
     }
 
-    if(this.ownerUserId == userId)
+    if (this.ownerUserId === userId)
       return cb(null, true);
 
-    var allowedEntities = [];
-
+    /*eslint-disable camelcase*/
     let whereFilter = {
-      auth_type:0,
-      auth_id:userId,
-      entity_id:this.id,
+      auth_type: 0,
+      auth_id: userId,
+      entity_id: this.id
     };
+    /*eslint-enable camelcase*/
 
     Entity.app.models.EntityAccessAssign.findOne({where:whereFilter},
-      function(err,data)
-      {
+      function(err, data) {
         if (err || !data) {
           return cb(null, false);
         }
         return cb(null, true);
       });
-  }
+  };
 };

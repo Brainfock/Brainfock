@@ -1,3 +1,12 @@
+/**
+ * Brainfock, <http://www.brainfock.org>
+ *
+ * Copyright (C) 2015-present Sergii Gamaiunov <hello@webkadabra.com>
+ * All rights reserved.
+ *
+ * This source code is licensed under the GPL-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import * as authActions from '../auth/actions';
 import * as actions from '../users/actions';
 import User from './user';
@@ -14,7 +23,7 @@ const InitialState = Record({
   list: List(),
   listMeta: new (Record({
     isFetching: true,
-    count: 0,
+    count: 0
   })),
   forms: new Map()
 });
