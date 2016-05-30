@@ -17,7 +17,7 @@ export default Record({
     password: '',
     confirmPassword: '',
     currentPassword: '',
-    newEmail: '',
+    newEmail: ''
   })),
   meta: new (Record({
     isSubmitting: false,

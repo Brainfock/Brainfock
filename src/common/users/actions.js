@@ -90,13 +90,13 @@ export function saveUserUpdateForm(id, formKey, data) {
             throw response;
           }
         })
-        .then(function (jsonResponce) {
+        .then(function(jsonResponce) {
           if (jsonResponce.error) {
             throw jsonResponce;
           }
           else
             return jsonResponce;
-        }, function (response) {
+        }, function(response) {
           // throw other errors (i.e. 50x) that don't have `.json()` available
           throw response;
         })
@@ -113,7 +113,7 @@ export function saveUserCreateForm(id, formKey, data) {
     type: 'SAVE_USER_CREATE_FORM',
     meta: {
       userId: id,
-      formKey,
+      formKey
     },
     payload: {
       promise: apiPost(fetch, endpoint, data)
@@ -126,13 +126,13 @@ export function saveUserCreateForm(id, formKey, data) {
             throw response;
           }
         })
-        .then(function (jsonResponce) {
+        .then(function(jsonResponce) {
           if (jsonResponce.error) {
             throw jsonResponce;
           }
           else
             return jsonResponce;
-        }, function (response) {
+        }, function(response) {
           // throw other errors (i.e. 50x) that don't have `.json()` available
           throw response;
         })
