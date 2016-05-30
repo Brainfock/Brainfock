@@ -90,6 +90,7 @@ Currently evaluating, most likely AGPL v3
 ## Credit
 
 Sergii Gamaiunov, [@SergiiGama](https://twitter.com/SergiiGama), <hello@webkadabra.com>
+
 Daniel Steigerwald, [@steida](https://twitter.com/steida)
 
 ** Authors **
