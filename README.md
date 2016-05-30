@@ -44,12 +44,12 @@ Tech summary
 - Google's Material Design guidelines (utilizing powerful <http://material-ui.com>)
 - Universal JavaScript dev stack for browser, server, mobile.
 
-Please, follow [SETUP.md](/SETUP.md) for in-depth information about used technologies and stack, setup and development.
+Please, follow [docs/README.md](/docs/README.md) for in-depth information about used technologies and stack, setup and development.
 
 Installation
 --------------------------
 
-> Please, see [SETUP.md](/SETUP.md)  for details
+> Please, see [docs/README.md](/docs/README.md)  for details
 
 Contribution & support
 --------------------------
