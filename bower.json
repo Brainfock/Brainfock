@@ -1,0 +1,45 @@
+{
+  "name": "brainfock-client",
+  "version": "1.0-RC.1",
+  "authors": [
+    "Sergii Gamaiunov 'Webkadabra' <hello@webkadabra.com>"
+  ],
+  "description": "Project Management Solution",
+  "main": "client/main.js",
+  "keywords": [
+    "issue",
+    "tracker",
+    "management",
+    "erp",
+    "crm",
+    "task",
+    "tracker"
+  ],
+  "license": "AGPLv3",
+  "homepage": "http://brainfock.org",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "*",
+    "jquery-ui": "^1.11",
+    "bootstrap-material-design": "~0.2.1",
+    "todc-bootstrap": "~3.3",
+    "bootstrap": "~3.3.1",
+    "jquery.atwho": "latest",
+    "jquery.complexify.js": "*",
+    "messenger": "~1.4.1",
+    "autobahn-old": "latest",
+    "autobahn": "tavendo/AutobahnJS#0.8.2",
+    "caret.js": "~0.2.2",
+    "cortexjs": "~0.8.7"
+  },
+  "devDependencies": {
+    "select2": "~4.0.0"
+  }
+}

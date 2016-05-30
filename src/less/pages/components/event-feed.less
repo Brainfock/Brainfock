@@ -1,0 +1,52 @@
+/* Activity Stream (Dashboard >> Project)
+----------------------------------------------------------------------------------------------------*/
+.activity-stream{
+    .item{
+        margin-bottom: 20px;
+    }
+    .item .timeago{
+        display: inline-block;
+        color: #999;
+        width: auto;
+        clear: both;
+        font-size: .88em;
+    }
+    .item .activity-event {
+
+    }
+  
+    .item .activity-event .event-inner .userpic {
+        width: 32px
+    }
+}
+
+/** ADD PADDING ONLY WHEN COMMENTS ARE ACTIVE */
+.comments-wrapper  .activity-stream .item .activity-event .event-inner {
+  padding-left: 100px;
+}
+
+/** */
+.comments-wrapper .bubble {
+    position: relative;
+    min-height: 50px;
+    width: auto;
+    padding: 10px;
+    background: #fafafa;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-left: 90px;
+}
+
+.comments-wrapper .bubble:after {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: -15px;
+    border-style: solid;
+    border-width: 15px 15px 15px 0;
+    border-color: transparent #fafafa;
+    display: block;
+    width: 0;
+    z-index: 1;
+}

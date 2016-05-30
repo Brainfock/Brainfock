@@ -1,0 +1,17 @@
+/**
+ * This file contains dirty style fixes. Ideally, this file should be empty for stable releases
+ *
+ * IMPORTANT: since the nature of this file is dirty fixes for any kind of unwanted UI behavior, every fix should be
+ * well documented: what it fixes, what are the conditions that will allow hack to be deprecated, hack author etc.
+ */
+
+/**
+ * Fixes strange behavior of 'react-select' component at project/issues page in `filters` section: when such
+ * filter has remoteOptions enabled it displays empty div with fixed size thus adding visible blank space that
+ * acts like top-margin and makes UI not so neat. Should be deprecated with new version of react-select
+ *
+ * @author sergii gamaiunov <hello@webkadabra.com>
+ */
+.section-heading {
+  display:none
+}

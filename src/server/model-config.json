@@ -1,0 +1,189 @@
+{
+  "_meta": {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ],
+    "mixins": [
+      "loopback/common/mixins",
+      "loopback/server/mixins",
+      "../common/mixins",
+      "./mixins"
+    ]
+  },
+  "User": {
+    "dataSource": "db"
+  },
+  "Member": {
+    "dataSource": "db",
+    "public": true
+  },
+  "UserWorkspace": {
+    "dataSource": "db",
+    "public": false
+  },
+  "UserTopic": {
+    "dataSource": "db",
+    "public": false
+  },
+  "AccessToken": {
+    "dataSource": "db",
+    "public": false
+  },
+  "ACL": {
+    "dataSource": "db",
+    "public": false
+  },
+  "RoleMapping": {
+    "dataSource": "db",
+    "public": false
+  },
+  "Role": {
+    "dataSource": "db",
+    "public": false
+  },
+  "WikiPage": {
+    "dataSource": "db",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "WikiLink": {
+    "dataSource": "db",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "WikiPageRevision": {
+    "dataSource": "db",
+    "public": true
+  },
+  "Term": {
+    "dataSource": "db",
+    "public": true
+  },
+  "TermValue": {
+    "dataSource": "db",
+    "public": true
+  },
+  "Topic": {
+    "dataSource": "db",
+    "public": true
+  },
+  "RawTopic": {
+    "dataSource": "db",
+    "public": true
+  },
+  "TopicGroup": {
+    "dataSource": "db",
+    "public": true
+  },
+  "TopicType": {
+    "dataSource": "db",
+    "public": true
+  },
+  "TopicTypeScheme": {
+    "dataSource": "db",
+    "public": true
+  },
+  "TopicTypeSchemeTopicTypeMap": {
+    "dataSource": "db",
+    "public": false
+  },
+  "TopicGroupScheme": {
+    "dataSource": "db",
+    "public": true
+  },
+  "TopicGroupSchemeTypeScheme": {
+    "dataSource": "db",
+    "public": false
+  },
+  "TopicMenuItem": {
+    "dataSource": "db",
+    "public": false
+  },
+  "SettingsField": {
+    "dataSource": "db",
+    "public": true
+  },
+  "Settings": {
+    "dataSource": "db",
+    "public": false
+  },
+  "Entity": {
+    "dataSource": "db",
+    "public": true
+  },
+  "EntityAccessAssign": {
+    "dataSource": "db",
+    "public": false
+  },
+  "Comment": {
+    "dataSource": "db",
+    "public": true
+  },
+  "Screen": {
+    "dataSource": "db",
+    "public": true
+  },
+  "ScreenScheme": {
+    "dataSource": "db",
+    "public": true
+  },
+  "ScreenScheme_TopicTypeScreen_Map": {
+    "dataSource": "db",
+    "public": false
+  },
+  "ScreenField": {
+    "dataSource": "db",
+    "public": true
+  },
+  "Field": {
+    "dataSource": "db",
+    "public": false
+  },
+  "Workspace": {
+    "dataSource": "db",
+    "public": true
+  },
+  "Workflow": {
+    "dataSource": "db",
+    "public": true
+  },
+  "WorkflowScheme": {
+    "dataSource": "db",
+    "public": true
+  },
+  "WorkflowOperation": {
+    "dataSource": "db",
+    "public": false
+  },
+  "WorkflowSchemeTopicTypeWorkflow": {
+    "dataSource": "db",
+    "public": false
+  },
+  "WorkflowStage": {
+    "dataSource": "db",
+    "public": false
+  },
+  "WorkflowStageOperationMap": {
+    "dataSource": "db",
+    "public": false
+  },
+  "EntityWorkflowOperation": {
+    "dataSource": "db",
+    "public": false
+  },
+  "EntityMenu": {
+    "dataSource": "db",
+    "public": true
+  },
+  "EntityMenuItem": {
+    "dataSource": "db",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  }
+}

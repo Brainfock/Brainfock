@@ -1,0 +1,39 @@
+// Remember to use rems and ems. http://css-tricks.com/rems-ems.
+
+//@import '../../../node_modules/normalize.css/normalize.css'
+
+// http://phonegap-tips.com/articles/essential-phonegap-css-webkit-tap-highlight-color.html
+*
+  -webkit-tap-highlight-color rgba(0,0,0,0)
+
+// Goodness.
+*, ::after, ::before
+  box-sizing border-box
+
+html,
+body
+  height 100%
+
+body {
+  color #333
+  font-family 'Segoe UI', 'Lucida Grande','Ubuntu','sans-serif'
+  font-size 16px
+  line-height 1.5
+  margin: 0
+}
+  .page
+    padding-top 40px
+
+#app
+  margin 0
+
+  > header
+    h1
+      margin-bottom 0
+    ul
+      li
+        font-size 1em
+
+  > footer
+    font-size .75em
+    font-style italic
