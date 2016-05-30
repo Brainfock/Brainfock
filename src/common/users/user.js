@@ -4,7 +4,7 @@ const User = Record({
   id: '',
   email: '',
   username: '',
-  roles: List(),
+  roles: List()
 });
 
 export default User;

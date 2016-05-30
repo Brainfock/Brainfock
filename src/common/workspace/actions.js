@@ -48,7 +48,7 @@ export function postWorkspace(fields) {
           }
           else
             return jsonResponce;
-        }, function (response) {
+        }, function(response) {
           // throw other errors (i.e. 50x) that don't have `.json()` available
           throw response;
         })
@@ -120,10 +120,10 @@ export const FIND_ERROR = 'FIND_WORKSPACES_ERROR';
 
 export function findWorkspaces(includes, query) {
 
-  let endpoint = 'workspaces/?'+includes;
+  let endpoint = 'workspaces/?' + includes;
 
-  if(query) {
-    endpoint += '&'+toQueryString({filter:{where:query}},false);
+  if (query) {
+    endpoint += '&' + toQueryString({filter:{where:query}}, false);
   }
 
   return ({fetch, validate}) => ({

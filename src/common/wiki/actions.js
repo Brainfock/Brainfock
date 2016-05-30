@@ -130,19 +130,18 @@ const post = (fetch, endpoint, body) =>
 
 
 export function saveWikiChanges(id, fields) {
-
-  if(id) {
-    var endpoint = 'wikiPages/'+id;
-  }
-  else {
-    let query=[];
-    if(fields.pageUid) {
-      query.push('filter[where][pageUid]='+fields.pageUid);
+  let endpoint;
+  if (id) {
+    endpoint = 'wikiPages/' + id;
+  } else {
+    let query = [];
+    if (fields.pageUid) {
+      query.push('filter[where][pageUid]=' + fields.pageUid);
     }
-    if(fields.contextEntityId) {
-      query.push('filter[where][contextEntityId]='+fields.contextEntityId);
+    if (fields.contextEntityId) {
+      query.push('filter[where][contextEntityId]=' + fields.contextEntityId);
     }
-    var endpoint =  'wikiPages/?'+query.join('&')
+    endpoint = 'wikiPages/?' + query.join('&');
   }
 
   return ({fetch, validate}) => ({

@@ -31,17 +31,16 @@ describe('actions', () => {
         name: 'namespace',
         value: 'someNamespace'
       }
-    }
+    };
     const expectedAction = {
       type: SET_NEW_TOPIC_FIELD,
       payload: {
         name: 'namespace',
         value: 'someNamespace'
       }
-    }
-
-    expect(setNewTopicField(event)).to.eql(expectedAction)
-  })
+    };
+    expect(setNewTopicField(event)).to.eql(expectedAction);
+  });
 })
 
 describe('actions reduxers', () => {
@@ -53,7 +52,7 @@ describe('actions reduxers', () => {
         name: 'namespace',
         value: 'someNamespace'
       }
-    }
+    };
     store.dispatch(setNewTopicField(event));
     expect(store.getState().boards.newTopic.data.namespace).to.equal('someNamespace');
     store.dispatch(setNewTopicField({
@@ -63,10 +62,10 @@ describe('actions reduxers', () => {
       }
     }));
     expect(store.getState().boards.newTopic.data.summary).to.equal('Summary Text');
-    expect(store.getState().boards.newTopic.toJS()).to.have.ownProperty('meta')
-    expect(store.getState().boards.newTopic.toJS()).to.have.ownProperty('data')
+    expect(store.getState().boards.newTopic.toJS()).to.have.ownProperty('meta');
+    expect(store.getState().boards.newTopic.toJS()).to.have.ownProperty('data');
   });
-})
+});
 /*
 
 describe('boards reducer', () => {

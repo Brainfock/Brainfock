@@ -17,7 +17,7 @@ const InitialState = Record({
   newTodo: new Todo,
   viewPage: new Todo,
   meta: new (Record({
-    loading: true,
+    loading: true
   }))
 });
 const initialState = new InitialState;

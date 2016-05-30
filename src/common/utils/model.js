@@ -40,17 +40,17 @@ export function toQueryString(obj, urlEncode) {
   // ]
   //
   function flattenObj(x, path) {
-    var result = [];
+    let result = [];
 
     path = path || [];
     Object.keys(x).forEach(function (key) {
       if (!x.hasOwnProperty(key)) return;
 
-      var newPath = path.slice();
+      let newPath = path.slice();
       newPath.push(key);
 
-      var vals = [];
-      if (typeof x[key] == 'object') {
+      let vals = [];
+      if (typeof x[key] === 'object') {
         vals = flattenObj(x[key], newPath);
       } else {
         vals.push({ path: newPath, val: x[key] });
@@ -64,21 +64,23 @@ export function toQueryString(obj, urlEncode) {
   } // flattenObj
 
   // start with  flattening `obj`
-  var parts = flattenObj(obj); // [ { path: [ ...parts ], val: ... }, ... ]
+  let parts = flattenObj(obj); // [ { path: [ ...parts ], val: ... }, ... ]
 
   // convert to array notation:
-  parts = parts.map(function (varInfo) {
-    if (varInfo.path.length == 1) varInfo.path = varInfo.path[0];else {
-      var first = varInfo.path[0];
-      var rest = varInfo.path.slice(1);
+  parts = parts.map(function(varInfo) {
+    if (varInfo.path.length === 1) varInfo.path = varInfo.path[0];
+    else {
+      let first = varInfo.path[0];
+      let rest = varInfo.path.slice(1);
       varInfo.path = first + '[' + rest.join('][') + ']';
     }
     return varInfo;
   }); // parts.map
 
   // join the parts to a query-string url-component
-  var queryString = parts.map(function (varInfo) {
+  let queryString = parts.map(function(varInfo) {
     return varInfo.path + '=' + varInfo.val;
   }).join('&');
-  if (urlEncode) return encodeURIComponent(queryString);else return queryString;
+  if (urlEncode) return encodeURIComponent(queryString);
+  else return queryString;
 }

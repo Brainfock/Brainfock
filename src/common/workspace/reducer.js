@@ -10,28 +10,28 @@
 import * as actions from './actions';
 import Model from './model';
 import getRandomString from '../lib/getRandomString';
-import {List, Range, Record} from 'immutable';
+import {List, Record} from 'immutable';
 
 const InitialState = Record({
   list: List(),
   listMeta: new (Record({
     isFetching: true,
-    count: 0,
+    count: 0
   })),
   listFilters: List(),
   formFields: new (Record({
     loading: false,
     group: '',
-    fields: List(),
+    fields: List()
   })),
   newTopic: new Model,
   viewPage: new Model,
   meta: new (Record({
     isFetching: false,
     loading: false,
-    count: 0,
+    count: 0
   })),
-  active: new Model(),
+  active: new Model()
 });
 
 const initialState = new InitialState;
@@ -81,7 +81,7 @@ export default function spacesReducer(state = initialState, action) {
         .update('list', list => list.clear());
 
     case actions.FIND_ERROR:
-      return state.setIn(['listMeta', 'isFetching'], false)
+      return state.setIn(['listMeta', 'isFetching'], false);
 
     case actions.FIND_SUCCESS: {
       const newlist = action.payload.map((item) => {
