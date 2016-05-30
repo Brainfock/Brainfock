@@ -29,13 +29,6 @@ Whether you represent a **company** or a **single developer**, Brainfock at this
 
 ![](http://i57.tinypic.com/5cjfkh.png)
 
-Status
---------------------------
-Currently under **heavy development**, rewriting PHP/Backbone code to Node/React. Public code release is planned with version 0.x.0-beta.1
-
-Stay tuned for updates and definitely hit me up with a quick shouts  [@SergiiGama](https://twitter.com/SergiiGama) if you've read to this point, such support means a lot!
-
-
 Tech summary
 --------------------------
 - React.js + Redux
