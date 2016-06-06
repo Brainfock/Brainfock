@@ -32,18 +32,26 @@ You may also need to upgrade `npm` to 3.x
 npm install -g npm@3.x
 ```
 
-## Installing
+## Installation
 
+Get code and setup required NPM packages:
 ```shell
 git clone https://github.com/Brainfock/Brainfock.git brainfock
 cd brainfock
 npm install
 ```
 
-### Production setup
+Create a MySQL database and import `src/branfock_install.sql`.
 
-Brainfock uses Loopback and is ready for environment-specific configurations out-of-the-box. To complete Brainfock app
-setup for production, you need to set `NODE_ENV=production` and (optionally) set any of the following properties:
+#### Setup your data sources
+Brainfock uses Loopback and is ready for environment-specific configurations out-of-the-box. Default datasources config
+can be found in `src/server/datasources.json` - you can modify that file (not recommended) or create local or environment
+configuration file. Create `src/server/datasources.local.json` file and copy contents of `src/server/datasources.json` to
+quickly create local configuration file. Restart Brainfock app to apply new config files.
+
+### Production setup
+To complete Brainfock app setup for production, you need to set `NODE_ENV=production` and (optionally) set any of the
+following properties:
 
 * DB_HOST - database host address
 * DB_PORT - database port
