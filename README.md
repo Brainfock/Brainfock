@@ -5,6 +5,7 @@
 [![Gitter chat https://gitter.im/Brainfock/Brainfock](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Brainfock/Brainfock?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![CircleCI](https://img.shields.io/circleci/project/Brainfock/Brainfock.svg?maxAge=2592000)](https://circleci.com/gh/Brainfock/Brainfock)
 [![Dependency Status](https://david-dm.org/brainfock/brainfock.svg)](https://david-dm.org/brainfock/brainfock)
+[![Donate](https://img.shields.io/badge/gratipay-donate-green.svg)](https://gratipay.com/brainfock/)
 
 Written in universal JavaScript, NodeJS server with Loopback, ReactJS client with everything.
 
