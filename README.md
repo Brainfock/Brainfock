@@ -1,6 +1,6 @@
 [![Brainfock](https://brainfock.files.wordpress.com/2014/11/logo_greenhex_trans.png?w=250)](http://brainfock.org)
 
-## Brainfock â€” Business and Community Management Solution
+## Brainfock — Business and Community Management Solution
 
 Written in universal JavaScript, NodeJS server with Loopback, ReactJS client with everything.
 
