@@ -89,7 +89,7 @@
     "react-document-title": "^2.0.0",
     "react-dom": "^0.14.0-rc1",
     "react-hotkeys": "^0.6.0",
-    "react-intl": "^2.0.0-pr-1",
+    "react-intl": "2.0.0-pr-3",
     "react-pure-render": "^1.0.1",
     "react-redux": "^3.0.1",
     "react-router": "^1.0.0-rc1",
