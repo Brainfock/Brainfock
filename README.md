@@ -1,6 +1,8 @@
 [![Brainfock](https://brainfock.files.wordpress.com/2014/11/logo_greenhex_trans.png?w=250)](http://brainfock.org)
 
-## Brainfock — Business and Community Management Solution
+## Brainfock - Business and Community Management Solution
+
+[![Gitter chat https://gitter.im/Brainfock/Brainfock](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Brainfock/Brainfock?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Written in universal JavaScript, NodeJS server with Loopback, ReactJS client with everything.
 
@@ -8,7 +10,7 @@ Copyright (C) 2015-present Sergii Gamaiunov [@SergiiGama](https://twitter.com/Se
 
 > Brainfock is a modern web-based CMF started out as task & project management tool and ended up as something that angels might have crafted. It  will help you manage projects, project's tasks, deals, contacts, run community (discussion boards), manage documents like Wiki & much more. WIP, however!
 
-Follow Brainfock on [GitHub](https://github.com/Brainfock/Brainfock) or [Facebook](https://www.facebook.com/Brainfock) for updates, and say hi to me [@SergiiGama](https://twitter.com/SergiiGama) so that I know that you know, you know. Oh, and finally there is [![Gitter chat https://gitter.im/Brainfock/Brainfock](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Brainfock/Brainfock?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+Follow Brainfock on [GitHub](https://github.com/Brainfock/Brainfock) or [Facebook](https://www.facebook.com/Brainfock) for updates, and say hi to me [@SergiiGama](https://twitter.com/SergiiGama) so that I know that you know, you know. Oh, and finally there is [Gitter chat](https://gitter.im/Brainfock/Brainfock?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Features
 --------------------------
 Whether you represent a **company** or a **single developer**, Brainfock at this stage is a great product if you want to join Open Source development, as it can be a great learning source because of it's development stack with live reloads of code, rich tests and cutting-edge technologies. Project is WIP, join and support!
