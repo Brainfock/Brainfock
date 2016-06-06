@@ -52,13 +52,13 @@ setup for production, you need to set `NODE_ENV=production` and (optionally) set
 
 ## Start Development
 
-- run `npm run web-start-dev`
+- run `npm run start-dev`
 - point your browser to [localhost:3000](http://localhost:3000)
 - build something beautiful
 
 ## Dev Tasks
 
-- `npm run web-start-dev` run app in development mode
+- `npm run start-dev` run app in development mode
 - `npm run web-build` build web package
 - `npm test` test native, web & common
 
