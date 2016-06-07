@@ -19,7 +19,15 @@ const views = {
   'boards.homepage': ListView,
 };
 
-module.exports = React.createClass({
+module.exports = React.createClass({ // eslint-disable-line no-undef
+
+  propTypes: {
+    actions: React.PropTypes.object.isRequired,
+    boards: React.PropTypes.object,
+    children: React.PropTypes.object,
+    location: React.PropTypes.object,
+    topic_actions: React.PropTypes.object, // eslint-disable-line camelcase
+  },
 
   componentWillMount() {
     this.props.actions.appSetActiveSectionLabel('Discussion Boards');
@@ -29,8 +37,7 @@ module.exports = React.createClass({
     }
   },
 
-  render: function()
-  {
+  render: function() {
     let View;
     if (views[this.props.boards.group.view]) {
       View = views[this.props.boards.group.view];
@@ -46,8 +53,8 @@ module.exports = React.createClass({
         containerTopic={null}
         disableDetails
         emptyListFallback={ProjectsEmpty}
-        groupKey='board'
         groupBy={this.props.location.query && this.props.location.query.groupBy}
+        groupKey='board'
         {...passProps}
         />
     );

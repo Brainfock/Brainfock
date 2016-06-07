@@ -6,13 +6,13 @@ export default class List extends Component {
 
   static propTypes = {
     actions: React.PropTypes.object.isRequired,
-    // whether list should follow link when list item is clicked or just load u details
-    followItemOnClick: React.PropTypes.bool,
+    children: React.PropTypes.object,
+    followItemOnClick: React.PropTypes.bool, // whether list should follow link when list item is clicked or just load u details
     group: React.PropTypes.isRequired,
+    groupBy: React.PropTypes.string,
     itemComponent: React.PropTypes.element,
     list: React.PropTypes.isRequired,
     msg: React.PropTypes.object.isRequired,
-    groupBy: React.PropTypes.string,
   };
 
   static defaultProps = {

@@ -7,14 +7,15 @@ const Colors = Styles.Colors;
 export default class Todo extends Component {
 
   static propTypes = {
-    group: PropTypes.object,
     actions: PropTypes.object,
+    group: PropTypes.object,
+    isPreview: PropTypes.bool,
+    params: PropTypes.object,
     todo: PropTypes.object.isRequired,
-    isPreview: PropTypes.bool
   }
 
   render() {
-    const {actions, todo} = this.props;
+    const {todo} = this.props;
 
     const color = Colors[todo.logoBackground];
     const icon = 'fa ' + todo.logoIcon;
@@ -24,15 +25,9 @@ export default class Todo extends Component {
       privacyIcon = (
         <span>
           <IconButton iconClassName="fa fa-eye-slash"
+                      iconStyle={{height:'16px', fontSize:'19px'}}
+                      style={{marginTop:'-25px', height:'16px'}}
                       tooltip="Private & Invisible"
-                      style={{
-                        marginTop:'-25px',
-                        height:'16px'
-                      }}
-                      iconStyle={{
-                        height:'16px',
-                        fontSize:'19px',
-                      }}
             />
         </span>
       );
@@ -53,37 +48,39 @@ export default class Todo extends Component {
     //}
 
     return (<mui.ListItem
-      primaryText={<div>{todo.summary}{privacyIcon}</div>}
-      secondaryText={todo.text}
+      leftAvatar={<Avatar backgroundColor={color} icon={<span className={icon}/>} />}
       onClick={this._onClick.bind(this)}
+      primaryText={
+        <div>
+          {todo.summary} {privacyIcon}
+        </div>
+      }
       rightAvatar={rightAvatar}
-      leftAvatar={<Avatar icon={<span className={icon}/>} backgroundColor={color} />}
+      secondaryText={todo.text}
       > {this.confirmDialog()}
     </mui.ListItem>);
   }
 
   confirmDialog() {
 
-    var dialogActions = [
+    const dialogActions = [
       <mui.FlatButton
         label='BTN_CANCEL'
-        secondary
-        onTouchTap={this._onDialogCancel}
         onClick={this._onDialogCancel}
+        onTouchTap={this._onDialogCancel}
         ref="BTN_CANCEL"
+        secondary
         />,
       {text:'BTN_DELETE', onClick: this.delete}
     ];
-
-    var Dialog = (<mui.Dialog title='projects_deleteDialog_TITLE' ref="confirmDialog" actions={dialogActions}>
+    // TODO: i18n
+    return (<mui.Dialog actions={dialogActions} ref='confirmDialog' title='projects_deleteDialog_TITLE'>
       <p>Are you sure you want to delete this project? </p>
     </mui.Dialog>);
-
-    return Dialog;
   }
 
   _onClick() {
-    if(this.props.isPreview === true) {
+    if (this.props.isPreview === true) {
       alert('This is a preview :)');
       return;
     }

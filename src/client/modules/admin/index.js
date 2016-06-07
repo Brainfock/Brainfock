@@ -4,7 +4,7 @@
  * @category client/modules/admin
  * @type {{path: string, getComponent, getChildRoutes}}
  */
-module.exports = {
+module.exports = { // eslint-disable-line no-undef
   path: 'admin',
 
   getComponent(location, cb) {

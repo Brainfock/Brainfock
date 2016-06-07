@@ -11,6 +11,10 @@ import React from 'react';
 
 class ViewUser extends React.Component {
 
+  static propTypes = {
+    params: React.PropTypes.object,
+  }
+
   render() {
     return (
       <div>

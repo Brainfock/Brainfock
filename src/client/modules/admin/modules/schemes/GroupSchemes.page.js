@@ -1,13 +1,10 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {RadioButton, Table, TableHeader, TableRow, TableHeaderColumn, TableBody, TableRowColumn, TableFooter, Styles} from 'material-ui';
-const {Spacing, Colors} = Styles;
-
+import {RadioButton, Table, TableHeader, TableRow, TableHeaderColumn, TableBody, TableRowColumn, TableFooter} from 'material-ui';
 import Loader from '../../../../components/Loader';
-
 import Component from 'react-pure-render/component';
-
 import {Utils} from 'material-ui';
+
 const Events = Utils.Events;
 
 class Users extends Component {
@@ -15,6 +12,14 @@ class Users extends Component {
   static contextTypes = {
     muiTheme: React.PropTypes.object,
   };
+
+  static propTypes = {
+    actions: React.PropTypes.object,
+    children: React.PropTypes.object,
+    groupSchemes: React.PropTypes.object,
+    msg: React.PropTypes.object,
+    users: React.PropTypes.object,
+  }
 
   constructor(props) {
     super(props);
@@ -71,11 +76,11 @@ class Users extends Component {
 
     const {children, ...props} = this.props;
 
-    if(children) {
+    if (children) {
       return React.cloneElement(children, props);
     }
 
-    const {groupSchemes: {list, listMeta:{isFetching, count}}} = this.props;
+    const {groupSchemes: {list, listMeta:{isFetching}}} = this.props;
     const msg = this.props.msg.groupSchemes;
 
     if (isFetching === true) return (
@@ -90,15 +95,16 @@ class Users extends Component {
     let i = -1;
     return (
       <Table
-        height={this.state.tableHeight}
-        fixedHeader={this.state.fixedHeader}
         fixedFooter={this.state.fixedFooter}
-        selectable={this.state.selectable}
+        fixedHeader={this.state.fixedHeader}
+        height={this.state.tableHeight}
         multiSelectable={this.state.multiSelectable}
-        onRowSelection={this._onRowSelection}>
-        <TableHeader enableSelectAll={this.state.enableSelectAll} displaySelectAll={false}>
+        onRowSelection={this._onRowSelection}
+        selectable={this.state.selectable}
+        >
+        <TableHeader displaySelectAll={false} enableSelectAll={this.state.enableSelectAll}>
           <TableRow>
-            <TableHeaderColumn colSpan="4" tooltip='Super Header' style={{textAlign: 'center'}}>
+            <TableHeaderColumn colSpan="4" style={{textAlign: 'center'}} tooltip='Super Header' >
               <h4>Topic Group Schemes Management</h4>
             </TableHeaderColumn>
           </TableRow>
@@ -111,18 +117,19 @@ class Users extends Component {
         </TableHeader>
         <TableBody
           deselectOnClickaway={this.state.deselectOnClickaway}
-          showRowHover={this.state.showRowHover}
           displayRowCheckbox={this.state.displayRowCheckbox}
-          stripedRows={this.state.stripedRows}>
+          showRowHover={this.state.showRowHover}
+          stripedRows={this.state.stripedRows}
+          >
           {list.map(todo =>
-              <TableRow selected={false} selectable={false}>
+              <TableRow selectable={false} selected={false}>
                 <TableRowColumn>{todo.id}</TableRowColumn>
                 <TableRowColumn><Link to={`/admin/users/${todo.id}`}>{todo.name}</Link></TableRowColumn>
                 <TableRowColumn>
                   {todo.groups && todo.groups.map(group =>
                     <span>
                       <span className="label label-primary" style={{marginRight:5, display:'inline-block'}}>{group.name}</span>
-                      {(i++) % 2 == 0 && <br />}
+                      {(i++) % 2 === 0 && <br />}
                     </span>
                   )}
                 </TableRowColumn>

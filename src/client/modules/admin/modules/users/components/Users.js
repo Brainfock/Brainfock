@@ -7,10 +7,9 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react'
-import {Link} from 'react-router'
-import {Table, TableHeader, TableRow, TableHeaderColumn, TableBody, TableRowColumn, TableFooter, Styles} from 'material-ui';
-const {Spacing, Colors} = Styles;
+import React from 'react';
+import {Link} from 'react-router';
+import {Table, TableHeader, TableRow, TableHeaderColumn, TableBody, TableRowColumn, TableFooter} from 'material-ui';
 
 import Loader from '../../../../../components/Loader';
 import UserAvatar from '../../../../../users/components/Avatar';
@@ -29,6 +28,13 @@ class Users extends Component {
   static contextTypes = {
     muiTheme: React.PropTypes.object,
   };
+
+  static propTypes = {
+    actions: React.PropTypes.object,
+    children: React.PropTypes.object,
+    msg: React.PropTypes.object,
+    users: React.PropTypes.object,
+  }
 
   constructor(props) {
     super(props);
@@ -95,18 +101,18 @@ class Users extends Component {
 
     const actions = [
       <FlatButton
-        label="Cancel"
-        secondary={true}
-        onTouchTap={this.handleClose}
         disabled={formData && formData.meta.isSubmitting === true}
+        label="Cancel"
+        onTouchTap={this.handleClose}
+        secondary
         />,
       <FlatButton
-        label={(formData && formData.meta.isSubmitting === true ? 'Saving...' : "Submit")}
-        primary={true}
         disabled={formData && formData.meta.isSubmitting === true}
+        label={(formData && formData.meta.isSubmitting === true ? 'Saving...' : 'Submit')}
         onTouchTap={(e)=>{
-                      this.props.actions.saveUserCreateForm(-1, 'create', formData.data)
-                      }.bind(this)}
+          this.props.actions.saveUserCreateForm(-1, 'create', formData.data);
+        }.bind(this)}
+        primary
         />,
     ];
 
@@ -117,14 +123,13 @@ class Users extends Component {
     return (
       <div>
         <Dialog
-          title="Create new user account"
           actions={actions}
-          modal={true}
+          modal
           open={this.state.open}
+          title='Create new user account'
           >
           {loader}
-          <CreateUserForm actions={this.props.actions} users={this.props.users} msg={this.props.msg} />
-
+          <CreateUserForm actions={this.props.actions} msg={this.props.msg} users={this.props.users} />
           <br />
         </Dialog>
       </div>
@@ -134,11 +139,11 @@ class Users extends Component {
 
     const {children, ...props} = this.props;
 
-    if(children) {
+    if (children) {
       return React.cloneElement(children, props);
     }
 
-    const {users: {list, listMeta:{isFetching, count}}} = this.props;
+    const {users: {list, listMeta:{isFetching}}} = this.props;
     const msg = this.props.msg.users;
 
     if (isFetching === true) return (
@@ -152,13 +157,14 @@ class Users extends Component {
 
     return (
         <Table
-          height={this.state.tableHeight}
-          fixedHeader={this.state.fixedHeader}
           fixedFooter={this.state.fixedFooter}
-          selectable={this.state.selectable}
+          fixedHeader={this.state.fixedHeader}
+          height={this.state.tableHeight}
           multiSelectable={this.state.multiSelectable}
-          onRowSelection={this._onRowSelection}>
-          <TableHeader enableSelectAll={this.state.enableSelectAll} displaySelectAll={false}>
+          onRowSelection={this._onRowSelection}
+          selectable={this.state.selectable}
+          >
+          <TableHeader displaySelectAll={false} enableSelectAll={this.state.enableSelectAll}>
             <TableRow>
               <TableHeaderColumn colSpan="5" tooltip='Super Header' >
                 <div className="pull-right">
@@ -169,7 +175,7 @@ class Users extends Component {
             </TableRow>
             <TableRow>
               <TableHeaderColumn tooltip={msg.list.column.hint.id}>ID</TableHeaderColumn>
-              <TableHeaderColumn></TableHeaderColumn>
+              <TableHeaderColumn/>
               <TableHeaderColumn tooltip={msg.list.column.hint.name}>{msg.list.column.label.name}</TableHeaderColumn>
               <TableHeaderColumn tooltip={msg.list.column.hint.email}>{msg.list.column.label.email}</TableHeaderColumn>
               <TableHeaderColumn tooltip={msg.list.column.hint.role}>{msg.list.column.label.role}</TableHeaderColumn>
@@ -177,11 +183,11 @@ class Users extends Component {
           </TableHeader>
           <TableBody
             deselectOnClickaway={this.state.deselectOnClickaway}
-            showRowHover={this.state.showRowHover}
             displayRowCheckbox={this.state.displayRowCheckbox}
+            showRowHover={this.state.showRowHover}
             stripedRows={this.state.stripedRows}>
             {list.map(todo =>
-              <TableRow selected={false} selectable={false}>
+              <TableRow selectable={false} selected={false}>
                 <TableRowColumn>{todo.id}</TableRowColumn>
                 <TableRowColumn><UserAvatar user={todo}/></TableRowColumn>
                 <TableRowColumn><Link to={`/admin/users/${todo.id}`}>{todo.username}</Link></TableRowColumn>
@@ -206,4 +212,4 @@ class Users extends Component {
   }
 }
 
-export default Users
+export default Users;
