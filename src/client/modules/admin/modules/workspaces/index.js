@@ -21,7 +21,7 @@ module.exports = { // eslint-disable-line no-undef
   getChildRoutes(location, cb) {
 
     // currently, this is working better than 'react-router-proxy-loader'
-    if(process.env.IS_BROWSER)
+    if (process.env.IS_BROWSER)
       require.ensure([], (require) => {
         [
           cb(null, require('./modules/workspace'))

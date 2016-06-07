@@ -7,15 +7,15 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {Map, fromJS} from 'immutable';
-import reducer from '../../../common/boards/reducer.js';
+//import {Map, fromJS} from 'immutable';
+//import reducer from '../../../common/boards/reducer.js';
 import {configureStore} from '../../';
 import {
   expect,
-  assert,
-  React,
-  sinon,
-  TestUtils
+  //assert,
+  //React,
+  //sinon,
+  //TestUtils
 } from '../../../../test/mochaTestHelper';
 
 import {SET_NEW_TOPIC_FIELD, setNewTopicField} from '../../../common/topics/actions';

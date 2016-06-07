@@ -35,8 +35,8 @@ export default class CreateTopicForm extends Component {
     newTopic: React.PropTypes.any.isRequired,
     params: React.PropTypes.object.isRequired,
     sysFields: React.PropTypes.array,
-    topicGroup: React.PropTypes.string.isRequired, // topic group to load form for, e.g. `issue` if we want to greate topic in group `issue`
     topicActions: React.PropTypes.any.isRequired,
+    topicGroup: React.PropTypes.string.isRequired, // topic group to load form for, e.g. `issue` if we want to greate topic in group `issue`
     workspace: React.PropTypes.object,
   };
 
