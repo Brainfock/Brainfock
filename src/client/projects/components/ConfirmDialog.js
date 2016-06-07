@@ -18,6 +18,7 @@ export default class ConfirmDialog extends Component {
     activeStageId: PropTypes.any,
     deleteAction: PropTypes.function,
     onDelete: PropTypes.function,
+    onDismiss: PropTypes.function,
     onSelectDelete: PropTypes.func.isRequired,
     operations: PropTypes.array.isRequired,
     show: PropTypes.bool,

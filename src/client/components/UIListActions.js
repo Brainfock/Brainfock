@@ -13,27 +13,27 @@ import {RaisedButton, FlatButton, Dialog} from 'material-ui';
 let ListActions =  React.createClass({
   propTypes: {
     addItemForm: React.PropTypes.element,
-    BUTTON_ACTION_LABEL: React.PropTypes.string,
-    BUTTON_ACTION_LABEL: React.PropTypes.string,
+    //buttonActionLabel: React.PropTypes.string,
+    buttonActionLabel: React.PropTypes.string,
     isLoading: React.PropTypes.bool,
     msg: React.PropTypes.object,
-    TITLE: React.PropTypes.string,
+    title: React.PropTypes.string,
   },
 
   getDefaultProps() {
     return {
       actions: null,
-      BUTTON_ACTION_LABEL: 'BTN_CREATE',
-      BUTTON_ACTION_LABEL: 'INVITE PEOPLE',
+      //buttonActionLabel: 'BTN_CREATE',
+      buttonActionLabel: 'INVITE PEOPLE',
       isLoading: false,
-      TITLE: 'Add New',
+      title: 'Add New',
     };
   },
 
   render() {
     return (<div className="pull-right">
       <RaisedButton
-        label={this.props.BUTTON_ACTION_LABEL}
+        label={this.props.buttonActionLabel}
         onClick={this.showModelForm}
         primary
         />
@@ -73,7 +73,7 @@ let ListActions =  React.createClass({
       autoDetectWindowHeight
       autoScrollBodyContent
       ref="modelForm"
-      title={this.props.TITLE}
+      title={this.props.title}
       >
       {addItemForm}
     </Dialog>);

@@ -17,7 +17,7 @@ export default function fetch(action) {
     static fetchAction = action;
 
     componentDidMount() {
-      const {dispatch /*, location, params, app, users*/}=this.props;
+      const {dispatch/*, location, params, app, users*/} = this.props;
       dispatch(action({...this.props}));
      // dispatch(action({location, params, app, users}));
     }

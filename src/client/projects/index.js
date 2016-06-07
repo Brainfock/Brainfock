@@ -19,6 +19,7 @@ export default class ProjectsIndex extends Component {
     actions: React.PropTypes.object,
     boards: React.PropTypes.object,
     children: React.PropTypes.object,
+    location: React.PropTypes.object,
     msg: React.PropTypes.object,
     params: React.PropTypes.object,
   }

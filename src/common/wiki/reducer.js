@@ -9,8 +9,7 @@
  */
 import * as actions from './actions';
 import Todo from './wiki-page';
-import getRandomString from '../lib/getRandomString';
-import {List, Range, Record} from 'immutable';
+import {List, Record} from 'immutable';
 
 const InitialState = Record({
   list: List(),

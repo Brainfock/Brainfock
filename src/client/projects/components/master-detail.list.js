@@ -23,7 +23,6 @@ import Filters from '../../components/UISimpleFilters';
 import FetchActionError from '../../components/FetchActionError';
 
 export default class ProjectIssues extends Component {
-
   static propTypes = {
     actions: React.PropTypes.object.isRequired,
     boards: React.PropTypes.object.isRequired,
@@ -218,14 +217,13 @@ export default class ProjectIssues extends Component {
 
         <ListActions
           addItemForm={addItemForm}
-          BUTTON_ACTION_LABEL={msg.list.addNew.button}
+          buttonActionLabel={msg.list.addNew.button}
           isLoading={!formData || formData.meta.isSubmitting ? true : false}
           msg={msg}
-          TITLE={titleMsg}
+          title={titleMsg}
           />
       </div>
     );
-
 
     const content = this.renderListContent();
 
@@ -472,4 +470,4 @@ export default class ProjectIssues extends Component {
     if (e.key === 'Enter')
       this.applySearchQuery();
   }
-};
+}

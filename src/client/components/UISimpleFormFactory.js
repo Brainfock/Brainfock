@@ -10,9 +10,6 @@
 import React from 'react';
 import Component from 'react-pure-render/component';
 import mui from 'material-ui';
-import Select from 'react-select';
-
-import Loader from './Loader';
 import RemoteSelectField from './form/RemoteSelectField';
 /**
  * Simple factory to build basic forms' UIs;
@@ -154,7 +151,7 @@ class Page extends Component {
                   ? this.props.form.data[prop][0].value
                   : this.props.form.data[prop][0];
 
-                props.endpoint += '&'+includeSettings[prop]+filterValue;
+                props.endpoint += '&' + includeSettings[prop] + filterValue;
               }
             }
           }

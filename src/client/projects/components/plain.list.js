@@ -44,12 +44,12 @@ export default class ProjectIssues extends Component {
     super(props);
     this.state = {
       count:0,
+      disableDetails: true,
       filters:(props.location.query && props.location.query.filter ? props.location.query.filter : null),
       filtersOpen:false,
       loading:true,
       searchQuery:(props.location.query && props.location.query.query ? props.location.query.query : ''),
       showDetails: true,
-      disableDetails: true,
     };
   }
 
@@ -172,10 +172,10 @@ export default class ProjectIssues extends Component {
 
         <ListActions
           addItemForm={addItemForm}
-          BUTTON_ACTION_LABEL={msg.list.addNew.button}
+          buttonActionLabel={msg.list.addNew.button}
           formFields={formFields}
           msg={msg}
-          TITLE={titleMsg}
+          title={titleMsg}
           />
       </div>
     );
