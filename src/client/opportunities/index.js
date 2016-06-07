@@ -8,6 +8,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
+import Component from 'react-pure-render/component';
 
 import ProjectsEmpty from './components/empty-list-fallback.js';
 import MasterDetailsListView from '../projects/components/master-detail.list';
@@ -21,7 +22,16 @@ const views = {
   'boards.homepage': ListView,
 };
 
-module.exports = React.createClass({
+export default class OpportunitiesIndex extends Component {
+  static propTypes = {
+    actions: React.PropTypes.object,
+    boards: React.PropTypes.object,
+    children: React.PropTypes.object,
+    history: React.PropTypes.object,
+    location: React.PropTypes.object,
+    msg: React.PropTypes.object,
+    params: React.PropTypes.object,
+  }
 
   componentWillMount() {
     this.props.actions.appSetActiveSectionLabel('Opportunities');
@@ -29,10 +39,9 @@ module.exports = React.createClass({
       //this.props.topicActions.loadTopicGroup('board');
       //this.props.topicActions.find('project', {}/*, this.props.parentModel*/);
     }
-  },
+  }
 
-  render: function()
-  {
+  render() {
     let View;
     if (views[this.props.boards.group.view]) {
       View = views[this.props.boards.group.view];
@@ -44,32 +53,28 @@ module.exports = React.createClass({
 
     const {children, ...passProps} = this.props;
     return (
-    <PageWithNav
-      history={this.props.history}
-      menuItems={this.menuItems()}>
-      <View
-        containerTopic={null}
-        disableDetails_
-        browseAll
-        emptyListFallback={ProjectsEmpty}
-        groupKey='opportunity'
-        listViewItem={TaskListItem}
-        groupBy={this.props.location.query && this.props.location.query.groupBy}
-        {...passProps}
-        />
-    </PageWithNav>
+      <PageWithNav
+        history={this.props.history}
+        menuItems={this.menuItems()}>
+        <View
+          browseAll
+          containerTopic={null}
+          disableDetails_
+          emptyListFallback={ProjectsEmpty}
+          groupBy={this.props.location.query && this.props.location.query.groupBy}
+          groupKey='opportunity'
+          listViewItem={TaskListItem}
+          {...passProps}
+          />
+      </PageWithNav>
     );
-  },
+  }
 
   /**
    * @todo i18n
    * @returns {*[]}
    */
   menuItems() {
-    let icon;
-    if (this.props.boards.board.accessPrivateYn) {
-      icon = (<i className="fa fa-eye-slash"></i>);
-    }
     return [
       {
         route: '/tasks/',
@@ -95,4 +100,4 @@ module.exports = React.createClass({
       }
     ];
   }
-});
+}

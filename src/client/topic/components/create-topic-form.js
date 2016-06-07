@@ -243,7 +243,7 @@ export default class CreateTopicForm extends Component {
 
   onFormSubmit(e) {
 
-    const {topicActions, formData} = this.props; // eslint-disable-line camelcase
+    const {topicActions, formData} = this.props;
 
     const cid = formData.cid;
     const data = formData.toJS().data;
