@@ -6,6 +6,7 @@
 [![CircleCI](https://img.shields.io/circleci/project/Brainfock/Brainfock.svg?maxAge=2592000)](https://circleci.com/gh/Brainfock/Brainfock)
 [![Dependency Status](https://david-dm.org/brainfock/brainfock.svg)](https://david-dm.org/brainfock/brainfock)
 [![Donate](https://img.shields.io/badge/gratipay-donate-green.svg)](https://gratipay.com/brainfock/)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg))](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZH94NV7E9JU74)
 
 Written in universal JavaScript, NodeJS server with Loopback, ReactJS client with everything.
 
