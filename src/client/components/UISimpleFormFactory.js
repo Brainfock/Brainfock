@@ -209,7 +209,7 @@ class Page extends Component {
                   value: isChecked
                 }
               });
-             }).bind(this)}
+            }).bind(this)}
             />
         </div>
       );
@@ -226,7 +226,7 @@ class Page extends Component {
 
       let Datepicker = (
         <mui.DatePicker {...props}
-          onChange={(nill, newDate)=>{this.onDatepickerChange(newDate, item.name)}.bind(this)}
+          onChange={(nill, newDate)=>{this.onDatepickerChange(newDate, item.name);}.bind(this)}
         />
       );
 
