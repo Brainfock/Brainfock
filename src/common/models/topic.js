@@ -62,15 +62,15 @@ module.exports = function(Topic) {
 
   Topic.validate('typeId', typeIdcustomValidator, {message: 'Type is required'});
 
-  Topic.validate('workspaceId', function (err) {
+  Topic.validate('workspaceId', function(err) {
     if (!this.workspaceId || !(this.workspaceId > 0)) err();
   }, {message: 'is required'});
 
-  Topic.validate('groupId', function (err) {
+  Topic.validate('groupId', function(err) {
     if (!this.groupId || !(this.groupId > 0)) err();
   }, {message: 'is required'});
 
-  Topic.validate('typeId', function (err) {
+  Topic.validate('typeId', function(err) {
     if (!this.typeId || !(this.typeId > 0)) err();
   }, {message: 'is required'});
 
@@ -86,7 +86,7 @@ module.exports = function(Topic) {
   //  }
   //}, {message: 'is required '});
 
-  Topic.validate('contextTopicKey', function (err) {
+  Topic.validate('contextTopicKey', function(err) {
     if (!this.contextTopicId) {
       let result = /^[a-zA-Z\-]+$/.test(this.contextTopicKey);
       if (!result)  err();
@@ -176,7 +176,7 @@ module.exports = function(Topic) {
 
     // inherit workspaceId from contextTopicId
     if (ctx.instance.contextTopicId) {
-      Topic.findById(ctx.instance.contextTopicId, function (err, contextTopicInstance) {
+      Topic.findById(ctx.instance.contextTopicId, function(err, contextTopicInstance) {
 
         if (err) throw err;
 
@@ -203,7 +203,7 @@ module.exports = function(Topic) {
                 ctx.instance.namespace = wspcInstance.namespace;
                 next();
               })
-              .catch(function () {
+              .catch(function() {
                 return next({
                   name: 'error',
                   status: 403,
@@ -216,7 +216,7 @@ module.exports = function(Topic) {
     }
     else if (ctx.instance.namespace && !ctx.instance.workspaceId) {
       // make sure workspace exists
-      Topic.app.models.Workspace.findOne({where: {namespace: ctx.instance.namespace}}, function (wspcErr, wspcInstance) {
+      Topic.app.models.Workspace.findOne({where: {namespace: ctx.instance.namespace}}, function(wspcErr, wspcInstance) {
 
         if (wspcErr) throw wspcErr;
 
@@ -706,19 +706,19 @@ module.exports = function(Topic) {
 
   Topic.promiseUserAccess = function(topicWhere, userId) {
     if (process.env.NODE_ENV === 'development') {
-      console.log('> Topic.promiseUserAccess topicWhere', topicWhere)
+      console.log('> Topic.promiseUserAccess topicWhere', topicWhere);
     }
     return new Promise(
       function(resolve, reject) {
         Topic.findOne({where:topicWhere}, function(err, instance) {
           if(err || !instance) return reject(null, false);
-          instance.checkUserAccess(userId, function(err,isAllowed) {
+          instance.checkUserAccess(userId, function(err, isAllowed) {
             if(err || !isAllowed) return reject(null, false);
             return resolve(instance, true);
-          })
+          });
         });
       });
-  }
+  };
 
   /**
    * @return Workflow|null - active workflow for current topic type in active scheme
@@ -784,19 +784,19 @@ module.exports = function(Topic) {
         let ids = [];
         let where = {};
         where = {
-          workspaceId: { inq: workspaces },
+          workspaceId: {inq: workspaces},
           accessPrivateYn: '0'
         };
         Topic.find({where: where}, function(err, data) {
           if (err || !data) return resolve([]);
 
           data.forEach(item => {
-            ids.push(item.id)
+            ids.push(item.id);
           });
           resolve(ids);
         });
       });
-  }
+  };
 
   /**
    *
@@ -1082,9 +1082,9 @@ module.exports = function(Topic) {
                                 })
                                 .catch(e => {
                                   return cb(null, []);
-                                })
+                                });
                             });
-                        });
+                          });
                       } else {
                         // use type-specific screen (advanced):
                         Screen = ScreenSchemeTopicTypeScreenMap.screen();
@@ -1140,7 +1140,7 @@ module.exports = function(Topic) {
                             })
                             .catch(e => {
                               return cb(null, []);
-                            })
+                            });
                         });
                       }
                     });
@@ -1314,7 +1314,7 @@ module.exports = function(Topic) {
                                 })
                                 .catch(e => {
                                   return cb(null, []);
-                                })
+                                });
                             });
                           });
                       } else {
@@ -1342,7 +1342,7 @@ module.exports = function(Topic) {
                             .all(_screenFields.map(FieldsHandler.populateFormField))
                             .then(function(dataDone) {
 
-                              let dataFiltered = dataDone.filter(function(n){ return n !== undefined && n !== null });
+                              let dataFiltered = dataDone.filter(function(n) { return n !== undefined && n !== null; });
 
                               // manually add "group" and "type" select fields, re-using already populated data
                               FieldsHandler.typeIdFieldProps({

@@ -14,8 +14,8 @@ module.exports = {
   getComponent(location, cb) {
     if (process.env.IS_BROWSER) {
       require.ensure([], (require) => {
-        cb(null, require('./components/View'))
-      })
+        cb(null, require('./components/View'));
+      });
     } else {
       cb(null, require('./components/View'));
     }
@@ -29,4 +29,4 @@ module.exports = {
   //    cb(null, require('./components/View'));
   //  }
   //},
-}
+};

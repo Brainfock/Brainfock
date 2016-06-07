@@ -21,7 +21,7 @@ import {apiGet, apiPost} from '../lib/services';
 
 export function loadEntityComments(entity_id) {
 
-  let endpoint = 'entities/'+entity_id+'/comments?filter[include][user]' ;
+  let endpoint = 'entities/' + entity_id + '/comments?filter[include][user]';
 
   return ({fetch, validate}) => ({
     type: 'LOAD_COMMENTS',
@@ -41,7 +41,7 @@ export function catchComment(data) {
   };
 }
 export function postComment(entity_id, data) {
-  const endpoint = 'entities/'+entity_id+'/comments?include=user';
+  const endpoint = 'entities/' + entity_id + '/comments?include=user';
 
   return ({fetch, validate}) => ({
     type: 'POST_COMMENT',

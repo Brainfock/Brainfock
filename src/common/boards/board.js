@@ -9,7 +9,7 @@
  */
 import {Record, List, Map} from 'immutable';
 
-import ModelSchema from './model.js'
+import ModelSchema from './model.js';
 
 export default Record({
   cid: '',

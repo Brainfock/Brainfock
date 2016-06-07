@@ -12,7 +12,7 @@ import React from 'react';
 import RemoteSelectField from '../components/form/RemoteSelectField.js';
 import {RaisedButton} from 'material-ui';
 
-export default class Dashboard extends React.Component{
+export default class Dashboard extends React.Component {
 
   componentWillMount() {
 
@@ -38,7 +38,7 @@ export default class Dashboard extends React.Component{
                     return {
                       value:(item.id),
                       label:(item.username)
-                  }}}
+                    };}}
                   />
               </div>
               <div className="col-md-5 col-sm-4">

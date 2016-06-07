@@ -10,8 +10,8 @@ module.exports = {
   getComponent(location, cb) {
     if (process.env.IS_BROWSER) {
       require.ensure([], (require) => {
-        cb(null, require('./pages/AdminHome'))
-      })
+        cb(null, require('./pages/AdminHome'));
+      });
     } else {
       cb(null, require('./pages/AdminHome'));
     }
@@ -22,4 +22,4 @@ module.exports = {
     require('./modules/workspaces'),
     require('./modules/schemes'),
   ]
-}
+};

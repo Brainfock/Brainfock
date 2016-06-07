@@ -64,10 +64,10 @@ module.exports = function(app) {
    *
    * @todo: do not allow updating locked topics
    */
-  Role.registerResolver('$createTopic', function (role, context, cb) {
+  Role.registerResolver('$createTopic', function(role, context, cb) {
 
     function reject() {
-      process.nextTick(function () {
+      process.nextTick(function() {
         cb(null, false);
       });
     }
@@ -107,13 +107,13 @@ module.exports = function(app) {
   /**
    * @todo: do not allow updating locked topics
    */
-  Role.registerResolver('$updateTopic', function (role, context, cb) {
+  Role.registerResolver('$updateTopic', function(role, context, cb) {
 
     const userId = context.accessToken.userId || null;
     console.log('[RBAC $updateTopic] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName + '`, user:' + userId);
 
     function reject() {
-      process.nextTick(function () {
+      process.nextTick(function() {
         cb(null, false);
       });
     }
@@ -142,7 +142,7 @@ module.exports = function(app) {
 
               if (err || !contextTopicInstance) return cb(null, false);
 
-              contextTopicInstance.checkUserAccess(userId, function (err, isAllowed) {
+              contextTopicInstance.checkUserAccess(userId, function(err, isAllowed) {
                 if (err || !isAllowed) return reject(null, false);
 
                 Workspace.promiseUserAccess(topicInstance.workspaceId, userId)
@@ -366,16 +366,16 @@ module.exports = function(app) {
           if (userId) {
 
             app.models.EntityAccessAssign.find({where:{
-                authType:0,
-                authId:userId
-              }},
+              authType:0,
+              authId:userId
+            }},
               (err, data) => {
                 if (err || data.length === 0) {
                   // apply base
                   context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
                     {where: {
                       and: [
-                        {workspaceId: { inq: ids }},
+                        {workspaceId: {inq: ids}},
                         {or: [
                           {ownerUserId: userId},
                           {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
@@ -393,7 +393,7 @@ module.exports = function(app) {
                       context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
                         {where: {
                           and: [
-                            {workspaceId: { inq: ids }},
+                            {workspaceId: {inq: ids}},
                             {or: [
                               {ownerUserId: userId},
                               {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
@@ -408,7 +408,7 @@ module.exports = function(app) {
                       context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
                         {where: {
                           and: [
-                            {workspaceId: { inq: ids }},
+                            {workspaceId: {inq: ids}},
                             {or: [
                               {ownerUserId: userId},
                               {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
@@ -453,16 +453,16 @@ module.exports = function(app) {
                 context.remotingContext.args.filter = mergeQuery(context.remotingContext.args.filter,
                   // allow either public roots or public issues in public contexts
                   {where: {
-                    workspaceId: { inq: ids },
+                    workspaceId: {inq: ids},
                     or: [
                       {and: [{accessPrivateYn: '0', contextTopicId: null}]},
                       {and: [{accessPrivateYn: '0', contextTopicId: {inq: topicsIds}}]},
                     ]
                   }});
                 return cb(null, true);
-              })
+              });
           }
-        })
+        });
 
       //if(context.remotingContext.args.filter.group) {
       //  //app.models.TopicGroup.findOne({where:{groupKey:context.remotingContext.args.filter.group}},
@@ -501,16 +501,16 @@ module.exports = function(app) {
         .then(ids => {
           if (userId) {
             app.models.EntityAccessAssign.find({where:{
-                authType:0,
-                authId:userId
-              }},
+              authType:0,
+              authId:userId
+            }},
               function(err, data) {
                 if (err) {
                   // apply base
                   context.remotingContext.args = mergeQuery(context.remotingContext.args,
                     {where: {
                       and: [
-                        {workspaceId: { inq: ids }},
+                        {workspaceId: {inq: ids}},
                         {or: [
                           {ownerUserId: userId},
                           {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
@@ -530,7 +530,7 @@ module.exports = function(app) {
                           {accessPrivateYn: '0'},
                           {entityId:{inq:allowedEntities}}
                         ],
-                        workspaceId: { inq: ids }
+                        workspaceId: {inq: ids}
                       }});
                   } else {
                     // base constraints: do not show private topics of other users:
@@ -541,7 +541,7 @@ module.exports = function(app) {
                           {and: [{accessPrivateYn: '1', ownerUserId: userId}]},
                           {accessPrivateYn: '0'}
                         ],
-                        workspaceId: { inq: ids }
+                        workspaceId: {inq: ids}
                         //or: [{accessPrivateYn: '0'}, {ownerUserId: userId}]
                       }});
                   }
@@ -578,14 +578,14 @@ module.exports = function(app) {
                 context.remotingContext.args = mergeQuery(context.remotingContext.args,
                   // allow either public roots or public issues in public contexts
                   {where: {
-                    workspaceId: { inq: ids },
+                    workspaceId: {inq: ids},
                     or: [
                       {and: [{accessPrivateYn: '0', contextTopicId: null}]},
                       {and: [{accessPrivateYn: '0', contextTopicId: {inq: topicsIds}}]},
                     ]
                   }});
                 return cb(null, true);
-              })
+              });
           }
         });
 
@@ -708,7 +708,7 @@ module.exports = function(app) {
    *
    * @todo: do not allow updating locked topics
    */
-  Role.registerResolver('$updateWikiPage', function (role, context, cb) {
+  Role.registerResolver('$updateWikiPage', function(role, context, cb) {
 
     const userId = context.accessToken.userId || null;
     console.log('[RBAC $updateWikiPage] Validate access to  operation `' + context.remotingContext.method.name + '` of model `' + context.modelName + ':' + context.modelId  + '`, user:' + userId);
@@ -727,7 +727,7 @@ module.exports = function(app) {
 
       // posting to global wiki
       if (!context.remotingContext.args.data.contextEntityId) {
-    console.log('>root wiki')
+        console.log('>root wiki');
         Role.isInRole('$authenticated', context, (err, isAllowed) => {
 
           // TODO: allow guest posts to root wiki via admin
@@ -1022,7 +1022,7 @@ module.exports = function(app) {
 
     try {
 
-    const ownerContainerId = context.remotingContext.args.data.contextTopicId > 0
+      const ownerContainerId = context.remotingContext.args.data.contextTopicId > 0
       // post/update topic of some other topic (e.g. update `issue` of some `project`)
       ? context.remotingContext.args.data.contextTopicId
       : (
@@ -1032,17 +1032,17 @@ module.exports = function(app) {
         : 0
     );
 
-    console.log('[RBAC createTopicAccess] Validate access to  operation `' + context.remotingContext.method.name
+      console.log('[RBAC createTopicAccess] Validate access to  operation `' + context.remotingContext.method.name
       + '` of model `' + context.modelName + '`:' + ownerContainerId);
 
     // creating root topic, e.g. project, board etc.
-    if (ownerContainerId === 0) {
+      if (ownerContainerId === 0) {
       // TODO: DO NOT ALLOW GUESTS
-      return accept();
-    } else {
-      app.models.Topic.findOne({where:{
-        id:ownerContainerId
-      }},
+        return accept();
+      } else {
+        app.models.Topic.findOne({where:{
+          id:ownerContainerId
+        }},
       function(err, ContextTopic) {
         // TODO: support for root topics
         if (err || !ContextTopic) {
@@ -1067,7 +1067,7 @@ module.exports = function(app) {
           });
         }
       });
-    }
+      }
     }
     catch (e) {
       return reject();
@@ -1378,9 +1378,9 @@ module.exports = function(app) {
             if (userId) {
 
               app.models.EntityAccessAssign.find({where:{
-                  authType:0,
-                  authId:userId
-                }},
+                authType:0,
+                authId:userId
+              }},
                 function(err, data) {
                   if (err || data.length === 0) {
                     // apply base
@@ -1449,9 +1449,9 @@ module.exports = function(app) {
 
             if (userId) {
               app.models.EntityAccessAssign.find({where:{
-                  authType:0,
-                  authId:userId
-                }},
+                authType:0,
+                authId:userId
+              }},
                 function(err, data) {
                   if (err) {
                     // apply base

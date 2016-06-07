@@ -102,7 +102,7 @@ function toQueryString(obj, urlEncode) {
     var result = [];
 
     path = path || [];
-    Object.keys(x).forEach(function (key) {
+    Object.keys(x).forEach(function(key) {
       if (!x.hasOwnProperty(key)) return;
 
       var newPath = path.slice();
@@ -112,9 +112,9 @@ function toQueryString(obj, urlEncode) {
       if (typeof x[key] == 'object') {
         vals = flattenObj(x[key], newPath);
       } else {
-        vals.push({ path: newPath, val: x[key] });
+        vals.push({path: newPath, val: x[key]});
       }
-      vals.forEach(function (obj) {
+      vals.forEach(function(obj) {
         return result.push(obj);
       });
     });
@@ -126,8 +126,8 @@ function toQueryString(obj, urlEncode) {
   var parts = flattenObj(obj); // [ { path: [ ...parts ], val: ... }, ... ]
 
   // convert to array notation:
-  parts = parts.map(function (varInfo) {
-    if (varInfo.path.length == 1) varInfo.path = varInfo.path[0];else {
+  parts = parts.map(function(varInfo) {
+    if (varInfo.path.length == 1) varInfo.path = varInfo.path[0]; else {
       var first = varInfo.path[0];
       var rest = varInfo.path.slice(1);
       varInfo.path = first + '[' + rest.join('][') + ']';
@@ -136,22 +136,22 @@ function toQueryString(obj, urlEncode) {
   }); // parts.map
 
   // join the parts to a query-string url-component
-  var queryString = parts.map(function (varInfo) {
+  var queryString = parts.map(function(varInfo) {
     return varInfo.path + '=' + varInfo.val;
   }).join('&');
-  if (urlEncode) return encodeURIComponent(queryString);else return queryString;
+  if (urlEncode) return encodeURIComponent(queryString); else return queryString;
 }
 
 export function find(type, query, contextTopicId, namespace) {
   let endpoint = '';
   if(namespace) {
-    endpoint += `workspaces/${namespace}/`
+    endpoint += `workspaces/${namespace}/`;
   }
 
   if (contextTopicId && contextTopicId !== '*') {
     endpoint += `topics/${contextTopicId}/topics/?filter[where][groupKey]=${type}`;
   } else {
-    endpoint += 'topics/?filter[where][groupKey]='+type;
+    endpoint += 'topics/?filter[where][groupKey]=' + type;
     if (contextTopicId !== '*')
       // exclude non-root items, e.g. boards of some project
       endpoint += '&filter[where][contextTopicId]=null';
@@ -206,11 +206,11 @@ export function count(group, query, contextTopicId, namespace) {
   if (contextTopicId) {
     endpoint += `topics/${contextTopicId}/topics/count?where[groupKey]=${group}`;
   } else {
-    endpoint += 'topics/count?where[groupKey]='+group;
+    endpoint += 'topics/count?where[groupKey]=' + group;
   }
 
   if (query) {
-    endpoint += '&'+toQueryString({where:query},false);
+    endpoint += '&' + toQueryString({where:query}, false);
   }
 
   return ({fetch, validate}) => ({
@@ -230,7 +230,7 @@ export function loadCurrent(id, namespace) {
   if(namespace) {
     endpoint += `workspaces/${namespace}/`;
   }
-  endpoint += 'topics/'+id ;
+  endpoint += 'topics/' + id;
 
   return ({fetch, validate}) => ({
     type: 'TOPIC_FIND_ONE',
@@ -245,7 +245,7 @@ export function loadCurrent(id, namespace) {
 
 export function loadTopic(id) {
 
-  let endpoint = 'topics/'+id+'?filter[include][1][type]&filter[include][2][author]&filter[extra][operations]' ;
+  let endpoint = 'topics/' + id + '?filter[include][1][type]&filter[include][2][author]&filter[extra][operations]';
 
   return ({fetch, validate}) => ({
     type: 'LOAD_TOPIC',
@@ -267,13 +267,13 @@ export function loadTopic(id) {
  */
 export function loadContextGroupTopicByNum(contextTopicId, groupKey, topicNum) {
 
-  let endpoint = `topics/${contextTopicId}/topics/?filter[include][1][type]&filter[include][2][author]&filter[extra][operations]` ;
-  endpoint += `&filter[where][groupKey]=${groupKey}` ;
+  let endpoint = `topics/${contextTopicId}/topics/?filter[include][1][type]&filter[include][2][author]&filter[extra][operations]`;
+  endpoint += `&filter[where][groupKey]=${groupKey}`;
 
   if(isNaN(topicNum))
-    endpoint += `&filter[where][contextTopicKey]=${topicNum}` ;
+    endpoint += `&filter[where][contextTopicKey]=${topicNum}`;
   else
-    endpoint += `&filter[where][contextTopicNum]=${topicNum}` ;
+    endpoint += `&filter[where][contextTopicNum]=${topicNum}`;
 
   return ({fetch, validate}) => ({
     type: 'LOAD_TOPIC',
@@ -295,7 +295,7 @@ export function loadContextGroupTopicByNum(contextTopicId, groupKey, topicNum) {
  */
 export function loadNamespaceTopicByNum(namespace, ownerTopicKeyOrId, groupKey, topicNum) {
 
-  let endpoint = `workspaces/${namespace}/topics/${ownerTopicKeyOrId}/topics/${groupKey}/${topicNum}?filter[include][1][type]&filter[include][2][author]&filter[extra][operations]` ;
+  let endpoint = `workspaces/${namespace}/topics/${ownerTopicKeyOrId}/topics/${groupKey}/${topicNum}?filter[include][1][type]&filter[include][2][author]&filter[extra][operations]`;
   //endpoint += `&filter[where][groupKey]=${groupKey}` ;
   //
   //if(isNaN(topicNum))
@@ -328,7 +328,7 @@ export function setCurrentTopicMarker(id) {
 
 export function loadTopicGroup(name) {
 
-  let endpoint = `topicGroups/findOne?filter[where][group_key]=${name}` ;
+  let endpoint = `topicGroups/findOne?filter[where][group_key]=${name}`;
 
   return ({fetch, validate}) => ({
     type: 'LOAD_TOPIC_GROUP',
@@ -356,7 +356,7 @@ export function loadTopicGroup(name) {
 export function loadTopicGroupBoard(name) {
  // workspaces/sandbox/topics/demosand/topics/board/3
   // http://localhost:3000/api/workspaces/sandbox/topics/demosand/topics/board/3
-  let endpoint = `topicGroups/findOne?filter[where][group_key]=${name}` ;
+  let endpoint = `topicGroups/findOne?filter[where][group_key]=${name}`;
 
   return ({fetch, validate}) => ({
     type: 'LOAD_TOPIC_GROUP',
@@ -385,9 +385,9 @@ export function loadFilters(group, query, contextTopicId) {
 
   let endpoint;
   if(contextTopicId) {
-    endpoint = `topics/${contextTopicId}/filters/${group}` ;
+    endpoint = `topics/${contextTopicId}/filters/${group}`;
   } else {
-    console.log('contextTopic must be provided for `loadFilters`')
+    console.log('contextTopic must be provided for `loadFilters`');
   }
 
   return ({fetch, validate}) => ({
@@ -445,7 +445,7 @@ export function makeTopicUpdateFormRecord(id, initialValues) {
   };
 }
 
-export function applyTopicFormDefaults(cid, data, overwrite=false) {
+export function applyTopicFormDefaults(cid, data, overwrite = false) {
   return {
     type: APPLY_TOPIC_FORM_DEFAULTS,
     payload: data,
@@ -456,7 +456,7 @@ export function applyTopicFormDefaults(cid, data, overwrite=false) {
   };
 }
 
-export function setNewTopicField({target: {name, value}},{cid, id}) {
+export function setNewTopicField({target: {name, value}}, {cid, id}) {
   return {
     type: SET_NEW_TOPIC_FIELD,
     payload: {name, value, cid, id}
@@ -494,13 +494,13 @@ export function create(data) {
             throw response;
           }
         })
-        .then(function (jsonResponce) {
+        .then(function(jsonResponce) {
           if (jsonResponce.error) {
             throw jsonResponce;
           }
           else
             return jsonResponce;
-        }, function (response) {
+        }, function(response) {
           // throw other errors (i.e. 50x) that don't have `.json()` available
           throw response;
         })
@@ -535,13 +535,13 @@ export function postTopicFormData(cid, data) {
             throw response;
           }
         })
-        .then(function (jsonResponce) {
+        .then(function(jsonResponce) {
           if (jsonResponce.error) {
             throw jsonResponce;
           }
           else
             return jsonResponce;
-        }, function (response) {
+        }, function(response) {
           // throw other errors (i.e. 50x) that don't have `.json()` available
           throw response;
         })
@@ -551,7 +551,7 @@ export function postTopicFormData(cid, data) {
 
 export function save(id, data) {
 
-  const endpoint = 'topics/'+id;
+  const endpoint = 'topics/' + id;
 
   return ({fetch, validate}) => ({
     type: 'TOPIC_SAVE',
@@ -569,13 +569,13 @@ export function save(id, data) {
             throw response;
           }
         })
-        .then(function (jsonResponce) {
+        .then(function(jsonResponce) {
           if (jsonResponce.error) {
             throw jsonResponce;
           }
           else
             return jsonResponce;
-        }, function (response) {
+        }, function(response) {
           // throw other errors (i.e. 50x) that don't have `.json()` available
           throw response;
         })

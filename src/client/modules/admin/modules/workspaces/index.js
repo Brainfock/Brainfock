@@ -25,11 +25,11 @@ module.exports = {
       require.ensure([], (require) => {
         [
           cb(null, require('./modules/workspace'))
-        ]
-      })
+        ];
+      });
     else cb(null, [
       require('./modules/workspace'),
-    ])
+    ]);
   },
 
-}
+};

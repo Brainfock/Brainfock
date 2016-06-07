@@ -24,7 +24,7 @@ export default class Home extends Component {
     return (
       <DocumentTitle title={msg.home.title}>
         <div className="home-page" style={{
-          marginLeft:this.getTheme().width+10
+          marginLeft:this.getTheme().width + 10
         }}>
           <p>
             <FormattedHTMLMessage defaultMessage={msg.home.infoHtml} />

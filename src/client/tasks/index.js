@@ -15,7 +15,7 @@ import MasterDetailsListView from '../projects/components/master-detail.list';
 import ListView from '../projects/components/plain.list';
 let PageWithNav = require('../components/layout/page-with-nav');
 import TaskListItem from './components/task-list-item.js';
-import IssueView from '../projects/components/Issue.js'
+import IssueView from '../projects/components/Issue.js';
 
 const views = {
   'master.detail': MasterDetailsListView,
@@ -75,19 +75,19 @@ module.exports = React.createClass({
     }
     return [
       {
-        route: `/tasks/`,
+        route: '/tasks/',
         text: 'All tasks',
       },
       {
-        route: `/tasks/?filter[wfStatus][inq]=open&filter[wfStatus][inq]=progress`,
+        route: '/tasks/?filter[wfStatus][inq]=open&filter[wfStatus][inq]=progress',
         text: 'Open & in Progress',
       },
       {
-        route: `/tasks/?filter[isStarred]=1`,
+        route: '/tasks/?filter[isStarred]=1',
         text: 'Starred',
       },
       {
-        route: `/tasks/?filter[status]=draft`,
+        route: '/tasks/?filter[status]=draft',
         text: 'Drafts',
       },
       {

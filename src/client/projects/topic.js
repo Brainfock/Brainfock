@@ -14,8 +14,8 @@ var bs = require('react-bootstrap'),
 
 var Loader = require('../components/Loader');
 var AppContentCanvas = require('../components/layout/AppContentCanvas');
-import OperationsDropdown from './components/OperationsDropdown.js'
-import Issue from './components/Issue.js'
+import OperationsDropdown from './components/OperationsDropdown.js';
+import Issue from './components/Issue.js';
 
 /**
  * TopicView
@@ -32,15 +32,15 @@ var TopicView = React.createClass({
   /**
    * prealod board info
    */
-  componentDidMount: function () {
-    if(process.env.IS_BROWSER==true) {
+  componentDidMount: function() {
+    if(process.env.IS_BROWSER == true) {
       if (this.props.params.id) {
         this.props.topic_actions.loadNamespaceTopicByNum(this.props.params.namespace, this.props.params.board_id, this.props.params.group_key, this.props.params.id);
       }
     }
   },
 
-  componentWillReceiveProps: function (newProps) {
+  componentWillReceiveProps: function(newProps) {
     if (newProps.params.namespace && newProps.params.group_key && newProps.params.id && (this.props.params !== newProps.params)) {
       this.props.topic_actions.loadNamespaceTopicByNum(this.props.params.namespace, this.props.params.board_id, this.props.params.group_key, this.props.params.id);
     }
@@ -49,7 +49,7 @@ var TopicView = React.createClass({
   /**
    * @returns {XML}
    */
-  render: function () {
+  render: function() {
 
     const viewTopic = this.props.boards.viewTopic;
 

@@ -8,8 +8,8 @@ const MAX_TODO_TITLE_LENGTH = 42;
 
 export function setNewTodoField({target: {name, value}}) {
   switch (name) {
-  case 'title':
-    value = value.slice(0, MAX_TODO_TITLE_LENGTH); break;
+    case 'title':
+      value = value.slice(0, MAX_TODO_TITLE_LENGTH); break;
   }
   return {
     type: SET_NEW_TODO_FIELD,

@@ -24,7 +24,7 @@ export default class ProjectIssues extends Component {
    */
   resolveGroupKey() {
     if (this.props.params.groupKey.substr(-1) === 's') {
-      return this.props.params.groupKey.substr(0, this.props.params.groupKey.length-1)
+      return this.props.params.groupKey.substr(0, this.props.params.groupKey.length - 1);
     } else {
       return this.props.params.groupKey;
     }

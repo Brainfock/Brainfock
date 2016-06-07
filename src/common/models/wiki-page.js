@@ -1,6 +1,6 @@
-var Promise = require('bluebird')
+var Promise = require('bluebird');
 var marked = require('marked');
-var app = require("../../server/main");
+var app = require('../../server/main');
 
 marked.setOptions({
   renderer: new marked.Renderer(),
@@ -35,7 +35,7 @@ module.exports = function(WikiPage)
     if(ctx.data && ctx.data.pageUid)
     {
       let pageUid = ctx.data.pageUid.split(':');
-      if(pageUid.length>1) {
+      if(pageUid.length > 1) {
         ctx.data.namespace = pageUid.shift();
         ctx.data.pageUid = pageUid.join('');
       }
@@ -43,7 +43,7 @@ module.exports = function(WikiPage)
     else if(ctx.instance && ctx.instance.pageUid)
     {
       let pageUid = ctx.instance.pageUid.split(':');
-      if(pageUid.length>1) {
+      if(pageUid.length > 1) {
         ctx.instance.namespace = pageUid.shift();
         ctx.instance.pageUid = pageUid.join('');
       }
@@ -57,7 +57,7 @@ module.exports = function(WikiPage)
         owerUserId: ctx.instance.owerUserId,
         modelClassName: 'WikiPage',
         modelPk: null,
-      }, function (err, entityInstance) {
+      }, function(err, entityInstance) {
         if(err) {
           throw err;
         }
@@ -74,8 +74,8 @@ module.exports = function(WikiPage)
   {
     // after model has been saved, we have to pass model's ID back to entity registry:
     if (ctx.isNewInstance && ctx.instance.entityId) {
-      WikiPage.app.models.Entity.findById(ctx.instance.entityId, function (err, entityInstance) {
-        entityInstance.updateAttributes({modelPk:ctx.instance.id}, function(errE,instance){
+      WikiPage.app.models.Entity.findById(ctx.instance.entityId, function(err, entityInstance) {
+        entityInstance.updateAttributes({modelPk:ctx.instance.id}, function(errE, instance) {
           if(errE) {
             throw errE;
           }
@@ -110,18 +110,18 @@ module.exports = function(WikiPage)
    *       may change based on existing/non-existing of other data (e.g. new wiki page create that had been linked from
    *       this page as link to non-existing page)
    */
-  WikiPage.afterRemote( 'findOne', function( ctx, modelInstance, next) {
+  WikiPage.afterRemote('findOne', function(ctx, modelInstance, next) {
     if (modelInstance) {
 
       const cleanUid = modelInstance.pageUid;
 
       // TODO: append special content: CATEGORY and INDEX
-      let parsers = []
+      let parsers = [];
 
       if (modelInstance.namespace === 'Special') {
         if (cleanUid === 'Index') {
           console.log('>> modelInstance.contextEntityId', modelInstance);
-          parsers.push(modelInstance.appendPagesIndex())
+          parsers.push(modelInstance.appendPagesIndex());
         }
         // TODO: `Category` special page
       }
@@ -130,8 +130,8 @@ module.exports = function(WikiPage)
         .then(function() {
           modelInstance.applyContentParsers(() => {
             next();
-          })
-        })
+          });
+        });
 
     } else {
       //console.log('remotingContext:',ctx.remotingContext);
@@ -141,9 +141,9 @@ module.exports = function(WikiPage)
     }
   });
 
-  WikiPage.afterRemote( '*.updateAttributes', function( ctx, modelInstance, next) {
+  WikiPage.afterRemote('*.updateAttributes', function(ctx, modelInstance, next) {
     if(modelInstance) {
-      modelInstance.applyContentParsers(next)
+      modelInstance.applyContentParsers(next);
     } else {
       next();
     }
@@ -180,7 +180,7 @@ module.exports = function(WikiPage)
       // END [from dao.js]
 
 
-      if(filter.where.pageUid && filter.where.pageUid.indexOf( ':' ) !== -1) {
+      if(filter.where.pageUid && filter.where.pageUid.indexOf(':') !== -1) {
         let findBy = filter.where.pageUid.split(':');
 
         filter.where.namespace = findBy[0];
@@ -189,7 +189,7 @@ module.exports = function(WikiPage)
 
       override.apply(this, [filter, function(err, modelInstance) {
         if(modelInstance) {
-          callback(null, modelInstance)
+          callback(null, modelInstance);
         } else {
           if(filter.where.namespace == 'Special' || filter.where.namespace == 'Category') {
             callback(null, new WikiPage({
@@ -211,7 +211,7 @@ module.exports = function(WikiPage)
       }]);
 
       return callback.promise;
-    }
+    };
   });
 
 
@@ -225,7 +225,7 @@ module.exports = function(WikiPage)
     const where = {
       contextEntityId: this.contextEntityId > 0 ? this.contextEntityId : 0
     };
-console.log('>> INDEX where',where)
+    console.log('>> INDEX where', where);
     if (!modelInstance.contentRendered) {
       modelInstance.contentRendered = modelInstance.content;
     }
@@ -261,21 +261,21 @@ console.log('>> INDEX where',where)
             });
 
             if (links.length > 0) {
-              modelInstance.contentRendered += "\n" + links.join("\n");
+              modelInstance.contentRendered += '\n' + links.join('\n');
             }
           }
 
           return resolve();
         });
       });
-  }
+  };
 
-  WikiPage.prototype.applyContentParsers = function (next)
+  WikiPage.prototype.applyContentParsers = function(next)
   {
     const modelInstance = this;
 
     if(modelInstance.namespace)
-      modelInstance.pageUid = modelInstance.namespace+':'+modelInstance.pageUid;
+      modelInstance.pageUid = modelInstance.namespace + ':' + modelInstance.pageUid;
 
     if (!modelInstance.contentRendered) // content may be already prepended with some data, e.g. for `Special:Index` page
       modelInstance.contentRendered = modelInstance.content;
@@ -304,7 +304,7 @@ console.log('>> INDEX where',where)
 
       });
     });
-  }
+  };
 
   /**
    * Gets info about all wiki-links found in text
@@ -314,7 +314,7 @@ console.log('>> INDEX where',where)
    * @param object $originalCallback
    * @return object
    */
-  WikiPage.prototype.getWikiLinks = function (content, originalCallback) {
+  WikiPage.prototype.getWikiLinks = function(content, originalCallback) {
 
     let links = {};
     let _regex = new RegExp(/\[\[(.*?)\]\]/gi);
@@ -327,9 +327,9 @@ console.log('>> INDEX where',where)
         let $contentMatch = $fullMatch.match(/\[\[(.*?)\]\]/i);
         let $parts = $contentMatch[1].split('|');
         let $first = $parts.shift();
-        if($parts.length>0) {
+        if($parts.length > 0) {
           links[$fullMatch] = {
-            title: $parts.join ( '' ),
+            title: $parts.join(''),
             wiki_uid: $first,
           };
         } else {
@@ -339,21 +339,21 @@ console.log('>> INDEX where',where)
           };
         }
 
-        callback()
+        callback();
       }
       function final() {
-        originalCallback(links)
+        originalCallback(links);
       }
 
       let results = [];
 
       matches.forEach(function(item) {
-        async(item, function(result){
+        async(item, function(result) {
           results.push(result);
           if(results.length === matches.length) {
             final();
           }
-        })
+        });
       });
 
     } else {
@@ -367,7 +367,7 @@ console.log('>> INDEX where',where)
    * @param string $text
    * @return string
    */
-  WikiPage.prototype.replaceWikiLinks = function (text, links, originalCallback) {
+  WikiPage.prototype.replaceWikiLinks = function(text, links, originalCallback) {
 
     var self = this;
 
@@ -391,7 +391,7 @@ console.log('>> INDEX where',where)
             limit: 1
           };
 
-          if(filter.where.pageUid && filter.where.pageUid.indexOf( ':' ) !== -1) {
+          if(filter.where.pageUid && filter.where.pageUid.indexOf(':') !== -1) {
             let findBy = filter.where.pageUid.split(':');
             filter.where.namespace = findBy[0];
             filter.where.pageUid = findBy[1];
@@ -401,7 +401,7 @@ console.log('>> INDEX where',where)
             return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
           };
 
-          RegExp.escape= function(s) {
+          RegExp.escape = function(s) {
             return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
           };
 
@@ -415,24 +415,24 @@ console.log('>> INDEX where',where)
 
             if (!foundPage || foundPage.length === 0) {
               // page is not found, but it's not a fatal error
-              text = text.replace(new RegExp(find, 'g'), '<a class="non-existing WkikLink" href="'+baseLink+$pageData. wiki_uid+'">'+$pageData. title+'</a>');
+              text = text.replace(new RegExp(find, 'g'), '<a class="non-existing WkikLink" href="' + baseLink + $pageData. wiki_uid + '">' + $pageData. title + '</a>');
               return callback();
 
             } else {
-              text = text.replace(new RegExp(find, 'g'), '<a class="WkikLink" href="'+baseLink+$pageData. wiki_uid+'">'+$pageData. title+'</a>');
+              text = text.replace(new RegExp(find, 'g'), '<a class="WkikLink" href="' + baseLink + $pageData. wiki_uid + '">' + $pageData. title + '</a>');
               return callback();
             }
           });
         }
         function final() {
-          originalCallback(text)
+          originalCallback(text);
         }
 
         var results = [];
         let _keys = Object.keys(links);
-        Object.keys(links).forEach(function (linkData, index) {
+        Object.keys(links).forEach(function(linkData, index) {
 
-          asyncReplace(linkData, links[linkData], function(result){
+          asyncReplace(linkData, links[linkData], function(result) {
             results.push(1);
             if(results.length === (_keys.length)) {
               final();
@@ -441,15 +441,15 @@ console.log('>> INDEX where',where)
         });
       }
       else {
-        originalCallback(text)
+        originalCallback(text);
       }
     }
 
     if (self.contextEntityId) {
       WikiPage.app.models.Topic.findOne({where:{
-          entityId: self.contextEntityId
-        }},
-        function(err,data)
+        entityId: self.contextEntityId
+      }},
+        function(err, data)
         {
           if (err || !data) {
             replaceWikiLinks(null);
@@ -460,5 +460,5 @@ console.log('>> INDEX where',where)
     } else {
       replaceWikiLinks(null);
     }
-  }
+  };
 };

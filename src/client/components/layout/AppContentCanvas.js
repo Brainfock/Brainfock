@@ -21,7 +21,7 @@ let AppContentCanvas = React.createClass({
   },
 
   render() {
-    let styles = this.props.style?this.props.style:{};
+    let styles = this.props.style ? this.props.style : {};
 
     let header = this.props.header ?
         <div className="page-header clearfix">{this.props.header}</div> : null;

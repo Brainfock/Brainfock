@@ -41,7 +41,7 @@ describe('actions', () => {
     };
     expect(setNewTopicField(event)).to.eql(expectedAction);
   });
-})
+});
 
 describe('actions reduxers', () => {
 

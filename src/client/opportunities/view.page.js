@@ -25,7 +25,7 @@ class ViewTaskPage extends Component {
   };
 
   componentDidMount() {
-    if(process.env.IS_BROWSER==true) {
+    if(process.env.IS_BROWSER == true) {
       if (this.props.params.id) {
         this.props.topic_actions.loadTopic(this.props.params.id);
       }
@@ -34,11 +34,11 @@ class ViewTaskPage extends Component {
   comments() {
     if(this.props.boards.viewTopic.type && this.props.boards.viewTopic.type.commentsEnabled) {
       var Comments  = require('../topic/components/comments');
-      return  <Comments
+      return  (<Comments
         topic={this.props.boards.viewTopic}
         comments={this.props.boards.viewTopic.comments}
         io={this.props.io}
-        actions={this.props.actions} />
+        actions={this.props.actions} />);
     }
   }
   /**
@@ -50,16 +50,16 @@ class ViewTaskPage extends Component {
     let operaitons = [];
     let i = 0;
     if(viewTopic.operations) {
-      viewTopic.operations.forEach(function(op){
+      viewTopic.operations.forEach(function(op) {
         i++;
-        var _style={};
-        var active=false;
-        if(viewTopic.workflowStageId==op.id) {
-          _style['font-weight']=800;
-          active=true;
+        var _style = {};
+        var active = false;
+        if(viewTopic.workflowStageId == op.id) {
+          _style['font-weight'] = 800;
+          active = true;
         }
         operaitons.push(<MenuItem onClick={self.applyOperation} data-operation-id={op.id} eventKey={i} active={active}>{op.name}</MenuItem>);
-      })
+      });
     }
     let style = {
       opacity: this.props.boards.viewTopic.loading == true ? .3 : 1,
@@ -69,14 +69,14 @@ class ViewTaskPage extends Component {
     return (
       <div>
         <div className="breadcrumbs-bar" style={{
-            background: '#8982A2', // variants: 8C8D98, 7F8090, 7E848E, DAD9E6, FDFDFD
-            padding: '5px 15px',
-            margin: 0,
-            color: '#fff'
-          }}>
+          background: '#8982A2', // variants: 8C8D98, 7F8090, 7E848E, DAD9E6, FDFDFD
+          padding: '5px 15px',
+          margin: 0,
+          color: '#fff'
+        }}>
           <h4>
             <Link to='/tasks'
-                  style={{color: '#EFEFEF',textDecoration:'underline'}}>Tasks</Link>
+                  style={{color: '#EFEFEF', textDecoration:'underline'}}>Tasks</Link>
             {this.props.boards.viewTopic.summary && <span> > {this.props.boards.viewTopic.summary}</span>}
           </h4>
         </div>
@@ -149,9 +149,9 @@ class ViewTaskPage extends Component {
     const viewTopic = this.props.boards.viewTopic;
 
     if (viewTopic.loading == true) {
-      return <AppContentCanvas header={
+      return (<AppContentCanvas header={
         <h4 className="pull-left"><Loader /></h4>
-      }/>
+      }/>);
     }
 
     return (
@@ -164,7 +164,7 @@ class ViewTaskPage extends Component {
         {this.props.boards.viewTopic.text
         && <mui.CardText>{this.props.boards.viewTopic.text}</mui.CardText>}
       </mui.Card>
-    )
+    );
 
   }
 }

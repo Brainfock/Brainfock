@@ -17,7 +17,7 @@
  */
 export function clearBaseACLs(ModelType, ModelConfig) {
   ModelType.settings.acls.length = 0;
-  ModelConfig.acls.forEach(function (r) {
+  ModelConfig.acls.forEach(function(r) {
     ModelType.settings.acls.push(r);
   });
 }
@@ -43,7 +43,7 @@ export function toQueryString(obj, urlEncode) {
     let result = [];
 
     path = path || [];
-    Object.keys(x).forEach(function (key) {
+    Object.keys(x).forEach(function(key) {
       if (!x.hasOwnProperty(key)) return;
 
       let newPath = path.slice();
@@ -53,9 +53,9 @@ export function toQueryString(obj, urlEncode) {
       if (typeof x[key] === 'object') {
         vals = flattenObj(x[key], newPath);
       } else {
-        vals.push({ path: newPath, val: x[key] });
+        vals.push({path: newPath, val: x[key]});
       }
-      vals.forEach(function (obj) {
+      vals.forEach(function(obj) {
         return result.push(obj);
       });
     });

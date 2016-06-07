@@ -1,5 +1,5 @@
-import React from 'react'
-import {Link} from 'react-router'
+import React from 'react';
+import {Link} from 'react-router';
 import {RadioButton, Table, TableHeader, TableRow, TableHeaderColumn, TableBody, TableRowColumn, TableFooter, Styles} from 'material-ui';
 const {Spacing, Colors} = Styles;
 
@@ -28,7 +28,7 @@ class Users extends Component {
       enableSelectAll: false,
       deselectOnClickaway: true,
       displayRowCheckbox: false,
-      tableHeight: `300px`,
+      tableHeight: '300px',
       deviceHeight: 300,
     };
   }
@@ -121,7 +121,7 @@ class Users extends Component {
                 <TableRowColumn>
                   {todo.groups && todo.groups.map(group =>
                     <span>
-                      <span className="label label-primary" style={{marginRight:5,display:'inline-block'}}>{group.name}</span>
+                      <span className="label label-primary" style={{marginRight:5, display:'inline-block'}}>{group.name}</span>
                       {(i++) % 2 == 0 && <br />}
                     </span>
                   )}
@@ -144,4 +144,4 @@ class Users extends Component {
   }
 }
 
-export default Users
+export default Users;

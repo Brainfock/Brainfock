@@ -25,12 +25,12 @@ module.exports = {
     if(process.env.IS_BROWSER)
       require.ensure([], (require) => {
         [
-        cb(null, require('./modules/user'))
-        ]
-      })
+          cb(null, require('./modules/user'))
+        ];
+      });
     else cb(null, [
       require('./modules/user'),
-    ])
+    ]);
   },
 
-}
+};

@@ -40,12 +40,12 @@ export default class FetchActionError extends Component {
             />
         </CardActions>
       </div>
-    )
+    );
     return (
-      <div className="alert alert-warning" style={{margin:0,borderRadius:0}}>{message}
+      <div className="alert alert-warning" style={{margin:0, borderRadius:0}}>{message}
         <button onClick={this.props.handleRetry}>Retry</button>
       </div>
-    )
+    );
   }
 
   getWrapperStyle() {
@@ -55,6 +55,6 @@ export default class FetchActionError extends Component {
       boxShadow: 'inset 0px 7px 8px -4px rgba(92,92,92,0.45)',
       background: '#efefef',
       color: 'maroon'
-    }
+    };
   }
 };

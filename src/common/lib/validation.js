@@ -56,7 +56,7 @@ export default class Validation {
   }
 
   getEmailMessage() {
-    return `Email address is not valid.`;
+    return 'Email address is not valid.';
   }
 
   simplePassword() {

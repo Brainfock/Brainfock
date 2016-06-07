@@ -24,17 +24,17 @@ var ListActions =  React.createClass({
   },
 
   render: function() {
-    return <div className="pull-right">
-      <mui.RaisedButton primary={true} onClick={this.showModelForm} label={this.props.BUTTON_ACTION_LABEL}/>
+    return (<div className="pull-right">
+      <mui.RaisedButton primary onClick={this.showModelForm} label={this.props.BUTTON_ACTION_LABEL}/>
       {this.renderModelForm()}
-    </div>;
+    </div>);
   },
 
   renderModelForm: function()
   {
     var dialogActions = [
-      { text: this.props.msg.form.button.cancel, onClick: this._onDialogCancel  },
-      { text: this.props.msg.form.button.create, onClick: this.onFormSubmit }
+      {text: this.props.msg.form.button.cancel, onClick: this._onDialogCancel},
+      {text: this.props.msg.form.button.create, onClick: this.onFormSubmit}
     ];
 
     if(this.props.isLoading === true) {
@@ -57,15 +57,15 @@ var ListActions =  React.createClass({
       ref: 'formView'
     });
 
-    return <mui.Dialog
+    return (<mui.Dialog
       actions={dialogActions}
-      autoDetectWindowHeight={true}
-      autoScrollBodyContent={true}
+      autoDetectWindowHeight
+      autoScrollBodyContent
       ref="modelForm"
       title={this.props.TITLE}
       >
       {addItemForm}
-    </mui.Dialog>
+    </mui.Dialog>);
   },
 
   showModelForm: function() {
@@ -77,8 +77,8 @@ var ListActions =  React.createClass({
   },
 
   onFormSubmit:function(e) {
-    this.refs.formView.onFormSubmit(e)
+    this.refs.formView.onFormSubmit(e);
   }
 });
 
-module.exports=ListActions;
+module.exports = ListActions;

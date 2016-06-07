@@ -407,7 +407,7 @@ export default function boardsReducer(state = initialState, action) {
               .setIn(['newTopic', 'meta', 'isSubmitting'], false)
               // TODO: review if we need to modify `form` here at all
               .setIn(['form', 'meta', 'errors'], Map(errorDetails))
-              .setIn(['form', 'meta', 'isSubmitting'], false)
+              .setIn(['form', 'meta', 'isSubmitting'], false);
             //.setIn(['formFields', 'loading'], false);
 
           } else if (action.payload.error) {

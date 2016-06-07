@@ -5,8 +5,8 @@ module.exports = {
 
     if (process.env.IS_BROWSER) {
       require.ensure([], (require) => {
-        cb(null, require('./components/Home'))
-      })
+        cb(null, require('./components/Home'));
+      });
     } else {
       cb(null, require('./components/Home'));
     }
@@ -16,17 +16,17 @@ module.exports = {
    * profile
    * access control
    */
-    getChildRoutes(location, cb) {
+  getChildRoutes(location, cb) {
 
     if (process.env.IS_BROWSER)
       require.ensure([], (require) => {
         [
-        cb(null, require('./modules/profile'))
-        ]
-      })
+          cb(null, require('./modules/profile'))
+        ];
+      });
     else cb(null, [
       require('./modules/profile'),
-    ])
+    ]);
 
     //const UserModule = (process.env.IS_BROWSER)
     //  ? require('react-router-proxy?!./modules/user')
@@ -37,4 +37,4 @@ module.exports = {
     //])
   },
 
-}
+};

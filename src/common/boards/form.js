@@ -7,7 +7,7 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import ModelSchema from './model.js'
+import ModelSchema from './model.js';
 
 import {Record, Map} from 'immutable';
 export default Record({

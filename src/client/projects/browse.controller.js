@@ -21,7 +21,7 @@ import IssueView from './components/Issue';
  */
 export default class ProjectIssues extends Component {
 
-  componentDidMount () {
+  componentDidMount() {
     // fetch data initially in scenario 2 from above
     this.fetchBoardInfo();
   }
@@ -35,7 +35,7 @@ export default class ProjectIssues extends Component {
     const groupKey = this.resolveGroupKey();
 
     // http://localhost:3000/api/workspaces/sandbox/topics/demosand/topics/board/3
-    this.props.topic_actions.loadTopicGroupBoard(groupKey, this.props.browseBoardNum)
+    this.props.topic_actions.loadTopicGroupBoard(groupKey, this.props.browseBoardNum);
 
 
     if (this.props.browseBoardNum) {
@@ -64,7 +64,7 @@ export default class ProjectIssues extends Component {
    */
   resolveGroupKey() {
     if (this.props.params.groupKey.substr(-1) === 's') {
-      return this.props.params.groupKey.substr(0, this.props.params.groupKey.length-1)
+      return this.props.params.groupKey.substr(0, this.props.params.groupKey.length - 1);
     } else {
       return this.props.params.groupKey;
     }

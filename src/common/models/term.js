@@ -43,12 +43,12 @@ module.exports = function(Term) {
           return {
             value: id,
             label: value
-          }
+          };
         }));
-      })
+      });
 
     });
-  }
+  };
 
   /**
    * API endpoint `api/terms/values/:key`

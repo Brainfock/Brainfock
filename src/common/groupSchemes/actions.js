@@ -17,10 +17,10 @@ export const FIND_ERROR = 'FIND_SCHEMES_ERROR';
 export function findGroupSchemes(includes, query) {
   let endpoint = '';
 
-  endpoint += 'topicGroupSchemes/?'+includes;
+  endpoint += 'topicGroupSchemes/?' + includes;
 
   if(query) {
-    endpoint += '&'+toQueryString({filter:{where:query}},false);
+    endpoint += '&' + toQueryString({filter:{where:query}}, false);
   }
 
   return ({fetch, validate}) => ({

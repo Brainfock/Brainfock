@@ -17,7 +17,7 @@ app.start = function() {
 app.use(function(req, res, next) {
   GLOBAL.navigator = {
     userAgent: req.headers['user-agent']
-  }
+  };
   next();
 });
 

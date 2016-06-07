@@ -39,7 +39,7 @@ export default function usersReducer(state = initialState, action) {
         .update('list', list => list.clear());
 
     case actions.FIND_ERROR:
-      return state.setIn(['listMeta', 'isFetching'], false)
+      return state.setIn(['listMeta', 'isFetching'], false);
 
     case actions.FIND_SUCCESS: {
       const newlist = action.payload.map((item) => {

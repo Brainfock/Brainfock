@@ -22,13 +22,13 @@ var RemoteSelectField = React.createClass({
     endpointQueryString:React.PropTypes.string,
     formatCallback: React.PropTypes.callback,
   },
-  loadOptions (input, callback) {
+  loadOptions(input, callback) {
 
     if (!input.length) {
       return callback(null, {
         options: this.props.options || [],
         complete:false
-        });
+      });
     }
 
     if (this.timer !== null)
@@ -43,13 +43,13 @@ var RemoteSelectField = React.createClass({
     }
 
 
-          let formatCallback = this.props.formatCallback
+    let formatCallback = this.props.formatCallback
             ? this.props.formatCallback
             : item => { return {
-            value:(item.value || item.id),
-            label:(item.label || item.summary || item.name),
-          }}
-    this.timer=setTimeout(function() {
+              value:(item.value || item.id),
+              label:(item.label || item.summary || item.name),
+            };};
+    this.timer = setTimeout(function() {
       fetch(endpoint.join('&'), {
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
         method: 'get',
@@ -70,21 +70,21 @@ var RemoteSelectField = React.createClass({
             complete: false
           });
         });
-    }.bind(this),400);
+    }.bind(this), 400);
   },
-  renderHint () {
+  renderHint() {
     if (!this.props.hint) return null;
     return (
       <div className="hint">{this.props.hint}</div>
     );
   },
-  renderError () {
+  renderError() {
     if (!this.props.errorText) return null;
     return (
-      <div style={{fontSize:12,color:'red',padding:'10px 0 0 0'}}>{this.props.errorText}</div>
+      <div style={{fontSize:12, color:'red', padding:'10px 0 0 0'}}>{this.props.errorText}</div>
     );
   },
-  render () {
+  render() {
 
     const {...props} = this.props;
 

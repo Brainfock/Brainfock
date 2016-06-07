@@ -17,9 +17,9 @@ module.exports = function(Workflow) {
       if(err) throw err;
 
       if(!wfStage)
-        next(null, null)
+        next(null, null);
       else
-        next(null, wfStage)
-    })
-  }
+        next(null, wfStage);
+    });
+  };
 };

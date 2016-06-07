@@ -48,7 +48,7 @@ export default function usersReducer(state = initialState, action) {
     // TODO: remove 'LOGOUT' action from list when logout fetch is fixed
     case authActions.LOGOUT:
     case authActions.LOGOUT_SUCCESS: {
-      return state.set('viewer',null);
+      return state.set('viewer', null);
     }
 
     case actions.FIND:
@@ -57,7 +57,7 @@ export default function usersReducer(state = initialState, action) {
         .update('list', list => list.clear());
 
     case actions.FIND_ERROR:
-      return state.setIn(['listMeta', 'isFetching'], false)
+      return state.setIn(['listMeta', 'isFetching'], false);
 
     case actions.FIND_SUCCESS: {
       const newlist = action.payload.map((item) => {
@@ -74,7 +74,7 @@ export default function usersReducer(state = initialState, action) {
     case actions.SETUP_USER_UPDATE_FORM: {
       if (!state.getIn(['forms', 'id', action.payload.userId, action.payload.formKey])) {
         return state
-          .setIn(['forms', 'id', action.payload.userId, action.payload.formKey], new (ChangePasswordForm))
+          .setIn(['forms', 'id', action.payload.userId, action.payload.formKey], new (ChangePasswordForm));
       } else {
         return state;
       }
@@ -84,7 +84,7 @@ export default function usersReducer(state = initialState, action) {
       return state
         .setIn(['forms', 'id', userId, formKey, 'data', name], value)
         .deleteIn(['forms', 'id', userId, formKey, 'meta', 'errors', name])
-        .deleteIn(['forms', 'id', userId, formKey, 'meta', 'postedOn'])
+        .deleteIn(['forms', 'id', userId, formKey, 'meta', 'postedOn']);
     }
 
     case actions.SAVE_USER_CREATE_FORM: {

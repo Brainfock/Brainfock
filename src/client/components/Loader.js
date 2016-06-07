@@ -1,4 +1,4 @@
-import React , {PropTypes} from 'react';
+import React, {PropTypes} from 'react';
 import {LinearProgress} from 'material-ui';
 
 // TODO: i18n
@@ -13,7 +13,7 @@ module.exports = React.createClass({
 
     let {wrapperStyle, propgressBarStyle} = {};
     if (!this.props.noLabel) {
-      propgressBarStyle = {margin: 0}
+      propgressBarStyle = {margin: 0};
     }
     if (this.props.asGlobal) {
       wrapperStyle = {
@@ -22,7 +22,7 @@ module.exports = React.createClass({
         left: 0,
         right: 0,
         zIndex: 9999
-      }
+      };
     }
 
     return (
@@ -31,7 +31,7 @@ module.exports = React.createClass({
           <LinearProgress mode="indeterminate" style={propgressBarStyle}/>
         </div>
         {!this.props.noLabel &&
-        <div style={{textAlign:'center',marginTop:!this.props.noLabel ? '10%' : 0}}>
+        <div style={{textAlign:'center', marginTop:!this.props.noLabel ? '10%' : 0}}>
           <span><i className="fa fa-cog fa-spin"></i> Loading...</span>
         </div>}
       </div>

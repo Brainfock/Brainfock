@@ -28,10 +28,10 @@ export const SAVE_USER_CREATE_FORM_ERROR = 'SAVE_USER_CREATE_FORM_ERROR';
 
 export function findUsers(includes, query) {
 
-  let endpoint = 'members/?'+includes;
+  let endpoint = 'members/?' + includes;
 
   if(query) {
-    endpoint += '&'+toQueryString({filter:{where:query}},false);
+    endpoint += '&' + toQueryString({filter:{where:query}}, false);
   }
 
   return ({fetch, validate}) => ({
@@ -107,7 +107,7 @@ export function saveUserUpdateForm(id, formKey, data) {
 
 export function saveUserCreateForm(id, formKey, data) {
 
-  const endpoint = `users`;
+  const endpoint = 'users';
 
   return ({fetch, validate}) => ({
     type: 'SAVE_USER_CREATE_FORM',

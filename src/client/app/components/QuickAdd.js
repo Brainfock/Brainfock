@@ -43,11 +43,11 @@ export default class QuickAdd extends Component {
 
     return (
       <div style={{
-          position:'fixed',
-          bottom: 10,
-          right: 10,
-          zIndex:99999999999
-        }}>
+        position:'fixed',
+        bottom: 10,
+        right: 10,
+        zIndex:99999999999
+      }}>
         <IconMenu
           style={{
             position:'relative',

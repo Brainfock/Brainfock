@@ -1,5 +1,5 @@
-import React from 'react'
-import {Link} from 'react-router'
+import React from 'react';
+import {Link} from 'react-router';
 
 class ViewUser extends React.Component {
 
@@ -18,9 +18,9 @@ class ViewUser extends React.Component {
           <li><Link to={`/workspaces/${this.props.params.namespace}/settings/profile`}>Profile</Link></li>
         </ul>
       </div>
-    )
+    );
   }
 
 }
 
-export default ViewUser
+export default ViewUser;

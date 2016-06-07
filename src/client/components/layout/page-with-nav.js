@@ -10,10 +10,10 @@
 var React = require('react');
 var Loader = require('../Loader');
 
-let { Menu, Mixins, Styles } = require('material-ui');
+let {Menu, Mixins, Styles} = require('material-ui');
 
-let { Spacing, Colors } = Styles;
-let { StyleResizable, StylePropable } = Mixins;
+let {Spacing, Colors} = Styles;
+let {StyleResizable, StylePropable} = Mixins;
 
 import * as mui from 'material-ui';
 //const Events = mui.Utils.Events;
@@ -32,7 +32,7 @@ var PageWithNav = React.createClass({
   getDefaultProps() {
     return {
       menuItems:[]
-    }
+    };
   },
 
   //componentDidMount() {
@@ -53,7 +53,7 @@ var PageWithNav = React.createClass({
   //  Events.off(window, 'resize', this._updateDeviceWidth);
   //},
 
-  getStyles(){
+  getStyles() {
     let subNavWidth = Spacing.desktopKeylineIncrement * 3 + 'px';
     let styles = {
       root: {
@@ -106,7 +106,7 @@ var PageWithNav = React.createClass({
         // see if any *one* route is valid
         for (var i2 = currentItem.routes.length - 1; i2 >= 0; i2--) {
           let _routeName = currentItem.routes[i2];
-          if (this.props.history.isActive(_routeName)) {return i};
+          if (this.props.history.isActive(_routeName)) {return i;};
         }
       }
       if (currentItem.route && this.props.history.isActive(currentItem.route)) return i;
@@ -117,7 +117,7 @@ var PageWithNav = React.createClass({
     this.props.history.pushState(null, payload.route);
   },
 
-  render: function () {
+  render: function() {
 
     const {children, ...passProps} = this.props;
 
@@ -142,4 +142,4 @@ var PageWithNav = React.createClass({
     );
   }
 });
-module.exports=PageWithNav;
+module.exports = PageWithNav;

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 class ViewUser extends React.Component {
 
@@ -7,9 +7,9 @@ class ViewUser extends React.Component {
       <div>
         <h4>PROFILE SETTINGS</h4>
       </div>
-    )
+    );
   }
 
 }
 
-export default ViewUser
+export default ViewUser;

@@ -13,7 +13,7 @@ var onlineUsers = 0;
 var started = false;
 
 function checkAuthToken(tokenId, next) {
-  next(null, tokenId!==null);
+  next(null, tokenId !== null);
 }
 
 module.exports = function(app) {
@@ -39,7 +39,7 @@ module.exports = function(app) {
                 var ctx = loopback.getCurrentContext();
                 if (ctx) {
                   ctx.set('accessToken', token);
-                  socket.authWasRequired=true;
+                  socket.authWasRequired = true;
                   return next(null, token);
                 } else {
                   return next(null, token);
@@ -66,39 +66,39 @@ module.exports = function(app) {
        *
        * Important: do not bind to 'connection' event, which is fired before all i.middlewares() are run
        */
-      app.io.on('connect', function(socket){
+    app.io.on('connect', function(socket) {
 
-        var ctx = require('loopback').getCurrentContext();
-        var currentUser = ctx && ctx.get('currentUser');
-        console.log('[SOCKET] NEW CONNECTION', currentUser, socket.authWasRequired);
+      var ctx = require('loopback').getCurrentContext();
+      var currentUser = ctx && ctx.get('currentUser');
+      console.log('[SOCKET] NEW CONNECTION', currentUser, socket.authWasRequired);
 
-        onlineUsers++;
+      onlineUsers++;
 
-        app.io.sockets.emit('onlineUsers', { onlineUsers: onlineUsers });
+      app.io.sockets.emit('onlineUsers', {onlineUsers: onlineUsers});
 
-        setTimeout(function(){socket.emit('testAuth', { authOk: !!(currentUser) });},5000);
+      setTimeout(function() {socket.emit('testAuth', {authOk: !!(currentUser)});}, 5000);
 
         /**
          * subscribe to comments
          */
-        socket.on('sub-comments', function (data) {
-          app.models.Entity.findById(data.entity_id, function(_err, instance){
-            if(!_err) {
-              instance.checkUserAccess((currentUser ? (currentUser.id) : null),function(accessError, accessGranted){
+      socket.on('sub-comments', function(data) {
+        app.models.Entity.findById(data.entity_id, function(_err, instance) {
+          if(!_err) {
+            instance.checkUserAccess((currentUser ? (currentUser.id) : null), function(accessError, accessGranted) {
                 // check if user CAN join here
-                if(accessGranted==true) {
-                  socket.join('comments-'+data.entity_id); // We are using room of socket io
-                }
-              });
-            }
-          })
-        });
-
-        socket.on('disconnect', function() {
-          console.log('[SOCKET] LOST CONNECTION' + (currentUser ? (currentUser.username + ':'+currentUser.id) : '%GUEST%'));
-          onlineUsers--;
-          app.io.sockets.emit('onlineUsers', { onlineUsers: onlineUsers });
+              if(accessGranted == true) {
+                socket.join('comments-' + data.entity_id); // We are using room of socket io
+              }
+            });
+          }
         });
       });
-  })
-}
+
+      socket.on('disconnect', function() {
+        console.log('[SOCKET] LOST CONNECTION' + (currentUser ? (currentUser.username + ':' + currentUser.id) : '%GUEST%'));
+        onlineUsers--;
+        app.io.sockets.emit('onlineUsers', {onlineUsers: onlineUsers});
+      });
+    });
+  });
+};

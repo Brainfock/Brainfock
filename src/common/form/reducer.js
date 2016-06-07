@@ -118,4 +118,4 @@ module.exports =  formReducer.plugin({
         return state;
     }
   }
-})
+});

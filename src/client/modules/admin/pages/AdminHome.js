@@ -7,7 +7,7 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react'
+import React from 'react';
 import Component from 'react-pure-render/component';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
@@ -23,7 +23,7 @@ class AdminHome extends Component {
   }
 
   render() {
-    const classNAme="col-xs-6 col-sm-3";
+    const classNAme = 'col-xs-6 col-sm-3';
 
     const {children, ...props} = this.props;
 
@@ -43,7 +43,7 @@ class AdminHome extends Component {
             <div className="row">
                   <div className={classNAme}>
                     <div style={{textAlign:'center'}}>
-                      <Link to={`/admin/users`}><i className="fa fa-users fa-4x"></i>
+                      <Link to={'/admin/users'}><i className="fa fa-users fa-4x"></i>
                         <br />
                         <h3>Users</h3></Link>
                       <p>Manage Users</p>
@@ -52,7 +52,7 @@ class AdminHome extends Component {
 
                   <div className={classNAme}>
                     <div style={{textAlign:'center'}}>
-                      <Link to={`/admin/users`}><i className="fa fa-cog fa-4x"></i>
+                      <Link to={'/admin/users'}><i className="fa fa-cog fa-4x"></i>
                         <br />
                         <h3>Config</h3></Link>
                       <p>System Config</p>
@@ -61,7 +61,7 @@ class AdminHome extends Component {
 
                   <div className={classNAme}>
                     <div style={{textAlign:'center'}}>
-                      <Link to={`/admin/schemes`}><i className="fa fa-cogs fa-4x"></i>
+                      <Link to={'/admin/schemes'}><i className="fa fa-cogs fa-4x"></i>
                         <br />
                         <h3>Topic Schemes</h3></Link>
                       <p>Group & Type Schemes</p>
@@ -70,7 +70,7 @@ class AdminHome extends Component {
 
                   <div className={classNAme}>
                     <div style={{textAlign:'center'}}>
-                      <Link to={`/admin/workspaces`}><i className="fa fa-sitemap fa-4x"></i>
+                      <Link to={'/admin/workspaces'}><i className="fa fa-sitemap fa-4x"></i>
                         <br />
                         <h3>Workspaces</h3></Link>
                       <p>Manage Workspaces</p>
@@ -82,8 +82,8 @@ class AdminHome extends Component {
             </div>
           </div>
       </div>
-    )
+    );
   }
 }
 
-export default AdminHome
+export default AdminHome;

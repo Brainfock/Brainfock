@@ -7,8 +7,8 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react'
-import {Link} from 'react-router'
+import React from 'react';
+import {Link} from 'react-router';
 import {Table, TableHeader, TableRow, TableHeaderColumn, TableBody, TableRowColumn, TableFooter, Styles} from 'material-ui';
 const {Spacing, Colors} = Styles;
 
@@ -37,7 +37,7 @@ class Users extends Component {
       enableSelectAll: false,
       deselectOnClickaway: true,
       displayRowCheckbox: false,
-      tableHeight: `300px`,
+      tableHeight: '300px',
       deviceHeight: 300,
     };
   }
@@ -143,4 +143,4 @@ class Users extends Component {
   }
 }
 
-export default Users
+export default Users;

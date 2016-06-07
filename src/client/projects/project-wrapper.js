@@ -45,15 +45,15 @@ class Layout extends Component {
   }
 
 
-  render () {
+  render() {
 
     // return full-page loader only if there's really no data
     if (this.props.workspace.active.meta.isFetching || !this.props.boards.board || this.props.boards.board.loading == true) {
-      return <AppContentCanvas header={
+      return (<AppContentCanvas header={
         <h1>
           <Loader />
         </h1>
-      }/>
+      }/>);
     }
 
     return (
@@ -93,16 +93,16 @@ class Layout extends Component {
       },
     ];
     //if(this.props.boards.board.menu.size && this.props.boards.board.menu.size > 0) {
-      this.props.boards.board.menu.forEach(item => {
-        menu.push({
-          route: (item.link.charAt(0) !== '/' ? homeUrl + '/' + item.link : item.link),
-          text: item.label,
-        })
-      })
+    this.props.boards.board.menu.forEach(item => {
+      menu.push({
+        route: (item.link.charAt(0) !== '/' ? homeUrl + '/' + item.link : item.link),
+        text: item.label,
+      });
+    });
    // }
 
-    menu.push({route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/users`, text: 'Users'})
-    menu.push({route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/settings`, text: 'Settings'})
+    menu.push({route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/users`, text: 'Users'});
+    menu.push({route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/settings`, text: 'Settings'});
 
     return menu;
     return [

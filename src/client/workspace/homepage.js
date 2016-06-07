@@ -12,10 +12,10 @@ module.exports = {
   getComponent(location, cb) {
     if (process.env.IS_BROWSER) {
       require.ensure([], (require) => {
-        cb(null, require('../modules/workspace/pages/Home'))
-      })
+        cb(null, require('../modules/workspace/pages/Home'));
+      });
     } else {
       cb(null, require('../modules/workspace/pages/Home'));
     }
   }
-}
+};

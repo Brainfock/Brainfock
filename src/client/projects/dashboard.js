@@ -11,13 +11,13 @@ import React from 'react';
 import mui, {Styles, Avatar, IconButton} from 'material-ui';
 const Colors = Styles.Colors;
 
-export default class Dashboard extends React.Component{
+export default class Dashboard extends React.Component {
 
   render()
   {
     const {boards:{list, board: {data}, group}, topic_actions, msg, history} = this.props;
     const color = Colors[data.logoBackground];
-    const icon = "fa "+data.logoIcon;
+    const icon = 'fa ' + data.logoIcon;
 
     return (
       <div className="wiki-wrapper">

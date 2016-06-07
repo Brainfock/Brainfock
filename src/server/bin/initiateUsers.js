@@ -45,35 +45,35 @@ var RoleMapping = app.models.RoleMapping;
   //var Account = app.models.Account;
   //var count = accounts.length;
 
-  app.models.User.create([
+app.models.User.create([
     {username: 'Admin', email: 'admin@brainfock.com', password: 'brainfock'},
     {username: 'John', email: 'john@doe.com', password: 'password'},
     {username: 'Jane', email: 'jane@doe.com', password: 'password'},
     {username: 'Bob', email: 'bob@projects.com', password: 'password'}
-  ], function(err, users) {
-    if (err) return debug(err);
+], function(err, users) {
+  if (err) return debug(err);
 
     // Create projects, assign project owners and project team members
 
     // Create the admin role
-    app.models.Role.create({
-      name: 'Admin'
-    }, function(err, role) {
+  app.models.Role.create({
+    name: 'Admin'
+  }, function(err, role) {
+    if (err) return debug(err);
+
+    debug(role);
+
+    role.principals.create({
+      principalType: RoleMapping.USER,
+      principalId: users[0].id
+    }, function(err, principal) {
       if (err) return debug(err);
 
-      debug(role);
-
-      role.principals.create({
-        principalType: RoleMapping.USER,
-        principalId: users[0].id
-      }, function(err, principal) {
-        if (err) return debug(err);
-
-        console.log(principal);
-        dataSource.disconnect();
-      });
+      console.log(principal);
+      dataSource.disconnect();
     });
   });
+});
 
 
   //accounts.forEach(function(account) {

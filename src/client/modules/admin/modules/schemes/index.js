@@ -17,11 +17,11 @@ module.exports = {
       require.ensure([], (require) => {
         [
           cb(null, require('./modules/groupScheme'))
-        ]
-      })
+        ];
+      });
     else cb(null, [
       require('./modules/groupScheme'),
-    ])
+    ]);
   },
 
-}
+};

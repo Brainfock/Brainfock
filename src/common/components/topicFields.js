@@ -12,4 +12,4 @@ var FieldTypes = {
   multiselect:'multiselect',
 };
 
-module.exports=FieldTypes;
+module.exports = FieldTypes;

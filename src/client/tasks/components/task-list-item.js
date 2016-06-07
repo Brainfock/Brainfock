@@ -47,14 +47,14 @@ export default class Todo extends Component {
         const labelConfig = JSON.parse(possibleConfig);
         if (labelConfig.bg) {
           if (Colors[labelConfig.bg]) {
-            labelStyle.backgroundColor = Colors[labelConfig.bg]
+            labelStyle.backgroundColor = Colors[labelConfig.bg];
             labelStyle.padding = '2px 3px 2px 3px';
             labelStyle.borderRadius = '3px';
           }
         }
         if (labelConfig.clr) {
           if (Colors[labelConfig.clr]) {
-            labelStyle.color= Colors[labelConfig.clr]
+            labelStyle.color = Colors[labelConfig.clr];
           }
         }
       } catch (e) {}
@@ -87,9 +87,9 @@ export default class Todo extends Component {
 
     let contextLabel;
     if(todo.contextTopic.id) {
-      contextLabel = <span className='label label-default' style={{marginRight:3}}>
+      contextLabel = (<span className='label label-default' style={{marginRight:3}}>
         {todo.workspace.name && <span>{todo.workspace.name} &rarr; </span>}
-        {todo.contextTopic.summary}</span>;
+        {todo.contextTopic.summary}</span>);
     } else if(todo.workspace) {
       contextLabel = <span className='label label-default' style={{marginRight:3}}>{todo.workspace.name}</span>;
     }
@@ -124,14 +124,14 @@ export default class Todo extends Component {
       else
         currentQuery = {filter: {parentTopicId: todo.parent.id}};
 
-      parentLink = ( <div className="">
+      parentLink = (<div className="">
 
             <span className='label label-info'
                   onClick={(e)=>{
-                e.preventDefault();
-                e.stopPropagation();
-                this.props.history.pushState(null, this.props.location.pathname, currentQuery)
-              }}>{todo.parent.summary}
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.props.history.pushState(null, this.props.location.pathname, currentQuery);
+                  }}>{todo.parent.summary}
             </span>
         </div>
       );
@@ -161,7 +161,7 @@ export default class Todo extends Component {
             {contextLabel}
             {priorityLabel}
             {typeLabel}
-            <span style={{fontSize: '.88em',color:'#333', fontWeight:600}}>— {todo.wfStage}</span>
+            <span style={{fontSize: '.88em', color:'#333', fontWeight:600}}>— {todo.wfStage}</span>
             {todo.text && <br />}
             {todo.text}
 
