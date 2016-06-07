@@ -123,7 +123,7 @@ let PageWithNav = React.createClass({
     return (
         <div style={styles.root}>
           <div style={styles.secondaryNav}>
-            <mui.Menu
+            <Menu
               menuItems={this.props.menuItems}
               multiple
               onItemTap={this._onMenuItemClick}
