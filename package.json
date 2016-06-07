@@ -2,7 +2,12 @@
   "name": "brainfock",
   "description": "Brainfock business management & CMS software.",
   "author": "Sergii Gamaiunov <hello@webkadabra.com>",
-  "version": "0.26.0-alpha.1",
+  "version": "0.27.0-alpha.1",
+  "license" : "SEE LICENSE IN LICENSE.md",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/Brainfock/Brainfock"
+  },
   "contributors": [],
   "main": "src/server/main",
   "scripts": {
