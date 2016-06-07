@@ -77,7 +77,7 @@ class TopicComments extends Component {
         </div>
 
         <div className="comment-form-wrapper" >
-          <form className="comment-form commentsform" onSubmit={this.handleCommentSubmit}>
+          <form className="comment-form commentsform" onSubmit={this.handleCommentSubmit.bind(this)}>
                 <textarea
                   className="ux-comment-input ui-comment-input"
                   data-placeholder="Leave a comment"
