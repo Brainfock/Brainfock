@@ -17,7 +17,7 @@ export default class Todo extends Component {
     const {actions, todo} = this.props;
 
     const color = Colors[todo.logoBackground];
-    const icon = "fa "+todo.logoIcon;
+    const icon = 'fa ' + todo.logoIcon;
 
     let privacyIcon;
     if (todo.accessPrivateYn) {
@@ -26,13 +26,13 @@ export default class Todo extends Component {
           <IconButton iconClassName="fa fa-eye-slash"
                       tooltip="Private & Invisible"
                       style={{
-              marginTop:'-25px',
-              height:'16px'
-            }}
+                        marginTop:'-25px',
+                        height:'16px'
+                      }}
                       iconStyle={{
-              height:'16px',
-              fontSize:'19px',
-            }}
+                        height:'16px',
+                        fontSize:'19px',
+                      }}
             />
         </span>
       );
@@ -52,14 +52,14 @@ export default class Todo extends Component {
     //  );
     //}
 
-    return <mui.ListItem
+    return (<mui.ListItem
       primaryText={<div>{todo.summary}{privacyIcon}</div>}
       secondaryText={todo.text}
       onClick={this._onClick.bind(this)}
       rightAvatar={rightAvatar}
       leftAvatar={<Avatar icon={<span className={icon}/>} backgroundColor={color} />}
       > {this.confirmDialog()}
-    </mui.ListItem>
+    </mui.ListItem>);
   }
 
   confirmDialog() {
@@ -67,17 +67,17 @@ export default class Todo extends Component {
     var dialogActions = [
       <mui.FlatButton
         label='BTN_CANCEL'
-        secondary={true}
+        secondary
         onTouchTap={this._onDialogCancel}
         onClick={this._onDialogCancel}
         ref="BTN_CANCEL"
         />,
-      { text:'BTN_DELETE', onClick: this.delete }
+      {text:'BTN_DELETE', onClick: this.delete}
     ];
 
-    var Dialog = <mui.Dialog title='projects_deleteDialog_TITLE' ref="confirmDialog" actions={dialogActions}>
+    var Dialog = (<mui.Dialog title='projects_deleteDialog_TITLE' ref="confirmDialog" actions={dialogActions}>
       <p>Are you sure you want to delete this project? </p>
-    </mui.Dialog>
+    </mui.Dialog>);
 
     return Dialog;
   }

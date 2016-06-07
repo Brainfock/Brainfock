@@ -19,10 +19,10 @@ const views = {
  */
 module.exports = React.createClass({
 
-  getDefaultProps(){
+  getDefaultProps() {
     return {
       groupKey: 'board'
-    }
+    };
   },
 
   componentWillMount() {
@@ -37,7 +37,7 @@ module.exports = React.createClass({
     }
   },
 
-  render: function () {
+  render: function() {
 
     const {children, groupKey, ...passProps} = this.props;
     const group = this.props.boards.groups.get(groupKey);
@@ -59,11 +59,11 @@ module.exports = React.createClass({
         }}>
           <div className="pull-right">
             <IconButton iconClassName="fa fa-pencil" tooltip="Settings" iconStyle={{color: '#EFEFEF'}}
-              onClick={()=>{this.props.history.pushState(null,`/board/edit/${this.props.boards.board.id}`)}}/>
+              onClick={()=>{this.props.history.pushState(null, `/board/edit/${this.props.boards.board.id}`);}}/>
           </div>
           {group &&
           <h4><Link to='/boards'
-                    style={{color: '#EFEFEF',textDecoration:'underline'}}>{group.summary}</Link>
+                    style={{color: '#EFEFEF', textDecoration:'underline'}}>{group.summary}</Link>
             > {this.props.boards.board.summary}</h4>}
         </div>
 

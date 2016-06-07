@@ -63,9 +63,9 @@ export default class ProjectsEmpty extends Component {
               <RaisedButton
                 label="Create your first board"
                 onClick={e => this.setState({
-                target: e.target,
-                showForm: !this.state.showForm
-              })}
+                  target: e.target,
+                  showForm: !this.state.showForm
+                })}
                 primary
                 />
             </div>
@@ -85,9 +85,9 @@ export default class ProjectsEmpty extends Component {
                 children="Do it later"
                 href="#"
                 onClick={e => this.setState({
-                target: e.target,
-                showForm: !this.state.showForm
-              })}
+                  target: e.target,
+                  showForm: !this.state.showForm
+                })}
                 />
             </Paper>
           </div>

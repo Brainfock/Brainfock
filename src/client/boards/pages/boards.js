@@ -25,13 +25,13 @@ export default class Boards extends Component {
   };
 
   render() {
-    let header = <div>
+    let header = (<div>
       {this.props.group && <h4>{this.props.group.name}</h4>}
       {!this.props.group && <h4>Loading...</h4>}
-    </div>;
+    </div>);
 
-    if(this.props.meta.loading==true) {
-      return <h3>Loading...</h3>
+    if(this.props.meta.loading == true) {
+      return <h3>Loading...</h3>;
     }
 
     return (

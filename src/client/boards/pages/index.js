@@ -26,7 +26,7 @@ module.exports = React.createClass({
   },
 
   componentWillMount() {
-    if(process.env.IS_BROWSER==true) {
+    if(process.env.IS_BROWSER == true) {
       this.props.topic_actions.loadTopicGroup('board', {}/*, this.props.parentModel*/);
       this.props.topic_actions.find('board', {}/*, this.props.parentModel*/);
     }

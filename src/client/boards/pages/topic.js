@@ -11,9 +11,9 @@ var ListActions =  require('../../components/UIListActions');
 
 var EmptyComponent =  React.createClass({
   render: function() {
-    return <div className="alert alert-info">
+    return (<div className="alert alert-info">
       <p>TopicItems_ListEmpty</p>
-    </div>
+    </div>);
   }
 });
 
@@ -29,7 +29,7 @@ var Issues = React.createClass({
    * @returns {string}
    */
   displayName: function(bcComponent) {
-    return bcComponent.props.model.attributes.summary
+    return bcComponent.props.model.attributes.summary;
   },
 
   contextTypes: {
@@ -69,14 +69,14 @@ var Issues = React.createClass({
         this.props.topic_actions.loadTopicGroup('board')
           .then(()=> {
             //this.props.topic_actions.loadTopicGroup('board')
-          })
+          });
 
       //this.props.topic_actions.find('project', {}/*, this.props.parentModel*/);
     }
 
     if(this.props.params.id)
     {
-      if(process.env.IS_BROWSER==true) {
+      if(process.env.IS_BROWSER == true) {
         this.props.topic_actions.loadTopic(this.props.params.id);
         //this.props.actions.topic.query('board_topic', {}, this.props.board_id);
       }
@@ -101,34 +101,34 @@ var Issues = React.createClass({
   comments: function() {
     if(this.props.boards.viewTopic.type && this.props.boards.viewTopic.type.commentsEnabled) {
       var Comments  = require('../../topic/components/comments');
-      return  <Comments
+      return  (<Comments
         topic={this.props.boards.viewTopic}
         comments={this.props.boards.viewTopic.comments}
         io={this.props.io}
-        actions={this.props.actions} />
+        actions={this.props.actions} />);
     }
   },
 
   /**
    * @returns {XML}
    */
-  render: function () {
+  render: function() {
 
     const viewTopic = this.props.boards.viewTopic;
 
     let operaitons = [];
     let i = 0;
     if(viewTopic.operations) {
-      viewTopic.operations.forEach(function(op){
+      viewTopic.operations.forEach(function(op) {
         i++;
-        var _style={};
-        var active=false;
-        if(viewTopic.workflowStageId==op.id) {
-          _style['font-weight']=800;
-          active=true;
+        var _style = {};
+        var active = false;
+        if(viewTopic.workflowStageId == op.id) {
+          _style['font-weight'] = 800;
+          active = true;
         }
         operaitons.push(<MenuItem onClick={self.applyOperation} data-operation-id={op.id} eventKey={i} active={active}>{op.name}</MenuItem>);
-      })
+      });
     }
 
     let style = {
@@ -136,7 +136,7 @@ var Issues = React.createClass({
       position: 'relative'
     };
 
-    const BoardGroup = this.props.boards.groups.get('board')
+    const BoardGroup = this.props.boards.groups.get('board');
 
     return (
       <div>
@@ -150,9 +150,9 @@ var Issues = React.createClass({
           {BoardGroup &&
           <h4>
             <Link to='/boards'
-                  style={{color: '#EFEFEF',textDecoration:'underline'}}>{BoardGroup.summary}</Link>
+                  style={{color: '#EFEFEF', textDecoration:'underline'}}>{BoardGroup.summary}</Link>
             > <Link to={`/board/${this.props.boards.board.id}/${this.props.boards.board.contextTopicKey}/`}
-                    style={{color: '#EFEFEF',textDecoration:'underline'}}>{this.props.boards.board.summary}</Link>
+                    style={{color: '#EFEFEF', textDecoration:'underline'}}>{this.props.boards.board.summary}</Link>
             {this.props.boards.viewTopic.summary && <span> > {this.props.boards.viewTopic.summary}</span>}
           </h4>}
         </div>
@@ -226,9 +226,9 @@ var Issues = React.createClass({
     const viewTopic = this.props.boards.viewTopic;
 
     if (viewTopic.loading == true) {
-      return <AppContentCanvas header={
+      return (<AppContentCanvas header={
         <h4 className="pull-left"><Loader /></h4>
-      }/>
+      }/>);
     }
 
     return (
@@ -241,7 +241,7 @@ var Issues = React.createClass({
         {this.props.boards.viewTopic.text
         && <mui.CardText>{this.props.boards.viewTopic.text}</mui.CardText>}
       </mui.Card>
-    )
+    );
 
   }
 
