@@ -34,23 +34,20 @@ export default class FieldsHandler {
           })
           .catch(e => {
             if (isDebug)
-              console.log('>> error, ', e);
+              console.log('>> error, ', e); // eslint-disable-line no-console
             return resolve({
               key: item.key,
               type: '__NO_DATA__'
             });
           });
+        } else if (!isDebug) {
+          return resolve(null);
         } else {
-          if (!isDebug) {
-            return resolve(null);
-          } else {
-            return resolve({
-              key: item.key,
-              type: '__NOT_IMPLEMENTED__'
-            });
-          }
+          return resolve({
+            key: item.key,
+            type: '__NOT_IMPLEMENTED__'
+          });
         }
-
       });
   }
 
@@ -118,7 +115,7 @@ export default class FieldsHandler {
 
           if (parentGroup) {
             resolve({
-              label: `File under ${parentGroup.name}`,
+              //label: `File under ${parentGroup.name}`,
               label: 'Select category',
             // `name` is used for form inputs to identify model's attribute
               name: data.key,
@@ -262,7 +259,7 @@ export default class FieldsHandler {
     );
   }
 
-  static linked_issuesFieldProps(data) {
+  static linked_issuesFieldProps(data) { // eslint-disable-line camelcase
     return new Promise(
       function(resolve, reject) {
         resolve({
@@ -310,16 +307,18 @@ export default class FieldsHandler {
 
         if (!process.env.IS_BROWSER) {
           app.models.Term.prepareFormOptions('priority', 1000, (err, options) => {
-
-            resolve({
-              label: 'Priority',
-              name: data.key,
-              type: 'select',
-              options: options,
-            });
+            if (err) {
+              reject(err);
+            } else {
+              resolve({
+                label: 'Priority',
+                name: data.key,
+                type: 'select',
+                options: options,
+              });
+            }
           });
         } else {
-
           resolve({
             label: 'Priority',
             name: data.key,

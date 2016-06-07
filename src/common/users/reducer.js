@@ -12,7 +12,7 @@ import * as actions from '../users/actions';
 import User from './user';
 import CurrentUser from './currentUser';
 import ChangePasswordForm from './changePassword.form.js';
-import {List, Range, Record, Map} from 'immutable';
+import {List, Record, Map} from 'immutable';
 import getRandomString from '../lib/getRandomString';
 
 const InitialState = Record({

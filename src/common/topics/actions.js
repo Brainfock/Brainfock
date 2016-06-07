@@ -69,7 +69,7 @@ const getApi = (fetch, endpoint) =>
       throw response;
     });
 
-const deleteApi = (fetch, endpoint) =>
+/*const deleteApi = (fetch, endpoint) =>
   fetch(`/api/${endpoint}`, {
     headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
     method: 'DELETE',
@@ -78,8 +78,7 @@ const deleteApi = (fetch, endpoint) =>
     .then(response => {
       if (response.status === 200) return response.json();
       throw response;
-    });
-
+    });*/
 
 /**
  * @author Jrop <http://stackoverflow.com/a/31415775/360292>
@@ -99,17 +98,17 @@ function toQueryString(obj, urlEncode) {
   // ]
   //
   function flattenObj(x, path) {
-    var result = [];
+    let result = [];
 
     path = path || [];
     Object.keys(x).forEach(function(key) {
       if (!x.hasOwnProperty(key)) return;
 
-      var newPath = path.slice();
+      let newPath = path.slice();
       newPath.push(key);
 
-      var vals = [];
-      if (typeof x[key] == 'object') {
+      let vals = [];
+      if (typeof x[key] === 'object') {
         vals = flattenObj(x[key], newPath);
       } else {
         vals.push({path: newPath, val: x[key]});
@@ -123,20 +122,20 @@ function toQueryString(obj, urlEncode) {
   } // flattenObj
 
   // start with  flattening `obj`
-  var parts = flattenObj(obj); // [ { path: [ ...parts ], val: ... }, ... ]
+  let parts = flattenObj(obj); // [ { path: [ ...parts ], val: ... }, ... ]
 
   // convert to array notation:
   parts = parts.map(function(varInfo) {
-    if (varInfo.path.length == 1) varInfo.path = varInfo.path[0]; else {
-      var first = varInfo.path[0];
-      var rest = varInfo.path.slice(1);
+    if (varInfo.path.length === 1) varInfo.path = varInfo.path[0]; else {
+      let first = varInfo.path[0];
+      let rest = varInfo.path.slice(1);
       varInfo.path = first + '[' + rest.join('][') + ']';
     }
     return varInfo;
   }); // parts.map
 
   // join the parts to a query-string url-component
-  var queryString = parts.map(function(varInfo) {
+  let queryString = parts.map(function(varInfo) {
     return varInfo.path + '=' + varInfo.val;
   }).join('&');
   if (urlEncode) return encodeURIComponent(queryString); else return queryString;
@@ -144,7 +143,7 @@ function toQueryString(obj, urlEncode) {
 
 export function find(type, query, contextTopicId, namespace) {
   let endpoint = '';
-  if(namespace) {
+  if (namespace) {
     endpoint += `workspaces/${namespace}/`;
   }
 
@@ -199,8 +198,6 @@ export function count(group, query, contextTopicId, namespace) {
   let endpoint = '';
   if (namespace) {
     endpoint += `workspaces/${namespace}/`;
-  } else {
-    console.warn('Topics count: `namespace` is missing!');
   }
 
   if (contextTopicId) {
@@ -227,7 +224,7 @@ export function count(group, query, contextTopicId, namespace) {
 export function loadCurrent(id, namespace) {
 
   let endpoint = '';
-  if(namespace) {
+  if (namespace) {
     endpoint += `workspaces/${namespace}/`;
   }
   endpoint += 'topics/' + id;
@@ -270,7 +267,7 @@ export function loadContextGroupTopicByNum(contextTopicId, groupKey, topicNum) {
   let endpoint = `topics/${contextTopicId}/topics/?filter[include][1][type]&filter[include][2][author]&filter[extra][operations]`;
   endpoint += `&filter[where][groupKey]=${groupKey}`;
 
-  if(isNaN(topicNum))
+  if (isNaN(topicNum))
     endpoint += `&filter[where][contextTopicKey]=${topicNum}`;
   else
     endpoint += `&filter[where][contextTopicNum]=${topicNum}`;
@@ -384,10 +381,8 @@ export function loadTopicGroupBoard(name) {
 export function loadFilters(group, query, contextTopicId) {
 
   let endpoint;
-  if(contextTopicId) {
+  if (contextTopicId) {
     endpoint = `topics/${contextTopicId}/filters/${group}`;
-  } else {
-    console.log('contextTopic must be provided for `loadFilters`');
   }
 
   return ({fetch, validate}) => ({
@@ -403,7 +398,7 @@ export function loadFilters(group, query, contextTopicId) {
 export function loadFormFields(group, contextTopicId) {
 
   let endpoint;
-  if(contextTopicId) {
+  if (contextTopicId) {
     endpoint = `topics/${contextTopicId}/formFields/${group}`;
   } else {
     endpoint = `topics/${contextTopicId}/formFields/${group}`;

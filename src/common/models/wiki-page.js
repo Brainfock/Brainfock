@@ -1,6 +1,6 @@
-var Promise = require('bluebird');
-var marked = require('marked');
-var app = require('../../server/main');
+import Promise from 'bluebird';
+import marked from 'marked';
+const app = require('../../server/main');
 
 marked.setOptions({
   renderer: new marked.Renderer(),
@@ -14,9 +14,9 @@ marked.setOptions({
 });
 
 
-var promiseWhile = function(condition, action) {
+/*let promiseWhile = function(condition, action) {
   return new Promise(function(resolve, reject) {
-    var loop = function() {
+    let loop = function() {
       if (!condition()) return resolve();
       return Promise.cast(action())
         .then(loop)
@@ -26,31 +26,25 @@ var promiseWhile = function(condition, action) {
     };
     process.nextTick(loop);
   });
-};
+};*/
 
-module.exports = function(WikiPage)
-{
+module.exports = function(WikiPage) {
   WikiPage.observe('before save', function updateTimestamp(ctx, next) {
-
-    if(ctx.data && ctx.data.pageUid)
-    {
+    if (ctx.data && ctx.data.pageUid) {
       let pageUid = ctx.data.pageUid.split(':');
-      if(pageUid.length > 1) {
+      if (pageUid.length > 1) {
         ctx.data.namespace = pageUid.shift();
         ctx.data.pageUid = pageUid.join('');
       }
-    }
-    else if(ctx.instance && ctx.instance.pageUid)
-    {
+    } else if (ctx.instance && ctx.instance.pageUid) {
       let pageUid = ctx.instance.pageUid.split(':');
-      if(pageUid.length > 1) {
+      if (pageUid.length > 1) {
         ctx.instance.namespace = pageUid.shift();
         ctx.instance.pageUid = pageUid.join('');
       }
     }
 
-    if (ctx.isNewInstance)
-    {
+    if (ctx.isNewInstance) {
       WikiPage.app.models.Entity.create({
         name: ctx.instance.pageUid,
         accessPrivateYn: ctx.instance.accessPrivateYn,
@@ -58,11 +52,11 @@ module.exports = function(WikiPage)
         modelClassName: 'WikiPage',
         modelPk: null,
       }, function(err, entityInstance) {
-        if(err) {
+        if (err) {
           throw err;
         }
         ctx.instance.entityId =  entityInstance.id;
-        ctx.instance.entity_id =  entityInstance.id;
+        ctx.instance.entity_id =  entityInstance.id; // eslint-disable-line camelcase
         next();
       });
     } else {
@@ -70,15 +64,13 @@ module.exports = function(WikiPage)
     }
   });
 
-  WikiPage.observe('after save', function updateTimestamp(ctx, next)
-  {
+  WikiPage.observe('after save', function updateTimestamp(ctx, next) {
     // after model has been saved, we have to pass model's ID back to entity registry:
     if (ctx.isNewInstance && ctx.instance.entityId) {
       WikiPage.app.models.Entity.findById(ctx.instance.entityId, function(err, entityInstance) {
+        if (err) return next(err);
         entityInstance.updateAttributes({modelPk:ctx.instance.id}, function(errE, instance) {
-          if(errE) {
-            throw errE;
-          }
+          if (errE) return next(errE);
           next();
         });
       });
@@ -120,7 +112,6 @@ module.exports = function(WikiPage)
 
       if (modelInstance.namespace === 'Special') {
         if (cleanUid === 'Index') {
-          console.log('>> modelInstance.contextEntityId', modelInstance);
           parsers.push(modelInstance.appendPagesIndex());
         }
         // TODO: `Category` special page
@@ -142,7 +133,7 @@ module.exports = function(WikiPage)
   });
 
   WikiPage.afterRemote('*.updateAttributes', function(ctx, modelInstance, next) {
-    if(modelInstance) {
+    if (modelInstance) {
       modelInstance.applyContentParsers(next);
     } else {
       next();
@@ -157,7 +148,7 @@ module.exports = function(WikiPage)
   });*/
 
   WikiPage.on('attached', function() {
-    var override = WikiPage.findOne;
+    let override = WikiPage.findOne;
     WikiPage.findOneCore = override;
     WikiPage.findOne = function(filter, options, callback) {
 
@@ -179,8 +170,7 @@ module.exports = function(WikiPage)
       options = options || {};
       // END [from dao.js]
 
-
-      if(filter.where.pageUid && filter.where.pageUid.indexOf(':') !== -1) {
+      if (filter.where.pageUid && filter.where.pageUid.indexOf(':') !== -1) {
         let findBy = filter.where.pageUid.split(':');
 
         filter.where.namespace = findBy[0];
@@ -188,25 +178,25 @@ module.exports = function(WikiPage)
       }
 
       override.apply(this, [filter, function(err, modelInstance) {
-        if(modelInstance) {
+        if (err) {
+          return callback(err);
+        } else if (modelInstance) {
           callback(null, modelInstance);
+        } else if (filter.where.namespace === 'Special' || filter.where.namespace === 'Category') {
+          callback(null, new WikiPage({
+            namespace: filter.where.namespace,
+            pageUid: filter.where.pageUid,
+            contextEntityId: filter.where.contextEntityId > 0 ? filter.where.contextEntityId : 0,
+            content: ''
+          }));
         } else {
-          if(filter.where.namespace == 'Special' || filter.where.namespace == 'Category') {
-            callback(null, new WikiPage({
-              namespace: filter.where.namespace,
-              pageUid: filter.where.pageUid,
-              contextEntityId: filter.where.contextEntityId > 0 ? filter.where.contextEntityId : 0,
-              content: ''
-            }));
-          } else {
-            // for wiki, we gotta return pseudo-instance to allow user to edit it
-            callback(null, new WikiPage({
-              namespace: filter.where.namespace,
-              pageUid: filter.where.pageUid,
-              content: '*This page does not exist yet. Click "Edit" to create it*',
-              contextEntityId: filter.where.contextEntityId > 0 ? filter.where.contextEntityId : 0,
-            }));
-          }
+          // for wiki, we gotta return pseudo-instance to allow user to edit it
+          callback(null, new WikiPage({
+            namespace: filter.where.namespace,
+            pageUid: filter.where.pageUid,
+            content: '*This page does not exist yet. Click "Edit" to create it*',
+            contextEntityId: filter.where.contextEntityId > 0 ? filter.where.contextEntityId : 0,
+          }));
         }
       }]);
 
@@ -220,16 +210,13 @@ module.exports = function(WikiPage)
    * @returns {bluebird|exports|module.exports}
    */
   WikiPage.prototype.appendPagesIndex = function() {
-
-    const modelInstance = this;
     const where = {
       contextEntityId: this.contextEntityId > 0 ? this.contextEntityId : 0
     };
-    console.log('>> INDEX where', where);
-    if (!modelInstance.contentRendered) {
-      modelInstance.contentRendered = modelInstance.content;
+    if (!this.contentRendered) {
+      this.contentRendered = this.content;
     }
-
+    const modelInstance = this; // eslint-disable-line consistent-this
     return new Promise(
       function(resolve, reject) {
         WikiPage.find({
@@ -237,7 +224,7 @@ module.exports = function(WikiPage)
           order: 'namespace ASC, pageUid ASC'
         }, function(err, foundPages) {
 
-          if(err || !foundPages) return resolve(null);
+          if (err || !foundPages) return resolve(null);
 
           if (foundPages.length > 0) {
 
@@ -270,16 +257,12 @@ module.exports = function(WikiPage)
       });
   };
 
-  WikiPage.prototype.applyContentParsers = function(next)
-  {
-    const modelInstance = this;
-
-    if(modelInstance.namespace)
+  WikiPage.prototype.applyContentParsers = function(next) {
+    const modelInstance = this; // eslint-disable-line consistent-this
+    if (modelInstance.namespace)
       modelInstance.pageUid = modelInstance.namespace + ':' + modelInstance.pageUid;
-
     if (!modelInstance.contentRendered) // content may be already prepended with some data, e.g. for `Special:Index` page
       modelInstance.contentRendered = modelInstance.content;
-
     // This does work:
     marked(modelInstance.contentRendered, {
       renderer: new marked.Renderer(),
@@ -320,42 +303,39 @@ module.exports = function(WikiPage)
     let _regex = new RegExp(/\[\[(.*?)\]\]/gi);
     let matches = content.match(_regex);
 
-    if(matches) {
+    function async($fullMatch, callback) {
 
-      function async($fullMatch, callback) {
-
-        let $contentMatch = $fullMatch.match(/\[\[(.*?)\]\]/i);
-        let $parts = $contentMatch[1].split('|');
-        let $first = $parts.shift();
-        if($parts.length > 0) {
-          links[$fullMatch] = {
-            title: $parts.join(''),
-            wiki_uid: $first,
-          };
-        } else {
-          links[$fullMatch] = {
-            title: $first,
-            wiki_uid: $first,
-          };
-        }
-
-        callback();
-      }
-      function final() {
-        originalCallback(links);
+      let $contentMatch = $fullMatch.match(/\[\[(.*?)\]\]/i);
+      let $parts = $contentMatch[1].split('|');
+      let $first = $parts.shift();
+      if ($parts.length > 0) {
+        links[$fullMatch] = {
+          title: $parts.join(''),
+          wiki_uid: $first, // eslint-disable-line camelcase
+        };
+      } else {
+        links[$fullMatch] = {
+          title: $first,
+          wiki_uid: $first, // eslint-disable-line camelcase
+        };
       }
 
+      callback();
+    }
+    function final() {
+      originalCallback(links);
+    }
+
+    if (matches) {
       let results = [];
-
       matches.forEach(function(item) {
         async(item, function(result) {
           results.push(result);
-          if(results.length === matches.length) {
+          if (results.length === matches.length) {
             final();
           }
         });
       });
-
     } else {
       return originalCallback();
     }
@@ -369,9 +349,57 @@ module.exports = function(WikiPage)
    */
   WikiPage.prototype.replaceWikiLinks = function(text, links, originalCallback) {
 
-    var self = this;
+    let self = this;
 
     function replaceWikiLinks(contextTopic) {
+
+      function asyncReplace($fullMath, $pageData, callback) {
+
+        let filter = {
+          where: {
+            contextEntityId: (self.contextEntityId ? self.contextEntityId : 0),
+            pageUid: $pageData. wiki_uid
+          },
+          limit: 1
+        };
+
+        if (filter.where.pageUid && filter.where.pageUid.indexOf(':') !== -1) {
+          let findBy = filter.where.pageUid.split(':');
+          filter.where.namespace = findBy[0];
+          filter.where.pageUid = findBy[1];
+        }
+
+        //let escapeReg = function(s) {
+        //  return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        //};
+
+        RegExp.escape = function(s) {
+          return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        };
+
+        app.models.WikiPage.find(filter, {}, function(err, foundPage) {
+
+          if (err) {
+            return callback();
+          }
+
+          const find = RegExp.escape($fullMath);
+
+          if (!foundPage || foundPage.length === 0) {
+            // page is not found, but it's not a fatal error
+            text = text.replace(new RegExp(find, 'g'), '<a class="non-existing WkikLink" href="' + baseLink + $pageData. wiki_uid + '">' + $pageData. title + '</a>');
+            return callback();
+
+          } else {
+            text = text.replace(new RegExp(find, 'g'), '<a class="WkikLink" href="' + baseLink + $pageData. wiki_uid + '">' + $pageData. title + '</a>');
+            return callback();
+          }
+        });
+      }
+      function final() {
+        originalCallback(text);
+      }
+
       let baseLink;
       if (contextTopic !== null) {
         baseLink = `/${contextTopic.namespace}/${contextTopic.contextTopicKey}/wiki/`;
@@ -379,68 +407,19 @@ module.exports = function(WikiPage)
         baseLink = '/wiki/';
       }
 
-      if(links) {
-
-        function asyncReplace($fullMath, $pageData, callback) {
-
-          let filter = {
-            where: {
-              contextEntityId: (self.contextEntityId ? self.contextEntityId : 0),
-              pageUid: $pageData. wiki_uid
-            },
-            limit: 1
-          };
-
-          if(filter.where.pageUid && filter.where.pageUid.indexOf(':') !== -1) {
-            let findBy = filter.where.pageUid.split(':');
-            filter.where.namespace = findBy[0];
-            filter.where.pageUid = findBy[1];
-          }
-
-          var escapeReg = function(s) {
-            return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-          };
-
-          RegExp.escape = function(s) {
-            return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-          };
-
-          app.models.WikiPage.find(filter, {}, function(err, foundPage) {
-
-            if (err) {
-              return callback();
-            }
-
-            const find = RegExp.escape($fullMath);
-
-            if (!foundPage || foundPage.length === 0) {
-              // page is not found, but it's not a fatal error
-              text = text.replace(new RegExp(find, 'g'), '<a class="non-existing WkikLink" href="' + baseLink + $pageData. wiki_uid + '">' + $pageData. title + '</a>');
-              return callback();
-
-            } else {
-              text = text.replace(new RegExp(find, 'g'), '<a class="WkikLink" href="' + baseLink + $pageData. wiki_uid + '">' + $pageData. title + '</a>');
-              return callback();
-            }
-          });
-        }
-        function final() {
-          originalCallback(text);
-        }
-
-        var results = [];
+      if (links) {
+        let results = [];
         let _keys = Object.keys(links);
         Object.keys(links).forEach(function(linkData, index) {
 
           asyncReplace(linkData, links[linkData], function(result) {
             results.push(1);
-            if(results.length === (_keys.length)) {
+            if (results.length === (_keys.length)) {
               final();
             }
           });
         });
-      }
-      else {
+      } else {
         originalCallback(text);
       }
     }
@@ -449,8 +428,7 @@ module.exports = function(WikiPage)
       WikiPage.app.models.Topic.findOne({where:{
         entityId: self.contextEntityId
       }},
-        function(err, data)
-        {
+        function(err, data) {
           if (err || !data) {
             replaceWikiLinks(null);
           } else {

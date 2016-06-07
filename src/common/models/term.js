@@ -9,7 +9,6 @@
  */
 import loopback from 'loopback';
 import {mergeQuery} from 'loopback-datasource-juggler/lib/utils';
-import app from '../../server/main';
 
 module.exports = function(Term) {
 
@@ -57,7 +56,7 @@ module.exports = function(Term) {
    * @param cb
    * @private
    */
-  Term.__findByKey__labels = function(key, cb) {
+  Term.__findByKey__labels = function(key, cb) { // eslint-disable-line camelcase
     Term.prepareFormOptions(key, 1000, cb);
   };
 

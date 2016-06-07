@@ -7,7 +7,7 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {apiGet, apiPost} from '../lib/services';
+import {apiGet} from '../lib/services';
 import {toQueryString} from '../utils/model.js';
 
 export const FIND = 'FIND_SCHEMES_PENDING';
@@ -19,7 +19,7 @@ export function findGroupSchemes(includes, query) {
 
   endpoint += 'topicGroupSchemes/?' + includes;
 
-  if(query) {
+  if (query) {
     endpoint += '&' + toQueryString({filter:{where:query}}, false);
   }
 

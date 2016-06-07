@@ -213,8 +213,7 @@ module.exports = function(Topic) {
           }
         });
       });
-    }
-    else if (ctx.instance.namespace && !ctx.instance.workspaceId) {
+    } else if (ctx.instance.namespace && !ctx.instance.workspaceId) {
       // make sure workspace exists
       Topic.app.models.Workspace.findOne({where: {namespace: ctx.instance.namespace}}, function(wspcErr, wspcInstance) {
 
@@ -309,8 +308,7 @@ module.exports = function(Topic) {
    * Validate uniqueness of namespace per groupId/workspaceId pair
    */
   Topic.observe('before save', function normalizeUserInput(ctx, next) {
-    const context = loopback.getCurrentContext();
-
+    //const context = loopback.getCurrentContext();
     if (ctx.instance) {
       if ((!ctx.instance.contextTopicId || ctx.instance.contextTopicId === 0)
         && ctx.instance.contextTopicKey && ctx.instance.workspaceId) {
@@ -409,8 +407,7 @@ module.exports = function(Topic) {
           }, function(err, relation) {
             if (err) {
               throw err;
-            }
-            else {
+            } else {
               next();
             }
           });
@@ -706,14 +703,14 @@ module.exports = function(Topic) {
 
   Topic.promiseUserAccess = function(topicWhere, userId) {
     if (process.env.NODE_ENV === 'development') {
-      console.log('> Topic.promiseUserAccess topicWhere', topicWhere);
+      console.log('> Topic.promiseUserAccess topicWhere', topicWhere); // eslint-disable-line no-console
     }
     return new Promise(
       function(resolve, reject) {
         Topic.findOne({where:topicWhere}, function(err, instance) {
-          if(err || !instance) return reject(null, false);
+          if (err || !instance) return reject(null, false);
           instance.checkUserAccess(userId, function(err, isAllowed) {
-            if(err || !isAllowed) return reject(null, false);
+            if (err || !isAllowed) return reject(null, false);
             return resolve(instance, true);
           });
         });

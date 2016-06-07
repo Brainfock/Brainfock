@@ -209,7 +209,7 @@ module.exports = function(Workspace) {
    * @param cb
    * @private
    */
-  Workspace.__findByKey__topics = function(namespace, nTopicId, groupKey, topicNum, cb) {
+  Workspace.__findByKey__topics = function(namespace, nTopicId, groupKey, topicNum, cb) { // eslint-disable-line camelcase
 
     const currentUser = loopback.getCurrentContext().get('currentUser');
     const userId = currentUser ? currentUser.id : null;
@@ -224,8 +224,8 @@ module.exports = function(Workspace) {
 
       wspcInstance.checkUserAccess(userId, function(err, isAllowed) {
 
-        if(err) return cb(err, null);
-        if(!isAllowed) {
+        if (err) return cb(err, null);
+        if (!isAllowed) {
           let e = new Error('Authorization Required');
           e.status = e.statusCode = 401;
           e.code = 'AUTHORIZATION_REQUIRED';
@@ -305,7 +305,7 @@ module.exports = function(Workspace) {
    * @param cb
    * @private
    */
-  Workspace.__findByKey__topics__topics = function(namespace, nTopicId, groupKey, topicNum, cb) {
+  Workspace.__findByKey__topics__topics = function(namespace, nTopicId, groupKey, topicNum, cb) { // eslint-disable-line camelcase
 
     const currentUser = loopback.getCurrentContext().get('currentUser');
     const userId = currentUser ? currentUser.id : null;
@@ -320,8 +320,8 @@ module.exports = function(Workspace) {
 
       wspcInstance.checkUserAccess(userId, function(err, isAllowed) {
 
-        if(err) return cb(err, null);
-        if(!isAllowed) {
+        if (err) return cb(err, null);
+        if (!isAllowed) {
           let e = new Error('Authorization Required');
           e.status = e.statusCode = 401;
           e.code = 'AUTHORIZATION_REQUIRED';

@@ -8,6 +8,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import {apiPost, apiGet} from '../lib/services';
+import {toQueryString} from '../utils/model.js';
 
 export const CREATE = 'WORKSPACE_SAVE_PENDING';
 export const CREATE_ERROR = 'WORKSPACE_SAVE_ERROR';
@@ -87,9 +88,9 @@ export function workspaceFindById(id) {
 export function fetchWorkspaceHomepage(data) {
 
   const {
-    location,
+    //location,
     params,
-    props,
+    //props,
     app,
     users
     } = data;

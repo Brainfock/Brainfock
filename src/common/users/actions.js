@@ -27,10 +27,8 @@ export const SAVE_USER_CREATE_FORM_SUCCESS = 'SAVE_USER_CREATE_FORM_SUCCESS';
 export const SAVE_USER_CREATE_FORM_ERROR = 'SAVE_USER_CREATE_FORM_ERROR';
 
 export function findUsers(includes, query) {
-
   let endpoint = 'members/?' + includes;
-
-  if(query) {
+  if (query) {
     endpoint += '&' + toQueryString({filter:{where:query}}, false);
   }
 

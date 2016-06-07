@@ -384,8 +384,6 @@ export default function boardsReducer(state = initialState, action) {
             .setIn(['forms', 'cid', cid, 'meta', 'isSubmitting'], false);
         }
       } else {
-        console.warn('Deprecated action responce');
-
         // TODO: if there is `cid` in mets
         // TODO: review, cleanup:
         state.setIn(['newTopic', 'meta', 'isSubmitting'], false);

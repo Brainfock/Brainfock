@@ -21,30 +21,31 @@ module.exports = function(Entity) {
 
 
   Entity.afterRemote('*.__get__comments', function(ctx, data, next) {
-    if (ctx.result && ctx.result.length > 0) {
-      function populateValue($modelInstance, callback) {
-        marked($modelInstance.text, {
-          renderer: new marked.Renderer(),
-          gfm: true,
-          tables: true,
-          breaks: false,
-          pedantic: false,
-          sanitize: true,
-          smartLists: true,
-          smartypants: false
-        }, function(err, content) {
-          if (err) throw err;
+    function populateValue($modelInstance, callback) {
+      marked($modelInstance.text, {
+        renderer: new marked.Renderer(),
+        gfm: true,
+        tables: true,
+        breaks: false,
+        pedantic: false,
+        sanitize: true,
+        smartLists: true,
+        smartypants: false
+      }, function(err, content) {
+        if (err) throw err;
 
-          $modelInstance.contentRendered = content;
-          return callback();
-        });
-      }
+        $modelInstance.contentRendered = content;
+        return callback();
+      });
+    }
+
+    if (ctx.result && ctx.result.length > 0) {
       let resCount = data.length;
       let lopRes = [];
       ctx.result.forEach(function(/*SettingsField model instance*/ item) {
         populateValue(item, function(result) {
           lopRes.push(1);
-          if (lopRes.length == (resCount)) {
+          if (lopRes.length === (resCount)) {
             next();
           }
         });

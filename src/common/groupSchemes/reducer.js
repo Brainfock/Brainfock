@@ -7,10 +7,9 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import * as authActions from '../auth/actions';
 import * as actions from './actions';
 import GroupSchemeRecord from './groupScheme.record.js';
-import {List, Range, Record} from 'immutable';
+import {List, Record} from 'immutable';
 import getRandomString from '../lib/getRandomString';
 
 const InitialState = Record({
