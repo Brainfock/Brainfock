@@ -54,7 +54,7 @@ class CommentItem extends Component {
       <div className="row">
       <div className="pull-left" style={{width: '70px'}}>
         <div className="pull-right">
-          <mui.Avatar>{this.props.model.user.username && this.props.model.user.username.charAt(0)}</mui.Avatar>
+          <Avatar>{this.props.model.user.username && this.props.model.user.username.charAt(0)}</Avatar>
         </div>
       </div>
 
