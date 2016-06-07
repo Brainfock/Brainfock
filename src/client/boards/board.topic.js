@@ -16,7 +16,9 @@ export default class Todo extends Component {
 
   static propTypes = {
     actions: PropTypes.object.isRequired,
-    todo: PropTypes.object.isRequired
+    history: PropTypes.object.isRequired,
+    params: PropTypes.object,
+    todo: PropTypes.object.isRequired,
   }
 
   render() {
