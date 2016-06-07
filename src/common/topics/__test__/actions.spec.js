@@ -18,7 +18,7 @@ import {
   //TestUtils
 } from '../../../../test/mochaTestHelper';
 
-import {SET_NEW_TOPIC_FIELD, setNewTopicField, makeTopicUpdateFormRecord} from '../../../common/topics/actions';
+import {/*SET_NEW_TOPIC_FIELD, */setNewTopicField, makeTopicUpdateFormRecord} from '../../../common/topics/actions';
 
 // TODO: write tests to capture errors that occur because of store's
 // `reive()` mistakes e.g. setting `newTopic` to bad record
