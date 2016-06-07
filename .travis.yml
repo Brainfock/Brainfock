@@ -1,5 +1,15 @@
+sudo: false
+env:
+  - CXX=g++-4.8
 language: node_js
 node_js:
   - "4"
   - "6"
 before_install: if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-4.8
+    - g++-4.8
