@@ -14,9 +14,10 @@ import Todo from './board.topic.react';
 export default class List extends Component {
 
   static propTypes = {
-    //actions: React.PropTypes.object.isRequired,
+    actions: React.PropTypes.object,
     list: React.PropTypes.object.isRequired,
-    //msg: React.PropTypes.object.isRequired
+    msg: React.PropTypes.object,
+    parentBoard: React.PropTypes.object,
   }
 
   render() {
