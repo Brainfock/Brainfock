@@ -10,7 +10,6 @@
 import React from 'react';
 import Component from 'react-pure-render/component';
 import {Link} from 'react-router';
-import {Paper} from 'material-ui';
 
 import fetch from '../../../../common/components/fetch';
 import {fetchWorkspaceHomepage} from '../../../../common/workspace/actions';
@@ -21,6 +20,13 @@ import Loader from '../../../components/Loader.js';
  * @todo since this is the last route in applicaiton that catches ANY route, this is where we have to handle 404 error
  */
 @fetch(fetchWorkspaceHomepage) class WorkspaceHome extends Component {
+
+  static propTypes = {
+    actions: React.PropTypes.object,
+    children: React.PropTypes.object,
+    msg: React.PropTypes.object,
+    workspace: React.PropTypes.object,
+  }
 
   componentWillMount() {
     this.props.actions.appSetActiveSectionLabel(this.props.workspace.active.data.name || 'Workspaces');
@@ -67,7 +73,7 @@ import Loader from '../../../components/Loader.js';
                 <Link to={`/projects/?filter[workspaceId]=${workspace.data.id}`}><i className="fa fa-sitemap fa-4x"></i>
                   <br />
 
-                  <h3>Projects & Initiatives</h3></Link>
+                  <h3>Projects &amp; Initiatives</h3></Link>
 
                 <p>Manage your business</p>
               </div>

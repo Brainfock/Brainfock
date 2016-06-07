@@ -7,16 +7,9 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react'),
-  Router = require('react-router'),
-  RouteHandler = Router.RouteHandler,
-  mui = require('material-ui'),
-  Menu = mui.Menu,
-  Loader = require('../../components/Loader');
-
-//var Store = require('../../components/comments/Store');
-//var Actions = require('../../components/comments/Actions');
-var Item = require('./comments-list-item');
+import React from 'react';
+import Component from 'react-pure-render/component';
+const Item = require('./comments-list-item');
 
 // for At.js plugin:
 //var $ = require('jquery');
@@ -30,38 +23,35 @@ var Item = require('./comments-list-item');
  *
  * @author sergii gamaiunov <hello@webkadabra.com>
  */
-var TopicComments = React.createClass({
+class TopicComments extends Component {
 
-  getInitialState: function() {
-    return {
-      //Store:Store
-    };
-  },
+  static propTypes = {
+    actions: React.PropTypes.object,
+    children: React.PropTypes.object,
+    comments: React.PropTypes.array,
+    io: React.PropTypes.object,
+    msg: React.PropTypes.object,
+    params: React.PropTypes.object,
+    topic: React.PropTypes.object,
+  }
 
-  getDefaultProps: function() {
-    return {
-      topic:{},
-      // some store cursor:
-      model:null,
-      //ThreadUsersStore:require('client/issues/ThreadUserStore')
-    };
-  },
-  componentWillMount:function() {
+  static defaultProps = {
+    topic:{},
+    // some store cursor:
+    model:null,
+  };
+
+  componentWillMount() {
     this.props.actions.loadEntityComments(this.props.topic.entityId);
-
-    if(process.env.IS_BROWSER) {
-      this.props.io.emit('sub-comments', {entity_id:this.props.topic.entityId});
-
+    if (process.env.IS_BROWSER) {
+      this.props.io.emit('sub-comments', {entity_id:this.props.topic.entityId}); // eslint-disable-line camelcase
     }
-
-      //this.props.io.emit('join',{'entity-comments':this.props.topic.entityId});
-
+    //this.props.io.emit('join',{'entity-comments':this.props.topic.entityId});
     //this.props.socket.on('onlineUsers', function(data, data2){
     //  console.log('online users changed');
     //  self.setState({online:data.onlineUsers})
     //});
-
-  },
+  }
 
   //componentWillReceiveProps:function(nextProps, old) {
   //  if(this.props.model.id != nextProps.model.id) {
@@ -69,36 +59,7 @@ var TopicComments = React.createClass({
   //  }
   //},
 
-  __componentDidMount:function()
-  {
-    // pull new comments
-    //this.state.CursorStore.on('add remove reset change', function() {
-    //this.props.model.on('change:id', function() {
-    //  this.state.Store.isLoading=true;
-    //  //Actions.entityActivity(this.props.model.get('entity_id'));
-    //}, this);
-    //
-    //// redraw comments
-    //this.state.Store.on('add remove reset change', function() {
-    //  //Actions.issueActivity(this.props.model.id);
-    //  this.forceUpdate();
-    //}, this);
-    //
-    //// setup AtWho plugin when thread users store is changed
-    //this.props.ThreadUsersStore.on('add reset', function() {
-    //  this.setupCommentBox();
-    //}, this);
-
-    //Actions.listenToObjectActivity(this.props.topic.entityId);
-  },
-  __componentWillUnmount :function() {
-    //this.state.Store.off(null, null, this);
-    //this.props.ThreadUsersStore.off(null, null, this);
-    //Actions.hangupObjectActivity(this.props.topic.entityId);
-  },
-
-  render: function()
-  {
+  render() {
     //if(this.state.Store.isLoading == true) {
     //  // this action call is a workaround of an issue: whner ticket is updated, activity list is clieared
     //  //Actions.entityActivity(this.props.model.get('entity_id'));
@@ -110,47 +71,48 @@ var TopicComments = React.createClass({
     //}
 
     return (
-        <div className="container-fluid">
-          <div className="comments-wrapper" >
-            {this.renderComments()}
-          </div>
-
-          <div className="comment-form-wrapper" >
-            <form className="comment-form commentsform" onSubmit={this.handleCommentSubmit}>
-              <textarea onClick={this.setupCommentBox} name="comment" className="ux-comment-input ui-comment-input" required="required"
-                        data-placeholder="Leave a comment" ref="commentbox" />
-              <div className="actions" >
-                <button className="btn ux-comments-submit-btn">Send</button>
-              </div>
-            </form>
-          </div>
+      <div className="container-fluid">
+        <div className="comments-wrapper" >
+          {this.renderComments()}
         </div>
+
+        <div className="comment-form-wrapper" >
+          <form className="comment-form commentsform" onSubmit={this.handleCommentSubmit}>
+                <textarea
+                  className="ux-comment-input ui-comment-input"
+                  data-placeholder="Leave a comment"
+                  name="comment"
+                  onClick={this.setupCommentBox}
+                  ref="commentbox"
+                  required="required" />
+            <div className="actions" >
+              <button className="btn ux-comments-submit-btn">Send</button>
+            </div>
+          </form>
+        </div>
+      </div>
     );
-  },
+  }
 
-  renderComments: function() {
-
-    console.log('this.props.topic.comments:', this.props.comments);
-    if(this.props.comments.length == 0) {
+  renderComments() {
+    if (this.props.comments.length === 0) {
       return (
-          <div>
-            <em><b>There are no comments here. Please, write one:</b></em>
-          </div>
+        <div>
+          <em><b>There are no comments here. Please, write one:</b></em>
+        </div>
       );
     }
 
     return (<div className="activity-stream" >
-
       {this.props.comments.map(result =>
           <div className="item" >
             <Item model={result} />
           </div>
       )}
-
-
     </div>);
-  },
-  __setupCommentBox: function()
+  }
+
+  /*__setupCommentBox()
   {
     var users = [];
     this.props.ThreadUsersStore.each(function(userModel) {
@@ -162,14 +124,14 @@ var TopicComments = React.createClass({
       });
     });
     // load all names in this project that this user has access to
-    /*
+    /!*
      self.$('.ux-comment-input').atwho({
      at: "@",
      data: users,
      tpl: "<li data-value='@${name}'>${name} <img src='${userpic}'/></li>",
      show_the_at: true
      })
-     */
+     *!/
 
     // TODO: extract all users in this conversation + add all users who user can mention
     $(this.refs.commentbox).atwho({
@@ -178,18 +140,18 @@ var TopicComments = React.createClass({
       tpl: "<li data-value='@${name}'>${name} <img src='${userpic}'/></li>",
       show_the_at: true
     });
-  },
+  }*/
 
   /**
    * post entity comment
    */
-  handleCommentSubmit: function(e)
-  {
+  handleCommentSubmit(e) {
     e.preventDefault();
-    var comment = this.refs.commentbox.value;
+    let comment = this.refs.commentbox.value;
     this.props.actions.postComment(this.props.topic.entityId, {text:comment});
-  },
+  }
+}
 
-});
 
-module.exports = TopicComments;
+export default TopicComments;
+

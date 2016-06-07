@@ -10,7 +10,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Component from 'react-pure-render/component';
-
 import mui, {Snackbar} from 'material-ui';
 import Loader from '../../components/Loader';
 import SimpleFormFactory from '../../components/UISimpleFormFactory';
@@ -30,14 +29,15 @@ export default class CreateTopicForm extends Component {
 
   static propTypes = {
     actions: React.PropTypes.any.isRequired,
-    topic_actions: React.PropTypes.any.isRequired,
     containerStore: React.PropTypes.any.isRequired,
     formData: React.PropTypes.object,
     formFields: React.PropTypes.object,
     newTopic: React.PropTypes.any.isRequired,
     params: React.PropTypes.object.isRequired,
-    // topic group to load form for, e.g. `issue` if we want to greate topic in group `issue`
-    topicGroup: React.PropTypes.string.isRequired
+    sysFields: React.PropTypes.array,
+    topicGroup: React.PropTypes.string.isRequired, // topic group to load form for, e.g. `issue` if we want to greate topic in group `issue`
+    topic_actions: React.PropTypes.any.isRequired, // eslint-disable-line camelcase
+    workspace: React.PropTypes.object,
   };
 
   componentWillMount() {
@@ -142,36 +142,41 @@ export default class CreateTopicForm extends Component {
       return <Loader noLabel />;
     }
     return (
-      <form ref="frm" onSubmit={this.onFormSubmit.bind(this)} className="form-horizontal">
+      <form
+        className="form-horizontal"
+        onSubmit={this.onFormSubmit.bind(this)}
+        ref="frm" >
         {this.props.formData && this.props.formData.meta.error
         && <div className="alert alert-danger">
-          <i onClick={this.props.topic_actions.cleanErrorSummary} className="fa fa-times"></i> {this.props.formData.meta.error}
+          <i className="fa fa-times" onClick={this.props.topic_actions.cleanErrorSummary}></i> {this.props.formData.meta.error}
         </div>
         }
 
         {this.props.formData && this.props.formData.meta.isSubmitting
         && <Snackbar
-          openOnMount
+          _action="undo"
+          autoHideDuration={0}
           message="Saving..."
+          openOnMount
           style={{
             bottom: 0,
             left:'30%'
           }}
-          _action="undo"
-          autoHideDuration={0} /> }
+          /> }
 
         {this.props.formData && this.props.formData.meta.postedOn
         && <Snackbar
+          // TODO: action to open item details
+          _action="undo"
+          autoHideDuration={3000}
+          message="Item created!"
           openOnMount
           postedOn={this.props.formData.meta.postedOn}
-          message="Item created!"
           style={{
             top: 0,
             left:'30%'
           }}
-          // TODO: action to open item details
-          _action="undo"
-          autoHideDuration={3000} /> }
+          /> }
         {this.renderForm()}
         <br />
         <mui.Checkbox
@@ -204,16 +209,16 @@ export default class CreateTopicForm extends Component {
     }
     if (1 === 2 && !this.props.containerStore) {
 
-      let wspOptions = this.props.workspace.list.map(item => { return {
-        label: item.data.name,
-        value: item.data.id
-      };});
-      console.log('> wspOptions', wspOptions);
-      //SelectField
+      let wspOptions = this.props.workspace.list.map(item => {
+        return {
+          label: item.data.name,
+          value: item.data.id
+        };
+      });
 
       return (<div className="clearfix">Select Workspace
         <br />
-        <SelectField options={wspOptions.toJS()} label={'Workspace'} value='' />
+        <SelectField label={'Workspace'} options={wspOptions.toJS()}  value=''/>
       </div>);
     } else {
 
@@ -222,10 +227,10 @@ export default class CreateTopicForm extends Component {
         <SimpleFormFactory
           form={this.props.formData}
           formScheme={this.props.formFields.fields}
+          handleSubmit={this.onFormSubmit.bind(this)}
           modelValues={this.props.formData.data}
           onChange={this.onChange.bind(this)}
           primaryInputName='summary'
-          handleSubmit={this.onFormSubmit.bind(this)}
           />
       </div>
     );
@@ -238,7 +243,7 @@ export default class CreateTopicForm extends Component {
 
   onFormSubmit(e) {
 
-    const {topic_actions, formData} = this.props;
+    const {topic_actions, formData} = this.props; // eslint-disable-line camelcase
 
     const cid = formData.cid;
     const data = formData.toJS().data;
@@ -268,7 +273,7 @@ export default class CreateTopicForm extends Component {
       postData.contextTopicId = this.props.containerStore.id;
 
     //actions.create(postData)
-    topic_actions.postTopicFormData(cid, postData)
+    topic_actions.postTopicFormData(cid, postData) // eslint-disable-line camelcase
       .then(({error, payload}) => {
         if (error) {
           // TODO: snackbar message?

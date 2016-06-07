@@ -1,88 +1,86 @@
-var React = require('react'),
-  Router = require('react-router'),
-  Loader = require('../../components/Loader'),
-  Link = Router.Link,
-  Navigation = Router.Navigation,
+/**
+ * Brainfock, <http://www.brainfock.org>
+ *
+ * Copyright (C) 2015-present Sergii Gamaiunov <hello@webkadabra.com>
+ * All rights reserved.
+ *
+ * This source code is licensed under the GPL-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+import React from 'react';
+import Component from 'react-pure-render/component';
+import {Avatar} from 'material-ui';
+import Loader from '../../components/Loader';
 
-  mui = require('material-ui');
+class CommentItem extends Component {
 
-var bs = require('react-bootstrap'),
-  {ButtonToolbar, ButtonGroup, Button, Glyphicon} = bs;
+  static propTypes = {
+    actions: React.PropTypes.object,
+    children: React.PropTypes.object,
+    model: React.PropTypes.object,
+    msg: React.PropTypes.object,
+    params: React.PropTypes.object,
+  }
 
-module.exports = React.createClass({
-  mixins: [Navigation, Router.State],
-  delete: function() {
+  deleteComment() {
     this.props.model.destroy();
-  },
-  getInitialState: function() {
-    return {
+  }
+
+  constructor() {
+    super();
+    this.state = {
       active: false,
     };
-  },
+  }
 
-  render: function() {
-
-    if(!this.props.model.id === 0) {
+  render() {
+    if (!this.props.model.id === 0) {
       return <Loader />;
     }
     return this.renderComment();
-    if(1 == 1 /*OR this.props.model.type=='comment'*/) {
-      return this.renderComment();
-    } else {
-      return this.renderEvent();
-    }
-  },
+    //return this.renderComment();
+    //if (this.props.model.type=='comment'*/) {
+    //  return this.renderComment();
+    //} else {
+    //  return this.renderEvent();
+    //}
+  }
 
-  renderComment: function() {
-
-    if(!this.props.model.user) {
+  renderComment() {
+    if (!this.props.model.user) {
       return <div><em>n/a</em></div>;
     }
-    return (<div className="row">
+    return (
+      <div className="row">
       <div className="pull-left" style={{width: '70px'}}>
         <div className="pull-right">
-
           <mui.Avatar>{this.props.model.user.username && this.props.model.user.username.charAt(0)}</mui.Avatar>
-
         </div>
-
       </div>
 
       <div className="bubble">
         <div className="comment-meta">
           <b>{this.props.model.user.username}</b>
-
-          <abbr title={this.props.model.created_on} className="timeago">{this.props.model.createdOn}</abbr>
+          <abbr className="timeago" title={this.props.model.created_on}>{this.props.model.createdOn}</abbr>
         </div>
         <div dangerouslySetInnerHTML={{__html: this.props.model.contentRendered}} />
       </div>
+    </div>
+    );
+  }
 
-
-
-    </div>);
-
-
-
-
-  },
-
-  renderEvent: function() {
-    if(!this.props.model.user) {
+  renderEvent() {
+    if (!this.props.model.user) {
       return <div>n/a</div>;
     }
     return (<div className="activity-event row">
       <div className="event-inner">
-
         <img className="userpic" src={this.props.model.user.userpic} />
-
-        <abbr title={this.props.model.created_on} className="timeago">{this.props.model.created_on} </abbr>
-
+        <abbr className="timeago" title={this.props.model.created_on}>{this.props.model.created_on} </abbr>
         <div dangerouslySetInnerHTML={{__html: this.props.model.contentRendered}} />
-
-
-
       </div>
     </div>);
+  }
+}
 
-  },
-});
+export default CommentItem;

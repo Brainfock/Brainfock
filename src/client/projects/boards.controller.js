@@ -21,25 +21,33 @@ import IssueView from './components/Issue';
  */
 export default class ProjectIssues extends Component {
 
+  static propTypes = {
+    actions: React.PropTypes.object,
+    boards: React.PropTypes.object,
+    children: React.PropTypes.object,
+    location: React.PropTypes.object,
+    msg: React.PropTypes.object,
+    params: React.PropTypes.object,
+  }
+
   resolveGroupKey() {
     return 'board';
   }
 
   render() {
-    const {board, meta, listFilters, newTopic, formFields} = this.props.boards;
-    const msg = this.props.msg.topics;
+    const {board} = this.props.boards;
     const {children, ...passProps} = this.props;
     const {location: {pathname}} = this.props;
     return (
       <MasterDetailsListView
         containerTopic={board}
         detailsComponent={IssueView}
+        disableDetails
         emptyListFallback={ProjectsEmpty}
+        groupBy={'parent'}
         groupKey={this.resolveGroupKey()}
         listViewItem={ListViewItem}
         pathname={pathname}
-        groupBy={'parent'}
-        disableDetails
         {...passProps}
         />
     );

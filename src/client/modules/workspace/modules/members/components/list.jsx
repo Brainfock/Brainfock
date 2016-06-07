@@ -7,11 +7,20 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react'
-import {Link} from 'react-router'
+import React from 'react';
 
 class ViewUser extends React.Component {
 
+  static propTypes = {
+    actions: React.PropTypes.object,
+    children: React.PropTypes.object,
+    msg: React.PropTypes.object,
+    params: React.PropTypes.object,
+  }
+
+  /**
+   * @todo implement
+   */
   render() {
 
     const {children, ...props} = this.props;
@@ -24,9 +33,9 @@ class ViewUser extends React.Component {
       <div>
         <h4>@todo: list all users here</h4>
       </div>
-    )
+    );
   }
 
 }
 
-export default ViewUser
+export default ViewUser;

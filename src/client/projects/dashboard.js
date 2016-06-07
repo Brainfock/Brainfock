@@ -8,14 +8,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import mui, {Styles, Avatar, IconButton} from 'material-ui';
+import {Styles, Avatar} from 'material-ui';
 const Colors = Styles.Colors;
 
 export default class Dashboard extends React.Component {
 
-  render()
-  {
-    const {boards:{list, board: {data}, group}, topic_actions, msg, history} = this.props;
+  static propTypes = {
+    actions: React.PropTypes.object,
+    boards: React.PropTypes.object,
+    children: React.PropTypes.object,
+    msg: React.PropTypes.object,
+    params: React.PropTypes.object,
+  }
+
+  render() {
+    const {boards:{board: {data}}} = this.props;
     const color = Colors[data.logoBackground];
     const icon = 'fa ' + data.logoIcon;
 
@@ -25,7 +32,7 @@ export default class Dashboard extends React.Component {
           <div className="container-fluid">
             <div className="row">
               <h1>
-                <Avatar icon={<span className={icon}/>} backgroundColor={color} /> {data.summary}
+                <Avatar backgroundColor={color} icon={<span className={icon}/>}  /> {data.summary}
               </h1>
               <h3>{data.text}</h3>
             </div>

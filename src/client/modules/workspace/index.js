@@ -1,4 +1,4 @@
-module.exports = {
+module.exports = { // eslint-disable-line no-undef
   path: '/workspaces/:namespace',
 
   //getIndexRoute(location, cb) {

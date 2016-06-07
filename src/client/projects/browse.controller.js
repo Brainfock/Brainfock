@@ -21,6 +21,16 @@ import IssueView from './components/Issue';
  */
 export default class ProjectIssues extends Component {
 
+  static propTypes = {
+    boards: React.PropTypes.object,
+    browseBoardNum: React.PropTypes.number,
+    children: React.PropTypes.object,
+    location: React.PropTypes.object,
+    msg: React.PropTypes.object,
+    params: React.PropTypes.object,
+    topic_actions: React.PropTypes.object, // eslint-disable-line camelcase
+  }
+
   componentDidMount() {
     // fetch data initially in scenario 2 from above
     this.fetchBoardInfo();
@@ -72,20 +82,20 @@ export default class ProjectIssues extends Component {
 
   // load info about what group is available in :sub_board_num
   render() {
-    const {board, meta, listFilters, newTopic, formFields} = this.props.boards;
-    const msg = this.props.msg.topics;
+    const {board} = this.props.boards;
+    //const msg = this.props.msg.topics;
     const {children, ...passProps} = this.props;
     const {location: {pathname}} = this.props;
     return (
       <MasterDetailsListView
+        browseBoardNum={this.props.params.sub_board_num}
         containerTopic={board}
         detailsComponent={IssueView}
         emptyListFallback={ProjectsEmpty}
+        groupBy={this.props.location.query.groupBy}
         groupKey={this.resolveGroupKey()}
         listViewItem={ListViewItem}
         pathname={pathname}
-        browseBoardNum={this.props.params.sub_board_num}
-        groupBy={this.props.location.query.groupBy}
         {...passProps}
         />
     );

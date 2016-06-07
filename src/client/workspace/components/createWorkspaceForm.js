@@ -44,6 +44,7 @@ const asyncValidate = (values/*, dispatch */) => {
 class AsynchronousBlurValidationForm extends Component {
   static propTypes = {
     asyncValidating: PropTypes.bool.isRequired,
+    error: PropTypes.string,
     fields: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     resetForm: PropTypes.func.isRequired
@@ -52,7 +53,7 @@ class AsynchronousBlurValidationForm extends Component {
     muiTheme: PropTypes.object
   };
   render() {
-    const {asyncValidating, fields: {namespace, name}, resetForm, handleSubmit, error} = this.props;
+    const {asyncValidating, fields: {namespace, name}, handleSubmit, error} = this.props;
     return (
       <form onSubmit={handleSubmit}>
         <div

@@ -2,6 +2,9 @@ import React from 'react';
 
 class ViewUser extends React.Component {
 
+  /**
+   * @todo implement
+   */
   render() {
     return (
       <div>

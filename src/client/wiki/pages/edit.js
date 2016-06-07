@@ -1,8 +1,17 @@
+/**
+ * Brainfock, <http://www.brainfock.org>
+ *
+ * Copyright (C) 2015-present Sergii Gamaiunov <hello@webkadabra.com>
+ * All rights reserved.
+ *
+ * This source code is licensed under the GPL-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import React, {PropTypes} from 'react';
 import Component from 'react-pure-render/component';
 import {HotKeys} from 'react-hotkeys';
 import {FormattedRelative, FormattedDate} from 'react-intl';
-import Router, {Link, Navigation} from 'react-router';
+import {Link} from 'react-router';
 import {TextField, RaisedButton} from 'material-ui';
 
 // define hotkeys
@@ -83,18 +92,25 @@ export default class Page extends Component {
                 <h3>{page.pageUid} - edit</h3>
                 <HotKeys handlers={handlers}>
                 <TextField
-                    ref="contentInput"
-                  //hintText="Hint Text (MultiLine)"
                     defaultValue={page.content}
-                    value={page.content}
-                    name="content"
                     multiLine
-                    style={{width:'99%'}}
+                    name="content"
                     onChange={this.props.actions.setWikiViewPageField}
+                    ref="contentInput"
+                    style={{width:'99%'}}
+                    value={page.content}
                 />
-                <RaisedButton label="Save" primary  disabled={disabled}  onClick={this.save.bind(this)}  />
-              &nbsp;<RaisedButton label="Cancel" primary={false}  disabled={disabled} onClick={this.cancelAndReturn.bind(this)} />
-              &nbsp;<RaisedButton label="Return" primary={false}  disabled={disabled} onClick={this.cancelAndReturn.bind(this)} />
+                <RaisedButton
+                  disabled={disabled}
+                  label="Save"
+                  onClick={this.save.bind(this)}
+                  primary />
+              &nbsp;<RaisedButton
+                  disabled={disabled}
+                  label="Cancel"
+                  onClick={this.cancelAndReturn.bind(this)}
+                  primary={false} />
+              &nbsp;<RaisedButton disabled={disabled} label="Return" onClick={this.cancelAndReturn.bind(this)} primary={false} />
                   <span style={{textColor:(this.state.hasBeenSaved ? '#8C8C8C' : '#C1C1C1'), paddingLeft:15}}>
                     {this.state.hasBeenSaved && page.clientSavedOn && <FormattedRelative elapsed={this.state.elapsed} value={page.clientSavedOn} />}
                     {!this.state.hasBeenSaved && page.updatedOn &&
@@ -107,7 +123,7 @@ export default class Page extends Component {
             </div>
           </div>
           <div className="footer">
-            <Link to="wiki" params={{uid: 'Special:Index'}}>This Wiki Index</Link>
+            <Link params={{uid: 'Special:Index'}} to="wiki">This Wiki Index</Link>
           </div>
         </div>
       </HotKeys>
