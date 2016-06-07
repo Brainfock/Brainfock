@@ -26,8 +26,8 @@ import {
   DropDownMenu,
   Styles,
   Avatar,
-  RaisedButton,
-  TextField
+  RaisedButton
+  // TextField
 } from 'material-ui';
 
 import './app.styl';
@@ -93,7 +93,7 @@ export class App extends Component {
 
         if (!this.ioSubscribed) {
           this.ioSubscribed = true;
-          this.io.on('new-comment', function (data) {
+          this.io.on('new-comment', function(data) {
             this.props.actions.catchComment(data.data);
           }.bind(this));
         }
@@ -140,7 +140,7 @@ export class App extends Component {
 
     let sectionTitle = this.props.app.activeSectionLabel || 'Brainfock';
     if (this.props.app.activeSectionLabel && this.props.app.activeSubSectionLabel) {
-      sectionTitle = `${this.props.app.activeSectionLabel} » ${this.props.app.activeSubSectionLabel}`
+      sectionTitle = `${this.props.app.activeSectionLabel} » ${this.props.app.activeSubSectionLabel}`;
     }
     if (viewer && viewer.username) {
       // TODO: use avatar instead when available
@@ -204,14 +204,6 @@ export class App extends Component {
         </div>
       );
     }
-    let menuItems = [
-      { payload: '1', text: 'Never' },
-      { payload: '2', text: 'Every Night' },
-      { payload: '3', text: 'Weeknights' },
-      { payload: '4', text: 'Weekends' },
-      { payload: '5', text: 'Weekly' },
-    ];
-
     /*title={
      <div>
      <h3 style={{
@@ -220,7 +212,13 @@ export class App extends Component {
      lineHeight:`${this.state.muiTheme.appBar.height}px`,
      }}>
      Brainfock
-     <DropDownMenu menuItems={menuItems} />
+     <DropDownMenu menuItems={[
+     {payload: '1', text: 'Never'},
+     {payload: '2', text: 'Every Night'},
+     {payload: '3', text: 'Weeknights'},
+     {payload: '4', text: 'Weekends'},
+     {payload: '5', text: 'Weekly'},
+     ]} />
 
      <TextField style={{position:'absolute',left:'37%'}}/>
      </h3>
@@ -236,14 +234,12 @@ export class App extends Component {
           onLeftIconButtonTouchTap={this._onLeftIconButtonTouchTap.bind(this)}
           pathname={pathname}
           style={{borderBottom:'1px solid #E0E0E0'}}
+          /*title={<DropDownMenu menuItems={menuItems} />}
           title={this.props.workspace.active.data.name}
-          title={this.props.app.activeSectionLabel || 'Brainfock'}
+          title={this.props.app.activeSectionLabel || 'Brainfock'}*/
           title={sectionTitle}
-          __title="Brainfock"
-          _title={<DropDownMenu menuItems={menuItems} />}
           zDepth={0}
-          >
-        </AppBar>
+          />
         <AppSideNav ref="leftNav" {...this.props} />
 
         <div style={{
@@ -264,4 +260,6 @@ export class App extends Component {
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
-export default class extends App{};
+class AppExp extends App {}
+
+export default AppExp;

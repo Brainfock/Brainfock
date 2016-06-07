@@ -1,12 +1,12 @@
-var loopback = require('loopback');
-var boot = require('loopback-boot');
-
-var app = module.exports = loopback();
+const loopback = require('loopback');
+const boot = require('loopback-boot');
+const app = module.exports = loopback();
+let server;
 console.log('Trying to boot server...');
 
 app.start = function() {
   // start the web server
-  var server = app.listen(function() {
+  server = app.listen(function() {
     app.emit('started', server);
     console.log('Web server listening at: %s', app.get('url'));
   });
@@ -21,12 +21,12 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use(loopback.cookieParser("SECRET"));
+app.use(loopback.cookieParser('SECRET'));
 
-var bodyParser= require('body-parser');
+let bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 
 //s Bootstrap the application, configure models, datasources and middleware.
 // Sub-apps like REST API are mounted via boot scripts.

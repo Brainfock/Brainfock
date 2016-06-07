@@ -10,7 +10,6 @@
 import Component from 'react-pure-render/component';
 import React from 'react';
 import Todo from './board.topic.react';
-//import Todo from './todo.react';
 
 export default class List extends Component {
 
@@ -30,7 +29,12 @@ export default class List extends Component {
     return (
       <ol className="todos">
         {list.map(todo =>
-            <Todo actions={actions} key={todo.id} todo={todo} parent={this.props.parentBoard} />
+            <Todo
+              actions={actions}
+              key={todo.id}
+              parent={this.props.parentBoard}
+              todo={todo}
+              />
         )}
       </ol>
     );

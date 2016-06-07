@@ -1,10 +1,8 @@
 /* eslint-disable no-undef, no-console */
 import bg from 'gulp-bg';
 import eslint from 'gulp-eslint';
-import fs from 'fs';
 import gulp from 'gulp';
 import mochaRunCreator from './test/mochaRunCreator';
-import os from 'os';
 import path from 'path';
 import runSequence from 'run-sequence';
 import shell from 'gulp-shell';

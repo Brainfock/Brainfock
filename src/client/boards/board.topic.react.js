@@ -18,53 +18,46 @@ export default class Todo extends Component {
   }
 
   render() {
-    const {actions, todo} = this.props;
-
-    return <mui.ListItem
-      primaryText={todo.summary}
-      secondaryText={todo.text}
-      onClick={this._onClick.bind(this)}
-      rightIcon={
-          <div className="stats">
-            <span className="unread prop">{todo.countActiveTopics}</span>
-            topics
-          </div>
-        }
-      > {this.confirmDialog()}
-    </mui.ListItem>
+    const {todo} = this.props;
 
     return (
-
-
-      <li className="todo">
-        <span className="editable view">{todo.summary}</span>
-        <span className="button" onClick={() => actions.deleteTodo(todo)}>x</span>
-      </li>
+      <mui.ListItem
+        onClick={this._onClick.bind(this)}
+        primaryText={todo.summary}
+        rightIcon={
+            <div className="stats">
+              <span className="unread prop">{todo.countActiveTopics}</span>
+              topics
+            </div>
+          }
+        secondaryText={todo.text}
+        > {this.confirmDialog()}
+      </mui.ListItem>
     );
   }
 
   confirmDialog() {
 
-    var dialogActions = [
+    const dialogActions = [
       <mui.FlatButton
         label='BTN_CANCEL'
-        secondary={true}
-        onTouchTap={this._onDialogCancel}
         onClick={this._onDialogCancel}
+        onTouchTap={this._onDialogCancel}
         ref="BTN_CANCEL"
+        secondary
         />,
-      { text:'BTN_DELETE', onClick: this.delete }
+      {text:'BTN_DELETE', onClick: this.delete}
     ];
 
-    var Dialog = <mui.Dialog title='projects_deleteDialog_TITLE' ref="confirmDialog" actions={dialogActions}>
-      <p>Are you sure you want to delete this project? </p>
-    </mui.Dialog>
-
-    return Dialog;
+    return (
+      <mui.Dialog actions={dialogActions} ref="confirmDialog" title='projects_deleteDialog_TITLE'>
+        <p>Are you sure you want to delete this project? </p>
+      </mui.Dialog>
+    );
   }
 
   _onClick() {
-    this.context.router.transitionTo('board_topic',{
+    this.context.router.transitionTo('board_topic', {
       'board_id': this.props.parent.id,
       'id': this.props.todo.id,
     });

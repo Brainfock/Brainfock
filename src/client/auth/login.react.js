@@ -43,13 +43,15 @@ export default class Login extends Component {
 
     const {actions, auth: {form}, msg: {auth: {form: msg}}} = this.props;
 
+    let ver = VERSION;  // eslint-disable-line no-undef
+
     return (
       <div className="login" style={{paddingTop:20}}>
         <Grid>
           <Row>
             <Col sm={6} smOffset={3} xs={6} xsOffset={2}>
               <div className="headline">
-                <h1 className="brand" title={`Powered by Brainfock ${VERSION}`}>Brainfock</h1>
+                <h1 className="brand" title={`Powered by Brainfock ${ver}`}>Brainfock</h1>
                 <h2>{msg.legend}</h2>
                 </div>
               <Paper>
@@ -58,25 +60,25 @@ export default class Login extends Component {
                     <fieldset disabled={form.disabled}>
                       <mui.TextField
                         autoFocus
-                        hintText={msg.placeholder.email}
                         fullWidth
+                        hintText={msg.placeholder.email}
                         name="email"
                         onChange={actions.setFormField}
                         value={form.fields.email}/>
                       <br />
                       <mui.TextField
+                        fullWidth
                         hintText={msg.placeholder.password}
                         name="password"
-                        fullWidth
                         onChange={actions.setFormField}
                         type="password"
                         value={form.fields.password}/>
                       <br />
                       <mui.RaisedButton
                         disabled={form.disabled}
+                        fullWidth
                         label={msg.button.login}
                         primary
-                        fullWidth
                         type="submit"
                         />
                       {form.error &&
