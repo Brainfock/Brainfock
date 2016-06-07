@@ -17,16 +17,19 @@ import DocumentTitle from 'react-document-title';
 import Loader from '../../components/Loader';
 import ListActions from '../../components/UIListActions';
 import Form from '../../topic/components/create-topic-form';
-
 import ListView from '../../boards/boards.react';
-import ListViewItem from './issues-list-item';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import Filters from '../../components/UISimpleFilters';
 
 export default class ProjectIssues extends Component {
 
   static propTypes = {
+    actions: React.PropTypes.object,
     boards: React.PropTypes.object.isRequired,
+    children: React.PropTypes.object,
+    containerTopic: React.PropTypes.object,
+    disableDetails: React.PropTypes.bool,
+    emptyListFallback: React.PropTypes.element,
     groupKey: React.PropTypes.string.isRequired,
     history: React.PropTypes.object.isRequired,
     listViewItem: React.PropTypes.object.isRequired,
@@ -34,6 +37,7 @@ export default class ProjectIssues extends Component {
     msg: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired,
     topicActions: React.PropTypes.object.isRequired,
+    workspace: React.PropTypes.object,
   }
 
   constructor(props, props2) {
@@ -124,14 +128,14 @@ export default class ProjectIssues extends Component {
     const addItemForm = (
       <Form
         actions={this.props.actions}
-        topicActions={this.props.topicActions}
-        workspace={this.props.workspace}
         containerStore={this.props.containerTopic}
         formFields={formFields}
         newTopic={newTopic}
         params={this.props.params}
         ref="formView"
+        topicActions={this.props.topicActions}
         topicGroup={this.props.groupKey}
+        workspace={this.props.workspace}
         />
     );
 
@@ -158,7 +162,7 @@ export default class ProjectIssues extends Component {
             target: e.target
           })}
           style={{
-            display: this.props.disableDetails == true ? 'none' : '',
+            display: this.props.disableDetails === true ? 'none' : '',
             height:38,
             padding:9,
             width:38,
@@ -275,10 +279,10 @@ export default class ProjectIssues extends Component {
 
     return (
       <ListView
-        actions={this.props.topicActions}
-        group={this.props.boards.group}
         // whether list should follow link when list item is clicked or just load u details
+        actions={this.props.topicActions}
         followItemOnClick={!this.state.showDetails || !this.state.disableDetails}
+        group={this.props.boards.group}
         history={this.props.history}
         itemComponent={this.props.listViewItem}
         list={this.props.boards.list}

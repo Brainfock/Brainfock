@@ -1,11 +1,8 @@
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
-import Router from 'react-router';
 
-var AppContentCanvas = require('../../components/layout/AppContentCanvas');
-var ListActions =  require('../../components/UIListActions');
-let ListComponent = require('../boards.react');
-
+import AppContentCanvas from '../../components/layout/AppContentCanvas';
+import ListComponent from '../boards.react';
 /**
  * List all topics of group 'project' - all data is loaded from server, client-side filtering: gather all needed files
  * (actions, stores) and setup List/Form/Filter components
@@ -17,11 +14,16 @@ let ListComponent = require('../boards.react');
  * @todo: pull from server (by group key [projects]: routeName, formSettings, listSettings, ListColumns
  */
 export default class Boards extends Component {
-
   static propTypes = {
-   // topicType: PropTypes.string.isRequired,
+    board: PropTypes.object,
     group: PropTypes.object.isRequired,
-    params: PropTypes.object.isRequired,
+    history: PropTypes.object,
+    list: PropTypes.any,
+    meta: PropTypes.object,
+    msg: PropTypes.object,
+    params: PropTypes.object,
+    topicActions: PropTypes.object,
+   // topicType: PropTypes.string.isRequired,
   };
 
   render() {
@@ -30,7 +32,7 @@ export default class Boards extends Component {
       {!this.props.group && <h4>Loading...</h4>}
     </div>);
 
-    if(this.props.meta.loading == true) {
+    if (this.props.meta.loading === true) {
       return <h3>Loading...</h3>;
     }
 
@@ -39,12 +41,12 @@ export default class Boards extends Component {
         <div className="col-md-7 col-md-offset-2">
           { /*<h5 style={{textTransform:'uppercase'}}>Categories</h5> */ }
           <ListComponent
-            list={this.props.list}
             actions={this.props.topicActions}
-            msg={this.props.msg.todos}
-            history={this.props.history}
-            group={this.props.group}
             board={this.props.board}
+            group={this.props.group}
+            history={this.props.history}
+            list={this.props.list}
+            msg={this.props.msg.todos}
             params={this.props.params}
             />
         </div>

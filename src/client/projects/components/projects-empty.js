@@ -11,7 +11,6 @@ import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import {RaisedButton, Paper} from 'material-ui';
 
-
 export default class ProjectsEmpty extends Component {
 
   static propTypes = {
@@ -33,9 +32,6 @@ export default class ProjectsEmpty extends Component {
    * @returns {XML}
    */
   render() {
-
-    const {newTopic, formFields} = this.props.boards;
-
     const formContent = React.cloneElement(this.props.form, {ref:'formView'});
 
     let formStyles = {

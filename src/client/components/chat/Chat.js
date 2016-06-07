@@ -1,14 +1,22 @@
+/**
+ * Brainfock, <http://www.brainfock.org>
+ *
+ * Copyright (C) 2015-present Sergii Gamaiunov <hello@webkadabra.com>
+ * All rights reserved.
+ *
+ * This source code is licensed under the GPL-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
-import {Link} from 'react-router';
-import {TextField, ListItem, List, LeftNav, Avatar, IconButton, MenuItem, RaisedButton, FloatingActionButton} from 'material-ui';
+import {TextField, ListItem, List, LeftNav, Avatar,  MenuItem,  FloatingActionButton} from 'material-ui';
 
 export default class ChatWidget extends Component {
 
   static propTypes = {
-    //msg: PropTypes.object.isRequired,
-    //pathname: PropTypes.string.isRequired,
-    //viewer: PropTypes.object
+    msg: PropTypes.object,
+    pathname: PropTypes.string,
+    viewer: PropTypes.object
   }
 
   constructor(props) {
@@ -23,7 +31,7 @@ export default class ChatWidget extends Component {
   }
 
   renderUsersList() {
-    return <h1>yo</h1>;
+    return <h4>[in development]</h4>;
   }
   /*
    <FloatingActionButton
@@ -37,8 +45,6 @@ export default class ChatWidget extends Component {
    </FloatingActionButton>
    */
   render() {
-    const {msg, viewer} = this.props;
-    const sidebarContent = this.renderUsersList();
     return (
       <div>
         <FloatingActionButton
@@ -54,19 +60,25 @@ export default class ChatWidget extends Component {
           }}
           />
 
-        <LeftNav ref="sideBar" openRight docked={false} style={{
-          position: 'relative',
-        }}>
+        <LeftNav
+          docked={false}
+          openRight
+          ref="sideBar"
+          style={{
+            position: 'relative',
+          }} >
           <MenuItem index={0}>Speak up!</MenuItem>
           <MenuItem index={1}><a href="/me/chatConfig">Settings</a></MenuItem>
 
           <List subheader="Previous chats">
             <ListItem
+              leftAvatar={<Avatar src="https://randomuser.me/api/portraits/med/women/94.jpg" />}
               primaryText="Annie Hoffman"
-              leftAvatar={<Avatar src="https://randomuser.me/api/portraits/med/women/94.jpg" />} />
+               />
             <ListItem
+              leftAvatar={<Avatar src="https://randomuser.me/api/portraits/med/women/20.jpg" />}
               primaryText="Felecia Lambert"
-              leftAvatar={<Avatar src="https://randomuser.me/api/portraits/med/women/20.jpg" />} />
+              />
           </List>
           <div style={{
             position: 'absolute',
@@ -74,17 +86,10 @@ export default class ChatWidget extends Component {
             left:10,
             right: '20px'
           }}>
-            <TextField
-              placeholder='Look for anything (TODO)'
-
-              />
-
-
-        </div>
+            <TextField placeholder='Look for anything (TODO)' />
+          </div>
         </LeftNav>
       </div>
-
     );
   }
-
 }

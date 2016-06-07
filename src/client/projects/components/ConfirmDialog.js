@@ -10,15 +10,18 @@
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
-import {RaisedButton, Paper, FlatButton, Dialog} from 'material-ui';
+import {FlatButton, Dialog} from 'material-ui';
 
 export default class ConfirmDialog extends Component {
 
   static propTypes = {
-    operations: PropTypes.array.isRequired,
-    onSelectDelete: PropTypes.func.isRequired,
     activeStageId: PropTypes.any,
-
+    deleteAction: PropTypes.function,
+    onDelete: PropTypes.function,
+    onSelectDelete: PropTypes.func.isRequired,
+    operations: PropTypes.array.isRequired,
+    show: PropTypes.bool,
+    topic: PropTypes.object,
   };
 
   render() {
@@ -58,9 +61,9 @@ export default class ConfirmDialog extends Component {
     return (
       <Dialog
         actions={dialogActions}
-        ref='deletePrompt'
-        openImmediately={this.props.show}
         onDismiss={this.props.onDismiss}
+        openImmediately={this.props.show}
+        ref='deletePrompt'
         title='Topic_deleteDialog_TITLE'
         >
         {this.props.topic.meta.error && <div className="alert alert-warning">{this.props.topic.meta.error}</div>}

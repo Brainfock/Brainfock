@@ -9,21 +9,24 @@
  */
 import Component from 'react-pure-render/component';
 import DocumentTitle from 'react-document-title';
-var React = require('react'),
-  Router = require('react-router'),
-  {Link, Navigation} = Router,
-  mui = require('material-ui'),
-  Menu = mui.Menu;
-
-import fetch from '../../../common/components/fetch';
-
+import React from 'react';
+import {Link} from 'react-router';
+import mui from 'material-ui';
 import Loader from '../../components/Loader';
-
-import {fetchContextPage} from '../../../common/wiki/actions';
+//import fetch from '../../../common/components/fetch';
+//import {fetchContextPage} from '../../../common/wiki/actions';
 
 //@fetch(fetchContextPage)
 class Page extends Component {
-//this.props.params.namespace}/${this.props.params.board_id
+  static propTypes = {
+    actions: React.PropTypes.object,
+    boards: React.PropTypes.object,
+    history: React.PropTypes.object,
+    page: React.PropTypes.object,
+    params: React.PropTypes.object,
+    wiki: React.PropTypes.object,
+  }
+
   componentWillMount(props)  {
     if (this.props.params.uid && this.props.boards.board.data.entityId
       && (!this.props.wiki.viewPage.pageUid || this.props.wiki.viewPage.pageUid !== this.props.params.uid
@@ -33,7 +36,7 @@ class Page extends Component {
   }
 
   componentWillReceiveProps(newProps, b)  {
-    if(newProps.params.uid && (this.props.params !== newProps.params)) {
+    if (newProps.params.uid && (this.props.params !== newProps.params)) {
       this.props.actions.findContextPage(this.props.boards.board.data.entityId, newProps.params.uid);
     }
   }
@@ -43,17 +46,16 @@ class Page extends Component {
    * @param a
    */
   handleClick(a) {
-    if(a.target.nodeName === 'A' && a.target.className.indexOf('WkikLink') == 0) {
+    if (a.target.nodeName === 'A' && a.target.className.indexOf('WkikLink') === 0) {
       a.preventDefault();
       this.props.history.pushState(null, a.target.getAttribute('href'));
     }
   }
 
-  render()
-  {
+  render() {
     const page = this.props.page || this.props.wiki.viewPage;
 
-    if(!this.props.boards.board.data.entityId || page.loading) {
+    if (!this.props.boards.board.data.entityId || page.loading) {
       return <Loader />;
     }
 
@@ -66,7 +68,7 @@ class Page extends Component {
     //  </div>;
     //}
 
-    if(page) {
+    if (page) {
       return (
         <DocumentTitle title={page.pageUid + ' — Wiki'}>
           <div className="wiki-wrapper">
@@ -75,10 +77,10 @@ class Page extends Component {
                 <div className="row">
                   <h3>{page.pageUid }
                     <div className="pull-right">
-                      <mui.RaisedButton label="Edit" primary  onClick={this.gotoEdit.bind(this)} />
+                      <mui.RaisedButton label="Edit" onClick={this.gotoEdit.bind(this)}  primary />
                     </div>
                   </h3>
-                  <div onClick={this.handleClick.bind(this)} dangerouslySetInnerHTML={{__html: page.contentRendered}} />
+                  <div  dangerouslySetInnerHTML={{__html: page.contentRendered}} onClick={this.handleClick.bind(this)} />
                 </div>
               </div>
             </div>
@@ -91,8 +93,7 @@ class Page extends Component {
       );
 
 
-    }
-    else {
+    } else {
       return (<div>
         Empty!
       </div>);
@@ -100,9 +101,9 @@ class Page extends Component {
   }
 
   gotoEdit() {
-    console.log('>>>>>>', this.props.params);
     this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/wiki/${this.props.wiki.viewPage.pageUid}/edit`);
   }
-};
+}
 
-module.exports = Page;
+export default Page;
+

@@ -7,21 +7,20 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var Loader = require('../Loader');
-
-let {Menu, Mixins, Styles} = require('material-ui');
-
+import React from 'react';
+import {Menu, Mixins, Styles} from 'material-ui';
 let {Spacing, Colors} = Styles;
 let {StyleResizable, StylePropable} = Mixins;
-
-import * as mui from 'material-ui';
-//const Events = mui.Utils.Events;
-
 /**
  * Page With Navigation, based on material-ui's PageWithNav
  */
-var PageWithNav = React.createClass({
+let PageWithNav = React.createClass({
+
+  propTypes: {
+    children: React.PropTypes.object,
+    history: React.PropTypes.object,
+    menuItems: React.PropTypes.array,
+  },
 
   mixins: [StyleResizable, StylePropable],
 
@@ -95,22 +94,21 @@ var PageWithNav = React.createClass({
     return styles;
   },
 
-  _getSelectedIndex: function()
-  {
-    var currentItem;
+  _getSelectedIndex() {
+    let currentItem;
     let menuItems = this.props.menuItems;
-    for (var i = menuItems.length - 1; i >= 0; i--) {
+    for (let i = menuItems.length - 1; i >= 0; i--) {
       currentItem = menuItems[i];
       // multiple routes match support:
-      if(currentItem.routes) {
+      if (currentItem.routes) {
         // see if any *one* route is valid
-        for (var i2 = currentItem.routes.length - 1; i2 >= 0; i2--) {
+        for (let i2 = currentItem.routes.length - 1; i2 >= 0; i2--) {
           let _routeName = currentItem.routes[i2];
-          if (this.props.history.isActive(_routeName)) {return i;};
+          if (this.props.history.isActive(_routeName)) {return i;}
         }
       }
       if (currentItem.route && this.props.history.isActive(currentItem.route)) return i;
-    };
+    }
   },
 
   _onMenuItemClick(e, index, payload) {
@@ -127,8 +125,8 @@ var PageWithNav = React.createClass({
           <div style={styles.secondaryNav}>
             <mui.Menu
               menuItems={this.props.menuItems}
-              onItemTap={this._onMenuItemClick}
               multiple
+              onItemTap={this._onMenuItemClick}
               ref="menuItems"
               selectedIndex={this._getSelectedIndex()}
               zDepth={0}
@@ -142,4 +140,5 @@ var PageWithNav = React.createClass({
     );
   }
 });
-module.exports = PageWithNav;
+
+module.exports = PageWithNav; // eslint-disable-line no-undef

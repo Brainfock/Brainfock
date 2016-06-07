@@ -11,16 +11,17 @@ import React from 'react';
 import Select from 'react-select';
 require('isomorphic-fetch');
 
-var RemoteSelectField = React.createClass({
+let RemoteSelectField = React.createClass({
   timer:null,
   displayName: 'RemoteSelectField',
   propTypes: {
+    endpoint:React.PropTypes.string,
+    endpointQueryString:React.PropTypes.string,
+    errorText: React.PropTypes.string,
+    formatCallback: React.PropTypes.callback,
     hint: React.PropTypes.string,
     label: React.PropTypes.string,
-    endpoint:React.PropTypes.string,
     options:React.PropTypes.array,
-    endpointQueryString:React.PropTypes.string,
-    formatCallback: React.PropTypes.callback,
   },
   loadOptions(input, callback) {
 
@@ -45,10 +46,12 @@ var RemoteSelectField = React.createClass({
 
     let formatCallback = this.props.formatCallback
             ? this.props.formatCallback
-            : item => { return {
-              value:(item.value || item.id),
-              label:(item.label || item.summary || item.name),
-            };};
+            : item => {
+              return {
+                value:(item.value || item.id),
+                label:(item.label || item.summary || item.name),
+              };
+            };
     this.timer = setTimeout(function() {
       fetch(endpoint.join('&'), {
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
@@ -107,4 +110,4 @@ var RemoteSelectField = React.createClass({
   }
 });
 
-module.exports = RemoteSelectField;
+module.exports = RemoteSelectField; // eslint-disable-line no-undef

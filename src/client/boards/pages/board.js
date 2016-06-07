@@ -4,21 +4,27 @@ import {IconButton} from 'material-ui';
 
 import ProjectsEmpty from '../components/boards.empty';
 import MasterDetailsListView from '../../projects/components/master-detail.list';
-import ListView from '../../projects/components/plain.list';
-
-const views = {
-  'master.detail': MasterDetailsListView,
-  'list': ListView,
-  'boards.homepage': ListView,
-};
+//import ListView from '../../projects/components/plain.list';
+//const views = {
+//  'master.detail': MasterDetailsListView,
+//  'list': ListView,
+//  'boards.homepage': ListView,
+//};
 
 /**
  * Board view
  *
  * List topics of a board (same as issues of a project)
  */
-module.exports = React.createClass({
-
+module.exports = React.createClass({ // eslint-disable-line no-undef
+  propTypes: {
+    boards:React.PropTypes.object,
+    children:React.PropTypes.object,
+    groupKey:React.PropTypes.string,
+    history:React.PropTypes.object,
+    params:React.PropTypes.object,
+    topicActions:React.PropTypes.object,
+  },
   getDefaultProps() {
     return {
       groupKey: 'board'
@@ -42,12 +48,12 @@ module.exports = React.createClass({
     const {children, groupKey, ...passProps} = this.props;
     const group = this.props.boards.groups.get(groupKey);
 
-    let View;
-    if (views[this.props.boards.group.view]) {
-      View = views[this.props.boards.group.view];
-    } else {
-      View = MasterDetailsListView;
-    }
+    //let View;
+    //if (views[this.props.boards.group.view]) {
+    //  View = views[this.props.boards.group.view];
+    //} else {
+    //  View = MasterDetailsListView;
+    //}
 
     return (
       <div>
@@ -58,13 +64,19 @@ module.exports = React.createClass({
           color: '#fff'
         }}>
           <div className="pull-right">
-            <IconButton iconClassName="fa fa-pencil" tooltip="Settings" iconStyle={{color: '#EFEFEF'}}
-              onClick={()=>{this.props.history.pushState(null, `/board/edit/${this.props.boards.board.id}`);}}/>
+            <IconButton
+              iconClassName="fa fa-pencil"
+              iconStyle={{color: '#EFEFEF'}}
+              onClick={()=>{this.props.history.pushState(null, `/board/edit/${this.props.boards.board.id}`);}}
+              tooltip="Settings"
+              />
           </div>
           {group &&
-          <h4><Link to='/boards'
-                    style={{color: '#EFEFEF', textDecoration:'underline'}}>{group.summary}</Link>
-            > {this.props.boards.board.summary}</h4>}
+          <h4><Link
+            style={{color: '#EFEFEF', textDecoration:'underline'}}
+            to='/boards'
+            >{group.summary}</Link>
+            &gt; {this.props.boards.board.summary}</h4>}
         </div>
 
         <MasterDetailsListView

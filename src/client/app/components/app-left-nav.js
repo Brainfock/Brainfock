@@ -7,14 +7,14 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+/* global VERSION_FULL */
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
-import Router, {Route, Redirect, Link} from 'react-router';
 import mui from 'material-ui';
 
 // TODO: i18n
 // TODO: add ability to reorder & add custom elements
-var menuItems = [
+let menuItems = [
   {
     // matching any of these routes will make this link "active"
     //routes: ['projects','project'],
@@ -44,12 +44,11 @@ var menuItems = [
       marginLeft: '-24px',
       fontSize:'11px'
     }}>
-      <img src="/assets/img/logo_white_bg.png"
-           style={{
-             height:'50px'
-           }}
-           alt={VERSION_FULL}
-           title={VERSION_FULL}
+      <img
+        alt={VERSION_FULL}
+        src="/assets/img/logo_white_bg.png"
+        style={{height:'50px'}}
+        title={VERSION_FULL}
         />
       Powered by {VERSION_FULL}</div>
   },
@@ -138,4 +137,4 @@ export default class AppLeftNav extends Component {
   }
 };
 
-module.exports = AppLeftNav;
+module.exports = AppLeftNav; // eslint-disable-line no-undef

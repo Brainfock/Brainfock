@@ -1,7 +1,15 @@
+/**
+ * Brainfock, <http://www.brainfock.org>
+ *
+ * Copyright (C) 2015-present Sergii Gamaiunov <hello@webkadabra.com>
+ * All rights reserved.
+ *
+ * This source code is licensed under the GPL-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import {RaisedButton, Paper} from 'material-ui';
-
 
 export default class ProjectsEmpty extends Component {
 
@@ -24,9 +32,6 @@ export default class ProjectsEmpty extends Component {
    * @returns {XML}
    */
   render() {
-
-    const {newTopic, formFields} = this.props.boards;
-
     const formContent = React.cloneElement(this.props.form, {ref: 'formView'});
 
     let formStyles = {

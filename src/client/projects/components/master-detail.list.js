@@ -17,7 +17,6 @@ import DocumentTitle from 'react-document-title';
 import Loader from '../../components/Loader';
 import ListActions from '../../components/UIListActions';
 import Form from '../../topic/components/create-topic-form';
-
 import ListView from '../../boards/boards.react';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import Filters from '../../components/UISimpleFilters';
@@ -26,28 +25,28 @@ import FetchActionError from '../../components/FetchActionError';
 export default class ProjectIssues extends Component {
 
   static propTypes = {
+    actions: React.PropTypes.object.isRequired,
     boards: React.PropTypes.object.isRequired,
-
+    browseAll: React.PropTypes.bool,
+    browseBoardNum: React.PropTypes.number,
+    children: React.PropTypes.any,
     // "Context" of this topic; a link to {Topic} by contextTopicId.
     // Must be `null` for root views (e.g. list all projects, boards etc.)
     containerTopic: React.PropTypes.any,
-    // React Component to render in details section
-    detailsComponent: React.PropTypes.element,
-    // disable details panel
-    disableDetails: React.PropTypes.bool,
-    // React Component to render is list is empty
-    emptyListFallback: React.PropTypes.element,
+    detailsComponent: React.PropTypes.element, // React Component to render in details section
+    disableDetails: React.PropTypes.bool, // disable details panel
+    emptyListFallback: React.PropTypes.element, // React Component to render is list is empty
+    groupBy: React.PropTypes.string,
     groupKey: React.PropTypes.string.isRequired,
-    // react-router history
-    history: React.PropTypes.object.isRequired,
+    history: React.PropTypes.object.isRequired, // react-router history
+    io: React.PropTypes.object,
     listViewItem: React.PropTypes.object.isRequired,
     location: React.PropTypes.object.isRequired,
     msg: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired,
-    topicActions: React.PropTypes.object.isRequired,
     pathname: React.PropTypes.any,
-    groupBy: React.PropTypes.string,
-    browseAll: React.PropTypes.bool,
+    topicActions: React.PropTypes.object.isRequired,
+    workspace: React.PropTypes.object,
   };
 
   static contextTypes = {
@@ -100,12 +99,8 @@ export default class ProjectIssues extends Component {
   componentWillUpdate(newProps) {
 
     if (process.env.IS_BROWSER === true) {
-
-      console.log('> will update', this.props, newProps.location)
-      console.log('> will update grp ',  newProps.groupKey, this.props.groupKey)
       if (`${newProps.location.search}` !== `${this.props.location.search}`
-      || (newProps.groupKey && this.props.groupKey  && newProps.groupKey != this.props.groupKey )) {
-
+      || (newProps.groupKey && this.props.groupKey  && newProps.groupKey !== this.props.groupKey)) {
         let query = {};
         if (this.state.searchQuery) {
 
@@ -174,16 +169,16 @@ export default class ProjectIssues extends Component {
 
     const addItemForm = (
       <Form
-        workspace={this.props.workspace}
         actions={this.props.actions}
-        topicActions={this.props.topicActions}
         containerStore={this.props.containerTopic}
         form={this.props.boards.form}
         formData={formData}
         formFields={formFields}
         newTopic={newTopic}
         params={this.props.params}
+        topicActions={this.props.topicActions}
         topicGroup={this.props.groupKey}
+        workspace={this.props.workspace}
         />
     );
 
@@ -389,6 +384,7 @@ export default class ProjectIssues extends Component {
         actions={this.props.topicActions}
         followItemOnClick={!this.state.showDetails || this.state.disableDetails}
         group={this.props.boards.group}
+        groupBy={this.props.groupBy}
         history={this.props.history}
         itemComponent={this.props.listViewItem}
         list={this.props.boards.list}
@@ -397,7 +393,6 @@ export default class ProjectIssues extends Component {
         params={this.props.params}
         topicGroupKey={groupKey}
         viewTopic={this.props.boards.viewTopic}
-        groupBy={this.props.groupBy}
         />
     );
   }
@@ -424,15 +419,17 @@ export default class ProjectIssues extends Component {
 
     if (this.props.detailsComponent) {
       const Details = this.props.detailsComponent;
-      return <Details
-        actions={this.props.actions}
-        io={this.props.io}
-        onDeleted={()=>{
-          // TODO: close details panel?
-        }.bind(this)}
-        topic={this.props.boards.viewTopic}
-        topicActions={this.props.topicActions}
+      return (
+        <Details
+          actions={this.props.actions}
+          io={this.props.io}
+          onDeleted={()=>{
+            // TODO: close details panel?
+          }.bind(this)}
+          topic={this.props.boards.viewTopic}
+          topicActions={this.props.topicActions}
         />
+      );
     } else {
       return (
         <mui.Paper>

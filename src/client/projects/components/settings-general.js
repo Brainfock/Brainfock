@@ -7,14 +7,20 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, {PropTypes} from 'react';
 import mui from 'material-ui';
-import {Tabs, Tab} from 'react-bootstrap';
 
 import TopicPreview from '../../boards/boards.board.react';
 import ConfirmDialog from './ConfirmDialog';
 
 export default class Dashboard extends React.Component {
+  static propTypes = {
+    actions: PropTypes.object,
+    history: PropTypes.object.isRequired,
+    msg: PropTypes.object.isRequired,
+    params: PropTypes.object.isRequired,
+    topic: PropTypes.object.isRequired,
+  };
 
   constructor(props) {
     super(props);
@@ -24,9 +30,8 @@ export default class Dashboard extends React.Component {
   }
 
   render() {
-
     const {msg} = this.props;
-    const isLoading = this.props.topic.meta.isFetching == true; // in some views, loading means "loading form scheme"
+    const isLoading = this.props.topic.meta.isFetching === true; // in some views, loading means "loading form scheme"
 
     return (
       <div>
@@ -43,24 +48,24 @@ export default class Dashboard extends React.Component {
              <span> <span className="fa fa-spin fa-circle-o-notch"></span></span>}
           </div>}
           <mui.TextField
+            errorText={this.props.topic.meta.errors && this.props.topic.meta.errors.get('summary') || ''}
+            floatingLabelText={msg.form.label.summary}
+            hintText={msg.form.hint.summary}
             name="summary"
             onChange={this.onChange.bind(this)}
-            hintText={msg.form.hint.summary}
-            errorText={this.props.topic.meta.errors && this.props.topic.meta.errors.get('summary') || ''}
             value={this.props.topic.data.get('summary')}
-            floatingLabelText={msg.form.label.summary}
             />
 
           <br />
 
           <mui.TextField
+            errorText={this.props.topic.meta.errors && this.props.topic.meta.errors.get('text') || ''}
+            floatingLabelText={msg.form.label.text}
+            hintText={msg.form.hint.text}
+            multiLine
             name="text"
             onChange={this.onChange.bind(this)}
             value={this.props.topic.data.get('text')}
-            hintText={msg.form.hint.text}
-            errorText={this.props.topic.meta.errors && this.props.topic.meta.errors.get('text') || ''}
-            multiLine
-            floatingLabelText={msg.form.label.text}
             />
 
           <br />
@@ -77,20 +82,20 @@ export default class Dashboard extends React.Component {
 
             <div className="col-md-6 col-md-pull-6">
               <mui.TextField
-                name="logoIcon"
-                value={this.props.topic.data.get('logoIcon')}
-                onChange={this.onChange.bind(this)}
-                hintText={msg.form.hint.logoIcon}
                 floatingLabelText={msg.form.label.logoIcon}
+                hintText={msg.form.hint.logoIcon}
+                name="logoIcon"
+                onChange={this.onChange.bind(this)}
+                value={this.props.topic.data.get('logoIcon')}
                 />
               <p>Available icon names listed at:<br/> https://fortawesome.github.io/Font-Awesome/icons/</p>
 
               <mui.TextField
-                name="logoBackground"
-                value={this.props.topic.data.get('logoBackground')}
-                onChange={this.onChange.bind(this)}
-                hintText={msg.form.hint.logoBackground}
                 floatingLabelText={msg.form.label.logoBackground}
+                hintText={msg.form.hint.logoBackground}
+                name="logoBackground"
+                onChange={this.onChange.bind(this)}
+                value={this.props.topic.data.get('logoBackground')}
                 />
               <p>Pick Material Design color code from list:<br/> http://material-ui.com/#/customization/colors</p>
             </div>
@@ -99,6 +104,8 @@ export default class Dashboard extends React.Component {
           <h4>{msg.form.section.access}:</h4>
 
           <mui.Checkbox
+            checked={(this.props.topic.data.get('accessPrivateYn') === 1)}
+            label={msg.form.label.accessPrivate}
             name="accessPrivateYn"
             onCheck={(function(event, isChecked) {
               this.onChange({
@@ -109,29 +116,29 @@ export default class Dashboard extends React.Component {
               });
             }).bind(this)}
             value="1"
-            label={msg.form.label.accessPrivate}
-            checked={(this.props.topic.data.get('accessPrivateYn') === 1)}
             />
 
-          <mui.RaisedButton label={msg.form.button.save} primary onClick={this.trySave.bind(this)}
-                            disabled={isLoading} />
-
+          <mui.RaisedButton
+            disabled={isLoading}
+            label={msg.form.button.save}
+            onClick={this.trySave.bind(this)}
+            primary
+            />
           <hr />
           <h4>{msg.form.section.danger}:</h4>
-
           <ConfirmDialog
-            ref="confirmDialog"
-            requireString="path/to/project"
-            onDelete={this.onDelete.bind(this)}
-            topic={this.props.topic}
             deleteAction={this.props.actions.deleteTopic}
-            show={this.state.showDeletePrompt === true}
+            onDelete={this.onDelete.bind(this)}
             onDismiss={()=>{
               this.setState({showDeletePrompt: false});
             }}
+            ref="confirmDialog"
+            requireString="path/to/project"
+            show={this.state.showDeletePrompt === true}
+            topic={this.props.topic}
             />
 
-          <mui.RaisedButton label={msg.form.deleteItem.button} primary onClick={()=>{this.setState({showDeletePrompt: true});}} backgroundColor='#D64141' />
+          <mui.RaisedButton backgroundColor='#D64141'  label={msg.form.deleteItem.button} onClick={()=>{this.setState({showDeletePrompt: true});}} primary />
         </div>
       </div>
     );
@@ -150,7 +157,7 @@ export default class Dashboard extends React.Component {
     const {actions, topic} = this.props;
 
     let data = topic.data.toJS();
-    let put_data = {
+    let putData = {
       summary: data.summary,
       text: data.text,
       typeId: data.typeId,
@@ -159,7 +166,7 @@ export default class Dashboard extends React.Component {
       logoBackground: data.logoBackground,
     };
 
-    actions.save(data.id, put_data)
+    actions.save(data.id, putData)
       .then(({error, payload}) => {
         if (error) {
           //focusInvalidField(this, payload);

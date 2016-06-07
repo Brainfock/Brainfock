@@ -9,7 +9,6 @@
  */
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
-import {Link} from 'react-router';
 import mui, {Styles, Avatar, IconButton} from 'material-ui';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 const Colors = Styles.Colors;
@@ -17,14 +16,17 @@ const Colors = Styles.Colors;
 export default class Todo extends Component {
 
   static propTypes = {
-    group: PropTypes.object,
     actions: PropTypes.object,
+    group: PropTypes.object,
+    history: PropTypes.object,
+    isPreview: PropTypes.bool,
+    location: PropTypes.object,
+    params: PropTypes.object,
     todo: PropTypes.object.isRequired,
-    isPreview: PropTypes.bool
   }
 
   render() {
-    const {actions, todo} = this.props;
+    const {todo} = this.props;
 
     const color = Colors[todo.logoBackground];
     const icon = 'fa ' + todo.logoIcon;
@@ -34,15 +36,9 @@ export default class Todo extends Component {
       privacyIcon = (
         <span>
           <IconButton iconClassName="fa fa-eye-slash"
+                      iconStyle={{height:'16px', fontSize:'19px'}}
+                      style={{marginTop:'-25px', height:'16px'}}
                       tooltip="Private & Invisible"
-                      style={{
-                        marginTop:'-25px',
-                        height:'16px'
-                      }}
-                      iconStyle={{
-                        height:'16px',
-                        fontSize:'19px',
-                      }}
             />
         </span>
       );
@@ -62,7 +58,11 @@ export default class Todo extends Component {
         <Tooltip>Show only items in this workspace</Tooltip>
       );
       rightAvatar = (<div className="">
-          <OverlayTrigger placement="top" overlay={tooltip} id="listTooltip">
+          <OverlayTrigger
+            id="listTooltip"
+            overlay={tooltip}
+            placement="top"
+            >
             <span className='label label-info'
               onClick={(e)=>{
                 e.preventDefault();
@@ -88,37 +88,36 @@ export default class Todo extends Component {
     //}
 
     return (<mui.ListItem
-      primaryText={<div>{todo.summary}{privacyIcon}</div>}
-      secondaryText={todo.text}
+      backgroundColor={color}
+      leftAvatar={<Avatar icon={<span className={icon}/>} />}
       onClick={this._onClick.bind(this)}
+      primaryText={<div>{todo.summary} {privacyIcon}</div>}
       rightAvatar={rightAvatar}
-      leftAvatar={<Avatar icon={<span className={icon}/>} backgroundColor={color} />}
+      secondaryText={todo.text}
       > {this.confirmDialog()}
     </mui.ListItem>);
   }
 
   confirmDialog() {
 
-    var dialogActions = [
+    const dialogActions = [
       <mui.FlatButton
         label='BTN_CANCEL'
-        secondary
-        onTouchTap={this._onDialogCancel}
         onClick={this._onDialogCancel}
+        onTouchTap={this._onDialogCancel}
         ref="BTN_CANCEL"
+        secondary
         />,
       {text:'BTN_DELETE', onClick: this.delete}
     ];
 
-    var Dialog = (<mui.Dialog title='projects_deleteDialog_TITLE' ref="confirmDialog" actions={dialogActions}>
+    return (<mui.Dialog actions={dialogActions} ref="confirmDialog" title='projects_deleteDialog_TITLE'>
       <p>Are you sure you want to delete this project? </p>
     </mui.Dialog>);
-
-    return Dialog;
   }
 
   _onClick() {
-    if(this.props.isPreview === true) {
+    if (this.props.isPreview === true) {
       alert('This is a preview :)');
       return;
     }

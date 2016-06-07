@@ -33,9 +33,6 @@ export default class ProjectsEmpty extends Component {
    * @returns {XML}
    */
   render() {
-
-    const {newTopic, formFields} = this.props.boards;
-
     const formContent = React.cloneElement(this.props.form, {ref:'formView'});
 
     let formStyles = {

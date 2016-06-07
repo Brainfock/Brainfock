@@ -10,7 +10,6 @@
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import mui from 'material-ui';
-
 import {Styles} from 'material-ui';
 const Colors = Styles.Colors;
 
@@ -23,7 +22,7 @@ export default class Todo extends Component {
     params: PropTypes.object.isRequired,
     todo: PropTypes.object.isRequired,
     topicGroupKey: PropTypes.string.isRequired,
-    viewTopic: PropTypes.object
+    viewTopic: PropTypes.object,
   };
 
   static defaultProps = {
@@ -87,7 +86,7 @@ export default class Todo extends Component {
 
     let priorityLabel;
 
-    if(todo.priority) {
+    if (todo.priority) {
       let labelStyle = Object.assign({
         marginRight: todo.priority.value ? 5 : 0,
         fontWeight: 500,
@@ -98,7 +97,7 @@ export default class Todo extends Component {
     }
 
     let typeLabel = '';
-    if(todo.type && todo.type.name) {
+    if (todo.type && todo.type.name) {
       let labelStyle = Object.assign({
         marginRight: 5,
         fontWeight: 500,
@@ -126,7 +125,7 @@ export default class Todo extends Component {
 
               </div>
             }
-          _primaryText={
+          /*_primaryText={
             <div>
               <div className="pull-left" style={{marginRight:5}}>
                 <div className="stats" style={{marginRight:5, width:'100%'}}>
@@ -158,7 +157,7 @@ export default class Todo extends Component {
               {todo.summary}
 
             </div>
-            }
+            }*/
           secondaryText={<span>
           {priorityLabel}
           {typeLabel}

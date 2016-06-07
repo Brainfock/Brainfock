@@ -14,7 +14,16 @@ import ProjectsEmpty from '../boards.empty';
 import ListComponent from '../boards.react';
 import Loader from '../../components/Loader';
 
-module.exports = React.createClass({
+module.exports = React.createClass({ // eslint-disable-line no-undef
+  propTypes: {
+    actions:React.PropTypes.object,
+    boards:React.PropTypes.object,
+    children:React.PropTypes.object,
+    history:React.PropTypes.object,
+    msg:React.PropTypes.object,
+    params:React.PropTypes.object,
+    topicActions:React.PropTypes.object,
+  },
   /**
    * This component's user-friendly name for breadcrumbs
    * @param bcComponent
@@ -26,14 +35,13 @@ module.exports = React.createClass({
   },
 
   componentWillMount() {
-    if(process.env.IS_BROWSER == true) {
+    if (process.env.IS_BROWSER === true) {
       this.props.topicActions.loadTopicGroup('board', {}/*, this.props.parentModel*/);
       this.props.topicActions.find('board', {}/*, this.props.parentModel*/);
     }
   },
 
-  render: function()
-  {
+  render() {
     const {boards:{list, board, group, meta}, topicActions, msg, history} = this.props;
 
     if (!group || !group.groupKey || meta.loading === true) {
@@ -49,17 +57,16 @@ module.exports = React.createClass({
 
     return (
       <List
-        itemComponent={ListComponent}
         board={board}
         group={group}
-        list={list}
-        topicActions={topicActions}
-        msg={msg}
         history={history}
+        itemComponent={ListComponent}
+        list={list}
         meta={this.props.boards.meta}
+        msg={msg}
         params={this.props.params}
+        topicActions={topicActions}
         />
     );
-
-  },
+  }
 });

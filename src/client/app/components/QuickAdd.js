@@ -8,18 +8,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 import Component from 'react-pure-render/component';
-import React, {PropTypes} from 'react';
-import {Link} from 'react-router';
-import {IconMenu, TextField, ListItem, List, LeftNav, Avatar, IconButton, RaisedButton, FloatingActionButton} from 'material-ui';
+import React from 'react';
+import {IconMenu, FloatingActionButton} from 'material-ui';
 import MenuItem from 'material-ui/lib/menus/menu-item';
-import MenuDivider from 'material-ui/lib/menus/menu-divider';
 
 export default class QuickAdd extends Component {
 
   static propTypes = {
-    //msg: PropTypes.object.isRequired,
-    //pathname: PropTypes.string.isRequired,
-    //viewer: PropTypes.object
+    //msg: React.PropTypes.object.isRequired,
+    //pathname: React.PropTypes.string.isRequired,
+    //viewer: React.PropTypes.object
   }
 
   constructor(props) {
@@ -34,13 +32,10 @@ export default class QuickAdd extends Component {
   }
 
   renderUsersList() {
-    return <h1>yo</h1>;
+    return <h4>[in development]</h4>;
   }
 
   render() {
-    const {msg, viewer} = this.props;
-    const sidebarContent = this.renderUsersList();
-
     return (
       <div style={{
         position:'fixed',
@@ -49,17 +44,6 @@ export default class QuickAdd extends Component {
         zIndex:99999999999
       }}>
         <IconMenu
-          style={{
-            position:'relative',
-            bottom: 10,
-            right: 10
-          }}
-          menuStyle={{
-            position:'fixed',
-            bottom: 10,
-            right: 10
-          }}
-          openDirection='top-left'
           iconButtonElement={
             <FloatingActionButton
               iconClassName="fa fa-plus"
@@ -72,16 +56,25 @@ export default class QuickAdd extends Component {
                 right: 10
               }}
               />
-          }>
+          }
+          menuStyle={{
+            position:'fixed',
+            bottom: 10,
+            right: 10
+          }}
+          openDirection='top-left'
+          style={{
+            position:'relative',
+            bottom: 10,
+            right: 10
+          }}
+          >
           <MenuItem primaryText="Opportunity" />
           <MenuItem primaryText="Task" />
           <MenuItem primaryText="Discussion" />
           <MenuItem primaryText="Message" />
         </IconMenu>
-</div>
-
-
+      </div>
     );
   }
-
 }

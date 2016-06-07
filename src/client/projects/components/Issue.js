@@ -9,7 +9,7 @@
  */
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
-import {RaisedButton, Paper, Card, CardHeader, CardText, Avatar, FlatButton, Dialog} from 'material-ui';
+import {Card, CardHeader, CardText, Avatar, FlatButton, Dialog} from 'material-ui';
 import OperationsDropdown from './OperationsDropdown.js';
 import Loader from '../../components/Loader.js';
 import Comments from '../../topic/components/comments';
@@ -17,7 +17,6 @@ import {FormattedDate} from 'react-intl';
 import {TextField} from 'material-ui';
 
 export default class Issue extends Component {
-
   static propTypes = {
     actions: PropTypes.object.isRequired,
     io: PropTypes.object.isRequired,
@@ -47,7 +46,6 @@ export default class Issue extends Component {
    * @returns {XML}
    */
   render() {
-
     const topic = this.props.topic;
 
     const displayDate = (
@@ -69,9 +67,9 @@ export default class Issue extends Component {
 
           <OperationsDropdown
             activeStageId={topic.workflowStageId}
-            operations={topic.operations}
             handleOperation={this.applyOperation.bind(this)}
             onSelectDelete={this.showDeletePrompt.bind(this)}
+            operations={topic.operations}
             />
 
 
@@ -88,19 +86,18 @@ export default class Issue extends Component {
           {topic &&
           <h2 style={{
             fontWeight:800,
-            display: (this.state.showForm == false ? 'inline' : 'none')
+            display: (this.state.showForm === false ? 'inline' : 'none')
           }}>
             {!this.props.isBirdview &&
             <span
               className="stats"
               title={`ID ${topic.id}`}>
-              <span style={{
+              <span className="prop" style={{
                 fontSize: '14pt',
                 margin: '0 5px 0px 0px',
                 lineHeight: '18pt',
                 verticalAlign: 'text-bottom'
-              }}
-                    className="prop">#{topic.contextTopicNum}</span></span>}
+              }}>#{topic.contextTopicNum}</span></span>}
             {topic.summary}
             <a href={'#'} onClick={()=>{this.setState({'showForm': true});}}>[edit]</a>
             <span className="label label-primary ">
@@ -209,10 +206,11 @@ export default class Issue extends Component {
     if (this.props.topic.type && this.props.topic.type.commentsEnabled && !this.props.topic.loading) {
       return (
         <Comments
-          topic={this.props.topic}
+          actions={this.props.actions}
           comments={this.props.topic.comments}
           io={this.props.io}
-          actions={this.props.actions}/>
+          topic={this.props.topic}
+          />
       );
     } else {
       return null;

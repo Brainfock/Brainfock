@@ -16,6 +16,7 @@ export default class ProjectsEmpty extends Component {
   static propTypes = {
     boards: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
+    form: PropTypes.object,
     topicActions: PropTypes.object.isRequired,
   };
 
@@ -31,9 +32,6 @@ export default class ProjectsEmpty extends Component {
    * @returns {XML}
    */
   render() {
-
-    const {newTopic, formFields} = this.props.boards;
-
     const formContent = React.cloneElement(this.props.form, {ref: 'formView'});
 
     let formStyles = {

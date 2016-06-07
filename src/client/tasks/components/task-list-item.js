@@ -20,6 +20,7 @@ export default class Todo extends Component {
     actions: PropTypes.object.isRequired,
     followItemOnClick: PropTypes.object,
     history: PropTypes.object,
+    location: PropTypes.object,
     params: PropTypes.object.isRequired,
     todo: PropTypes.object.isRequired,
     topicGroupKey: PropTypes.string.isRequired,
@@ -86,16 +87,16 @@ export default class Todo extends Component {
     }
 
     let contextLabel;
-    if(todo.contextTopic.id) {
+    if (todo.contextTopic.id) {
       contextLabel = (<span className='label label-default' style={{marginRight:3}}>
         {todo.workspace.name && <span>{todo.workspace.name} &rarr; </span>}
         {todo.contextTopic.summary}</span>);
-    } else if(todo.workspace) {
+    } else if (todo.workspace) {
       contextLabel = <span className='label label-default' style={{marginRight:3}}>{todo.workspace.name}</span>;
     }
 
     let priorityLabel;
-    if(todo.priority) {
+    if (todo.priority) {
       let labelStyle = Object.assign({
         marginRight: todo.priority.value ? 5 : 0,
         fontWeight: 500,
@@ -106,7 +107,7 @@ export default class Todo extends Component {
     }
 
     let typeLabel = '';
-    if(todo.type && todo.type.name) {
+    if (todo.type && todo.type.name) {
       let labelStyle = Object.assign({
         marginRight: 5,
         fontWeight: 500,
