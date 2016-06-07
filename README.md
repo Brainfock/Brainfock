@@ -1,6 +1,6 @@
 [![Brainfock](https://brainfock.files.wordpress.com/2014/11/logo_greenhex_trans.png?w=250)](http://brainfock.org)
 
-## Brainfock - Business and Community Management Solution
+## Brainfock - Project and Team Management Solution
 
 [![Gitter chat https://gitter.im/Brainfock/Brainfock](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Brainfock/Brainfock?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![CircleCI](https://img.shields.io/circleci/project/Brainfock/Brainfock.svg?maxAge=7200)](https://circleci.com/gh/Brainfock/Brainfock)
