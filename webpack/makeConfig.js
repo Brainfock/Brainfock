@@ -4,7 +4,7 @@ import autoprefixer from 'autoprefixer';
 import constants from './constants';
 import path from 'path';
 import webpack from 'webpack';
-var pkg = require('../package.json');
+const pkg = require('../package.json');
 
 // Webpack does not like npm link
 // https://github.com/webpack/webpack/issues/784#issuecomment-126835731
@@ -57,19 +57,19 @@ export default function makeConfig(isDevelopment) {
     module: {
       loaders: [{
         test: /\.woff(\?v=\d+\.\d+\.\d+)?/,
-        loader: "url?limit=10000&minetype=application/font-woff"
-      } , {
+        loader: 'url?limit=10000&minetype=application/font-woff'
+      }, {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?/,
-        loader: "url?limit=10000&minetype=application/octet-stream"
-      } , {
+        loader: 'url?limit=10000&minetype=application/octet-stream'
+      }, {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?/,
-        loader: "file"
-      } , {
+        loader: 'file'
+      }, {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?/,
-        loader: "url?limit=10000&minetype=image/svg+xml"
-      } , {
+        loader: 'url?limit=10000&minetype=image/svg+xml'
+      }, {
         test: /\.png/,
-        loader: "url?limit=10000&minetype=image/png"
+        loader: 'url?limit=10000&minetype=image/png'
       }, {
         loader: 'url-loader?limit=100000',
         test: /\.(gif|jpg|woff2)$/
@@ -92,7 +92,7 @@ export default function makeConfig(isDevelopment) {
       chunkFilename: '[name]-[chunkhash].js',
       filename: '[name].js',
       path: constants.BUILD_DIR,
-      publicPath: `/_assets/`
+      publicPath: '/_assets/'
     },
     plugins: (() => {
       const plugins = [
@@ -101,8 +101,8 @@ export default function makeConfig(isDevelopment) {
             NODE_ENV: JSON.stringify(isDevelopment ? 'development' : 'production'),
             IS_BROWSER: true
           },
-          "VERSION": JSON.stringify(pkg.version),
-          "VERSION_FULL": JSON.stringify(pkg.name + ' ' + pkg.version),
+          'VERSION': JSON.stringify(pkg.version),
+          'VERSION_FULL': JSON.stringify(pkg.name + ' ' + pkg.version),
         })
       ];
       if (isDevelopment) plugins.push(
