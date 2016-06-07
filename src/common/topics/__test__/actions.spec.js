@@ -8,7 +8,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 //import {Map, fromJS} from 'immutable';
-import reducer from '../../../common/boards/reducer.js';
+//import reducer from '../../../common/boards/reducer.js';
 import {configureStore} from '../../';
 import {
   expect,
