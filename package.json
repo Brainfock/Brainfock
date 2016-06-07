@@ -4,10 +4,23 @@
   "author": "Sergii Gamaiunov <hello@webkadabra.com>",
   "version": "0.27.0-alpha.1",
   "license" : "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/Brainfock/Brainfock/issues"
+  },
   "repository" : {
     "type" : "git",
     "url" : "https://github.com/Brainfock/Brainfock"
   },
+  "keywords": [
+    "react",
+    "react-component",
+    "brainfock",
+    "project-management",
+    "community",
+    "issue-tracker",
+    "bugtracker"
+  ],
+  "homepage": "https://github.com/Brainfock/Brainfock",
   "contributors": [],
   "main": "src/server/main",
   "scripts": {
