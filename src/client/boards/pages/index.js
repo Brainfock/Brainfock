@@ -27,14 +27,14 @@ module.exports = React.createClass({
 
   componentWillMount() {
     if(process.env.IS_BROWSER == true) {
-      this.props.topic_actions.loadTopicGroup('board', {}/*, this.props.parentModel*/);
-      this.props.topic_actions.find('board', {}/*, this.props.parentModel*/);
+      this.props.topicActions.loadTopicGroup('board', {}/*, this.props.parentModel*/);
+      this.props.topicActions.find('board', {}/*, this.props.parentModel*/);
     }
   },
 
   render: function()
   {
-    const {boards:{list, board, group, meta}, topic_actions, msg, history} = this.props;
+    const {boards:{list, board, group, meta}, topicActions, msg, history} = this.props;
 
     if (!group || !group.groupKey || meta.loading === true) {
       return <h1><Loader /></h1>;
@@ -53,7 +53,7 @@ module.exports = React.createClass({
         board={board}
         group={group}
         list={list}
-        topic_actions={topic_actions}
+        topicActions={topicActions}
         msg={msg}
         history={history}
         meta={this.props.boards.meta}

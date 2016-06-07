@@ -33,7 +33,7 @@ export default class ProjectIssues extends Component {
     location: React.PropTypes.object.isRequired,
     msg: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired,
-    topic_actions: React.PropTypes.object.isRequired,
+    topicActions: React.PropTypes.object.isRequired,
   }
 
   constructor(props, props2) {
@@ -54,13 +54,13 @@ export default class ProjectIssues extends Component {
     if (process.env.IS_BROWSER === true) {
       const groupKey = this.props.groupKey;
       // load TOPICS of this BOARD
-      this.props.topic_actions.count(groupKey, this.state.filters, this.props.params.board_id);
-      this.props.topic_actions.find(groupKey, this.state.filters, this.props.params.board_id);
+      this.props.topicActions.count(groupKey, this.state.filters, this.props.params.board_id);
+      this.props.topicActions.find(groupKey, this.state.filters, this.props.params.board_id);
       // load available filters
-      this.props.topic_actions.loadFilters(groupKey, {}, this.props.params.board_id);
+      this.props.topicActions.loadFilters(groupKey, {}, this.props.params.board_id);
 
       if (!this.props.boards.group)
-        this.props.topic_actions.loadTopicGroup(groupKey, {}/*, this.props.parentModel*/);
+        this.props.topicActions.loadTopicGroup(groupKey, {}/*, this.props.parentModel*/);
     }
   }
 
@@ -68,8 +68,8 @@ export default class ProjectIssues extends Component {
     if (process.env.IS_BROWSER === true) {
       const groupKey = this.props.groupKey;
       if (newProps.location.query !== this.props.location.query) {
-        this.props.topic_actions.count(groupKey, (newProps.location.query.filter || null), this.props.params.board_id);
-        this.props.topic_actions.find(groupKey, (newProps.location.query.filter || null), this.props.params.board_id);
+        this.props.topicActions.count(groupKey, (newProps.location.query.filter || null), this.props.params.board_id);
+        this.props.topicActions.find(groupKey, (newProps.location.query.filter || null), this.props.params.board_id);
       }
     }
   }
@@ -124,7 +124,7 @@ export default class ProjectIssues extends Component {
     const addItemForm = (
       <Form
         actions={this.props.actions}
-        topic_actions={this.props.topic_actions}
+        topicActions={this.props.topicActions}
         workspace={this.props.workspace}
         containerStore={this.props.containerTopic}
         formFields={formFields}
@@ -196,7 +196,7 @@ export default class ProjectIssues extends Component {
             {filterToggleButton}
 
             <Filters
-              actions={this.props.topic_actions}
+              actions={this.props.topicActions}
               containerStore={board}
               filters={listFilters}
               header={
@@ -275,7 +275,7 @@ export default class ProjectIssues extends Component {
 
     return (
       <ListView
-        actions={this.props.topic_actions}
+        actions={this.props.topicActions}
         group={this.props.boards.group}
         // whether list should follow link when list item is clicked or just load u details
         followItemOnClick={!this.state.showDetails || !this.state.disableDetails}

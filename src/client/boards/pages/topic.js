@@ -63,21 +63,21 @@ var Issues = React.createClass({
 
     if (process.env.IS_BROWSER === true) {
       //// load info about CURRENT BOARD
-      //this.props.topic_actions.loadCurrent(this.props.params.board_id);
+      //this.props.topicActions.loadCurrent(this.props.params.board_id);
 
       if (!this.props.boards.groups.has(this.props.groupKey))
-        this.props.topic_actions.loadTopicGroup('board')
+        this.props.topicActions.loadTopicGroup('board')
           .then(()=> {
-            //this.props.topic_actions.loadTopicGroup('board')
+            //this.props.topicActions.loadTopicGroup('board')
           });
 
-      //this.props.topic_actions.find('project', {}/*, this.props.parentModel*/);
+      //this.props.topicActions.find('project', {}/*, this.props.parentModel*/);
     }
 
     if(this.props.params.id)
     {
       if(process.env.IS_BROWSER == true) {
-        this.props.topic_actions.loadTopic(this.props.params.id);
+        this.props.topicActions.loadTopic(this.props.params.id);
         //this.props.actions.topic.query('board_topic', {}, this.props.board_id);
       }
 

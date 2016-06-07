@@ -24,11 +24,11 @@ class Layout extends Component {
       this.updateAppSectionLabels(this.props);
 
       // load info about CURRENT BOARD
-      this.props.topic_actions.loadCurrent(this.props.params.board_id, this.props.params.namespace);
-      this.props.topic_actions.fetchTopicMenu(this.props.params.board_id, this.props.params.namespace);
+      this.props.topicActions.loadCurrent(this.props.params.board_id, this.props.params.namespace);
+      this.props.topicActions.fetchTopicMenu(this.props.params.board_id, this.props.params.namespace);
       this.props.actions.workspaceFindById(this.props.params.namespace);
       // load TOPIC of this BOARD
-     // this.props.topic_actions.find(this.props.groupKey || 'board_topic', {},this.props.params.board_id);
+     // this.props.topicActions.find(this.props.groupKey || 'board_topic', {},this.props.params.board_id);
     }
   }
 

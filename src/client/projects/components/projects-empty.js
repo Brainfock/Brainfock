@@ -18,7 +18,7 @@ export default class ProjectsEmpty extends Component {
     boards: PropTypes.object.isRequired,
     form: PropTypes.node.isRequired,
     params: PropTypes.object.isRequired,
-    topic_actions: PropTypes.object.isRequired,
+    topicActions: PropTypes.object.isRequired,
   };
 
   constructor(props) {

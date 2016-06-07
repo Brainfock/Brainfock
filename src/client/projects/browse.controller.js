@@ -28,7 +28,7 @@ export default class ProjectIssues extends Component {
     location: React.PropTypes.object,
     msg: React.PropTypes.object,
     params: React.PropTypes.object,
-    topic_actions: React.PropTypes.object, // eslint-disable-line camelcase
+    topicActions: React.PropTypes.object,
   }
 
   componentDidMount() {
@@ -45,7 +45,7 @@ export default class ProjectIssues extends Component {
     const groupKey = this.resolveGroupKey();
 
     // http://localhost:3000/api/workspaces/sandbox/topics/demosand/topics/board/3
-    this.props.topic_actions.loadTopicGroupBoard(groupKey, this.props.browseBoardNum);
+    this.props.topicActions.loadTopicGroupBoard(groupKey, this.props.browseBoardNum);
 
 
     if (this.props.browseBoardNum) {
@@ -56,13 +56,13 @@ export default class ProjectIssues extends Component {
       // load()
     } else {
 
-      this.props.topic_actions.count(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
-      this.props.topic_actions.find(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
-      this.props.topic_actions.loadFilters(groupKey, {}, this.props.params.board_id);
+      this.props.topicActions.count(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
+      this.props.topicActions.find(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
+      this.props.topicActions.loadFilters(groupKey, {}, this.props.params.board_id);
     }
 
     if (!this.props.boards.group || this.props.boards.group.groupKey !== groupKey) {
-      this.props.topic_actions.loadTopicGroup(groupKey);
+      this.props.topicActions.loadTopicGroup(groupKey);
     }
 
   }

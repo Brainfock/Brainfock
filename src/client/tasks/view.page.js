@@ -28,7 +28,7 @@ class ViewTaskPage extends Component {
   componentDidMount() {
     if(process.env.IS_BROWSER == true) {
       if (this.props.params.id) {
-        this.props.topic_actions.loadTopic(this.props.params.id);
+        this.props.topicActions.loadTopic(this.props.params.id);
       }
     }
   }
@@ -86,7 +86,7 @@ class ViewTaskPage extends Component {
             actions={this.props.actions}
             io={this.props.io}
             topic={this.props.boards.viewTopic}
-            topic_actions={this.props.topic_actions}
+            topicActions={this.props.topicActions}
             />
         </div>
       </div>

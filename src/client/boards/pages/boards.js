@@ -40,7 +40,7 @@ export default class Boards extends Component {
           { /*<h5 style={{textTransform:'uppercase'}}>Categories</h5> */ }
           <ListComponent
             list={this.props.list}
-            actions={this.props.topic_actions}
+            actions={this.props.topicActions}
             msg={this.props.msg.todos}
             history={this.props.history}
             group={this.props.group}

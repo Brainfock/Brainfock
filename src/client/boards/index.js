@@ -26,14 +26,14 @@ module.exports = React.createClass({ // eslint-disable-line no-undef
     boards: React.PropTypes.object,
     children: React.PropTypes.object,
     location: React.PropTypes.object,
-    topic_actions: React.PropTypes.object, // eslint-disable-line camelcase
+    topicActions: React.PropTypes.object,
   },
 
   componentWillMount() {
     this.props.actions.appSetActiveSectionLabel('Discussion Boards');
     if (process.env.IS_BROWSER === true) {
-      this.props.topic_actions.loadTopicGroup('board');
-      //this.props.topic_actions.find('project', {}/*, this.props.parentModel*/);
+      this.props.topicActions.loadTopicGroup('board');
+      //this.props.topicActions.find('project', {}/*, this.props.parentModel*/);
     }
   },
 

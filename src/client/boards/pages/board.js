@@ -30,10 +30,10 @@ module.exports = React.createClass({
     if (process.env.IS_BROWSER === true) {
 
       // load info about CURRENT BOARD
-      this.props.topic_actions.loadCurrent(this.props.params.board_id);
+      this.props.topicActions.loadCurrent(this.props.params.board_id);
 
       if (!this.props.boards.groups.has(this.props.groupKey))
-        this.props.topic_actions.loadTopicGroup('board');
+        this.props.topicActions.loadTopicGroup('board');
     }
   },
 

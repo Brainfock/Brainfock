@@ -13,17 +13,17 @@ export default class Dashboard extends React.Component {
 
   componentWillMount() {
     if (process.env.IS_BROWSER === true && !this.props.boards.board.id) {
-      this.props.topic_actions.loadCurrent(this.props.params.board_id);
+      this.props.topicActions.loadCurrent(this.props.params.board_id);
     }
 
     if (!this.props.formData && this.props.boards.board.id) {
-      this.props.topic_actions.makeTopicUpdateFormRecord(this.props.boards.board.id, {...this.props.boards.board});
+      this.props.topicActions.makeTopicUpdateFormRecord(this.props.boards.board.id, {...this.props.boards.board});
     }
   }
 
   render()
 {
-    const {boards:{list, board, group, newTopic}, topic_actions, msg, history} = this.props;
+    const {boards:{list, board, group, newTopic}, topicActions, msg, history} = this.props;
 
     if (!this.props.boards.board.id) {
       return <Loader />;
@@ -36,7 +36,7 @@ export default class Dashboard extends React.Component {
    */
     return (
     <div className="bfk-browse">
-      <GeneralSettings actions={topic_actions}
+      <GeneralSettings actions={topicActions}
                        isLoading={newTopic.meta.isSubmitting === true}
                        msg={msg.topics}
                        topic={newTopic}
@@ -48,7 +48,7 @@ export default class Dashboard extends React.Component {
 
 /*renderTabbed()
  {
- const {boards:{list, board, group, newTopic, formFields}, topic_actions, msg, history} = this.props;
+ const {boards:{list, board, group, newTopic, formFields}, topicActions, msg, history} = this.props;
 
  return (
  <div>
@@ -64,7 +64,7 @@ export default class Dashboard extends React.Component {
  <Tabs defaultActiveKey={2} position="left" tabWidth={4} className="bf-tabs">
  <Tab eventKey={1} title="Info">
  <GeneralSettings
- actions={topic_actions}
+ actions={topicActions}
  isLoading={newTopic.meta.isSubmitting === true}
  msg={msg}
  topic={newTopic}

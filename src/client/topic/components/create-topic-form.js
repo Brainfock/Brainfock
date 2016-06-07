@@ -36,7 +36,7 @@ export default class CreateTopicForm extends Component {
     params: React.PropTypes.object.isRequired,
     sysFields: React.PropTypes.array,
     topicGroup: React.PropTypes.string.isRequired, // topic group to load form for, e.g. `issue` if we want to greate topic in group `issue`
-    topic_actions: React.PropTypes.any.isRequired, // eslint-disable-line camelcase
+    topicActions: React.PropTypes.any.isRequired,
     workspace: React.PropTypes.object,
   };
 
@@ -49,13 +49,13 @@ export default class CreateTopicForm extends Component {
     if (!this.props.formFields || (this.props.formFields && this.props.formFields.fields.size === 0)
       || (this.props.formFields.group !== this.props.topicGroup)) {
 
-      this.props.topic_actions.loadFormFields(this.props.topicGroup,
+      this.props.topicActions.loadFormFields(this.props.topicGroup,
         (this.props.containerStore ? this.props.containerStore.id : 0));
     }
 
     // TODO: looks like it belongs to parent component
     if (!this.props.formData) {
-      this.props.topic_actions.findOrCreateForm((this.props.containerStore ? this.props.containerStore.id : 0),
+      this.props.topicActions.findOrCreateForm((this.props.containerStore ? this.props.containerStore.id : 0),
         this.props.topicGroup, {
           // initial values for new form
           createGroup: this.props.topicGroup,
@@ -103,7 +103,7 @@ export default class CreateTopicForm extends Component {
       ];
     }
 
-    this.props.topic_actions.applyTopicFormDefaults(this.props.formData.cid, applyDefault, overwrite);
+    this.props.topicActions.applyTopicFormDefaults(this.props.formData.cid, applyDefault, overwrite);
   }
 
   componentWillReceiveProps(newProps) {
@@ -148,7 +148,7 @@ export default class CreateTopicForm extends Component {
         ref="frm" >
         {this.props.formData && this.props.formData.meta.error
         && <div className="alert alert-danger">
-          <i className="fa fa-times" onClick={this.props.topic_actions.cleanErrorSummary}></i> {this.props.formData.meta.error}
+          <i className="fa fa-times" onClick={this.props.topicActions.cleanErrorSummary}></i> {this.props.formData.meta.error}
         </div>
         }
 
@@ -184,7 +184,7 @@ export default class CreateTopicForm extends Component {
           label='createForm_LABEL_access_private_yn'
           name="accessPrivateYn"
           onCheck={(function(event, isChecked) {
-            this.props.topic_actions.setNewTopicField({
+            this.props.topicActions.setNewTopicField({
               target:{
                 name: event.target.name,
                 value: isChecked
@@ -238,12 +238,12 @@ export default class CreateTopicForm extends Component {
   }
 
   onChange(e) {
-    this.props.topic_actions.setNewTopicField(e, {cid: this.props.formData.cid});
+    this.props.topicActions.setNewTopicField(e, {cid: this.props.formData.cid});
   }
 
   onFormSubmit(e) {
 
-    const {topic_actions, formData} = this.props; // eslint-disable-line camelcase
+    const {topicActions, formData} = this.props; // eslint-disable-line camelcase
 
     const cid = formData.cid;
     const data = formData.toJS().data;
@@ -273,7 +273,7 @@ export default class CreateTopicForm extends Component {
       postData.contextTopicId = this.props.containerStore.id;
 
     //actions.create(postData)
-    topic_actions.postTopicFormData(cid, postData) // eslint-disable-line camelcase
+    topicActions.postTopicFormData(cid, postData)
       .then(({error, payload}) => {
         if (error) {
           // TODO: snackbar message?

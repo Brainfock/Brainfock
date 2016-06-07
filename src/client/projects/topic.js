@@ -35,14 +35,14 @@ var TopicView = React.createClass({
   componentDidMount: function() {
     if(process.env.IS_BROWSER == true) {
       if (this.props.params.id) {
-        this.props.topic_actions.loadNamespaceTopicByNum(this.props.params.namespace, this.props.params.board_id, this.props.params.group_key, this.props.params.id);
+        this.props.topicActions.loadNamespaceTopicByNum(this.props.params.namespace, this.props.params.board_id, this.props.params.group_key, this.props.params.id);
       }
     }
   },
 
   componentWillReceiveProps: function(newProps) {
     if (newProps.params.namespace && newProps.params.group_key && newProps.params.id && (this.props.params !== newProps.params)) {
-      this.props.topic_actions.loadNamespaceTopicByNum(this.props.params.namespace, this.props.params.board_id, this.props.params.group_key, this.props.params.id);
+      this.props.topicActions.loadNamespaceTopicByNum(this.props.params.namespace, this.props.params.board_id, this.props.params.group_key, this.props.params.id);
     }
   },
 
@@ -75,7 +75,7 @@ var TopicView = React.createClass({
           actions={this.props.actions}
           io={this.props.io}
           topic={this.props.boards.viewTopic}
-          topic_actions={this.props.topic_actions}
+          topicActions={this.props.topicActions}
           />
       </div>
     );

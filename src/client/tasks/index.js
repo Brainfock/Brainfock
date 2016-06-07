@@ -28,8 +28,8 @@ module.exports = React.createClass({
   componentWillMount() {
     this.props.actions.appSetActiveSectionLabel('Tasks');
     if (process.env.IS_BROWSER === true) {
-      //this.props.topic_actions.loadTopicGroup('board');
-      //this.props.topic_actions.find('project', {}/*, this.props.parentModel*/);
+      //this.props.topicActions.loadTopicGroup('board');
+      //this.props.topicActions.find('project', {}/*, this.props.parentModel*/);
     }
   },
 

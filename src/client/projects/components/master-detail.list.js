@@ -44,7 +44,7 @@ export default class ProjectIssues extends Component {
     location: React.PropTypes.object.isRequired,
     msg: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired,
-    topic_actions: React.PropTypes.object.isRequired,
+    topicActions: React.PropTypes.object.isRequired,
     pathname: React.PropTypes.any,
     groupBy: React.PropTypes.string,
     browseAll: React.PropTypes.bool,
@@ -82,13 +82,13 @@ export default class ProjectIssues extends Component {
         // load()
       } else {
 
-        this.props.topic_actions.count(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
-        this.props.topic_actions.find(groupKey, this.state.filters, (this.props.browseAll ? '*' : this.props.params.board_id), this.props.params.namespace);
-        this.props.topic_actions.loadFilters(groupKey, {}, this.props.params.board_id);
+        this.props.topicActions.count(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
+        this.props.topicActions.find(groupKey, this.state.filters, (this.props.browseAll ? '*' : this.props.params.board_id), this.props.params.namespace);
+        this.props.topicActions.loadFilters(groupKey, {}, this.props.params.board_id);
       }
 
       if (!this.props.boards.group || this.props.boards.group.groupKey !== groupKey) {
-        this.props.topic_actions.loadTopicGroup(groupKey);
+        this.props.topicActions.loadTopicGroup(groupKey);
       }
     }
   }
@@ -113,8 +113,8 @@ export default class ProjectIssues extends Component {
           query.summary = {like: queryString};
         }
         let filter = Object.assign(query, newProps.location.query.filter);
-        this.props.topic_actions.count(newProps.groupKey, filter, newProps.params.board_id, newProps.params.namespace);
-        this.props.topic_actions.find(newProps.groupKey, filter, (newProps.browseAll ? '*' : newProps.params.board_id), newProps.params.namespace);
+        this.props.topicActions.count(newProps.groupKey, filter, newProps.params.board_id, newProps.params.namespace);
+        this.props.topicActions.find(newProps.groupKey, filter, (newProps.browseAll ? '*' : newProps.params.board_id), newProps.params.namespace);
       }
     }
   }
@@ -176,7 +176,7 @@ export default class ProjectIssues extends Component {
       <Form
         workspace={this.props.workspace}
         actions={this.props.actions}
-        topic_actions={this.props.topic_actions}
+        topicActions={this.props.topicActions}
         containerStore={this.props.containerTopic}
         form={this.props.boards.form}
         formData={formData}
@@ -256,7 +256,7 @@ export default class ProjectIssues extends Component {
             {filterToggleButton}
 
             <Filters
-              actions={this.props.topic_actions}
+              actions={this.props.topicActions}
               containerStore={board}
               filters={listFilters}
               onApply={this.onApplyFilters}
@@ -386,7 +386,7 @@ export default class ProjectIssues extends Component {
     const groupKey = this.props.groupKey;
     return (
       <ListView
-        actions={this.props.topic_actions}
+        actions={this.props.topicActions}
         followItemOnClick={!this.state.showDetails || this.state.disableDetails}
         group={this.props.boards.group}
         history={this.props.history}
@@ -431,7 +431,7 @@ export default class ProjectIssues extends Component {
           // TODO: close details panel?
         }.bind(this)}
         topic={this.props.boards.viewTopic}
-        topic_actions={this.props.topic_actions}
+        topicActions={this.props.topicActions}
         />
     } else {
       return (

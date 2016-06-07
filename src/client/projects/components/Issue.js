@@ -24,7 +24,7 @@ export default class Issue extends Component {
     isBirdview: PropTypes.bool,
     onDeleted: PropTypes.func,
     topic: PropTypes.object.isRequired,
-    topic_actions: PropTypes.object.isRequired
+    topicActions: PropTypes.object.isRequired
   };
 
   static defaultProps = {
@@ -134,7 +134,7 @@ export default class Issue extends Component {
    * @private
    */
   applyOperation(opName) {
-    this.props.topic_actions.runOperation(this.props.topic.id, opName);
+    this.props.topicActions.runOperation(this.props.topic.id, opName);
   }
 
   renderDeleteDialog() {
@@ -189,7 +189,7 @@ export default class Issue extends Component {
   }
 
   doDelete() {
-    this.props.topic_actions.deleteTopic(this.props.topic.id)
+    this.props.topicActions.deleteTopic(this.props.topic.id)
       .then(({error, payload}) => {
         if (!error) {
           this.handleCloseDialog();
