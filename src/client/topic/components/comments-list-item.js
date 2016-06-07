@@ -1,13 +1,13 @@
 var React = require('react'),
-    Router = require('react-router'),
-    Loader = require('../../components/Loader'),
-    Link = Router.Link,
-    Navigation = Router.Navigation,
+  Router = require('react-router'),
+  Loader = require('../../components/Loader'),
+  Link = Router.Link,
+  Navigation = Router.Navigation,
 
-    mui = require('material-ui');
+  mui = require('material-ui');
 
 var bs = require('react-bootstrap'),
-    {ButtonToolbar, ButtonGroup, Button, Glyphicon} = bs;
+  {ButtonToolbar, ButtonGroup, Button, Glyphicon} = bs;
 
 module.exports = React.createClass({
   mixins: [Navigation, Router.State],
@@ -17,16 +17,16 @@ module.exports = React.createClass({
   getInitialState: function() {
     return {
       active: false,
-    }
+    };
   },
 
   render: function() {
 
     if(!this.props.model.id === 0) {
-      return <Loader />
+      return <Loader />;
     }
     return this.renderComment();
-    if(1==1 /*OR this.props.model.type=='comment'*/) {
+    if(1 == 1 /*OR this.props.model.type=='comment'*/) {
       return this.renderComment();
     } else {
       return this.renderEvent();
@@ -36,9 +36,9 @@ module.exports = React.createClass({
   renderComment: function() {
 
     if(!this.props.model.user) {
-      return <div><em>n/a</em></div>
+      return <div><em>n/a</em></div>;
     }
-    return <div className="row">
+    return (<div className="row">
       <div className="pull-left" style={{width: '70px'}}>
         <div className="pull-right">
 
@@ -59,7 +59,7 @@ module.exports = React.createClass({
 
 
 
-    </div>
+    </div>);
 
 
 
@@ -68,9 +68,9 @@ module.exports = React.createClass({
 
   renderEvent: function() {
     if(!this.props.model.user) {
-      return <div>n/a</div>
+      return <div>n/a</div>;
     }
-    return <div className="activity-event row">
+    return (<div className="activity-event row">
       <div className="event-inner">
 
         <img className="userpic" src={this.props.model.user.userpic} />
@@ -82,7 +82,7 @@ module.exports = React.createClass({
 
 
       </div>
-    </div>
+    </div>);
 
   },
 });

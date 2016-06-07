@@ -32,9 +32,9 @@ class Page extends Component {
     }
   }
 
-  componentWillReceiveProps(newProps,b)  {
+  componentWillReceiveProps(newProps, b)  {
     if(newProps.params.uid && (this.props.params !== newProps.params)) {
-        this.props.actions.findContextPage(this.props.boards.board.data.entityId, newProps.params.uid);
+      this.props.actions.findContextPage(this.props.boards.board.data.entityId, newProps.params.uid);
     }
   }
 
@@ -42,8 +42,8 @@ class Page extends Component {
    * handle clicks on elements in page's text & navigate internal links with app router
    * @param a
    */
-  handleClick(a){
-    if(a.target.nodeName === 'A' && a.target.className.indexOf("WkikLink") == 0) {
+  handleClick(a) {
+    if(a.target.nodeName === 'A' && a.target.className.indexOf('WkikLink') == 0) {
       a.preventDefault();
       this.props.history.pushState(null, a.target.getAttribute('href'));
     }
@@ -68,14 +68,14 @@ class Page extends Component {
 
     if(page) {
       return (
-        <DocumentTitle title={page.pageUid + " — Wiki"}>
+        <DocumentTitle title={page.pageUid + ' — Wiki'}>
           <div className="wiki-wrapper">
             <div className="wiki-page">
               <div className="container-fluid">
                 <div className="row">
                   <h3>{page.pageUid }
                     <div className="pull-right">
-                      <mui.RaisedButton label="Edit" primary={true}  onClick={this.gotoEdit.bind(this)} />
+                      <mui.RaisedButton label="Edit" primary  onClick={this.gotoEdit.bind(this)} />
                     </div>
                   </h3>
                   <div onClick={this.handleClick.bind(this)} dangerouslySetInnerHTML={{__html: page.contentRendered}} />
@@ -93,14 +93,14 @@ class Page extends Component {
 
     }
     else {
-      return <div>
+      return (<div>
         Empty!
-      </div>
+      </div>);
     }
   }
 
   gotoEdit() {
-    console.log('>>>>>>',this.props.params);
+    console.log('>>>>>>', this.props.params);
     this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/wiki/${this.props.wiki.viewPage.pageUid}/edit`);
   }
 };

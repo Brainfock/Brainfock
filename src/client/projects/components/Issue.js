@@ -65,7 +65,7 @@ export default class Issue extends Component {
     return (
       <div>
         <WrapperEl>
-          {topic.loading && <div style={{position:'absolute',width:'100%'}}><Loader noLabel/></div>}
+          {topic.loading && <div style={{position:'absolute', width:'100%'}}><Loader noLabel/></div>}
 
           <OperationsDropdown
             activeStageId={topic.workflowStageId}
@@ -83,11 +83,11 @@ export default class Issue extends Component {
 
           {topic &&
           this.state.showForm &&
-          <a href={'#'} onClick={()=>{this.setState({'showForm': false})}}>[save]</a>}
+          <a href={'#'} onClick={()=>{this.setState({'showForm': false});}}>[save]</a>}
 
           {topic &&
           <h2 style={{
-          fontWeight:800,
+            fontWeight:800,
             display: (this.state.showForm == false ? 'inline' : 'none')
           }}>
             {!this.props.isBirdview &&
@@ -95,14 +95,14 @@ export default class Issue extends Component {
               className="stats"
               title={`ID ${topic.id}`}>
               <span style={{
-              fontSize: '14pt',
-              margin: '0 5px 0px 0px',
-              lineHeight: '18pt',
-              verticalAlign: 'text-bottom'
-             }}
+                fontSize: '14pt',
+                margin: '0 5px 0px 0px',
+                lineHeight: '18pt',
+                verticalAlign: 'text-bottom'
+              }}
                     className="prop">#{topic.contextTopicNum}</span></span>}
             {topic.summary}
-            <a href={'#'} onClick={()=>{this.setState({'showForm': true})}}>[edit]</a>
+            <a href={'#'} onClick={()=>{this.setState({'showForm': true});}}>[edit]</a>
             <span className="label label-primary ">
               {topic.wfStage}
             </span>

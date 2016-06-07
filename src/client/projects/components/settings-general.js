@@ -20,13 +20,13 @@ export default class Dashboard extends React.Component {
     super(props);
     this.state = {
       showDeletePrompt: false
-    }
+    };
   }
 
   render() {
 
     const {msg} = this.props;
-    const isLoading = this.props.topic.meta.isFetching==true; // in some views, loading means "loading form scheme"
+    const isLoading = this.props.topic.meta.isFetching == true; // in some views, loading means "loading form scheme"
 
     return (
       <div>
@@ -59,7 +59,7 @@ export default class Dashboard extends React.Component {
             value={this.props.topic.data.get('text')}
             hintText={msg.form.hint.text}
             errorText={this.props.topic.meta.errors && this.props.topic.meta.errors.get('text') || ''}
-            multiLine={true}
+            multiLine
             floatingLabelText={msg.form.label.text}
             />
 
@@ -100,20 +100,20 @@ export default class Dashboard extends React.Component {
 
           <mui.Checkbox
             name="accessPrivateYn"
-            onCheck={(function(event, isChecked){
+            onCheck={(function(event, isChecked) {
               this.onChange({
                 target:{
                   name: event.target.name,
                   value: isChecked ? 1 : 0
                 }
-              })
-             }).bind(this)}
+              });
+            }).bind(this)}
             value="1"
             label={msg.form.label.accessPrivate}
             checked={(this.props.topic.data.get('accessPrivateYn') === 1)}
             />
 
-          <mui.RaisedButton label={msg.form.button.save} primary={true} onClick={this.trySave.bind(this)}
+          <mui.RaisedButton label={msg.form.button.save} primary onClick={this.trySave.bind(this)}
                             disabled={isLoading} />
 
           <hr />
@@ -127,11 +127,11 @@ export default class Dashboard extends React.Component {
             deleteAction={this.props.actions.deleteTopic}
             show={this.state.showDeletePrompt === true}
             onDismiss={()=>{
-              this.setState({showDeletePrompt: false})
+              this.setState({showDeletePrompt: false});
             }}
             />
 
-          <mui.RaisedButton label={msg.form.deleteItem.button} primary={true} onClick={()=>{this.setState({showDeletePrompt: true})}} backgroundColor='#D64141' />
+          <mui.RaisedButton label={msg.form.deleteItem.button} primary onClick={()=>{this.setState({showDeletePrompt: true});}} backgroundColor='#D64141' />
         </div>
       </div>
     );
@@ -143,7 +143,7 @@ export default class Dashboard extends React.Component {
 
   onDelete() {
     // TODO: post global notifiction e.g. `project deleted`
-    this.props.history.pushState(null, `/projects`);
+    this.props.history.pushState(null, '/projects');
   }
 
   trySave() {

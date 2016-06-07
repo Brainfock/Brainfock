@@ -100,7 +100,7 @@ export default class CreateTopicForm extends Component {
       : [
         // for `react-select` we must provide {Array} with {Object}s
         {label: this.props.containerStore.summary, value: this.props.containerStore.id}
-      ]
+      ];
     }
 
     this.props.topic_actions.applyTopicFormDefaults(this.props.formData.cid, applyDefault, overwrite);
@@ -178,14 +178,14 @@ export default class CreateTopicForm extends Component {
           defaultChecked={this.props.formData.data.accessPrivateYn}
           label='createForm_LABEL_access_private_yn'
           name="accessPrivateYn"
-          onCheck={(function(event, isChecked){
-                this.props.topic_actions.setNewTopicField({
-                  target:{
-                    name: event.target.name,
-                    value: isChecked
-                  }
-                }, {cid: this.props.formData.cid})
-               }).bind(this)}
+          onCheck={(function(event, isChecked) {
+            this.props.topic_actions.setNewTopicField({
+              target:{
+                name: event.target.name,
+                value: isChecked
+              }
+            }, {cid: this.props.formData.cid});
+          }).bind(this)}
           ref="accessSettings"
           value="1"
           />
@@ -202,22 +202,22 @@ export default class CreateTopicForm extends Component {
     if (!this.props.formFields.fields || this.props.workspace.list.size === 0) {
       return <Loader />;
     }
-    if (1===2 && !this.props.containerStore) {
+    if (1 === 2 && !this.props.containerStore) {
 
       let wspOptions = this.props.workspace.list.map(item => { return {
         label: item.data.name,
         value: item.data.id
-      }});
-      console.log('> wspOptions', wspOptions)
+      };});
+      console.log('> wspOptions', wspOptions);
       //SelectField
 
-      return <div className="clearfix">Select Workspace
+      return (<div className="clearfix">Select Workspace
         <br />
         <SelectField options={wspOptions.toJS()} label={'Workspace'} value='' />
-      </div>
+      </div>);
     } else {
 
-    return (
+      return (
       <div className="clearfix">
         <SimpleFormFactory
           form={this.props.formData}
@@ -276,7 +276,7 @@ export default class CreateTopicForm extends Component {
         } else {
           const node = ReactDOM.findDOMNode(this);
           if (!node) return;
-          let el = node.querySelector(`[name="summary"]`);
+          let el = node.querySelector('[name="summary"]');
           if (el) {
             el.focus();
           }

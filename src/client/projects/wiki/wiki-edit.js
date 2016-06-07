@@ -19,7 +19,7 @@ const keyMap = {
   saveWiki: 'ctrl+s'
 };
 
-export default class Page extends Component{
+export default class Page extends Component {
 
   static propTypes = {
     actions: PropTypes.object,
@@ -96,11 +96,11 @@ export default class Page extends Component{
                     defaultValue={page.content}
                     value={page.content}
                     name="content"
-                    multiLine={true}
-                    style={{width:"99%"}}
+                    multiLine
+                    style={{width:'99%'}}
                     onChange={this.props.actions.setWikiViewPageField}
                     />
-                  <RaisedButton label="Save" primary={true}  disabled={disabled}  onClick={this.save.bind(this)}  />
+                  <RaisedButton label="Save" primary  disabled={disabled}  onClick={this.save.bind(this)}  />
                   &nbsp;<RaisedButton label="Cancel" primary={false}  disabled={disabled} onClick={this.cancelAndReturn.bind(this)} />
                   &nbsp;<RaisedButton label="Return" primary={false}  disabled={disabled} onClick={this.cancelAndReturn.bind(this)} />
                   <span style={{textColor:(this.state.hasBeenSaved ? '#8C8C8C' : '#C1C1C1'), paddingLeft:15}}>

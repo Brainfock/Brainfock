@@ -7,7 +7,7 @@ import {Tabs, Tab} from 'react-bootstrap';
 
 import PageWithNav from '../components/layout/page-with-nav';
 import GeneralSettings from './components/settings-general.js';
-import Loader from '../../components/Loader.js'
+import Loader from '../../components/Loader.js';
 
 export default class Dashboard extends React.Component {
 
@@ -18,23 +18,23 @@ export default class Dashboard extends React.Component {
 
     if (!this.props.formData && this.props.boards.board.id) {
       this.props.topic_actions.makeTopicUpdateFormRecord(this.props.boards.board.id, {...this.props.boards.board});
+    }
   }
-}
 
-render()
+  render()
 {
-  const {boards:{list, board, group, newTopic}, topic_actions, msg, history} = this.props;
+    const {boards:{list, board, group, newTopic}, topic_actions, msg, history} = this.props;
 
-  if (!this.props.boards.board.id) {
-    return <Loader />
-  }
+    if (!this.props.boards.board.id) {
+      return <Loader />;
+    }
 
   /*
    <PageWithNav  menuItems={this.menuItems()} {...this.props}>
    Project <b>{board.summary}</b> dashboard is in development
    </PageWithNav>
    */
-  return (
+    return (
     <div className="bfk-browse">
       <GeneralSettings actions={topic_actions}
                        isLoading={newTopic.meta.isSubmitting === true}
@@ -44,7 +44,7 @@ render()
         />
     </div>
   );
-}
+  }
 
 /*renderTabbed()
  {

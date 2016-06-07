@@ -8,11 +8,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 var React = require('react'),
-    Router = require('react-router'),
-    RouteHandler = Router.RouteHandler,
-    mui = require('material-ui'),
-    Menu = mui.Menu,
-    Loader = require('../../components/Loader');
+  Router = require('react-router'),
+  RouteHandler = Router.RouteHandler,
+  mui = require('material-ui'),
+  Menu = mui.Menu,
+  Loader = require('../../components/Loader');
 
 //var Store = require('../../components/comments/Store');
 //var Actions = require('../../components/comments/Actions');
@@ -35,7 +35,7 @@ var TopicComments = React.createClass({
   getInitialState: function() {
     return {
       //Store:Store
-    }
+    };
   },
 
   getDefaultProps: function() {
@@ -44,13 +44,13 @@ var TopicComments = React.createClass({
       // some store cursor:
       model:null,
       //ThreadUsersStore:require('client/issues/ThreadUserStore')
-    }
+    };
   },
   componentWillMount:function() {
     this.props.actions.loadEntityComments(this.props.topic.entityId);
 
     if(process.env.IS_BROWSER) {
-      this.props.io.emit('sub-comments',{entity_id:this.props.topic.entityId});
+      this.props.io.emit('sub-comments', {entity_id:this.props.topic.entityId});
 
     }
 
@@ -130,8 +130,8 @@ var TopicComments = React.createClass({
 
   renderComments: function() {
 
-    console.log('this.props.topic.comments:',this.props.comments);
-    if(this.props.comments.length==0) {
+    console.log('this.props.topic.comments:', this.props.comments);
+    if(this.props.comments.length == 0) {
       return (
           <div>
             <em><b>There are no comments here. Please, write one:</b></em>
@@ -139,7 +139,7 @@ var TopicComments = React.createClass({
       );
     }
 
-    return <div className="activity-stream" >
+    return (<div className="activity-stream" >
 
       {this.props.comments.map(result =>
           <div className="item" >
@@ -148,12 +148,12 @@ var TopicComments = React.createClass({
       )}
 
 
-    </div>;
+    </div>);
   },
   __setupCommentBox: function()
   {
-    var users=[];
-    this.props.ThreadUsersStore.each(function(userModel){
+    var users = [];
+    this.props.ThreadUsersStore.each(function(userModel) {
 
       users.push({
         'id':userModel.get('id'),
@@ -171,13 +171,13 @@ var TopicComments = React.createClass({
      })
      */
 
-    // TODO: extract all users in this conversation + add all users who user can mention 
+    // TODO: extract all users in this conversation + add all users who user can mention
     $(this.refs.commentbox).atwho({
-      at: "@",
+      at: '@',
       data: users,
       tpl: "<li data-value='@${name}'>${name} <img src='${userpic}'/></li>",
       show_the_at: true
-    })
+    });
   },
 
   /**
@@ -187,7 +187,7 @@ var TopicComments = React.createClass({
   {
     e.preventDefault();
     var comment = this.refs.commentbox.value;
-    this.props.actions.postComment(this.props.topic.entityId,{text:comment});
+    this.props.actions.postComment(this.props.topic.entityId, {text:comment});
   },
 
 });

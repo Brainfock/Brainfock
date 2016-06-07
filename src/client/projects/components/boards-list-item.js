@@ -47,14 +47,14 @@ export default class Todo extends Component {
         const labelConfig = JSON.parse(possibleConfig);
         if (labelConfig.bg) {
           if (Colors[labelConfig.bg]) {
-            labelStyle.backgroundColor = Colors[labelConfig.bg]
+            labelStyle.backgroundColor = Colors[labelConfig.bg];
             labelStyle.padding = '2px 3px 2px 3px';
             labelStyle.borderRadius = '3px';
           }
         }
         if (labelConfig.clr) {
           if (Colors[labelConfig.clr]) {
-            labelStyle.color= Colors[labelConfig.clr]
+            labelStyle.color = Colors[labelConfig.clr];
           }
         }
       } catch (e) {}
@@ -162,7 +162,7 @@ export default class Todo extends Component {
           secondaryText={<span>
           {priorityLabel}
           {typeLabel}
-          <span style={{fontSize: '.88em',color:'#333', fontWeight:600}}>— {todo.wfStage}</span>
+          <span style={{fontSize: '.88em', color:'#333', fontWeight:600}}>— {todo.wfStage}</span>
           {todo.text && <br />}
           {todo.text}
 
