@@ -1,11 +1,21 @@
+/**
+ * Brainfock, <http://www.brainfock.org>
+ *
+ * Copyright (C) 2015-present Sergii Gamaiunov <hello@webkadabra.com>
+ * All rights reserved.
+ *
+ * This source code is licensed under the GPL-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import React from 'react';
-import mui, {Card, CardHeader, CardTitle, CardActions, FlatButton, CardText} from 'material-ui';
+import {CardActions, FlatButton, CardText} from 'material-ui';
 import Component from 'react-pure-render/component';
 
 export default class FetchActionError extends Component {
 
   static propTypes = {
     action: React.PropTypes.func.isRequired,
+    handleRetry: React.PropTypes.function,
     meta: React.PropTypes.object.isRequired,
     msg: React.PropTypes.object.isRequired,
   };
@@ -33,19 +43,19 @@ export default class FetchActionError extends Component {
         <CardText>{message}</CardText>
         <CardActions style={{paddingTop:0}}>
           <FlatButton
-            onClick={this.props.handleRetry}
             label="Retry"
-            style={{padding:100}}
             labelStyle={{color:'#B95252'}}
+            onClick={this.props.handleRetry}
+            style={{padding:100}}
             />
         </CardActions>
       </div>
     );
-    return (
-      <div className="alert alert-warning" style={{margin:0, borderRadius:0}}>{message}
-        <button onClick={this.props.handleRetry}>Retry</button>
-      </div>
-    );
+    //return (
+    //  <div className="alert alert-warning" style={{margin:0, borderRadius:0}}>{message}
+    //    <button onClick={this.props.handleRetry}>Retry</button>
+    //  </div>
+    //);
   }
 
   getWrapperStyle() {

@@ -16,7 +16,13 @@ import ProjectsEmpty from './components/projects-empty';
 import IssueView from './components/Issue';
 
 export default class ProjectIssues extends Component {
-
+  static propTypes = {
+    boards: React.PropTypes.object,
+    children: React.PropTypes.object,
+    location: React.PropTypes.object,
+    msg: React.PropTypes.object,
+    params: React.PropTypes.object,
+  }
   /**
    * resolve group (key) to load topics for, taking into account plurals form of gorup name,
    * e.g. `brainfock/issues` will resolve group key `issue`
@@ -31,8 +37,7 @@ export default class ProjectIssues extends Component {
   }
 
   render() {
-    const {board, meta, listFilters, newTopic, formFields} = this.props.boards;
-    const msg = this.props.msg.topics;
+    const {board} = this.props.boards;
     const {children, ...passProps} = this.props;
     const {location: {pathname}} = this.props;
     return (

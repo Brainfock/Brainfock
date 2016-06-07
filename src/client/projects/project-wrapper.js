@@ -9,16 +9,25 @@
  */
 import React from 'react';
 import Component from 'react-pure-render/component';
-
-let PageWithNav = require('../components/layout/page-with-nav');
-let Loader = require('../components/Loader');
-let AppContentCanvas = require('../components/layout/AppContentCanvas');
+import PageWithNav from '../components/layout/page-with-nav';
+import Loader from '../components/Loader';
+import AppContentCanvas from '../components/layout/AppContentCanvas';
 
 class Layout extends Component {
+  static propTypes = {
+    actions: React.PropTypes.object,
+    boards: React.PropTypes.object,
+    children: React.PropTypes.object,
+    msg: React.PropTypes.object,
+    params: React.PropTypes.object,
+    topicActions: React.PropTypes.object,
+    workspace: React.PropTypes.object,
+  }
 
   updateAppSectionLabels(props) {
     this.props.actions.appSetActiveSectionLabel(props.workspace.active.data.name,  props.boards.board.data.summary);
   }
+
   componentDidMount() {
     if (process.env.IS_BROWSER === true) {
       this.updateAppSectionLabels(this.props);
@@ -33,13 +42,13 @@ class Layout extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if(this.props.workspace.active.data.name !== newProps.workspace.active.data.name) {
+    if (this.props.workspace.active.data.name !== newProps.workspace.active.data.name) {
       this.updateAppSectionLabels(newProps);
     }
   }
 
   componentWillUpdate(newProps) {
-    if(this.props.workspace.active.data.name !== newProps.workspace.active.data.name) {
+    if (this.props.workspace.active.data.name !== newProps.workspace.active.data.name) {
       this.updateAppSectionLabels(newProps);
     }
   }
@@ -48,7 +57,7 @@ class Layout extends Component {
   render() {
 
     // return full-page loader only if there's really no data
-    if (this.props.workspace.active.meta.isFetching || !this.props.boards.board || this.props.boards.board.loading == true) {
+    if (this.props.workspace.active.meta.isFetching || !this.props.boards.board || this.props.boards.board.loading === true) {
       return (<AppContentCanvas header={
         <h1>
           <Loader />
@@ -105,7 +114,7 @@ class Layout extends Component {
     menu.push({route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/settings`, text: 'Settings'});
 
     return menu;
-    return [
+    /*return [
       {
         route: `/${this.props.workspace.active.data.namespace}/${this.props.boards.board.data.contextTopicKey}`,
         text: (
@@ -147,8 +156,8 @@ class Layout extends Component {
       // Like agile or scrum boards, custom reports?
       {route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/users`, text: 'Users'},
       {route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/settings`, text: 'Settings'},
-    ];
+    ];*/
   }
-};
+}
 
 export default Layout;

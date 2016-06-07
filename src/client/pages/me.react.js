@@ -1,18 +1,17 @@
 import React, {PropTypes} from 'react';
-import {FormattedMessage} from 'react-intl';
 import Component from 'react-pure-render/component';
 import DocumentTitle from 'react-document-title';
 import mui, {TextField, RaisedButton} from 'material-ui';
-import {ButtonToolbar, Overlay, Popover, Grid, Row, Col} from 'react-bootstrap';
+import {Grid, Row, Col} from 'react-bootstrap';
 
-import Logout from '../auth/logout.react';
 import Loader from '../components/Loader.js';
 
 export default class Me extends Component {
 
   static propTypes = {
+    actions: PropTypes.object,
     msg: PropTypes.object,
-    users: PropTypes.object
+    users: PropTypes.object,
   }
 
   constructor(props) {
@@ -21,7 +20,7 @@ export default class Me extends Component {
       formStep: {
         email: 1
       }
-    }
+    };
   }
 
   componentWillMount() {
@@ -45,29 +44,34 @@ export default class Me extends Component {
       return (
         <span>
         <TextField
-          placeholder='New Email'
-          name='newEmail'
-          fullWidth
-          value={emailForm.data.newEmail}
           errorText={emailForm.meta.errors.get('newEmail') || null}
+          fullWidth
+          name='newEmail'
           onChange={(e)=>{
-                    this.props.actions.setUserUpdateFormField(e, viewer.id, 'email')
-                    }.bind(this)}
+            this.props.actions.setUserUpdateFormField(e, viewer.id, 'email');
+          }.bind(this)}
+          placeholder='New Email'
+          value={emailForm.data.newEmail}
           />
         <br />
         <TextField
-          placeholder='Your current password'
-          name='currentPassword'
-          type='password'
-          fullWidth
-          value={emailForm.data.currentPassword}
           errorText={emailForm.meta.errors.get('currentPassword') || null}
+          fullWidth
+          name='currentPassword'
           onChange={(e)=>{
-                    this.props.actions.setUserUpdateFormField(e, viewer.id, 'email')
-                    }.bind(this)}
+            this.props.actions.setUserUpdateFormField(e, viewer.id, 'email');
+          }.bind(this)}
+          placeholder='Your current password'
+          type='password'
+          value={emailForm.data.currentPassword}
           />
         <br />
-        <RaisedButton type="submit" label="Next" primary disabled={!(emailForm.data.newEmail && emailForm.data.currentPassword)} />
+        <RaisedButton
+          disabled={!(emailForm.data.newEmail && emailForm.data.currentPassword)}
+          label="Next"
+          primary
+          type="submit"
+          />
         </span>
       );
 
@@ -76,16 +80,21 @@ export default class Me extends Component {
         <span>
           <p>You will receive a link to confirm your new email.</p>
         <br />
-        <RaisedButton type="submit" label="Send confirmation link" primary disabled={!(emailForm.data.newEmail && emailForm.data.currentPassword)} />
+        <RaisedButton
+          disabled={!(emailForm.data.newEmail && emailForm.data.currentPassword)}
+          label="Send confirmation link"
+          primary
+          type="submit"
+          />
           <span> </span>
-        <RaisedButton onClick={(e)=>{this.resetFormStep(e, 'email')}} label="Cancel" />
+        <RaisedButton label="Cancel" onClick={(e)=>{this.resetFormStep(e, 'email');}}/>
       </span>
           );
     }
   }
   render() {
 
-    const {msg, users: {viewer, viewer: {email}}, actions} = this.props;
+    const {msg, users: {viewer, viewer: {email}}} = this.props;
 
     const passwordForm = this.props.users.getIn(['forms', 'id', viewer.id, 'password']);
     const emailForm = this.props.users.getIn(['forms', 'id', viewer.id, 'email']);
@@ -103,7 +112,7 @@ export default class Me extends Component {
     return (
       <DocumentTitle title={msg.me.title}>
 
-        <Grid fluid={true} style={{marginTop:20}}>
+        <Grid fluid style={{marginTop:20}}>
           <Row style={{marginBottom:20}}>
             <Col style={{textAlign:'center'}}>
               <mui.Avatar>
@@ -121,19 +130,17 @@ export default class Me extends Component {
               { /*<h3>Security & Email</h3> */ }
 
               <h4>Change password</h4>
-              <form onSubmit={(e)=>{this.handleFormSubmit(e, 'password')}}>
-
-
+              <form onSubmit={(e)=>{this.handleFormSubmit(e, 'password');}}>
                 <TextField
-                  placeholder='New Password'
-                  name='password'
-                  type='password'
-                  fullWidth
-                  value={passwordForm.data.password}
                   errorText={passwordForm.meta.errors.get('password') || null}
+                  fullWidth
+                  name='password'
                   onChange={(e)=>{
-                    this.props.actions.setUserUpdateFormField(e, viewer.id, 'password')
-                    }.bind(this)}
+                    this.props.actions.setUserUpdateFormField(e, viewer.id, 'password');
+                  }.bind(this)}
+                  placeholder='New Password'
+                  type='password'
+                  value={passwordForm.data.password}
                   />
                 <br />
                 { /*<TextField
@@ -158,7 +165,12 @@ export default class Me extends Component {
                     }.bind(this)}
                   />
                 <br /> */ }
-                <RaisedButton type="submit" label="Save" primary disabled={!(passwordForm.data.password && passwordForm.data.confirmPassword && passwordForm.data.currentPassword)} />
+                <RaisedButton
+                  disabled={!(passwordForm.data.password && passwordForm.data.confirmPassword && passwordForm.data.currentPassword)}
+                  label="Save"
+                  primary
+                  type="submit"
+                  />
               </form>
 
               <br />
@@ -166,7 +178,7 @@ export default class Me extends Component {
 
               <h4>Change email</h4>
 
-              <form onSubmit={(e)=>{this.nextFormStep(e, 'email')}}>
+              <form onSubmit={(e)=>{this.nextFormStep(e, 'email');}}>
                 {this.renderEmailChangeForm()}
               </form>
 
@@ -194,7 +206,7 @@ export default class Me extends Component {
   nextFormStep(e, formKey) {
     e.preventDefault();
     let state = this.state;
-    state.formStep[formKey]++
+    state.formStep[formKey]++;
     this.setState(state);
     this.setState({test:Math.random()});
   }
@@ -212,7 +224,7 @@ export default class Me extends Component {
     e.preventDefault();
     const data = this.props.users.getIn(['forms', 'id', this.props.users.viewer.id, formKey]).data;
 
-    this.props.actions.saveUserUpdateForm(this.props.users.viewer.id, formKey, data.toJS())
+    this.props.actions.saveUserUpdateForm(this.props.users.viewer.id, formKey, data.toJS());
   }
 
 }

@@ -7,14 +7,9 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var mui = require('material-ui');
-var bs = require('react-bootstrap'),
-  {Nav, NavItem, ButtonToolbar, ButtonGroup, Button, Glyphicon, TabbedArea, TabPane, DropdownButton, MenuItem} = bs;
-
-var Loader = require('../components/Loader');
-var AppContentCanvas = require('../components/layout/AppContentCanvas');
-import OperationsDropdown from './components/OperationsDropdown.js';
+import React from 'react';
+import Loader from '../components/Loader';
+import AppContentCanvas from '../components/layout/AppContentCanvas';
 import Issue from './components/Issue.js';
 
 /**
@@ -23,7 +18,14 @@ import Issue from './components/Issue.js';
  * @todo define propTypes
  * @author sergii gamaiunov <hello@webkadabra.com>
  */
-var TopicView = React.createClass({
+let TopicView = React.createClass({
+  propTypes: {
+    actions: React.PropTypes.object,
+    boards: React.PropTypes.object,
+    io: React.PropTypes.object,
+    params: React.PropTypes.object,
+    topicActions: React.PropTypes.object,
+  },
 
   contextTypes: {
     muiTheme: React.PropTypes.object,
@@ -33,7 +35,7 @@ var TopicView = React.createClass({
    * prealod board info
    */
   componentDidMount: function() {
-    if(process.env.IS_BROWSER == true) {
+    if (process.env.IS_BROWSER === true) {
       if (this.props.params.id) {
         this.props.topicActions.loadNamespaceTopicByNum(this.props.params.namespace, this.props.params.board_id, this.props.params.group_key, this.props.params.id);
       }
@@ -50,12 +52,10 @@ var TopicView = React.createClass({
    * @returns {XML}
    */
   render: function() {
-
     const viewTopic = this.props.boards.viewTopic;
-
-    if (viewTopic.loading == true &&
+    if (viewTopic.loading === true &&
         // replace whole page by loader only if we're switching between topics, or else we get unnecessary redraw of comments etc.
-      (!viewTopic.id || parseInt(viewTopic.contextTopicNum) !== parseInt(this.props.params.id))) {
+      (!viewTopic.id || parseInt(viewTopic.contextTopicNum, 10) !== parseInt(this.props.params.id, 10))) {
 
       return (
         <AppContentCanvas header={
@@ -65,12 +65,12 @@ var TopicView = React.createClass({
     }
 
     let style = {
-      opacity: this.props.boards.viewTopic.loading == true ? .3 : 1,
+      opacity: this.props.boards.viewTopic.loading === true ? .3 : 1,
       position: 'relative'
     };
 
     return (
-      <div style={style} className="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+      <div className="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1" style={style}>
         <Issue
           actions={this.props.actions}
           io={this.props.io}
@@ -82,4 +82,4 @@ var TopicView = React.createClass({
   },
 });
 
-module.exports = TopicView;
+module.exports = TopicView; // eslint-disable-line no-undef

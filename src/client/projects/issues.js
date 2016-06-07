@@ -16,10 +16,14 @@ import ProjectsEmpty from './components/projects-empty';
 import IssueView from './components/Issue';
 
 export default class ProjectIssues extends Component {
-
+  static propTypes = {
+    boards: React.PropTypes.object,
+    children: React.PropTypes.object,
+    msg: React.PropTypes.object,
+    params: React.PropTypes.object,
+  }
   render() {
-    const {board, meta, listFilters, newTopic, formFields} = this.props.boards;
-    const msg = this.props.msg.topics;
+    const {board} = this.props.boards;
     const {children, ...passProps} = this.props;
     return (
       <MasterDetailsListView

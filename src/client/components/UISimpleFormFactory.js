@@ -25,7 +25,7 @@ import RemoteSelectField from './form/RemoteSelectField';
  * @author sergii gamaiunov <hello@webkadabra.com>
  * @type {*|exports|module.exports}
  */
-class Page extends Component{
+class Page extends Component {
 
   static propTypes = {
     form: React.PropTypes.any.isRequired,
@@ -33,7 +33,7 @@ class Page extends Component{
     handleSubmit: React.PropTypes.func,
     modelValues: React.PropTypes.object,
     onChange: React.PropTypes.func.isRequired,
-    primaryInputName: React.PropTypes.string
+    primaryInputName: React.PropTypes.string,
   };
 
   render() {
@@ -45,13 +45,13 @@ class Page extends Component{
    * @returns {XML}
    */
   renderForm() {
-    if(!this.props.formScheme) {
+    if (!this.props.formScheme) {
       return <div></div>;
     }
-    return <div className="clearfix">
+    return (<div className="clearfix">
       {this.props.formScheme.map(this.renderItem.bind(this))}
       { /*<mui.RaisedButton primary={true} onClick={this.handleSubmit} label="Save" />*/ }
-    </div>
+    </div>);
   }
 
   /**
@@ -107,8 +107,8 @@ class Page extends Component{
 
     if (this.props.modelValues && this.props.modelValues[item.name]) {
       props.value = this.props.modelValues[item.name];
-    } else {
-      if (item.value) props.value = item.value;
+    } else if (item.value) {
+      props.value = item.value;
     }
 
     if (item.type === 'select' || item.type === 'multiselect') {
@@ -130,12 +130,13 @@ class Page extends Component{
 
       props.onChange = (function(newValue, newValues) {
         // in case of multiselect, pass `newValues` - form data has to be normalized before POSTing, see actions
-        this.onReactSelectChange(newValue, newValues, item.name)}).bind(this);
+        this.onReactSelectChange(newValue, newValues, item.name);
+      }).bind(this);
 
       // `react-select` does not like unset value, at least empty {String} is required
       if (!props.value) props.value = '';
 
-      let FilterComponent = Select;
+      //let FilterComponent = Select;
 
       if (item.endpoint) {
         props.endpoint = item.endpoint;
@@ -159,7 +160,7 @@ class Page extends Component{
           }
           props.endpointIncludeValues = item.endpointIncludeValues;
         }
-        FilterComponent = RemoteSelectField;
+        //FilterComponent = RemoteSelectField;
       }
 
       return (
@@ -204,7 +205,7 @@ class Page extends Component{
         <div  style={{'width':'100%'}}>
           <mui.Checkbox
             {...props}
-            onCheck={(function(event, isChecked){
+            onCheck={(function(event, isChecked) {
               this.props.onChange({
                 target:{
                   name: event.target.name,
@@ -247,4 +248,4 @@ class Page extends Component{
   }
 };
 
-module.exports = Page;
+module.exports = Page; // eslint-disable-line no-undef

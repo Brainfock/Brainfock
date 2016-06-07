@@ -7,16 +7,12 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react'),
-  bs = require('react-bootstrap'),
-  {Button} = bs;
-
+import React from 'react';
+//import {Button} from 'react-bootstrap';
 import Select from 'react-select';
+
 import RemoteSelectField from './form/RemoteSelectField';
-var mui = require('material-ui');
-
 require('react-select/less/select.less');
-
 
 /**
  * Renders filters based on props.filters configuration
@@ -24,16 +20,21 @@ require('react-select/less/select.less');
  *
  * @author sergii gamaiunov <hello@webkadabra.com>
  */
-var UISimpleFilters = React.createClass({
-
+let UISimpleFilters = React.createClass({
+  propTypes: {
+    actions: React.PropTypes.any,
+    filters: React.PropTypes.any,
+    header: React.PropTypes.element,
+    onApply: React.PropTypes.any,
+    style: React.PropTypes.object,
+  },
   getInitialState: function() {
     return {
 
     };
   },
 
-  getDefaultProps: function()
-  {
+  getDefaultProps() {
     return {
       filters: [
       ],
@@ -45,16 +46,14 @@ var UISimpleFilters = React.createClass({
   },
 
   applyFilters: function() {
-
     let send = {};
 
-    for(let i = 0; i < this.filters.length; i++) {
+    for (let i = 0; i < this.filters.length; i++) {
       let filterId = this.filters[i];
-      if(this.refs[filterId]) {
+      if (this.refs[filterId]) {
         send[filterId] = this.refs[filterId].state.values;
         //console.log('filter ' +filterId + ' value:',this.refs[filterId].state.values)
-      }
-      else {
+      } else {
         send[filterId] = null;
       }
     }
@@ -62,45 +61,39 @@ var UISimpleFilters = React.createClass({
     this.props.onApply(send);
 
   },
+
   onFilterChange: function(a, b, c) {
-    //console.log('onFilterChange')
-    //console.log('a',a)
-    //console.log('b',b)
   },
 
   /**
    * @todo implement master-detail view (optional)
    * @returns {*}
    */
-  render: function()
-  {
-    const {filters, actions} = this.props;
+  render() {
+    const {filters} = this.props;
     let styles = this.props.style || {};
     return (
-      <div style={styles} className="clearfix">
+      <div className="clearfix" style={styles}>
         {this.props.header}
         {filters.map(filter =>
           this.renderItem(filter)
         )}
       </div>
     );
-
-
-    return (<div style={styles} className="clearfix">
-      {this.props.filters.map(this.renderItem)}
-       <Button onClick={this.applyFilters}>Apply</Button>
-      </div>);
+    //return (<div style={styles} className="clearfix">
+    //  {this.props.filters.map(this.renderItem)}
+    //   <Button onClick={this.applyFilters}>Apply</Button>
+    //  </div>);
   },
   filters:[],
-  renderItem:function(item)
-  {
-    if(item.type == 'select' || item.type == 'multiselect') {
+  renderItem(item) {
+    if (item.type === 'select' || item.type === 'multiselect') {
       let props = {
         name:item.id,
         placeholder:item.label,
         options:item.options,
       };
-      if(item.type == 'multiselect') {
+      if (item.type === 'multiselect') {
         props.multi = true;
       }
       props.ref = item.id;
@@ -110,14 +103,13 @@ var UISimpleFilters = React.createClass({
       props.value = '';
 
       let Filter;
-      if(item.endpoint) {
+      if (item.endpoint) {
         Filter = (<RemoteSelectField
           {...props}
           endpoint={item.endpoint}
           onChange={this.onFilterChange}
           />);
-      }
-      else {
+      } else {
         Filter = (<Select
           {...props}
           onChange={this.onFilterChange}
@@ -156,4 +148,4 @@ var UISimpleFilters = React.createClass({
   },
 });
 
-module.exports = UISimpleFilters;
+module.exports = UISimpleFilters; // eslint-disable-line no-undef

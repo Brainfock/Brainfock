@@ -15,7 +15,13 @@ import ListViewItem from './components/project-list-item';
 import MasterDetailsListView from './components/master-detail.list';
 
 export default class ProjectsIndex extends Component {
-
+  static propTypes = {
+    actions: React.PropTypes.object,
+    boards: React.PropTypes.object,
+    children: React.PropTypes.object,
+    msg: React.PropTypes.object,
+    params: React.PropTypes.object,
+  }
   componentWillMount() {
     this.props.actions.appSetActiveSectionLabel('Projects');
   }
@@ -26,9 +32,9 @@ export default class ProjectsIndex extends Component {
         containerTopic={null}
         disableDetails
         emptyListFallback={ProjectsEmpty}
-        listViewItem={ListViewItem}
-        groupKey='project'
         groupBy={this.props.location.query && this.props.location.query.groupBy}
+        groupKey='project'
+        listViewItem={ListViewItem}
         {...passProps}
         />
     );

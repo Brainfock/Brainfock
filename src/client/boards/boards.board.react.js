@@ -9,6 +9,7 @@ export default class Todo extends Component {
   static propTypes = {
     actions: PropTypes.object,
     group: PropTypes.object,
+    history: PropTypes.object,
     isPreview: PropTypes.bool,
     params: PropTypes.object,
     todo: PropTypes.object.isRequired,

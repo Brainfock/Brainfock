@@ -7,8 +7,7 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var loopback;
-loopback = require('loopback');
+import loopback from 'loopback';
 
 module.exports = function(app) {
   // need to enable context right here, see https://github.com/strongloop/loopback/issues/1651
@@ -26,7 +25,7 @@ module.exports = function(app) {
     }
 
     app.models.User.findById(req.accessToken.userId, function(err, user) {
-      var loopbackContext;
+      let loopbackContext;
       if (err) {
         return next(err);
       }
@@ -52,8 +51,7 @@ module.exports = function(app) {
     return next();
   });
   app.models.User.afterRemote('login', function(context, result, next) {
-    var req, res;
-    req = context.req, res = context.res;
+    let res = context.res;
     if (result != null) {
       if (result.id != null) {
         res.cookie('authorization', result.id, {
@@ -65,8 +63,7 @@ module.exports = function(app) {
     return next();
   });
   return app.models.User.afterRemote('logout', function(context, result, next) {
-    var req, res;
-    req = context.req, res = context.res;
+    let res = context.res;
     return res.clearCookie('authorization');
   });
 };

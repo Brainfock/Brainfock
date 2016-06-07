@@ -6,7 +6,7 @@
  *
  * @type {{path: string, getComponent}}
  */
-module.exports = {
+module.exports = { // eslint-disable-line no-undef
   path: ':namespace',
 
   getComponent(location, cb) {

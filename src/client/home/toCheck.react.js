@@ -1,7 +1,7 @@
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import {FormattedHTMLMessage} from 'react-intl';
-import {Link} from 'react-router';
+//import {Link} from 'react-router';
 
 export default class ToCheck extends Component {
 

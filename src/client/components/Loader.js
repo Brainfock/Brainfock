@@ -2,15 +2,14 @@ import React, {PropTypes} from 'react';
 import {LinearProgress} from 'material-ui';
 
 // TODO: i18n
-module.exports = React.createClass({
+module.exports = React.createClass({ // eslint-disable-line no-undef
 
   propTypes: {
     asGlobal: PropTypes.bool, // render progress bar on very top of page
     noLabel: PropTypes.bool,
   },
 
-  render: function() {
-
+  render() {
     let {wrapperStyle, propgressBarStyle} = {};
     if (!this.props.noLabel) {
       propgressBarStyle = {margin: 0};

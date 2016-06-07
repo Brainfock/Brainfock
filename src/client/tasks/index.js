@@ -23,7 +23,14 @@ const views = {
   'boards.homepage': ListView,
 };
 
-module.exports = React.createClass({
+module.exports = React.createClass({ // eslint-disable-line no-undef
+  propTypes: {
+    actions: React.PropTypes.object,
+    boards: React.PropTypes.object,
+    children: React.PropTypes.object,
+    history: React.PropTypes.object,
+    location: React.PropTypes.object,
+  },
 
   componentWillMount() {
     this.props.actions.appSetActiveSectionLabel('Tasks');
@@ -33,15 +40,13 @@ module.exports = React.createClass({
     }
   },
 
-  render: function()
-  {
+  render() {
     let View;
     if (views[this.props.boards.group.view]) {
       View = views[this.props.boards.group.view];
     } else {
       View = MasterDetailsListView;
     }
-
     View = MasterDetailsListView;
 
     const {children, ...passProps} = this.props;
@@ -50,14 +55,14 @@ module.exports = React.createClass({
       history={this.props.history}
       menuItems={this.menuItems()}>
       <View
-        containerTopic={null}
-        disableDetails_
         browseAll
-        emptyListFallback={ProjectsEmpty}
+        containerTopic={null}
         detailsComponent={IssueView}
+        disableDetails_
+        emptyListFallback={ProjectsEmpty}
+        groupBy={this.props.location.query && this.props.location.query.groupBy}
         groupKey='issue'
         listViewItem={TaskListItem}
-        groupBy={this.props.location.query && this.props.location.query.groupBy}
         {...passProps}
         />
     </PageWithNav>
@@ -69,10 +74,6 @@ module.exports = React.createClass({
    * @returns {*[]}
    */
   menuItems() {
-    let icon;
-    if (this.props.boards.board.accessPrivateYn) {
-      icon = (<i className="fa fa-eye-slash"></i>);
-    }
     return [
       {
         route: '/tasks/',

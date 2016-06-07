@@ -7,7 +7,7 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var path = require('path');
+let path = require('path');
 
 const config = require('../config');
 require('babel/register')({stage: 0});
@@ -17,26 +17,26 @@ config.webpackStylesExtensions.forEach(function(ext) {
 });
 
 const pkg = require('../../../package.json');
-VERSION = JSON.stringify(pkg.version);
-VERSION_FULL = JSON.stringify(pkg.name + ' ' + pkg.version);
+VERSION = JSON.stringify(pkg.version); // eslint-disable-line no-undef
+VERSION_FULL = JSON.stringify(pkg.name + ' ' + pkg.version); // eslint-disable-line no-undef
 
-var app = require(path.resolve(__dirname, '../main'));
+let app = require(path.resolve(__dirname, '../main'));
 
 function debug(data) {
   console.log(data);
 }
 
-var accounts = [
-  {username: 'Admin', email: 'admin@brainfock.com', password: 'brainfock'},
-  {username: 'John', email: 'john@doe.com', password: 'password'},
-  {username: 'Jane', email: 'jane@doe.com', password: 'password'}
-];
+//let accounts = [
+//  {username: 'Admin', email: 'admin@brainfock.com', password: 'brainfock'},
+//  {username: 'John', email: 'john@doe.com', password: 'password'},
+//  {username: 'Jane', email: 'jane@doe.com', password: 'password'}
+//];
 
-var dataSource = app.dataSources.db;
+let dataSource = app.dataSources.db;
 
-var User = app.models.user;
-var Role = app.models.Role;
-var RoleMapping = app.models.RoleMapping;
+//let User = app.models.user;
+//let Role = app.models.Role;
+let RoleMapping = app.models.RoleMapping;
 //var Team = app.models.Team;
 
 //dataSource.automigrate('User', function(err) {

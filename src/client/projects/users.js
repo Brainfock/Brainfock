@@ -13,9 +13,12 @@ import RemoteSelectField from '../components/form/RemoteSelectField.js';
 import {RaisedButton} from 'material-ui';
 
 export default class Dashboard extends React.Component {
+  static propTypes = {
+    actions: React.PropTypes.object,
+    boards: React.PropTypes.object,
+  }
 
   componentWillMount() {
-
     //const {users: {viewer}, actions} = this.props;
     //
     //if (!this.props.users.getIn(['forms', 'id', -1, 'create'])) {
@@ -23,8 +26,7 @@ export default class Dashboard extends React.Component {
     //}
   }
 
-  render()
-  {
+  render() {
     return (
       <div className="wiki-wrapper">
         <div className="wiki-page">
@@ -32,13 +34,14 @@ export default class Dashboard extends React.Component {
             <div className="row">
               <h4>Invite new member to {this.props.boards.board.data.summary}:</h4>
               <div className="col-md-5 col-sm-4">
-                <RemoteSelectField label='Username or email'
+                <RemoteSelectField
                   endpoint='/api/members'
                   formatCallback={(item) => {
                     return {
                       value:(item.id),
                       label:(item.username)
                     };}}
+                  label='Username or email'
                   />
               </div>
               <div className="col-md-5 col-sm-4">
