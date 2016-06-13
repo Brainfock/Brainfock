@@ -12,6 +12,8 @@ import * as actions from '../topics/actions';
 import * as commentsActions from '../comments/actions';
 import Todo from './board';
 import FormRecord from './form';
+import MemberForm from './member-form';
+import MemberFormModel from '../topics/topic-user.js';
 import ModelSchema from './model.js';
 import TopicGroup from './topic-group';
 import Comment from '../comments/comment';
@@ -256,7 +258,7 @@ export default function boardsReducer(state = initialState, action) {
       // instantiate update form
       if (action.payload.topicId) {
         if (!state.getIn(['forms', 'id', action.payload.topicId])) {
-          const cid = getRandomString();
+          let cid = getRandomString();
           return state
             .setIn(['formsRegistry', 'cid',  cid], action.payload.topicId) // map `cid` to actual topic id in case we need it
             .setIn(['forms', 'id', action.payload.topicId], new FormRecord({
@@ -273,7 +275,7 @@ export default function boardsReducer(state = initialState, action) {
 
         if (!state.getIn(['formsRegistry', contextId,  action.payload.groupKey])) {
 
-          const cid = getRandomString();
+          let cid = getRandomString();
 
           return state
             .setIn(['formsRegistry', contextId,  action.payload.groupKey], cid)
@@ -295,7 +297,7 @@ export default function boardsReducer(state = initialState, action) {
 
     case actions.SET_NEW_TOPIC_FIELD: {
 
-      const {name, value, cid, id} = action.payload;
+      let {name, value, cid, id} = action.payload;
 
       if (cid) {
         return state
@@ -356,7 +358,7 @@ export default function boardsReducer(state = initialState, action) {
 
       if (action.meta.formCid) {
 
-        const cid = action.meta.formCid;
+        let cid = action.meta.formCid;
         if (action.payload.error && action.payload.error.details) {
 
           // error with details
@@ -564,6 +566,31 @@ export default function boardsReducer(state = initialState, action) {
           .updateIn(['board', 'menu'], list => list.clear())
           .updateIn(['board', 'menu'], list => list.push(...newMenu));
       }
+    }
+
+    case actions.SETUP_TOPIC_MEMBER_INVITE_FORM: {
+      if (action.payload.topicId) {
+        if (!state.getIn(['forms', 'member-invite', action.payload.topicId])) {
+          let cid = getRandomString();
+          return state
+            .setIn(['forms', 'member-invite', action.payload.topicId], new MemberForm({
+              cid: cid,
+              data: new MemberFormModel(action.payload.initialValues || {})
+            }));
+
+        } else {
+          return state;
+        }
+      }
+      return state;
+    }
+
+    case actions.SET_TOPIC_MEMBER_INVITE_FORM_FIELD: {
+      let {name, value, topicId} = action.payload;
+      return state
+        .setIn(['forms', 'member-invite', topicId, 'data', name], value)
+        .deleteIn(['forms', 'member-invite', topicId, 'meta', 'errors', name]);
+
     }
   }
 
