@@ -45,14 +45,14 @@ export default class Dashboard extends React.Component {
               <RemoteSelectField
                 endpoint='/api/members'
                 formatCallback={(item) => {
-                    return {
-                      // for react-select:
-                      value:(item.id),
-                      label:(item.username),
-                      // for redux stuff:
-                      id:(item.id),
-                      email:(item.email)
-                    };}}
+                  return {
+                    // for react-select:
+                    value:(item.id),
+                    label:(item.username),
+                    // for redux stuff:
+                    id:(item.id),
+                    email:(item.email)
+                  };}}
                 label='Username or email'
                 onChange = {::this.inputChanged}
                 value=''
