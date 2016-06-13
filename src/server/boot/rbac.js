@@ -1583,4 +1583,56 @@ module.exports = function(app) {
       return reject();
     }
   });
+
+
+  /**
+   * @todo implement
+   */
+  Role.registerResolver('$topicAdminAccess', function(role, context, cb) {
+    function reject() {
+      process.nextTick(function() {
+        cb(null, false);
+      });
+    }
+    Role.isInRole('$authenticated', context, (err, isAllowed) => {
+      if (err) {
+        return reject(err);
+      } else if (!isAllowed) {
+        return reject();
+      } else {
+        return cb(null, true);
+      }
+    });
+  });
+
+  /**
+   * @todo implement - should allow only topic owner and any user with `admin` access level
+   */
+  Role.registerResolver('$topicReadAccess', function(role, context, cb) {
+    function reject() {
+      process.nextTick(function() {
+        cb(null, false);
+      });
+    }
+    Role.isInRole('$authenticated', context, (err, isAllowed) => {
+      if (err) {
+        return reject(err);
+      } else if (!isAllowed) {
+        return reject();
+      } else {
+        return cb(null, true);
+      }
+    });
+  });
+
+  /**
+   * simple RBAC debug resolver
+   */
+  Role.registerResolver('$debugResolver', function(role, context, cb) {
+    const userId = context.accessToken.userId;
+    console.log('[RBAC $debugResolver] Validate access to  operation `' + context.remotingContext.method.name
+      + '` of model `' + context.modelName + ':' + context.modelId
+      + '`, user:' + userId);
+    return cb(null, true);
+  });
 };
