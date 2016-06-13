@@ -125,7 +125,18 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "user": {
+      "type": "belongsTo",
+      "model": "User",
+      "foreignKey": "userId"
+    },
+    "topic": {
+      "type": "belongsTo",
+      "model": "Topic",
+      "foreignKey": "topicId"
+    }
+  },
   "acls": [
     {
       "accessType": "*",
