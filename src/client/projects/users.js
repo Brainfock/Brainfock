@@ -28,7 +28,6 @@ export default class Dashboard extends React.Component {
   }
 
   render() {
-
     const membersList = this.renderList();
     return (
       <div className="wiki-wrapper">
@@ -60,7 +59,7 @@ export default class Dashboard extends React.Component {
           </div>
           <div className="container-fluid">
             <div className="row">
-              {this.renderList()}
+              {membersList}
             </div>
           </div>
         </div>
@@ -77,7 +76,6 @@ export default class Dashboard extends React.Component {
     if (listMeta.isFetching === true || !list) {
       return <Loader />;
     } else {
-      console.log('>> list: ', list)
       return (<div>
         {list.map(member =>
             <div>
@@ -87,6 +85,7 @@ export default class Dashboard extends React.Component {
       </div>);
     }
   }
+
   inputChanged(userId, userData) {
     if (userData.length) {
       userData = userData[0];
@@ -100,6 +99,7 @@ export default class Dashboard extends React.Component {
     ));
 
   }
+
   handleSubmit = () => {
     const formData = this.props.boards.getIn(['forms', 'member-invite', this.props.boards.board.data.id, 'data']);
     this.props.topicActions.submitTopicMemberInviteForm(this.props.boards.board.data.id, formData);
