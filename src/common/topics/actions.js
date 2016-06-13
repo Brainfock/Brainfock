@@ -679,6 +679,32 @@ export function fetchTopicMenu(id, namespace) {
     }
   });
 }
+/**
+ * find topic members
+ * @param topicId
+ * @param query
+ * @returns {Function}
+ */
+export function findTopicMembers(topicId, query) {
+  let endpoint = 'topics/' + topicId + '/members';
+  if (query) {
+    endpoint += '?' + toQueryString({filter:{where:query}}, false);
+  }
+  return ({fetch, validate}) => ({
+    type: 'FIND_TOPIC_MEMBERS',
+    meta: {
+      topicId
+    },
+    payload: {
+      promise:  apiGet(fetch, endpoint)
+        .catch(response => {
+          throw response;
+        })
+    }
+  });
+}
+export const FIND_TOPIC_MEMBERS = 'FIND_TOPIC_MEMBERS';
+
 export const TOPIC_MEMBER_CREATE = 'TOPIC_MEMBER_CREATE';
 export function submitTopicMemberInviteForm(topicId, data) {
   const endpoint = 'topics/' + topicId + '/members?include=user';
