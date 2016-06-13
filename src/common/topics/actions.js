@@ -681,14 +681,14 @@ export function fetchTopicMenu(id, namespace) {
 }
 export const TOPIC_MEMBER_CREATE = 'TOPIC_MEMBER_CREATE';
 export function submitTopicMemberInviteForm(topicId, data) {
-  const endpoint = 'topics/' + topicId + '/members';
+  const endpoint = 'topics/' + topicId + '/members?include=user';
   return ({fetch, validate}) => ({
     type: 'TOPIC_MEMBER_CREATE',
     meta: {
       topicId: topicId
     },
     payload: {
-      promise: apiPost(fetch, endpoint, data)
+      promise: apiPost(fetch, endpoint, {userId: data.id})
         .catch(response => {
           // decode validation error messages from server
           if (!response) {
