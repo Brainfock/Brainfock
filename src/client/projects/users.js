@@ -12,6 +12,7 @@ import React from 'react';
 import RemoteSelectField from '../components/form/RemoteSelectField.js';
 import {RaisedButton} from 'material-ui';
 import Loader from '../components/Loader.js';
+import {List, ListItem} from 'material-ui';
 
 export default class Dashboard extends React.Component {
   static propTypes = {
@@ -30,15 +31,20 @@ export default class Dashboard extends React.Component {
   render() {
     const membersList = this.renderList();
     return (
-      <div className="wiki-wrapper">
-        <div className="wiki-page">
+      <div>
+          <h3 style={{paddingLeft:15}}>{this.props.boards.board.data.summary} team</h3>
           <div className="container-fluid">
             <div className="row">
-              <h4>Invite new member to {this.props.boards.board.data.summary}:</h4>
-              <div className="col-md-5 col-sm-4">
-                <RemoteSelectField
-                  endpoint='/api/members'
-                  formatCallback={(item) => {
+              {membersList}
+            </div>
+          </div>
+        <div className="container-fluid">
+          <div className="row">
+            <h4 style={{paddingLeft:15}}>Invite new member to {this.props.boards.board.data.summary}</h4>
+            <div className="col-md-5 col-sm-4">
+              <RemoteSelectField
+                endpoint='/api/members'
+                formatCallback={(item) => {
                     return {
                       // for react-select:
                       value:(item.id),
@@ -47,24 +53,18 @@ export default class Dashboard extends React.Component {
                       id:(item.id),
                       email:(item.email)
                     };}}
-                  label='Username or email'
-                  onChange = {::this.inputChanged}
-                  value=''
-                  />
-              </div>
-              <div className="col-md-5 col-sm-4">
-                <RaisedButton label='Invite user' onTouchTap={this.handleSubmit} />
-              </div>
+                label='Username or email'
+                onChange = {::this.inputChanged}
+                value=''
+                />
             </div>
-          </div>
-          <div className="container-fluid">
-            <div className="row">
-              {membersList}
+            <div className="col-md-5 col-sm-4">
+              <RaisedButton label='Invite user' onTouchTap={this.handleSubmit} />
             </div>
           </div>
         </div>
+        </div>
 
-      </div>
     );
   }
 
@@ -76,13 +76,13 @@ export default class Dashboard extends React.Component {
     if (listMeta.isFetching === true || !list) {
       return <Loader />;
     } else {
-      return (<div>
+      return (<List>
         {list.map(member =>
-            <div>
+            <ListItem>
               {member.user.username} / {member.user.email}
-            </div>
+            </ListItem>
         )}
-      </div>);
+      </List>);
     }
   }
 
