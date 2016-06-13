@@ -4,7 +4,6 @@ env:
 language: node_js
 node_js:
   - "4"
-  - "6"
 before_install: if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
 addons:
   apt:
