@@ -11,6 +11,7 @@ import React from 'react';
 
 import RemoteSelectField from '../components/form/RemoteSelectField.js';
 import {RaisedButton} from 'material-ui';
+import Loader from '../components/Loader.js';
 
 export default class Dashboard extends React.Component {
   static propTypes = {
@@ -23,9 +24,12 @@ export default class Dashboard extends React.Component {
     if (!this.props.boards.getIn(['forms', 'member-invite', this.props.boards.board.data.id])) {
       this.props.topicActions.setupTopicMemberInviteForm(this.props.boards.board.data.id);
     }
+    this.props.topicActions.findTopicMembers(this.props.boards.board.data.id);
   }
 
   render() {
+
+    const membersList = this.renderList();
     return (
       <div className="wiki-wrapper">
         <div className="wiki-page">
@@ -54,12 +58,35 @@ export default class Dashboard extends React.Component {
               </div>
             </div>
           </div>
+          <div className="container-fluid">
+            <div className="row">
+              {this.renderList()}
+            </div>
+          </div>
         </div>
 
       </div>
     );
   }
 
+  renderList() {
+    if (!this.props.boards.getIn(['members', this.props.boards.board.data.id])) {
+      return <Loader />;
+    }
+    const {list, listMeta} = this.props.boards.getIn(['members', this.props.boards.board.data.id]);
+    if (listMeta.isFetching === true || !list) {
+      return <Loader />;
+    } else {
+      console.log('>> list: ', list)
+      return (<div>
+        {list.map(member =>
+            <div>
+              {member.user.username} / {member.user.email}
+            </div>
+        )}
+      </div>);
+    }
+  }
   inputChanged(userId, userData) {
     if (userData.length) {
       userData = userData[0];
