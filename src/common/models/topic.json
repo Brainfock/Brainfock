@@ -657,13 +657,6 @@
       "principalType": "ROLE",
       "principalId": "$debugResolver",
       "permission": "ALLOW",
-      "property": "__create__members"
-    },
-    {
-      "accessType": "*",
-      "principalType": "ROLE",
-      "principalId": "$debugResolver",
-      "permission": "ALLOW",
       "property": "**.**"
     },
     {
@@ -776,9 +769,16 @@
     {
       "accessType": "*",
       "principalType": "ROLE",
-      "principalId": "$debugResolver",
+      "principalId": "$topicReadAccess",
       "permission": "ALLOW",
       "property": "__get__members"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$topicAdminAccess",
+      "permission": "ALLOW",
+      "property": "__create__members"
     }
   ],
   "methods": []
