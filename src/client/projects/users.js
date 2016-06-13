@@ -16,14 +16,13 @@ export default class Dashboard extends React.Component {
   static propTypes = {
     actions: React.PropTypes.object,
     boards: React.PropTypes.object,
+    topicActions: React.PropTypes.object,
   }
 
   componentWillMount() {
-    //const {users: {viewer}, actions} = this.props;
-    //
-    //if (!this.props.users.getIn(['forms', 'id', -1, 'create'])) {
-    //  actions.makeUserUpdateFormRecord(-1, 'create');
-    //}
+    if (!this.props.boards.getIn(['forms', 'member-invite', this.props.boards.board.data.id])) {
+      this.props.topicActions.setupTopicMemberInviteForm(this.props.boards.board.data.id);
+    }
   }
 
   render() {
@@ -38,10 +37,16 @@ export default class Dashboard extends React.Component {
                   endpoint='/api/members'
                   formatCallback={(item) => {
                     return {
+                      // for react-select:
                       value:(item.id),
-                      label:(item.username)
+                      label:(item.username),
+                      // for redux stuff:
+                      id:(item.id),
+                      email:(item.email)
                     };}}
                   label='Username or email'
+                  onChange = {::this.inputChanged}
+                  value=''
                   />
               </div>
               <div className="col-md-5 col-sm-4">
@@ -55,8 +60,21 @@ export default class Dashboard extends React.Component {
     );
   }
 
+  inputChanged(userId, userData) {
+    if (userData.length) {
+      userData = userData[0];
+    }
+    ['id', 'email'].forEach((i, ii) => this.props.topicActions.setTopicMemberInviteFormField({
+      target: {
+        name: i,
+        value: userData[i]
+      }},
+      this.props.boards.board.data.id
+    ));
 
+  }
   handleSubmit = () => {
-    this.props.actions.submitTopicMember({open: true});
+    const formData = this.props.boards.getIn(['forms', 'member-invite', this.props.boards.board.data.id, 'data']);
+    this.props.topicActions.submitTopicMemberInviteForm(this.props.boards.board.data.id, formData);
   };
 };
