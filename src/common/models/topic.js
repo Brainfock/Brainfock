@@ -456,6 +456,23 @@ module.exports = function(Topic) {
     });
   });
 
+  /**
+   * force include `user` relation data
+   */
+  Topic.afterRemote('*.__create__members', function(ctx, modelInstance, next) {
+    if (modelInstance) {
+      modelInstance.user(
+        function(err, user) {
+          if (err) return next(err);
+          // we can not modify properties of relations directly via `modelInstance.user=[Object]`:
+          modelInstance.__data.user = user;
+          next(err);
+        });
+    } else {
+      return next();
+    }
+  });
+
   Topic.on('attached', function() {
     const override = Topic.findOne;
     Topic.findOneCore = override;
