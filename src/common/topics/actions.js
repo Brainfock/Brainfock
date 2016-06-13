@@ -712,7 +712,7 @@ export function submitTopicMemberInviteForm(topicId, data) {
   });
 }
 export const SETUP_TOPIC_MEMBER_INVITE_FORM = 'SETUP_TOPIC_MEMBER_INVITE_FORM';
-export function makeTopicMemberInviteForm(topicId, data) {
+export function setupTopicMemberInviteForm(topicId) {
   return {
     type: 'SETUP_TOPIC_MEMBER_INVITE_FORM',
     payload: {
