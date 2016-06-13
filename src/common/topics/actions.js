@@ -679,3 +679,51 @@ export function fetchTopicMenu(id, namespace) {
     }
   });
 }
+export const TOPIC_MEMBER_CREATE = 'TOPIC_MEMBER_CREATE';
+export function submitTopicMemberInviteForm(topicId) {
+  const endpoint = 'topics/' + topicId + '/members';
+  return ({fetch, validate}) => ({
+    type: 'TOPIC_MEMBER_CREATE',
+    meta: {
+      topicId: topicId
+    },
+    payload: {
+      promise: apiPost(fetch, endpoint, data)
+        .catch(response => {
+          // decode validation error messages from server
+          if (!response) {
+            throw new Error('No response');
+          } else if (response.ok === false) return response.json();
+          else {
+            throw response;
+          }
+        })
+        .then(function(jsonResponce) {
+          if (jsonResponce.error) {
+            throw jsonResponce;
+          }
+          else
+            return jsonResponce;
+        }, function(response) {
+          // throw other errors (i.e. 50x) that don't have `.json()` available
+          throw response;
+        })
+    }
+  });
+}
+export const SETUP_TOPIC_MEMBER_INVITE_FORM = 'SETUP_TOPIC_MEMBER_INVITE_FORM';
+export function makeTopicMemberInviteForm(topicId, data) {
+  return {
+    type: 'SETUP_TOPIC_MEMBER_INVITE_FORM',
+    payload: {
+      topicId: topicId
+    }
+  };
+}
+export const SET_TOPIC_MEMBER_INVITE_FORM_FIELD = 'SET_TOPIC_MEMBER_INVITE_FORM_FIELD';
+export function setTopicMemberInviteFormField({target: {name, value}}, topicId) {
+  return {
+    type: SET_TOPIC_MEMBER_INVITE_FORM_FIELD,
+    payload: {name, value, topicId}
+  };
+}
