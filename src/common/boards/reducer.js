@@ -52,7 +52,16 @@ const InitialState = Record({
     error: '',
     errors: new Map()
   })),
-  form: new FormRecord
+  form: new FormRecord,
+  members: new Map(),
+});
+
+const MembersList = Record({
+  list: List(),
+  listMeta: new (Record({
+    isFetching: true,
+    count: 0
+  }))
 });
 
 const initialState = new InitialState;
@@ -591,6 +600,27 @@ export default function boardsReducer(state = initialState, action) {
         .setIn(['forms', 'member-invite', topicId, 'data', name], value)
         .deleteIn(['forms', 'member-invite', topicId, 'meta', 'errors', name]);
 
+    }
+
+    case actions.FIND_TOPIC_MEMBERS + '_PENDING': {
+      if (!(state.getIn(['members', action.meta.topicId]))) {
+        return state
+          .setIn(['members', action.meta.topicId], new MembersList())
+          .setIn(['members', action.meta.topicId, 'listMeta', 'isFetching'], true);
+      }
+    }
+
+    case actions.FIND_TOPIC_MEMBERS + '_ERROR':
+      return state.setIn(['members', action.meta.topicId, 'listMeta', 'isFetching'], false);
+
+    case actions.FIND_TOPIC_MEMBERS + '_SUCCESS': {
+      const newlist = action.payload.map((item) => {
+        return new MemberFormModel({...item});
+      });
+      return state
+        .updateIn(['members', action.meta.topicId, 'list'], list => list.clear())
+        .updateIn(['members', action.meta.topicId, 'list'], list => list.push(...newlist))
+        .setIn(['members', action.meta.topicId, 'listMeta', 'isFetching'], false);
     }
   }
 
