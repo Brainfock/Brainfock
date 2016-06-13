@@ -9,6 +9,9 @@
     "schema": "brainfock_node",
     "table": "user_topic"
   },
+  "scope": {
+    "include": "user"
+  },
   "properties": {
     "id": {
       "type": "Number",
