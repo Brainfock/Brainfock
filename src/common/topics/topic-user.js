@@ -20,4 +20,6 @@ export default Record({
   assignedByUserId: '',
   starredYn: '',
   email: '', // pseudo-field for topic member invintaiton form
+  user: {}, // relation data
+  topic: {}, // relation data
 });
