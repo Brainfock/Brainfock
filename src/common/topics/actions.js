@@ -680,7 +680,7 @@ export function fetchTopicMenu(id, namespace) {
   });
 }
 export const TOPIC_MEMBER_CREATE = 'TOPIC_MEMBER_CREATE';
-export function submitTopicMemberInviteForm(topicId) {
+export function submitTopicMemberInviteForm(topicId, data) {
   const endpoint = 'topics/' + topicId + '/members';
   return ({fetch, validate}) => ({
     type: 'TOPIC_MEMBER_CREATE',
