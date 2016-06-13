@@ -69,7 +69,7 @@ module.exports = function(Member) {
     // Brainfock custom ACLs for built-in `User` model:
     {
       'principalType': 'ROLE',
-      'principalId': 'Admin',
+      'principalId': '$authenticated',
       'permission': 'ALLOW',
       'property': 'find'
     },
