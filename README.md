@@ -13,7 +13,7 @@ Copyright (C) 2015-present Sergii Gamaiunov [@SergiiGama](https://twitter.com/Se
 
 > Brainfock is a modern web-based CMF started out as task & project management tool and ended up as something that angels might have crafted. It  will help you manage projects, project's tasks, deals, contacts, run community (discussion boards), manage documents like Wiki & much more. WIP, however!
 
-Follow Brainfock on [GitHub](https://github.com/Brainfock/Brainfock) or [Facebook](https://www.facebook.com/Brainfock) for updates, and say hi to me [@SergiiGama](https://twitter.com/SergiiGama) so that I know that you know, you know. Oh, and finally there is [Gitter chat](https://gitter.im/Brainfock/Brainfock?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+Check out [live demo](http://bit.ly/1UMz4iZ)! Then, give Brainfock a star on [GitHub](https://github.com/Brainfock/Brainfock) and follow project's pages on [Twitter](https://twitter.com/brainfockapp) or [Facebook](https://www.facebook.com/Brainfock) for updates. and say hi to me [@SergiiGama](https://twitter.com/SergiiGama) so that I know that you know, you know. Oh, and finally there is [Gitter chat](https://gitter.im/Brainfock/Brainfock?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Features
 --------------------------
 Whether you represent a **company** or a **single developer**, Brainfock at this stage is a great product if you want to join Open Source development, as it can be a great learning source because of it's development stack with live reloads of code, rich tests and cutting-edge technologies. Project is WIP, join and support!
