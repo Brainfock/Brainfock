@@ -1,9 +1,9 @@
 [![Brainfock](https://brainfock.files.wordpress.com/2014/11/logo_greenhex_trans.png?w=250)](http://brainfock.org)
 
-## Brainfock - Business and Community Management Solution
+## Brainfock - Project and Team Management Solution
 
 [![Gitter chat https://gitter.im/Brainfock/Brainfock](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Brainfock/Brainfock?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![CircleCI](https://img.shields.io/circleci/project/Brainfock/Brainfock.svg?maxAge=2592000)](https://circleci.com/gh/Brainfock/Brainfock)
+[![CircleCI](https://img.shields.io/circleci/project/Brainfock/Brainfock.svg?maxAge=7200)](https://circleci.com/gh/Brainfock/Brainfock)
 [![Donate](https://img.shields.io/badge/gratipay-donate-green.svg)](https://gratipay.com/brainfock/)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZH94NV7E9JU74)
 
