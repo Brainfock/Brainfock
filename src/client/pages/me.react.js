@@ -29,10 +29,10 @@ export default class Me extends Component {
     const {users: {viewer}, actions} = this.props;
 
     if (!this.props.users.getIn(['forms', 'id', viewer.id, 'password'])) {
-      actions.makeUserUpdateFormRecord(viewer.id, 'password');
+      actions.setupUserPasswordForm(viewer.id);
     }
     if (!this.props.users.getIn(['forms', 'id', viewer.id, 'email'])) {
-      actions.makeUserUpdateFormRecord(viewer.id, 'email');
+      actions.setupUserEmailForm(viewer.id);
     }
   }
 
@@ -143,7 +143,7 @@ export default class Me extends Component {
                   value={passwordForm.data.password}
                   />
                 <br />
-                { /*<TextField
+                <TextField
                   placeholder='Type new pasword again'
                   name='confirmPassword'
                   type='password'
@@ -164,7 +164,7 @@ export default class Me extends Component {
                     this.props.actions.setUserUpdateFormField(e, viewer.id, 'password')
                     }.bind(this)}
                   />
-                <br /> */ }
+                <br />
                 <RaisedButton
                   disabled={!(passwordForm.data.password && passwordForm.data.confirmPassword && passwordForm.data.currentPassword)}
                   label="Save"
