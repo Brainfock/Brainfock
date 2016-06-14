@@ -15,6 +15,8 @@ export const FIND_SUCCESS = 'FIND_USERS_SUCCESS';
 export const FIND_ERROR = 'FIND_USERS_ERROR';
 
 export const SETUP_USER_UPDATE_FORM = 'SETUP_USER_UPDATE_FORM';
+export const SETUP_USER_PASSWORD_FORM = 'SETUP_USER_PASSWORD_FORM';
+export const SETUP_USER_EMAIL_FORM = 'SETUP_USER_EMAIL_FORM';
 
 export const SET_USER_UPDATE_FORM_FIELD = 'SET_USER_UPDATE_FORM_FIELD';
 
@@ -43,12 +45,49 @@ export function findUsers(includes, query) {
   });
 }
 
+/**
+ * create form record to update user
+ * @param userId
+ * @param formKey
+ * @param initialValues
+ * @returns {{type: string, payload: {userId: *, formKey: *, initialValues: *}}}
+ */
 export function makeUserUpdateFormRecord(userId, formKey, initialValues) {
   return {
     type: SETUP_USER_UPDATE_FORM,
     payload: {
       userId: userId,
       formKey: formKey,
+      initialValues
+    }
+  };
+}
+/**
+ * setup user password change form
+ * @param userId
+ * @param initialValues
+ * @returns {{type: string, payload: {userId: *, initialValues: *}}}
+ */
+export function setupUserPasswordForm(userId, initialValues) {
+  return {
+    type: SETUP_USER_PASSWORD_FORM,
+    payload: {
+      userId: userId,
+      initialValues
+    }
+  };
+}
+/**
+ * setup user email change form
+ * @param userId
+ * @param initialValues
+ * @returns {{type: string, payload: {userId: *, initialValues: *}}}
+ */
+export function setupUserEmailForm(userId, initialValues) {
+  return {
+    type: SETUP_USER_EMAIL_FORM,
+    payload: {
+      userId: userId,
       initialValues
     }
   };
@@ -102,11 +141,17 @@ export function saveUserUpdateForm(id, formKey, data) {
   });
 }
 
-
+/**
+ * admin: create new user account
+ * @todo refactor to simply `saveUserForm` since we have form type (save/create) in formKey
+ * @todo rename `formKey` to `formNamespace` for a more descriptive language (and reducers too!)
+ * @param id
+ * @param formKey
+ * @param data
+ * @returns {Function}
+ */
 export function saveUserCreateForm(id, formKey, data) {
-
   const endpoint = 'users';
-
   return ({fetch, validate}) => ({
     type: 'SAVE_USER_CREATE_FORM',
     meta: {
