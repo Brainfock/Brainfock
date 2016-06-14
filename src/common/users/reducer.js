@@ -12,6 +12,7 @@ import * as actions from '../users/actions';
 import User from './user';
 import CurrentUser from './currentUser';
 import ChangePasswordForm from './changePassword.form.js';
+import ChangeEmailForm from './changeEmail.form.js';
 import {List, Record, Map} from 'immutable';
 import getRandomString from '../lib/getRandomString';
 
@@ -92,6 +93,7 @@ export default function usersReducer(state = initialState, action) {
       return state
         .setIn(['forms', 'id', userId, formKey, 'meta', 'isSubmitting'], true);
     }
+
     case actions.SAVE_USER_CREATE_FORM_SUCCESS: {
       const {userId, formKey} = action.meta;
       return state
@@ -127,6 +129,25 @@ export default function usersReducer(state = initialState, action) {
           .setIn(['forms', 'id', userId, formKey, 'meta', 'isSubmitting'], false);
       }
     }
+
+    case actions.SETUP_USER_PASSWORD_FORM: {
+      if (!state.getIn(['forms', 'id', action.payload.userId, 'password'])) {
+        return state
+          .setIn(['forms', 'id', action.payload.userId, 'password'], new (ChangePasswordForm));
+      } else {
+        return state;
+      }
+    }
+
+    case actions.SETUP_USER_EMAIL_FORM: {
+      if (!state.getIn(['forms', 'id', action.payload.userId, 'email'])) {
+        return state
+          .setIn(['forms', 'id', action.payload.userId, 'email'], new (ChangeEmailForm));
+      } else {
+        return state;
+      }
+    }
+
   }
 
   return state;
