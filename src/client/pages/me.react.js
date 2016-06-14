@@ -144,25 +144,25 @@ export default class Me extends Component {
                   />
                 <br />
                 <TextField
-                  placeholder='Type new pasword again'
+                  errorText={passwordForm.meta.errors.get('confirmPassword') || null}
                   name='confirmPassword'
+                  onChange={(e)=>{
+                    this.props.actions.setUserUpdateFormField(e, viewer.id, 'password');
+                    }.bind(this)}
+                  placeholder='Type new pasword again'
                   type='password'
                   value={passwordForm.data.confirmPassword}
-                  errorText={passwordForm.meta.errors.get('confirmPassword') || null}
-                  onChange={(e)=>{
-                    this.props.actions.setUserUpdateFormField(e, viewer.id, 'password')
-                    }.bind(this)}
                   />
                 <br />
                 <TextField
-                  placeholder='Your current password'
+                  errorText={passwordForm.meta.errors.get('currentPassword') || null}
                   name='currentPassword'
+                  onChange={(e)=>{
+                    this.props.actions.setUserUpdateFormField(e, viewer.id, 'password');
+                    }.bind(this)}
+                  placeholder='Your current password'
                   type='password'
                   value={passwordForm.data.currentPassword}
-                  errorText={passwordForm.meta.errors.get('currentPassword') || null}
-                  onChange={(e)=>{
-                    this.props.actions.setUserUpdateFormField(e, viewer.id, 'password')
-                    }.bind(this)}
                   />
                 <br />
                 <RaisedButton
@@ -184,7 +184,6 @@ export default class Me extends Component {
 
             </Col>
 
-            { /*
             <Col md={3} mdOffset={1} sm={6} smOffset={3}>
               <mui.Paper zDepth={1}>
                 <mui.CardTitle title="Work in progress"/>
@@ -193,7 +192,7 @@ export default class Me extends Component {
                   <p>Todo list includes linking third-party accouns (Facebook, github, Twitter, LinkedIn etc.), session management, privacy settings and others. </p>
                 </mui.CardText>
               </mui.Paper>
-            </Col> */ }
+            </Col>
 
           </Row>
         </Grid>
