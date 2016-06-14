@@ -148,7 +148,7 @@ export default class Me extends Component {
                   name='confirmPassword'
                   onChange={(e)=>{
                     this.props.actions.setUserUpdateFormField(e, viewer.id, 'password');
-                    }.bind(this)}
+                  }.bind(this)}
                   placeholder='Type new pasword again'
                   type='password'
                   value={passwordForm.data.confirmPassword}
@@ -159,7 +159,7 @@ export default class Me extends Component {
                   name='currentPassword'
                   onChange={(e)=>{
                     this.props.actions.setUserUpdateFormField(e, viewer.id, 'password');
-                    }.bind(this)}
+                  }.bind(this)}
                   placeholder='Your current password'
                   type='password'
                   value={passwordForm.data.currentPassword}
