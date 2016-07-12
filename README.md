@@ -53,7 +53,7 @@ Installation
 
 Contribution & support
 --------------------------
-Want to contribute? Great! I'll be very happy to get help. More info is coming closer to public code release.
+Want to contribute? Great! Just create a pull request and you're in - welcome!
 
 
 Contacts
