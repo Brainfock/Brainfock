@@ -1,4 +1,4 @@
-[![Brainfock](https://brainfock.files.wordpress.com/2014/11/logo_greenhex_trans.png?w=250)](http://brainfock.org)
+![Brainfock](https://brainfock.files.wordpress.com/2014/11/logo_greenhex_trans.png?w=250 "Brainfock Logo")
 
 ## Brainfock - Project and Team Management Solution
 
