@@ -10,6 +10,8 @@ Written in universal JavaScript, NodeJS server with Loopback, ReactJS client wit
 
 Copyright (C) 2015-present Sergii Gamaiunov [@SergiiGama](https://twitter.com/SergiiGama)
 
+### Please, consider a donation to support this project. I've worked many months to build it 💪
+
 > Brainfock is a modern web-based CMF started out as task & project management tool and ended up as something that angels might have crafted. It  will help you manage projects, project's tasks, deals, contacts, run community (discussion boards), manage documents like Wiki & much more. WIP, however!
 
 Check out [live demo](http://bit.ly/1UMz4iZ)! Then, give Brainfock a star on [GitHub](https://github.com/Brainfock/Brainfock) and follow project's pages on [Twitter](https://twitter.com/brainfockapp) or [Facebook](https://www.facebook.com/Brainfock) for updates. Also, say hi to me [@SergiiGama](https://twitter.com/SergiiGama) so that I know that you know, you know. **If you like the code** you're having here and you have a really bad urge to thank me somehow - that is absolutely alright and welcomed. All the buttons and options are there, and be sure - it's worth it!  
