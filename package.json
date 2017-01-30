@@ -40,7 +40,7 @@
     "autoprefixer": "~6.0.2",
     "babel": "~5.0.8",
     "babel-core": "~5.0.8",
-    "babel-runtime": "~5.8.38",
+    "babel-runtime": "~5.0.13",
     "babel-loader": "~5.0.0",
     "babel-plugin-react-transform": "~1.0.5",
     "bcrypt": "~0.8.5",
