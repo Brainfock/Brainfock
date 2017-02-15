@@ -10,7 +10,8 @@
 let path = require('path');
 
 const config = require('../config');
-require('babel/register')({stage: 0});
+// require('babel/register')({stage: 0});
+require("babel-core/register");
 // To ignore webpack custom loaders on server.
 config.webpackStylesExtensions.forEach(function(ext) {
   require.extensions['.' + ext] = function() {};

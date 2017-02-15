@@ -1,9 +1,10 @@
+require('babel-polyfill');
 import gutil from 'gulp-util';
 import makeWebpackConfig from './makeConfig';
 import webpack from 'webpack';
 
 export default function build(callback) {
-  const config = makeWebpackConfig(false);
+  const config = makeWebpackConfig({ isDevelopment: false });
   webpack(config, (fatalError, stats) => {
     const jsonStats = stats.toJson();
 

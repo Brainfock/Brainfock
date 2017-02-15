@@ -1,146 +1,191 @@
+// @flow weak
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import NyanProgressPlugin from 'nyan-progress-webpack-plugin';
+import WebpackIsomorphicToolsPlugin from 'webpack-isomorphic-tools/plugin';
 import autoprefixer from 'autoprefixer';
+import config from '../src/server/config';
 import constants from './constants';
+import ip from 'ip';
 import path from 'path';
 import webpack from 'webpack';
-const pkg = require('../package.json');
+import webpackIsomorphicAssets from './assets';
 
-// Webpack does not like npm link
-// https://github.com/webpack/webpack/issues/784#issuecomment-126835731
-const babelLoader = require.resolve('babel-loader');
+const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(webpackIsomorphicAssets);
 
-const devtools = process.env.CONTINUOUS_INTEGRATION
-  ? 'inline-source-map'
-  // cheap-module-eval-source-map, because we want original source, but we don't
-  // care about columns, which makes this devtool faster than eval-source-map.
-  // http://webpack.github.io/docs/configuration.html#devtool
-  : 'cheap-module-eval-source-map';
+// github.com/facebookincubator/create-react-app/issues/343#issuecomment-237241875
+// You may want 'cheap-module-source-map' instead if you prefer source maps.
+const devtools = 'eval';
 
 const loaders = {
-  'css': '',
-  'less': '!less-loader',
-  'scss': '!sass-loader',
-  'sass': '!sass-loader?indentedSyntax',
-  'styl': '!stylus-loader'
+  css: '',
 };
 
-export default function makeConfig(isDevelopment) {
+const serverIp = config.remoteHotReload
+  ? ip.address() // Dynamic IP address enables hot reload on remote devices.
+  : 'localhost';
 
-  function stylesLoaders() {
-    return Object.keys(loaders).map(ext => {
-      const prefix = 'css-loader!postcss-loader';
-      const extLoaders = prefix + loaders[ext];
-      const loader = isDevelopment
-        ? `style-loader!${extLoaders}`
-        : ExtractTextPlugin.extract('style-loader', extLoaders);
-      return {
-        loader: loader,
-        test: new RegExp(`\\.(${ext})$`)
-      };
-    });
-  }
+const makeConfig = (options) => {
+  const {
+    isDevelopment,
+  } = options;
+
+  const stylesLoaders = Object.keys(loaders).map((ext) => {
+    const prefix = 'css-loader!postcss-loader';
+    const extLoaders = prefix + loaders[ext];
+    const loader = isDevelopment
+      ? `style-loader!${extLoaders}`
+      : ExtractTextPlugin.extract({
+        fallbackLoader: 'style-loader',
+        loader: extLoaders,
+      });
+    return {
+      loader,
+      test: new RegExp(`\\.(${ext})$`),
+    };
+  });
 
   const config = {
-    hotPort: constants.HOT_RELOAD_PORT,
     cache: isDevelopment,
-    debug: isDevelopment,
     devtool: isDevelopment ? devtools : '',
     entry: {
       app: isDevelopment ? [
-        `webpack-hot-middleware/client?path=http://localhost:${constants.HOT_RELOAD_PORT}/__webpack_hmr`,
-        path.join(constants.SRC_DIR, 'client/main.js')
+        `webpack-hot-middleware/client?path=http://${serverIp}:${constants.HOT_RELOAD_PORT}/__webpack_hmr`,
+        path.join(constants.SRC_DIR, 'client/index.js'),
       ] : [
-        path.join(constants.SRC_DIR, 'client/main.js')
-      ]
+        path.join(constants.SRC_DIR, 'client/index.js'),
+      ],
     },
     module: {
-      loaders: [{
-        test: /\.woff(\?v=\d+\.\d+\.\d+)?/,
-        loader: 'url?limit=10000&minetype=application/font-woff'
-      }, {
-        test: /\.ttf(\?v=\d+\.\d+\.\d+)?/,
-        loader: 'url?limit=10000&minetype=application/octet-stream'
-      }, {
-        test: /\.eot(\?v=\d+\.\d+\.\d+)?/,
-        loader: 'file'
-      }, {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?/,
-        loader: 'url?limit=10000&minetype=image/svg+xml'
-      }, {
-        test: /\.png/,
-        loader: 'url?limit=10000&minetype=image/png'
-      }, {
-        loader: 'url-loader?limit=100000',
-        test: /\.(gif|jpg|woff2)$/
-        //test: /\.(gif|jpg|png|woff|woff2|ttf|svg)$/
-      }, {
-        exclude: [
-          /node_modules/,
-          /bower_components/
-        ],
-        loaders: [babelLoader],
-        test: [/\.js$/, /\.jsx$/]
-      }].concat(stylesLoaders())
+      noParse: [
+        // https://github.com/localForage/localForage/issues/617
+        new RegExp('localforage.js'),
+      ],
+      rules: [
+        {
+          loader: 'url-loader',
+          test: /\.(gif|jpg|png|svg)(\?.*)?$/,
+          options: {
+            limit: 10000,
+          },
+        }, {
+          loader: 'url-loader',
+          test: /favicon\.ico$/,
+          options: {
+            limit: 1,
+          },
+        }, {
+          loader: 'url-loader',
+          test: /\.(ttf|eot|woff|woff2)(\?.*)?$/,
+          options: {
+            limit: 100000,
+          },
+        }, {
+          loader: 'babel-loader',
+          test: /\.js$/,
+          exclude: constants.NODE_MODULES_DIR,
+          options: {
+            cacheDirectory: true,
+            presets: [['es2015', { modules: false }], 'react', 'stage-1'],
+            plugins: [
+              ['transform-runtime', {
+                helpers: false,
+                polyfill: false,
+                regenerator: false,
+              }],
+            ],
+            env: {
+              production: {
+                plugins: [
+                  'transform-react-constant-elements',
+                ],
+              },
+            },
+          },
+        },
+        ...stylesLoaders,
+      ],
     },
     output: isDevelopment ? {
       path: constants.BUILD_DIR,
       filename: '[name].js',
       chunkFilename: '[name]-[chunkhash].js',
-      publicPath: `http://localhost:${constants.HOT_RELOAD_PORT}/build/`
+      publicPath: `http://${serverIp}:${constants.HOT_RELOAD_PORT}/build/`,
     } : {
-      chunkFilename: '[name]-[chunkhash].js',
-      filename: '[name].js',
       path: constants.BUILD_DIR,
-      publicPath: '/_assets/'
+      filename: '[name]-[hash].js',
+      chunkFilename: '[name]-[chunkhash].js',
+      publicPath: '/assets/',
     },
     plugins: (() => {
       const plugins = [
+        new webpack.LoaderOptionsPlugin({
+          minimize: !isDevelopment,
+          debug: isDevelopment,
+          // Webpack 2 no longer allows custom properties in configuration.
+          // Loaders should be updated to allow passing options via loader options in module.rules.
+          // Alternatively, LoaderOptionsPlugin can be used to pass options to loaders
+          hotPort: constants.HOT_RELOAD_PORT,
+          postcss: () => [autoprefixer({ browsers: 'last 2 version' })],
+        }),
         new webpack.DefinePlugin({
           'process.env': {
+            IS_BROWSER: true, // Because webpack is used only for browser code.
+            IS_SERVERLESS: JSON.stringify(process.env.IS_SERVERLESS || false),
             NODE_ENV: JSON.stringify(isDevelopment ? 'development' : 'production'),
-            IS_BROWSER: true
           },
-          'VERSION': JSON.stringify(pkg.version),
-          'VERSION_FULL': JSON.stringify(pkg.name + ' ' + pkg.version),
-        })
-      ];
-      if (isDevelopment) plugins.push(
-        new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
-      );
-      else plugins.push(
-        // Render styles into separate cacheable file to prevent FOUC and
-        // optimize for critical rendering path.
-        new ExtractTextPlugin('app.css', {
-          allChunks: true
         }),
-        new NyanProgressPlugin(),
-        new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.optimize.UglifyJsPlugin({
-          compress: {
-            screw_ie8: true, // eslint-disable-line camelcase
-            warnings: false // Because uglify reports irrelevant warnings.
-          }
-        })
-      );
+      ];
+      if (isDevelopment) {
+        plugins.push(
+          new webpack.HotModuleReplacementPlugin(),
+          new webpack.NoEmitOnErrorsPlugin(),
+          webpackIsomorphicToolsPlugin.development(),
+        );
+      } else {
+        plugins.push(
+          // Render styles into separate cacheable file to prevent FOUC and
+          // optimize for critical rendering path.
+          new ExtractTextPlugin({
+            filename: 'app-[hash].css',
+            disable: false,
+            allChunks: true,
+          }),
+          new webpack.optimize.UglifyJsPlugin({
+            sourceMap: true,
+            compress: {
+              screw_ie8: true, // eslint-disable-line camelcase
+              warnings: false, // Because uglify reports irrelevant warnings.
+            },
+          }),
+          new webpack.SourceMapDevToolPlugin({
+            filename: '[file].map',
+          }),
+          webpackIsomorphicToolsPlugin,
+          new CopyWebpackPlugin([{
+            from: './src/common/app/favicons/',
+            to: 'favicons',
+          }], {
+            ignore: ['original/**'],
+          }),
+        );
+      }
       return plugins;
     })(),
-    postcss: () => [autoprefixer({browsers: 'last 2 version'})],
+    performance: {
+      hints: false,
+      // TODO: Reenable it once Webpack 2 will complete dead code removing.
+      // hints: process.env.NODE_ENV === 'production' ? 'warning' : false,
+    },
     resolve: {
-      extensions: ['', '.js', '.jsx', '.json'],
-      modulesDirectories: ['src', 'node_modules', 'bower_components'],
-      root:  [constants.ABSOLUTE_BASE,
-        path.join(constants.ABSOLUTE_BASE, 'bower_components'),
-      ],
+      extensions: ['.js'], // .json is ommited to ignore ./firebase.json
+      modules: [constants.SRC_DIR, 'node_modules'],
       alias: {
-        'react$': require.resolve(path.join(constants.NODE_MODULES_DIR, 'react'))
-      }
-    }
+        react$: require.resolve(path.join(constants.NODE_MODULES_DIR, 'react')),
+      },
+    },
   };
 
   return config;
-
 };
+
+export default makeConfig;

@@ -1,0 +1,7 @@
+{
+  "javascript": {
+    "app": "http://localhost:8888/build/app.js"
+  },
+  "styles": {},
+  "assets": {}
+}
