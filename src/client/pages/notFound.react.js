@@ -1,5 +1,5 @@
 import Component from 'react-pure-render/component';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from '../components/Title';
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 

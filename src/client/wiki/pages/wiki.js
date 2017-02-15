@@ -8,7 +8,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import Component from 'react-pure-render/component';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from '../../components/Title';
 import React from 'react';
 import {Link} from 'react-router';
 import mui from 'material-ui';

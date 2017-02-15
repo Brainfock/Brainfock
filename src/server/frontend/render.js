@@ -7,7 +7,7 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from '../../client/components/Title';
 import Html from './html.react';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';

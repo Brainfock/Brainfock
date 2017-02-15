@@ -12,7 +12,7 @@ import mui from 'material-ui';
 import Component from 'react-pure-render/component';
 import {FormattedMessage} from 'react-intl';
 import {Grid, Row, Col, Affix} from 'react-bootstrap';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from '../../components/Title';
 
 import Loader from '../../components/Loader';
 import ListActions from '../../components/UIListActions';

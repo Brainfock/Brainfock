@@ -1,6 +1,6 @@
 import Buttons from '../todos/buttons.react';
 import Component from 'react-pure-render/component';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from '../components/Title';
 import NewTodo from '../todos/newTodo.react';
 import React, {PropTypes} from 'react';
 import TodosList from '../todos/todosList.react';

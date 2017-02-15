@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Component from 'react-pure-render/component';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from '../components/Title';
 import mui, {TextField, RaisedButton} from 'material-ui';
 import {Grid, Row, Col} from 'react-bootstrap';
 
