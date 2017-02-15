@@ -8,9 +8,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 /* global VERSION_FULL */
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import React, {PropTypes} from 'react';
 import mui from 'material-ui';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
+import Subheader from 'material-ui/Subheader';
 
 // TODO: i18n
 // TODO: add ability to reorder & add custom elements
@@ -28,12 +31,12 @@ let menuItems = [
   {route: '/boards?groupBy=workspace', params:{}, text: 'Discussions'},
   {route: '/opportunities', params:{}, text: 'Opportunities'},
   {route: '/wiki/Homepage', params:{uid:'Index'}, text: 'Wiki'},
-  {type: mui.MenuItem.Types.SUBHEADER, text: 'Resources'},
+ // {type: MenuItem.Types.SUBHEADER, text: 'Resources'},
   // Link to Brainfock guides in global wiki:
   {route: '/wiki/BFK_Guide',
     text: 'Brainfock Help'},
   // TODO: hide from non-admin users
-  {type: mui.MenuItem.Types.SUBHEADER, text: ' '},
+  //{type: MenuItem.Types.SUBHEADER, text: ' '},
   {route: '/admin', params:{}, text: <span>System Admin <i className="fa fa-cog"></i></span>},
   {route: '/workspaces/create', params:{}, text: 'Create Workspace'},
   // Link to Brainfock website & version, don't remove
@@ -59,7 +62,7 @@ let menuItems = [
  *
  * @author sergii gamaiunov <hello@webkadabra.com>
  */
-export default class AppLeftNav extends Component {
+export default class AppLeftNav extends React.Component {
 
   static propTypes = {
     history: PropTypes.object,

@@ -1,9 +1,9 @@
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import React, {PropTypes} from 'react';
-import {FormattedHTMLMessage} from 'react-intl';
+// import {FormattedHTMLMessage} from 'react-intl';
 //import {Link} from 'react-router';
 
-export default class ToCheck extends Component {
+export default class ToCheck extends React.Component {
 
   static propTypes = {
     msg: PropTypes.object.isRequired
@@ -18,7 +18,7 @@ export default class ToCheck extends Component {
         <ul>
           {msg.itemListHtml.map(item =>
             <li key={item.key}>
-              <FormattedHTMLMessage defaultMessage={item.txt} />
+                {item.txt}
             </li>
           )}
           { /*<li>

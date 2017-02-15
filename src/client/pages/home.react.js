@@ -1,10 +1,11 @@
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import DocumentTitle from '../components/Title';
 import React, {PropTypes} from 'react';
-import ToCheck from '../home/toCheck.react';
-import {FormattedHTMLMessage} from 'react-intl';
+// import ToCheck from '../home/toCheck.react';
+// import {FormattedHTMLMessage} from 'react-intl';
 
-export default class Home extends Component {
+// <FormattedHTMLMessage defaultMessage={msg.home.infoHtml} />
+export default class Home extends React.Component {
 
   // Why not .isRequired? https://github.com/rackt/react-router/issues/1505
   static propTypes = {
@@ -27,12 +28,26 @@ export default class Home extends Component {
           marginLeft:this.getTheme().width + 10
         }}>
           <p>
-            <FormattedHTMLMessage defaultMessage={msg.home.infoHtml} />
+            {msg.home.infoHtml}
           </p>
-          <ToCheck msg={msg.home.toCheck} />
         </div>
       </DocumentTitle>
     );
   }
 
 }
+
+/*
+ return (
+ <DocumentTitle title={msg.home.title}>
+ <div className="home-page" style={{
+ marginLeft:this.getTheme().width + 10
+ }}>
+ <p>
+ {msg.home.infoHtml}
+ </p>
+ <ToCheck msg={msg.home.toCheck} />
+ </div>
+ </DocumentTitle>
+ );
+ */

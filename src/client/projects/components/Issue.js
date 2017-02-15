@@ -7,7 +7,7 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import React, {PropTypes} from 'react';
 import {Card, CardHeader, CardText, Avatar, FlatButton, Dialog} from 'material-ui';
 import OperationsDropdown from './OperationsDropdown.js';
@@ -16,7 +16,7 @@ import Comments from '../../topic/components/comments';
 import {FormattedDate} from 'react-intl';
 import {TextField} from 'material-ui';
 
-export default class Issue extends Component {
+export default class Issue extends React.Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,
     io: PropTypes.object.isRequired,

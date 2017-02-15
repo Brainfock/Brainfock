@@ -7,7 +7,7 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
@@ -38,10 +38,11 @@ import AppSideNav from './components/app-left-nav';
 //import Chat from '../components/chat/Chat';
 import QuickAdd from './components/QuickAdd';
 
-const ThemeManager = Styles.ThemeManager;
-const DefaultRawTheme = Styles.LightRawTheme;
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-export class App extends Component {
+// const DefaultRawTheme = Styles.LightRawTheme;
+
+export class App extends React.Component {
 
   static propTypes = {
     actions: PropTypes.object.isRequired,
@@ -54,12 +55,12 @@ export class App extends Component {
   };
 
   static childContextTypes = {
-    muiTheme: React.PropTypes.object
+  //  muiTheme: React.PropTypes.object
   };
 
   getChildContext() {
     return {
-      muiTheme: this.state.muiTheme
+    //  muiTheme: this.state.muiTheme
     };
   }
 
@@ -67,7 +68,7 @@ export class App extends Component {
     super(args);
     this.state = {
       showUserMenu: false,
-      muiTheme: ThemeManager.getMuiTheme(DefaultRawTheme)
+    //  muiTheme: ThemeManager.getMuiTheme(DefaultRawTheme)
     };
   }
 
@@ -226,6 +227,7 @@ export class App extends Component {
 
     // todo: looks like we may remove `onLeftIconButtonTouchTap` event
     return (
+        <MuiThemeProvider>
       <AppCanvas predefinedLayout={1}>
         <AppBar
           autoWidth={false}
@@ -250,6 +252,7 @@ export class App extends Component {
           {React.cloneElement(children, props)}
         </div>
       </AppCanvas>
+          </MuiThemeProvider>
     );
   }
 
@@ -259,7 +262,11 @@ export class App extends Component {
   }
 };
 
-@connect(mapStateToProps, mapDispatchToProps)
-class AppExp extends App {}
+//
+// class AppExp extends App {
+// @connect(mapStateToProps, mapDispatchToProps)
+// }
+//
+// export default AppExp;
 
-export default AppExp;
+module.exports = connect(mapStateToProps, mapDispatchToProps)(App);

@@ -25,6 +25,8 @@ import {mapDispatchToProps} from '../../common';
 import createRoutes from '../../client/createRoutes.js';
 import {createMemoryHistory} from 'history';
 
+import { createServerRenderContext, ServerRouter } from 'react-router';
+
 import loopback from 'loopback';
 import app from '../main';
 

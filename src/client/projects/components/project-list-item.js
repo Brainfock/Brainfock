@@ -7,13 +7,18 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import React, {PropTypes} from 'react';
-import mui, {Styles, Avatar, IconButton} from 'material-ui';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
-const Colors = Styles.Colors;
 
-export default class Todo extends Component {
+import Avatar from 'material-ui/Avatar';
+import {List, ListItem} from 'material-ui/List';
+import {Colors} from 'material-ui/styles';
+import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
+import Dialog from 'material-ui/Dialog';
+
+export default class Todo extends React.Component {
 
   static propTypes = {
     actions: PropTypes.object,
@@ -87,7 +92,7 @@ export default class Todo extends Component {
     //  );
     //}
 
-    return (<mui.ListItem
+    return (<ListItem
       backgroundColor={color}
       leftAvatar={<Avatar icon={<span className={icon}/>} />}
       onClick={this._onClick.bind(this)}
@@ -95,13 +100,13 @@ export default class Todo extends Component {
       rightAvatar={rightAvatar}
       secondaryText={todo.text}
       > {this.confirmDialog()}
-    </mui.ListItem>);
+    </ListItem>);
   }
 
   confirmDialog() {
 
     const dialogActions = [
-      <mui.FlatButton
+      <FlatButton
         label='BTN_CANCEL'
         onClick={this._onDialogCancel}
         onTouchTap={this._onDialogCancel}
@@ -111,9 +116,9 @@ export default class Todo extends Component {
       {text:'BTN_DELETE', onClick: this.delete}
     ];
 
-    return (<mui.Dialog actions={dialogActions} ref="confirmDialog" title='projects_deleteDialog_TITLE'>
+    return (<Dialog actions={dialogActions} ref="confirmDialog" title='projects_deleteDialog_TITLE'>
       <p>Are you sure you want to delete this project? </p>
-    </mui.Dialog>);
+    </Dialog>);
   }
 
   _onClick() {

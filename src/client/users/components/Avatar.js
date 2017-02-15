@@ -8,10 +8,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import {Avatar} from 'material-ui';
 
-class UserAvatar extends Component {
+class UserAvatar extends React.Component {
 
   static propTypes = {
     user: React.PropTypes.object.isRequired,

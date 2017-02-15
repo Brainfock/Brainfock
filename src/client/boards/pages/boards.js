@@ -1,4 +1,4 @@
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import React, {PropTypes} from 'react';
 
 import AppContentCanvas from '../../components/layout/AppContentCanvas';
@@ -13,7 +13,7 @@ import ListComponent from '../boards.react';
  * @todo actually, 'container' model of this list is model of form, right?
  * @todo: pull from server (by group key [projects]: routeName, formSettings, listSettings, ListColumns
  */
-export default class Boards extends Component {
+export default class Boards extends React.Component {
   static propTypes = {
     board: PropTypes.object,
     group: PropTypes.object.isRequired,

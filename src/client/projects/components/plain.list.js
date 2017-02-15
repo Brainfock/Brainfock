@@ -9,19 +9,20 @@
  */
 import React from 'react';
 import mui from 'material-ui';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import {FormattedMessage} from 'react-intl';
 import {Grid, Row, Col, Affix} from 'react-bootstrap';
 import DocumentTitle from '../../components/Title';
-
+import IconMenu from 'material-ui/IconMenu';
 import Loader from '../../components/Loader';
 import ListActions from '../../components/UIListActions';
 import Form from '../../topic/components/create-topic-form';
 import ListView from '../../boards/boards.react';
-import MenuItem from 'material-ui/lib/menus/menu-item';
+import MenuItem from 'material-ui/MenuItem';
 import Filters from '../../components/UISimpleFilters';
+import IconButton from 'material-ui/IconButton';
 
-export default class ProjectIssues extends Component {
+export default class ProjectIssues extends React.Component {
 
   static propTypes = {
     actions: React.PropTypes.object,
@@ -89,7 +90,7 @@ export default class ProjectIssues extends Component {
     }
 
     let filterToggleButton = (
-      <mui.IconButton
+      <IconButton
         iconClassName="fa fa-filter fa-lg"
         onClick={this.toggleFilters.bind(this)}
         tooltip="Filter"
@@ -155,7 +156,7 @@ export default class ProjectIssues extends Component {
     const ListActionsRendered = (
       <div className="pull-right">
         {summary}
-        <mui.IconButton
+        <IconButton
           iconClassName={detailsToggleIconClass}
           onClick={e => this.setState({
             showDetails: !this.state.showDetails,
@@ -180,7 +181,7 @@ export default class ProjectIssues extends Component {
       </div>
     );
 
-    const iconButtonElement = <mui.IconButton iconClassName="fa fa-list-alt" tooltip="Filter presets"/>;
+    const iconButtonElement = <IconButton iconClassName="fa fa-list-alt" tooltip="Filter presets"/>;
 
     const content = this.renderListContent();
 
@@ -205,7 +206,7 @@ export default class ProjectIssues extends Component {
               filters={listFilters}
               header={
                <div className="pull-left">
-                 <mui.IconMenu iconButtonElement={iconButtonElement}>
+                 <IconMenu iconButtonElement={iconButtonElement}>
                    <MenuItem onClick={
                     function() {
                       this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStatus][]=open`);
@@ -221,7 +222,7 @@ export default class ProjectIssues extends Component {
                       this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStage][]=Backlog`);
                     }.bind(this)
                    } primaryText="Backlog"/>
-                 </mui.IconMenu>
+                 </IconMenu>
                </div>
              }
               onApply={this.onApplyFilters}

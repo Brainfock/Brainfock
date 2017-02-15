@@ -8,7 +8,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import mui from 'material-ui';
 import RemoteSelectField from './form/RemoteSelectField';
 /**
@@ -22,7 +22,23 @@ import RemoteSelectField from './form/RemoteSelectField';
  * @author sergii gamaiunov <hello@webkadabra.com>
  * @type {*|exports|module.exports}
  */
-class Page extends Component {
+class Page extends React.Component {
+
+  constructor(props) {
+    super(props);
+    // This binding is necessary to make `this` work in the callback
+    this.onDatepickerChange = this.onDatepickerChange.bind(this);
+    this.checkboxChanged = this.checkboxChanged.bind(this);
+  }
+
+  checkboxChanged(event, isChecked) {
+    this.props.onChange({
+      target:{
+        name: event.target.name,
+        value: isChecked
+      }
+    });
+  }
 
   static propTypes = {
     form: React.PropTypes.any.isRequired,
@@ -197,19 +213,12 @@ class Page extends Component {
 
       props.label = item.label;
       if (item.value === true) props.defaultChecked = true;
-
+      // TODO: FIX
       return (
         <div  style={{'width':'100%'}}>
           <mui.Checkbox
             {...props}
-            onCheck={(function(event, isChecked) {
-              this.props.onChange({
-                target:{
-                  name: event.target.name,
-                  value: isChecked
-                }
-              });
-            }).bind(this)}
+            onCheck={this.checkboxChanged}
             />
         </div>
       );
@@ -226,7 +235,7 @@ class Page extends Component {
 
       let Datepicker = (
         <mui.DatePicker {...props}
-          onChange={(nill, newDate)=>{this.onDatepickerChange(newDate, item.name);}.bind(this)}
+          onChange={(nill, newDate)=>{this.onDatepickerChange(newDate, item.name);}}
         />
       );
 

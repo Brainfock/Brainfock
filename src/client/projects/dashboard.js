@@ -8,9 +8,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import {Styles, Avatar} from 'material-ui';
-const Colors = Styles.Colors;
 
+import Avatar from 'material-ui/Avatar';
+import {List, ListItem} from 'material-ui/List';
+import {Colors} from 'material-ui/styles';
 export default class Dashboard extends React.Component {
 
   static propTypes = {

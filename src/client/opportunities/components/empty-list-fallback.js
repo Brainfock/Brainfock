@@ -7,12 +7,12 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import React, {PropTypes} from 'react';
 import {RaisedButton, Paper} from 'material-ui';
 
 
-export default class ProjectsEmpty extends Component {
+export default class ProjectsEmpty extends React.Component {
 
   static propTypes = {
     boards: PropTypes.object.isRequired,

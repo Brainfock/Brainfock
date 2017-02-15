@@ -1,12 +1,12 @@
 import React, {PropTypes} from 'react';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import DocumentTitle from '../components/Title';
 import mui, {TextField, RaisedButton} from 'material-ui';
 import {Grid, Row, Col} from 'react-bootstrap';
-
+import Paper from 'material-ui/Paper';
 import Loader from '../components/Loader.js';
-
-export default class Me extends Component {
+import {CardTitle, CardText} from 'material-ui/Card';
+export default class Me extends React.Component {
 
   static propTypes = {
     actions: PropTypes.object,
@@ -21,6 +21,8 @@ export default class Me extends Component {
         email: 1
       }
     };
+
+    // this.handleClick = this.handleClick.bind(this);
   }
 
   componentWillMount() {
@@ -36,6 +38,16 @@ export default class Me extends Component {
     }
   }
 
+  newEmailChanged(e) {
+    this.props.actions.setUserUpdateFormField(e, viewer.id, 'email');
+  }
+  currentPasswordChanged(e) {
+    this.props.actions.setUserUpdateFormField(e, viewer.id, 'email');
+  }
+  passwordChanged(e) {
+    this.props.actions.setUserUpdateFormField(e, viewer.id, 'password');
+  }
+
   renderEmailChangeForm() {
     const viewer = this.props.users.viewer;
     const emailForm = this.props.users.getIn(['forms', 'id', viewer.id, 'email']);
@@ -47,9 +59,7 @@ export default class Me extends Component {
           errorText={emailForm.meta.errors.get('newEmail') || null}
           fullWidth
           name='newEmail'
-          onChange={(e)=>{
-            this.props.actions.setUserUpdateFormField(e, viewer.id, 'email');
-          }.bind(this)}
+          onChange={::this.newEmailChanged}
           placeholder='New Email'
           value={emailForm.data.newEmail}
           />
@@ -58,9 +68,7 @@ export default class Me extends Component {
           errorText={emailForm.meta.errors.get('currentPassword') || null}
           fullWidth
           name='currentPassword'
-          onChange={(e)=>{
-            this.props.actions.setUserUpdateFormField(e, viewer.id, 'email');
-          }.bind(this)}
+          onChange={::this.currentPasswordChanged}
           placeholder='Your current password'
           type='password'
           value={emailForm.data.currentPassword}
@@ -135,9 +143,7 @@ export default class Me extends Component {
                   errorText={passwordForm.meta.errors.get('password') || null}
                   fullWidth
                   name='password'
-                  onChange={(e)=>{
-                    this.props.actions.setUserUpdateFormField(e, viewer.id, 'password');
-                  }.bind(this)}
+                  onChange={::this.passwordChanged}
                   placeholder='New Password'
                   type='password'
                   value={passwordForm.data.password}
@@ -146,9 +152,7 @@ export default class Me extends Component {
                 <TextField
                   errorText={passwordForm.meta.errors.get('confirmPassword') || null}
                   name='confirmPassword'
-                  onChange={(e)=>{
-                    this.props.actions.setUserUpdateFormField(e, viewer.id, 'password');
-                  }.bind(this)}
+                  onChange={::this.passwordChanged}
                   placeholder='Type new pasword again'
                   type='password'
                   value={passwordForm.data.confirmPassword}
@@ -157,9 +161,7 @@ export default class Me extends Component {
                 <TextField
                   errorText={passwordForm.meta.errors.get('currentPassword') || null}
                   name='currentPassword'
-                  onChange={(e)=>{
-                    this.props.actions.setUserUpdateFormField(e, viewer.id, 'password');
-                  }.bind(this)}
+                  onChange={::this.passwordChanged}
                   placeholder='Your current password'
                   type='password'
                   value={passwordForm.data.currentPassword}
@@ -185,13 +187,13 @@ export default class Me extends Component {
             </Col>
 
             <Col md={3} mdOffset={1} sm={6} smOffset={3}>
-              <mui.Paper zDepth={1}>
-                <mui.CardTitle title="Work in progress"/>
-                <mui.CardText>
+              <Paper zDepth={1}>
+                <CardTitle title="Work in progress"/>
+                <CardText>
                   <p>Please note that Brainfock is currently under heavy development, and many features are missing in release.</p>
                   <p>Todo list includes linking third-party accouns (Facebook, github, Twitter, LinkedIn etc.), session management, privacy settings and others. </p>
-                </mui.CardText>
-              </mui.Paper>
+                </CardText>
+              </Paper>
             </Col>
 
           </Row>

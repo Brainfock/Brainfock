@@ -1,9 +1,9 @@
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import React, {PropTypes} from 'react';
 
 export default function fetch(action) {
 
-  return Wrapped => class Fetch extends Component {
+  return Wrapped => class Fetch extends React.Component {
 
     static propTypes = {
       app: PropTypes.object,

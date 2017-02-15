@@ -7,12 +7,12 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import React from 'react';
 import {IconMenu, FloatingActionButton} from 'material-ui';
-import MenuItem from 'material-ui/lib/menus/menu-item';
+import MenuItem from 'material-ui/MenuItem';
 
-export default class QuickAdd extends Component {
+export default class QuickAdd extends React.Component {
 
   static propTypes = {
     //msg: React.PropTypes.object.isRequired,

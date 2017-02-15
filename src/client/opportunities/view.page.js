@@ -8,7 +8,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import {Link} from 'react-router';
 import {Avatar, CardText, CardHeader, Card} from 'material-ui';
 import {DropdownButton, MenuItem} from 'react-bootstrap';
@@ -16,7 +16,7 @@ import {DropdownButton, MenuItem} from 'react-bootstrap';
 import Loader from '../components/Loader';
 import AppContentCanvas from '../components/layout/AppContentCanvas';
 
-class ViewTaskPage extends Component {
+class ViewTaskPage extends React.Component {
   static contextTypes = {
     muiTheme: React.PropTypes.object,
   };

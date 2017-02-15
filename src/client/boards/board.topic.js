@@ -7,12 +7,12 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import React, {PropTypes} from 'react';
 
 const mui = require('material-ui');
 
-export default class Todo extends Component {
+export default class Todo extends React.Component {
 
   static propTypes = {
     actions: PropTypes.object.isRequired,

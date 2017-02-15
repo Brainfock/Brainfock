@@ -9,7 +9,7 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import mui, {Snackbar} from 'material-ui';
 import Loader from '../../components/Loader';
 import SimpleFormFactory from '../../components/UISimpleFormFactory';
@@ -21,7 +21,7 @@ import SelectField from '../../components/form/RemoteSelectField.js';
  * @category client/components/smart
  * @author sergii gamaiunov <hello@webkadabra.com>
  */
-export default class CreateTopicForm extends Component {
+export default class CreateTopicForm extends React.Component {
 
   static defaultProps = {
     sysFields: ['namespace', 'accessPrivateYn', 'createGroup']

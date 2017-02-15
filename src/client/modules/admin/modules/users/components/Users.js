@@ -13,7 +13,7 @@ import {Table, TableHeader, TableRow, TableHeaderColumn, TableBody, TableRowColu
 
 import Loader from '../../../../../components/Loader';
 import UserAvatar from '../../../../../users/components/Avatar';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 
 import {Utils} from 'material-ui';
 import RaisedButton from 'material-ui/lib/raised-button';
@@ -23,7 +23,7 @@ import CreateUserForm from './create-user-form.js';
 import {CircularProgress} from 'material-ui';
 const Events = Utils.Events;
 
-class Users extends Component {
+class Users extends React.Component {
 
   static contextTypes = {
     muiTheme: React.PropTypes.object,

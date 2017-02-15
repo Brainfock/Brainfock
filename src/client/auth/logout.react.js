@@ -1,4 +1,4 @@
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import React, {PropTypes} from 'react';
 
 export default class Logout extends Component {

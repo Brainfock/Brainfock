@@ -1,8 +1,8 @@
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 
-export default class Header extends Component {
+export default class Header extends React.Component {
 
   static propTypes = {
     msg: PropTypes.object.isRequired,

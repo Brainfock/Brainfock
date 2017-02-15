@@ -1,10 +1,10 @@
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import React, {PropTypes} from 'react';
 
 import mui, {Styles, Avatar, IconButton} from 'material-ui';
-const Colors = Styles.Colors;
 
-export default class Todo extends Component {
+import Colors from 'material-ui/styles/colors';
+export default class Todo extends React.Component {
 
   static propTypes = {
     actions: PropTypes.object,

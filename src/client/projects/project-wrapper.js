@@ -8,12 +8,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import PageWithNav from '../components/layout/page-with-nav';
 import Loader from '../components/Loader';
 import AppContentCanvas from '../components/layout/AppContentCanvas';
 
-class Layout extends Component {
+class Layout extends React.Component {
   static propTypes = {
     actions: React.PropTypes.object,
     boards: React.PropTypes.object,

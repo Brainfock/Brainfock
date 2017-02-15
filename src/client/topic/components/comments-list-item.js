@@ -8,11 +8,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import {Avatar} from 'material-ui';
 import Loader from '../../components/Loader';
 
-class CommentItem extends Component {
+class CommentItem extends React.Component {
 
   static propTypes = {
     actions: React.PropTypes.object,

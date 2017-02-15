@@ -1,4 +1,4 @@
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import React, {PropTypes} from 'react';
 import focusInvalidField from '../lib/focusInvalidField';
 import {Grid, Row, Col} from 'react-bootstrap';
@@ -8,7 +8,7 @@ import {Link} from 'react-router';
 if (process.env.IS_BROWSER)
   require('./login.styl');
 
-export default class Login extends Component {
+export default class Login extends React.Component {
 
   static propTypes = {
     actions: PropTypes.object.isRequired,

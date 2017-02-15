@@ -8,7 +8,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import {Link} from 'react-router';
 import {MenuItem} from 'react-bootstrap';
 
@@ -16,7 +16,7 @@ import Issue from '../projects/components/Issue.js';
 /**
  *
  */
-class ViewTaskPage extends Component {
+class ViewTaskPage extends React.Component {
   static contextTypes = {
     muiTheme: React.PropTypes.object,
   };

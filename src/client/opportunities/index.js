@@ -8,7 +8,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 
 import ProjectsEmpty from './components/empty-list-fallback.js';
 import MasterDetailsListView from '../projects/components/master-detail.list';
@@ -22,7 +22,7 @@ const views = {
   'boards.homepage': ListView,
 };
 
-export default class OpportunitiesIndex extends Component {
+export default class OpportunitiesIndex extends React.Component {
   static propTypes = {
     actions: React.PropTypes.object,
     boards: React.PropTypes.object,

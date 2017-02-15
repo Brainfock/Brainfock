@@ -1,8 +1,8 @@
 import './buttons.styl';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import React, {PropTypes} from 'react';
 
-export default class TodoButtons extends Component {
+export default class TodoButtons extends React.Component {
 
   static propTypes = {
     actions: PropTypes.object.isRequired,

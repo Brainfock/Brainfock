@@ -8,7 +8,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, {PropTypes} from 'react';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import {HotKeys} from 'react-hotkeys';
 import {FormattedRelative, FormattedDate} from 'react-intl';
 import {Link} from 'react-router';
@@ -19,7 +19,7 @@ const keyMap = {
   saveWiki: 'ctrl+s'
 };
 
-export default class Page extends Component {
+export default class Page extends React.Component {
 
   static propTypes = {
     actions: PropTypes.object,

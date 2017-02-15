@@ -8,9 +8,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import {Menu, Mixins, Styles} from 'material-ui';
-let {Spacing, Colors} = Styles;
-let {StyleResizable, StylePropable} = Mixins;
+import {Menu, Mixins} from 'material-ui';
+import {spacing, typography, zIndex, Colors} from 'material-ui/styles';
+// let {StylePropable} = Mixins;
 /**
  * Page With Navigation, based on material-ui's PageWithNav
  */
@@ -22,7 +22,7 @@ let PageWithNav = React.createClass({
     menuItems: React.PropTypes.array,
   },
 
-  mixins: [StyleResizable, StylePropable],
+  // mixins: [StylePropable],
 
   contextTypes: {
     router: React.PropTypes.func
@@ -53,10 +53,10 @@ let PageWithNav = React.createClass({
   //},
 
   getStyles() {
-    let subNavWidth = Spacing.desktopKeylineIncrement * 3 + 'px';
+    let subNavWidth = spacing.desktopKeylineIncrement * 3 + 'px';
     let styles = {
       root: {
-        //paddingTop: (Spacing.desktopKeylineIncrement/2) + 'px'
+        //paddingTop: (spacing.desktopKeylineIncrement/2) + 'px'
       },
       rootWhenMedium: {
         position: 'relative'
@@ -67,8 +67,8 @@ let PageWithNav = React.createClass({
       },
       content: {
         // removed maxWidth - this component is used as full-width container with side nav
-        //maxWidth: (Spacing.desktopKeylineIncrement * 20) + 'px'
-        //padding: Spacing.desktopGutter + 'px',
+        //maxWidth: (spacing.desktopKeylineIncrement * 20) + 'px'
+        //padding: spacing.desktopGutter + 'px',
         boxSizing: 'border-box',
       },
       secondaryNavWhenMedium: {
@@ -84,12 +84,13 @@ let PageWithNav = React.createClass({
       }
     };
 
-    if (this.isDeviceSize(StyleResizable.statics.Sizes.MEDIUM) ||
-        this.isDeviceSize(StyleResizable.statics.Sizes.LARGE)) {
-      styles.root = this.mergeStyles(styles.root, styles.rootWhenMedium);
-      styles.secondaryNav = this.mergeStyles(styles.secondaryNav, styles.secondaryNavWhenMedium);
-      styles.content = this.mergeStyles(styles.content, styles.contentWhenMedium);
-    }
+    // TODO: implement or drop, from 0.28.0
+    // if (this.isDeviceSize(StyleResizable.statics.Sizes.MEDIUM) ||
+    //     this.isDeviceSize(StyleResizable.statics.Sizes.LARGE)) {
+    //   styles.root = this.mergeStyles(styles.root, styles.rootWhenMedium);
+    //   styles.secondaryNav = this.mergeStyles(styles.secondaryNav, styles.secondaryNavWhenMedium);
+    //   styles.content = this.mergeStyles(styles.content, styles.contentWhenMedium);
+    // }
 
     return styles;
   },

@@ -9,9 +9,9 @@
  */
 import React from 'react';
 import {CardActions, FlatButton, CardText} from 'material-ui';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 
-export default class FetchActionError extends Component {
+export default class FetchActionError extends React.Component {
 
   static propTypes = {
     action: React.PropTypes.func.isRequired,

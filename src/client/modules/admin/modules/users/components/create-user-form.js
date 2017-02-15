@@ -8,10 +8,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import TextField from 'material-ui/lib/text-field';
 
-class CreateUserForm extends Component {
+class CreateUserForm extends React.Component {
 
   static propTypes = {
     actions: React.PropTypes.object,

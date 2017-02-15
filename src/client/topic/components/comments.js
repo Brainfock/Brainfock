@@ -8,7 +8,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 const Item = require('./comments-list-item');
 
 // for At.js plugin:
@@ -23,7 +23,7 @@ const Item = require('./comments-list-item');
  *
  * @author sergii gamaiunov <hello@webkadabra.com>
  */
-class TopicComments extends Component {
+class TopicComments extends React.Component {
 
   static propTypes = {
     actions: React.PropTypes.object,

@@ -1,8 +1,8 @@
 import './newTodo.styl';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import React, {PropTypes} from 'react';
 
-export default class NewTodo extends Component {
+export default class NewTodo extends React.Component {
 
   static propTypes = {
     actions: PropTypes.object.isRequired,

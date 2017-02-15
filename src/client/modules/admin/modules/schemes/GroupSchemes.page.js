@@ -2,12 +2,12 @@ import React from 'react';
 import {Link} from 'react-router';
 import {RadioButton, Table, TableHeader, TableRow, TableHeaderColumn, TableBody, TableRowColumn, TableFooter} from 'material-ui';
 import Loader from '../../../../components/Loader';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import {Utils} from 'material-ui';
 
 const Events = Utils.Events;
 
-class Users extends Component {
+class Users extends React.Component {
 
   static contextTypes = {
     muiTheme: React.PropTypes.object,

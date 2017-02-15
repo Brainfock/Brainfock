@@ -8,13 +8,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 
 import MasterDetailsListView from './components/master-detail.list';
 import ListViewItem from './components/issues-list-item';
 import ProjectsEmpty from './components/projects-empty';
 
-export default class ProjectIssues extends Component {
+export default class ProjectIssues extends React.Component {
 
   static propTypes = {
     boards: React.PropTypes.object,

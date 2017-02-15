@@ -7,13 +7,14 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import React, {PropTypes} from 'react';
-import mui from 'material-ui';
-import {Styles} from 'material-ui';
-const Colors = Styles.Colors;
+import {List, ListItem} from 'material-ui/List';
+import {Colors} from 'material-ui/styles';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
 
-export default class Todo extends Component {
+export default class Todo extends React.Component {
 
   static propTypes = {
     actions: PropTypes.object.isRequired,
@@ -139,7 +140,7 @@ export default class Todo extends Component {
 
     return (
       <div style={style}>
-        <mui.ListItem
+        <ListItem
           onClick={this._onClick.bind(this)}
           onDoubleClick={this._onDblClick.bind(this)}
           primaryText={
@@ -169,7 +170,7 @@ export default class Todo extends Component {
           secondaryTextLines={(todo.text ? 2 : 1)}
           >
           {this.confirmDialog()}
-        </mui.ListItem>
+        </ListItem>
       </div>
     );
   }
@@ -177,7 +178,7 @@ export default class Todo extends Component {
   confirmDialog() {
 
     let dialogActions = [
-      <mui.FlatButton
+      <FlatButton
         label='BTN_CANCEL'
         onClick={this._onDialogCancel}
         onTouchTap={this._onDialogCancel}
@@ -188,9 +189,9 @@ export default class Todo extends Component {
     ];
 
     return (
-      <mui.Dialog actions={dialogActions} ref='confirmDialog' title='projects_deleteDialog_TITLE'>
+      <Dialog actions={dialogActions} ref='confirmDialog' title='projects_deleteDialog_TITLE'>
         <p>Are you sure you want to delete this item? </p>
-      </mui.Dialog>
+      </Dialog>
     );
   }
 

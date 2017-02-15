@@ -8,7 +8,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import {Link} from 'react-router';
 
 import fetch from '../../../../common/components/fetch';
@@ -19,7 +19,7 @@ import Loader from '../../../components/Loader.js';
 /**
  * @todo since this is the last route in applicaiton that catches ANY route, this is where we have to handle 404 error
  */
-@fetch(fetchWorkspaceHomepage) class WorkspaceHome extends Component {
+@fetch(fetchWorkspaceHomepage) class WorkspaceHome extends React.Component {
 
   static propTypes = {
     actions: React.PropTypes.object,

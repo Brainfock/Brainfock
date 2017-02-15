@@ -9,20 +9,20 @@
  */
 import React from 'react';
 import mui from 'material-ui';
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import {FormattedMessage} from 'react-intl';
 import {Grid, Row, Col, Affix} from 'react-bootstrap';
 import DocumentTitle from '../../components/Title';
-
+import MenuItem from 'material-ui/MenuItem';
 import Loader from '../../components/Loader';
 import ListActions from '../../components/UIListActions';
 import Form from '../../topic/components/create-topic-form';
 import ListView from '../../boards/boards.react';
-import MenuItem from 'material-ui/lib/menus/menu-item';
 import Filters from '../../components/UISimpleFilters';
 import FetchActionError from '../../components/FetchActionError';
+import IconButton from 'material-ui/IconButton';
 
-export default class ProjectIssues extends Component {
+export default class ProjectIssues extends React.Component {
   static propTypes = {
     actions: React.PropTypes.object.isRequired,
     boards: React.PropTypes.object.isRequired,
@@ -119,7 +119,7 @@ export default class ProjectIssues extends Component {
     const msg = this.props.msg.topics;
 
     let filterToggleButton = (
-      <mui.IconButton
+      <IconButton
         iconClassName="fa fa-filter fa-lg"
         onClick={this.toggleFilters.bind(this)}
         tooltip="Filter"
@@ -201,7 +201,7 @@ export default class ProjectIssues extends Component {
     const ListActionsRendered = (
       <div className="pull-right">
         {summary}
-        <mui.IconButton
+        <IconButton
           iconClassName={detailsToggleIconClass}
           onClick={e => this.setState({
             showDetails: !this.state.showDetails,
@@ -280,7 +280,7 @@ export default class ProjectIssues extends Component {
    */
   renderfilterDropdownMenu() {
 
-    const iconButtonElement = <mui.IconButton iconClassName="fa fa-list-alt" tooltip="Filter presets"/>;
+    const iconButtonElement = <IconButton iconClassName="fa fa-list-alt" tooltip="Filter presets"/>;
     return (
       <mui.IconMenu iconButtonElement={iconButtonElement} openDirection={'bottom-right'}>
         <MenuItem innerDivStyle={{fontWeight: this.state.filterId === 1 ? 600 : 400}} onClick={
@@ -423,7 +423,7 @@ export default class ProjectIssues extends Component {
           io={this.props.io}
           onDeleted={()=>{
             // TODO: close details panel?
-          }.bind(this)}
+          }}
           topic={this.props.boards.viewTopic}
           topicActions={this.props.topicActions}
         />

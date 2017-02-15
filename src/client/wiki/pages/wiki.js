@@ -7,7 +7,7 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Component from 'react-pure-render/component';
+import Component from 'react-addons-pure-render-mixin';
 import DocumentTitle from '../../components/Title';
 import React from 'react';
 import {Link} from 'react-router';
@@ -16,7 +16,7 @@ import fetch from '../../../common/components/fetch';
 import {fetchContextPage} from '../../../common/wiki/actions';
 
 @fetch(fetchContextPage)
-class Page extends Component {
+class Page extends React.Component {
 
   static propTypes = {
     actions: React.PropTypes.object,
