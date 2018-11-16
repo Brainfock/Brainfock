@@ -4,7 +4,8 @@
 
 [![Gitter chat https://gitter.im/Brainfock/Brainfock](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Brainfock/Brainfock?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![CircleCI](https://img.shields.io/circleci/project/Brainfock/Brainfock.svg?maxAge=7200)](https://circleci.com/gh/Brainfock/Brainfock)
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZH94NV7E9JU74)
+
+## Fucking PayPal does not allow to get donations for poor morons in Ukraine, so fuck PayPal. If you can, please send me some dough @ https://streamlabs.com/sergiig because I'm out of coffee even...
 
 Written in universal JavaScript, NodeJS server with Loopback, ReactJS client with everything.
 
