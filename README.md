@@ -7,6 +7,10 @@
 
 ## Fucking PayPal does not allow to get donations for poor morons in Ukraine, so fuck PayPal. If you can, please send me some dough @ https://streamlabs.com/sergiig because I'm out of coffee even...
 
+## Donate Bitcoin 
+
+> 1Ceg8xdYpFmyPgeqqWDBBXVztcuNsWTMpq
+
 Written in universal JavaScript, NodeJS server with Loopback, ReactJS client with everything.
 
 Copyright (C) 2015-present Sergii Gamaiunov [@SergiiGama](https://twitter.com/SergiiGama)
