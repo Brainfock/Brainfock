@@ -5,11 +5,12 @@
 [![Gitter chat https://gitter.im/Brainfock/Brainfock](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Brainfock/Brainfock?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![CircleCI](https://img.shields.io/circleci/project/Brainfock/Brainfock.svg?maxAge=7200)](https://circleci.com/gh/Brainfock/Brainfock)
 
-## Fucking PayPal does not allow to get donations for poor morons in Ukraine, so fuck PayPal. If you can, please send me some dough @ https://streamlabs.com/sergiig because I'm out of coffee even...
-
 ## Donate Bitcoin 
 
 > 1Ceg8xdYpFmyPgeqqWDBBXVztcuNsWTMpq
+
+### Fucking PayPal does not allow to get donations, because it's great to live in Ukraine. If you can, please support my metabolism with a few $ via bitcoin or https://streamlabs.com/sergiig
+
 
 Written in universal JavaScript, NodeJS server with Loopback, ReactJS client with everything.
 
