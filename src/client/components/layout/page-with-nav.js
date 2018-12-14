@@ -7,22 +7,23 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
-import {Menu, Mixins} from 'material-ui';
-import {spacing, typography, zIndex, Colors} from 'material-ui/styles';
-// let {StylePropable} = Mixins;
+var React = require('react');
+var Loader = require('../Loader');
+
+let { Menu, Mixins, Styles } = require('material-ui');
+
+let { Spacing, Colors } = Styles;
+let { StyleResizable, StylePropable } = Mixins;
+
+import * as mui from 'material-ui';
+//const Events = mui.Utils.Events;
+
 /**
  * Page With Navigation, based on material-ui's PageWithNav
  */
-let PageWithNav = React.createClass({
+var PageWithNav = React.createClass({
 
-  propTypes: {
-    children: React.PropTypes.object,
-    history: React.PropTypes.object,
-    menuItems: React.PropTypes.array,
-  },
-
-  // mixins: [StylePropable],
+  mixins: [StyleResizable, StylePropable],
 
   contextTypes: {
     router: React.PropTypes.func
@@ -31,7 +32,7 @@ let PageWithNav = React.createClass({
   getDefaultProps() {
     return {
       menuItems:[]
-    };
+    }
   },
 
   //componentDidMount() {
@@ -52,11 +53,11 @@ let PageWithNav = React.createClass({
   //  Events.off(window, 'resize', this._updateDeviceWidth);
   //},
 
-  getStyles() {
-    let subNavWidth = spacing.desktopKeylineIncrement * 3 + 'px';
+  getStyles(){
+    let subNavWidth = Spacing.desktopKeylineIncrement * 3 + 'px';
     let styles = {
       root: {
-        //paddingTop: (spacing.desktopKeylineIncrement/2) + 'px'
+        //paddingTop: (Spacing.desktopKeylineIncrement/2) + 'px'
       },
       rootWhenMedium: {
         position: 'relative'
@@ -67,8 +68,8 @@ let PageWithNav = React.createClass({
       },
       content: {
         // removed maxWidth - this component is used as full-width container with side nav
-        //maxWidth: (spacing.desktopKeylineIncrement * 20) + 'px'
-        //padding: spacing.desktopGutter + 'px',
+        //maxWidth: (Spacing.desktopKeylineIncrement * 20) + 'px'
+        //padding: Spacing.desktopGutter + 'px',
         boxSizing: 'border-box',
       },
       secondaryNavWhenMedium: {
@@ -84,39 +85,39 @@ let PageWithNav = React.createClass({
       }
     };
 
-    // TODO: implement or drop, from 0.28.0
-    // if (this.isDeviceSize(StyleResizable.statics.Sizes.MEDIUM) ||
-    //     this.isDeviceSize(StyleResizable.statics.Sizes.LARGE)) {
-    //   styles.root = this.mergeStyles(styles.root, styles.rootWhenMedium);
-    //   styles.secondaryNav = this.mergeStyles(styles.secondaryNav, styles.secondaryNavWhenMedium);
-    //   styles.content = this.mergeStyles(styles.content, styles.contentWhenMedium);
-    // }
+    if (this.isDeviceSize(StyleResizable.statics.Sizes.MEDIUM) ||
+        this.isDeviceSize(StyleResizable.statics.Sizes.LARGE)) {
+      styles.root = this.mergeStyles(styles.root, styles.rootWhenMedium);
+      styles.secondaryNav = this.mergeStyles(styles.secondaryNav, styles.secondaryNavWhenMedium);
+      styles.content = this.mergeStyles(styles.content, styles.contentWhenMedium);
+    }
 
     return styles;
   },
 
-  _getSelectedIndex() {
-    let currentItem;
+  _getSelectedIndex: function()
+  {
+    var currentItem;
     let menuItems = this.props.menuItems;
-    for (let i = menuItems.length - 1; i >= 0; i--) {
+    for (var i = menuItems.length - 1; i >= 0; i--) {
       currentItem = menuItems[i];
       // multiple routes match support:
-      if (currentItem.routes) {
+      if(currentItem.routes) {
         // see if any *one* route is valid
-        for (let i2 = currentItem.routes.length - 1; i2 >= 0; i2--) {
+        for (var i2 = currentItem.routes.length - 1; i2 >= 0; i2--) {
           let _routeName = currentItem.routes[i2];
-          if (this.props.history.isActive(_routeName)) {return i;}
+          if (this.props.history.isActive(_routeName)) {return i};
         }
       }
       if (currentItem.route && this.props.history.isActive(currentItem.route)) return i;
-    }
+    };
   },
 
   _onMenuItemClick(e, index, payload) {
     this.props.history.pushState(null, payload.route);
   },
 
-  render: function() {
+  render: function () {
 
     const {children, ...passProps} = this.props;
 
@@ -124,10 +125,10 @@ let PageWithNav = React.createClass({
     return (
         <div style={styles.root}>
           <div style={styles.secondaryNav}>
-            <Menu
+            <mui.Menu
               menuItems={this.props.menuItems}
-              multiple
               onItemTap={this._onMenuItemClick}
+              multiple
               ref="menuItems"
               selectedIndex={this._getSelectedIndex()}
               zDepth={0}
@@ -141,5 +142,4 @@ let PageWithNav = React.createClass({
     );
   }
 });
-
-module.exports = PageWithNav; // eslint-disable-line no-undef
+module.exports=PageWithNav;

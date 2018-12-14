@@ -11,25 +11,24 @@ import React from 'react';
 import Select from 'react-select';
 require('isomorphic-fetch');
 
-let RemoteSelectField = React.createClass({
+var RemoteSelectField = React.createClass({
   timer:null,
   displayName: 'RemoteSelectField',
   propTypes: {
-    endpoint:React.PropTypes.string,
-    endpointQueryString:React.PropTypes.string,
-    errorText: React.PropTypes.string,
-    formatCallback: React.PropTypes.callback,
     hint: React.PropTypes.string,
     label: React.PropTypes.string,
+    endpoint:React.PropTypes.string,
     options:React.PropTypes.array,
+    endpointQueryString:React.PropTypes.string,
+    formatCallback: React.PropTypes.callback,
   },
-  loadOptions(input, callback) {
+  loadOptions (input, callback) {
 
     if (!input.length) {
       return callback(null, {
         options: this.props.options || [],
         complete:false
-      });
+        });
     }
 
     if (this.timer !== null)
@@ -44,15 +43,13 @@ let RemoteSelectField = React.createClass({
     }
 
 
-    let formatCallback = this.props.formatCallback
+          let formatCallback = this.props.formatCallback
             ? this.props.formatCallback
-            : item => {
-              return {
-                value:(item.value || item.id),
-                label:(item.label || item.summary || item.name),
-              };
-            };
-    this.timer = setTimeout(function() {
+            : item => { return {
+            value:(item.value || item.id),
+            label:(item.label || item.summary || item.name),
+          }}
+    this.timer=setTimeout(function() {
       fetch(endpoint.join('&'), {
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
         method: 'get',
@@ -73,21 +70,21 @@ let RemoteSelectField = React.createClass({
             complete: false
           });
         });
-    }.bind(this), 400);
+    }.bind(this),400);
   },
-  renderHint() {
+  renderHint () {
     if (!this.props.hint) return null;
     return (
       <div className="hint">{this.props.hint}</div>
     );
   },
-  renderError() {
+  renderError () {
     if (!this.props.errorText) return null;
     return (
-      <div style={{fontSize:12, color:'red', padding:'10px 0 0 0'}}>{this.props.errorText}</div>
+      <div style={{fontSize:12,color:'red',padding:'10px 0 0 0'}}>{this.props.errorText}</div>
     );
   },
-  render() {
+  render () {
 
     const {...props} = this.props;
 
@@ -110,4 +107,4 @@ let RemoteSelectField = React.createClass({
   }
 });
 
-module.exports = RemoteSelectField; // eslint-disable-line no-undef
+module.exports = RemoteSelectField;

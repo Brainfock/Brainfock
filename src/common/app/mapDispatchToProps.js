@@ -20,7 +20,7 @@ const actions = [
   usersActions
 ];
 
-const appTopicActions = [
+const topic_actions = [
   topicActions
 ];
 
@@ -30,14 +30,14 @@ export default function mapDispatchToProps(dispatch) {
     .filter(value => typeof value === 'function')
     .toObject();
 
-  const topicActionsCreators = Map()
-    .merge(...appTopicActions)
+  const topic_actions_creators = Map()
+    .merge(...topic_actions)
     .filter(value => typeof value === 'function')
     .toObject();
 
   return {
     actions: bindActionCreators(creators, dispatch),
-    topicActions: bindActionCreators(topicActionsCreators, dispatch),
+    topic_actions: bindActionCreators(topic_actions_creators, dispatch),
     dispatch
   };
 }

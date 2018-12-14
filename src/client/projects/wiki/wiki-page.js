@@ -7,26 +7,23 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Component from 'react-addons-pure-render-mixin';
-import DocumentTitle from '../../components/Title';
-import React from 'react';
-import {Link} from 'react-router';
-import mui from 'material-ui';
+import Component from 'react-pure-render/component';
+import DocumentTitle from 'react-document-title';
+var React = require('react'),
+  Router = require('react-router'),
+  {Link, Navigation} = Router,
+  mui = require('material-ui'),
+  Menu = mui.Menu;
+
+import fetch from '../../../common/components/fetch';
+
 import Loader from '../../components/Loader';
-//import fetch from '../../../common/components/fetch';
-//import {fetchContextPage} from '../../../common/wiki/actions';
+
+import {fetchContextPage} from '../../../common/wiki/actions';
 
 //@fetch(fetchContextPage)
-class Page extends React.Component {
-  static propTypes = {
-    actions: React.PropTypes.object,
-    boards: React.PropTypes.object,
-    history: React.PropTypes.object,
-    page: React.PropTypes.object,
-    params: React.PropTypes.object,
-    wiki: React.PropTypes.object,
-  }
-
+class Page extends Component {
+//this.props.params.namespace}/${this.props.params.board_id
   componentWillMount(props)  {
     if (this.props.params.uid && this.props.boards.board.data.entityId
       && (!this.props.wiki.viewPage.pageUid || this.props.wiki.viewPage.pageUid !== this.props.params.uid
@@ -35,9 +32,9 @@ class Page extends React.Component {
     }
   }
 
-  componentWillReceiveProps(newProps, b)  {
-    if (newProps.params.uid && (this.props.params !== newProps.params)) {
-      this.props.actions.findContextPage(this.props.boards.board.data.entityId, newProps.params.uid);
+  componentWillReceiveProps(newProps,b)  {
+    if(newProps.params.uid && (this.props.params !== newProps.params)) {
+        this.props.actions.findContextPage(this.props.boards.board.data.entityId, newProps.params.uid);
     }
   }
 
@@ -45,17 +42,18 @@ class Page extends React.Component {
    * handle clicks on elements in page's text & navigate internal links with app router
    * @param a
    */
-  handleClick(a) {
-    if (a.target.nodeName === 'A' && a.target.className.indexOf('WkikLink') === 0) {
+  handleClick(a){
+    if(a.target.nodeName === 'A' && a.target.className.indexOf("WkikLink") == 0) {
       a.preventDefault();
       this.props.history.pushState(null, a.target.getAttribute('href'));
     }
   }
 
-  render() {
+  render()
+  {
     const page = this.props.page || this.props.wiki.viewPage;
 
-    if (!this.props.boards.board.data.entityId || page.loading) {
+    if(!this.props.boards.board.data.entityId || page.loading) {
       return <Loader />;
     }
 
@@ -68,19 +66,19 @@ class Page extends React.Component {
     //  </div>;
     //}
 
-    if (page) {
+    if(page) {
       return (
-        <DocumentTitle title={page.pageUid + ' — Wiki'}>
+        <DocumentTitle title={page.pageUid + " — Wiki"}>
           <div className="wiki-wrapper">
             <div className="wiki-page">
               <div className="container-fluid">
                 <div className="row">
                   <h3>{page.pageUid }
                     <div className="pull-right">
-                      <mui.RaisedButton label="Edit" onClick={this.gotoEdit.bind(this)}  primary />
+                      <mui.RaisedButton label="Edit" primary={true}  onClick={this.gotoEdit.bind(this)} />
                     </div>
                   </h3>
-                  <div  dangerouslySetInnerHTML={{__html: page.contentRendered}} onClick={this.handleClick.bind(this)} />
+                  <div onClick={this.handleClick.bind(this)} dangerouslySetInnerHTML={{__html: page.contentRendered}} />
                 </div>
               </div>
             </div>
@@ -93,17 +91,18 @@ class Page extends React.Component {
       );
 
 
-    } else {
-      return (<div>
+    }
+    else {
+      return <div>
         Empty!
-      </div>);
+      </div>
     }
   }
 
   gotoEdit() {
+    console.log('>>>>>>',this.props.params);
     this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/wiki/${this.props.wiki.viewPage.pageUid}/edit`);
   }
-}
+};
 
-export default Page;
-
+module.exports = Page;

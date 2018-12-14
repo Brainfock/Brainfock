@@ -7,60 +7,49 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
-import {RaisedButton, FlatButton, Dialog} from 'material-ui';
+var React = require('react');
+var mui = require('material-ui');
+import cloneWithProps from 'react-addons-clone-with-props';
 
-let ListActions =  React.createClass({
-  propTypes: {
-    addItemForm: React.PropTypes.element,
-    //buttonActionLabel: React.PropTypes.string,
-    buttonActionLabel: React.PropTypes.string,
-    isLoading: React.PropTypes.bool,
-    msg: React.PropTypes.object,
-    title: React.PropTypes.string,
-  },
+var ListActions =  React.createClass({
 
-  getDefaultProps() {
+  getDefaultProps: function() {
     return {
-      actions: null,
-      //buttonActionLabel: 'BTN_CREATE',
-      buttonActionLabel: 'INVITE PEOPLE',
       isLoading: false,
-      title: 'Add New',
+      actions: null,
+      BUTTON_ACTION_LABEL: 'INVITE PEOPLE',
+      BUTTON_SUBMIT_LABEL: 'BTN_CREATE',
+      TITLE: 'Add New'
     };
   },
 
-  render() {
-    return (<div className="pull-right">
-      <RaisedButton
-        label={this.props.buttonActionLabel}
-        onClick={this.showModelForm}
-        primary
-        />
+  render: function() {
+    return <div className="pull-right">
+      <mui.RaisedButton primary={true} onClick={this.showModelForm} label={this.props.BUTTON_ACTION_LABEL}/>
       {this.renderModelForm()}
-    </div>);
+    </div>;
   },
 
-  renderModelForm() {
-    let dialogActions = [
-      {text: this.props.msg.form.button.cancel, onClick: this._onDialogCancel},
-      {text: this.props.msg.form.button.create, onClick: this.onFormSubmit}
+  renderModelForm: function()
+  {
+    var dialogActions = [
+      { text: this.props.msg.form.button.cancel, onClick: this._onDialogCancel  },
+      { text: this.props.msg.form.button.create, onClick: this.onFormSubmit }
     ];
-    if (this.props.isLoading === true) {
+
+    if(this.props.isLoading === true) {
       // disable all buttons while form is being processed
       dialogActions = [
-        <FlatButton
-            disabled
+        <mui.FlatButton
             label={this.props.msg.form.button.cancel}
-            onTouchTap={this._onDialogCancel}
             secondary
-          />,
-        <FlatButton
             disabled
+            onTouchTap={this._onDialogCancel} />,
+        <mui.FlatButton
             label={this.props.msg.form.button.create}
-            onTouchTap={this.onFormSubmit}
             primary
-          />
+            disabled
+            onTouchTap={this.onFormSubmit} />
       ];
     }
 
@@ -68,28 +57,28 @@ let ListActions =  React.createClass({
       ref: 'formView'
     });
 
-    return (<Dialog
+    return <mui.Dialog
       actions={dialogActions}
-      autoDetectWindowHeight
-      autoScrollBodyContent
+      autoDetectWindowHeight={true}
+      autoScrollBodyContent={true}
       ref="modelForm"
-      title={this.props.title}
+      title={this.props.TITLE}
       >
       {addItemForm}
-    </Dialog>);
+    </mui.Dialog>
   },
 
-  showModelForm() {
+  showModelForm: function() {
     this.refs.modelForm.show();
   },
 
-  _onDialogCancel() {
+  _onDialogCancel:function() {
     this.refs.modelForm.dismiss();
   },
 
-  onFormSubmit(e) {
-    this.refs.formView.onFormSubmit(e);
+  onFormSubmit:function(e) {
+    this.refs.formView.onFormSubmit(e)
   }
 });
 
-module.exports = ListActions; // eslint-disable-line no-undef
+module.exports=ListActions;

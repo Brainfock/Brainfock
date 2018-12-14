@@ -16,7 +16,7 @@ export const SAVE_SUCCESS = 'WIKI_SAVE_SUCCESS';
 export const SET_EDIT_WIKI_FIELD = 'SET_EDIT_WIKI_FIELD';
 
 
-const getApi = (fetch, endpoint, host = '/') =>
+const getApi = (fetch, endpoint, host='/') =>
   fetch(`${host}api/${endpoint}`, {
     headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
     method: 'get',
@@ -30,16 +30,18 @@ const getApi = (fetch, endpoint, host = '/') =>
 export function fetchContextPage(data) {
 
   const {
+    location,
     params,
+    props,
     app,
     users
     } = data;
 
   let query = [];
   query.push('filter[where][contextEntityId]=0');
-  query.push('filter[where][pageUid]=' + params.uid);
-  if (users && users.viewer) {
-    query.push('access_token=' + users.viewer.authToken);
+  query.push('filter[where][pageUid]='+params.uid);
+  if(users && users.viewer) {
+    query.push('access_token='+users.viewer.authToken)
   }
 
 //let query = [];
@@ -49,6 +51,7 @@ export function fetchContextPage(data) {
   //  query.push('access_token='+props.users.viewer.authToken)
   //}
   const host = app.baseUrl;
+  console.log('host',host)
   //return fetch('/api/wikiPages/findOne?'+ query.join('&'), {
   //  headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
   //  method: 'get',
@@ -65,7 +68,8 @@ export function fetchContextPage(data) {
   //    return response.body
   //  });
 
-  let endpoint =  'wikiPages/findOne?' + query.join('&');
+  let endpoint =  'wikiPages/findOne?'+ query.join('&');
+  console.log("ENDPOINT", endpoint);
   return ({fetch, validate}) => ({
     type: 'WIKI_FIND',
     payload: {
@@ -77,11 +81,11 @@ export function fetchContextPage(data) {
   });
 }
 
-export function findContextPage(contextId, uid) {
+export function findContextPage(context_id, uid) {
   return ({fetch, validate}) => ({
     type: 'WIKI_FIND',
     payload: {
-      promise:  getApi(fetch, 'wikiPages/findOne?filter[where][contextEntityId]=' + contextId + '&filter[where][pageUid]=' + uid)
+      promise:  getApi(fetch, 'wikiPages/findOne?filter[where][contextEntityId]='+context_id+'&filter[where][pageUid]='+uid)
         .catch(response => {
           throw response;
         })
@@ -107,10 +111,10 @@ export function setWikiViewPageField({target: {name, value}}) {
   };
 }
 
-//const validateForm = (validate, fields) => validate(fields)
-//  .prop('email').required().email()
-//  .prop('password').required().simplePassword()
-//  .promise;
+const validateForm = (validate, fields) => validate(fields)
+  .prop('email').required().email()
+  .prop('password').required().simplePassword()
+  .promise;
 
 const post = (fetch, endpoint, body) =>
   fetch(`/api/${endpoint}`, {

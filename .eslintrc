@@ -1,11 +1,11 @@
 {
   "globals": {
-    "after": false,
-    "afterEach": false,
-    "before": false,
-    "beforeEach": false,
     "describe": false,
     "it": false,
+    "before": false,
+    "beforeEach": false,
+    "after": false,
+    "afterEach": false,
     "require": false
   },
   "parser": "babel-eslint",
@@ -19,7 +19,6 @@
     "computed-property-spacing": 2,
     "consistent-this": [2, "self"],
     "curly": 0,
-    "global-require": 0, // Used by webpack-isomorphic-tools and React Native.
     "eol-last": 2,
     "eqeqeq": [2, "allow-null"],
     "guard-for-in": 0,
@@ -32,7 +31,6 @@
     "no-bitwise": 0,
     "no-cond-assign": 2,
     "no-console": 2,
-    "no-class-assign": 0, // Class assign is used for higher order components.
     "no-constant-condition": 2,
     "no-debugger": 2,
     "no-delete-var": 2,
@@ -43,7 +41,7 @@
     "no-ex-assign": 2,
     "no-extend-native": 2,
     "no-extra-parens": 0,
-    "no-floating-decimal": 0, // .5 is just fine.
+    "no-floating-decimal": 2,
     "no-func-assign": 2,
     "no-implied-eval": 2,
     "no-inner-declarations": 2,
@@ -85,7 +83,6 @@
     "quote-props": [0, "as-needed"],
     "quotes": [2, "single", "avoid-escape"],
     "radix": 2,
-    "no-param-reassign": 0, // We love param reassignment. Naming is hard.
     "semi": [2, "always"],
     "semi-spacing": [2, {"before": false, "after": true}],
     "space-after-keywords": [2, "always"],

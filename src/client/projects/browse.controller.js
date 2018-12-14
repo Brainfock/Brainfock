@@ -8,7 +8,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 
 import MasterDetailsListView from './components/master-detail.list';
 import ListViewItem from './components/issues-list-item';
@@ -19,19 +19,9 @@ import IssueView from './components/Issue';
  * @todo replace by topic_menu configuration; menu item config keeps settings for
  * template, empty list fallback, route etc.
  */
-export default class ProjectIssues extends React.Component {
+export default class ProjectIssues extends Component {
 
-  static propTypes = {
-    boards: React.PropTypes.object,
-    browseBoardNum: React.PropTypes.number,
-    children: React.PropTypes.object,
-    location: React.PropTypes.object,
-    msg: React.PropTypes.object,
-    params: React.PropTypes.object,
-    topicActions: React.PropTypes.object,
-  }
-
-  componentDidMount() {
+  componentDidMount () {
     // fetch data initially in scenario 2 from above
     this.fetchBoardInfo();
   }
@@ -45,7 +35,7 @@ export default class ProjectIssues extends React.Component {
     const groupKey = this.resolveGroupKey();
 
     // http://localhost:3000/api/workspaces/sandbox/topics/demosand/topics/board/3
-    this.props.topicActions.loadTopicGroupBoard(groupKey, this.props.browseBoardNum);
+    this.props.topic_actions.loadTopicGroupBoard(groupKey, this.props.browseBoardNum)
 
 
     if (this.props.browseBoardNum) {
@@ -56,13 +46,13 @@ export default class ProjectIssues extends React.Component {
       // load()
     } else {
 
-      this.props.topicActions.count(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
-      this.props.topicActions.find(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
-      this.props.topicActions.loadFilters(groupKey, {}, this.props.params.board_id);
+      this.props.topic_actions.count(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
+      this.props.topic_actions.find(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
+      this.props.topic_actions.loadFilters(groupKey, {}, this.props.params.board_id);
     }
 
     if (!this.props.boards.group || this.props.boards.group.groupKey !== groupKey) {
-      this.props.topicActions.loadTopicGroup(groupKey);
+      this.props.topic_actions.loadTopicGroup(groupKey);
     }
 
   }
@@ -74,7 +64,7 @@ export default class ProjectIssues extends React.Component {
    */
   resolveGroupKey() {
     if (this.props.params.groupKey.substr(-1) === 's') {
-      return this.props.params.groupKey.substr(0, this.props.params.groupKey.length - 1);
+      return this.props.params.groupKey.substr(0, this.props.params.groupKey.length-1)
     } else {
       return this.props.params.groupKey;
     }
@@ -82,20 +72,20 @@ export default class ProjectIssues extends React.Component {
 
   // load info about what group is available in :sub_board_num
   render() {
-    const {board} = this.props.boards;
-    //const msg = this.props.msg.topics;
+    const {board, meta, listFilters, newTopic, formFields} = this.props.boards;
+    const msg = this.props.msg.topics;
     const {children, ...passProps} = this.props;
     const {location: {pathname}} = this.props;
     return (
       <MasterDetailsListView
-        browseBoardNum={this.props.params.sub_board_num}
         containerTopic={board}
         detailsComponent={IssueView}
         emptyListFallback={ProjectsEmpty}
-        groupBy={this.props.location.query.groupBy}
         groupKey={this.resolveGroupKey()}
         listViewItem={ListViewItem}
         pathname={pathname}
+        browseBoardNum={this.props.params.sub_board_num}
+        groupBy={this.props.location.query.groupBy}
         {...passProps}
         />
     );

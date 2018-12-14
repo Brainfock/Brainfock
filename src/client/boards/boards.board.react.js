@@ -1,34 +1,38 @@
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 
 import mui, {Styles, Avatar, IconButton} from 'material-ui';
+const Colors = Styles.Colors;
 
-import Colors from 'material-ui/styles/colors';
-export default class Todo extends React.Component {
+export default class Todo extends Component {
 
   static propTypes = {
-    actions: PropTypes.object,
     group: PropTypes.object,
-    history: PropTypes.object,
-    isPreview: PropTypes.bool,
-    params: PropTypes.object,
+    actions: PropTypes.object,
     todo: PropTypes.object.isRequired,
+    isPreview: PropTypes.bool
   }
 
   render() {
-    const {todo} = this.props;
+    const {actions, todo} = this.props;
 
     const color = Colors[todo.logoBackground];
-    const icon = 'fa ' + todo.logoIcon;
+    const icon = "fa "+todo.logoIcon;
 
     let privacyIcon;
     if (todo.accessPrivateYn) {
       privacyIcon = (
         <span>
           <IconButton iconClassName="fa fa-eye-slash"
-                      iconStyle={{height:'16px', fontSize:'19px'}}
-                      style={{marginTop:'-25px', height:'16px'}}
                       tooltip="Private & Invisible"
+                      style={{
+              marginTop:'-25px',
+              height:'16px'
+            }}
+                      iconStyle={{
+              height:'16px',
+              fontSize:'19px',
+            }}
             />
         </span>
       );
@@ -48,40 +52,38 @@ export default class Todo extends React.Component {
     //  );
     //}
 
-    return (<mui.ListItem
-      leftAvatar={<Avatar backgroundColor={color} icon={<span className={icon}/>} />}
-      onClick={this._onClick.bind(this)}
-      primaryText={
-        <div>
-          {todo.summary} {privacyIcon}
-        </div>
-      }
-      rightAvatar={rightAvatar}
+    return <mui.ListItem
+      primaryText={<div>{todo.summary}{privacyIcon}</div>}
       secondaryText={todo.text}
+      onClick={this._onClick.bind(this)}
+      rightAvatar={rightAvatar}
+      leftAvatar={<Avatar icon={<span className={icon}/>} backgroundColor={color} />}
       > {this.confirmDialog()}
-    </mui.ListItem>);
+    </mui.ListItem>
   }
 
   confirmDialog() {
 
-    const dialogActions = [
+    var dialogActions = [
       <mui.FlatButton
         label='BTN_CANCEL'
-        onClick={this._onDialogCancel}
+        secondary={true}
         onTouchTap={this._onDialogCancel}
+        onClick={this._onDialogCancel}
         ref="BTN_CANCEL"
-        secondary
         />,
-      {text:'BTN_DELETE', onClick: this.delete}
+      { text:'BTN_DELETE', onClick: this.delete }
     ];
-    // TODO: i18n
-    return (<mui.Dialog actions={dialogActions} ref='confirmDialog' title='projects_deleteDialog_TITLE'>
+
+    var Dialog = <mui.Dialog title='projects_deleteDialog_TITLE' ref="confirmDialog" actions={dialogActions}>
       <p>Are you sure you want to delete this project? </p>
-    </mui.Dialog>);
+    </mui.Dialog>
+
+    return Dialog;
   }
 
   _onClick() {
-    if (this.props.isPreview === true) {
+    if(this.props.isPreview === true) {
       alert('This is a preview :)');
       return;
     }

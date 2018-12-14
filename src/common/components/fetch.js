@@ -1,23 +1,23 @@
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 
 export default function fetch(action) {
 
-  return Wrapped => class Fetch extends React.Component {
+  return Wrapped => class Fetch extends Component {
 
     static propTypes = {
-      app: PropTypes.object,
       dispatch: PropTypes.func,
       location: PropTypes.object,
-      params: PropTypes.object,
+      app: PropTypes.object,
       users: PropTypes.object,
+      params: PropTypes.object
     };
 
     // This allows server fetching.
     static fetchAction = action;
 
     componentDidMount() {
-      const {dispatch/*, location, params, app, users*/} = this.props;
+      const {dispatch, location, params, app, users} = this.props;
       dispatch(action({...this.props}));
      // dispatch(action({location, params, app, users}));
     }
@@ -29,5 +29,6 @@ export default function fetch(action) {
     render() {
       return <Wrapped {...this.props} />;
     }
+
   };
 }

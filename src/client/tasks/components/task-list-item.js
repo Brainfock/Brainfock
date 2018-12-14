@@ -7,20 +7,19 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import mui from 'material-ui';
 
 import {Styles} from 'material-ui';
-import Colors from 'material-ui/styles/colors';
+const Colors = Styles.Colors;
 
-export default class Todo extends React.Component {
+export default class Todo extends Component {
 
   static propTypes = {
     actions: PropTypes.object.isRequired,
     followItemOnClick: PropTypes.object,
     history: PropTypes.object,
-    location: PropTypes.object,
     params: PropTypes.object.isRequired,
     todo: PropTypes.object.isRequired,
     topicGroupKey: PropTypes.string.isRequired,
@@ -48,14 +47,14 @@ export default class Todo extends React.Component {
         const labelConfig = JSON.parse(possibleConfig);
         if (labelConfig.bg) {
           if (Colors[labelConfig.bg]) {
-            labelStyle.backgroundColor = Colors[labelConfig.bg];
+            labelStyle.backgroundColor = Colors[labelConfig.bg]
             labelStyle.padding = '2px 3px 2px 3px';
             labelStyle.borderRadius = '3px';
           }
         }
         if (labelConfig.clr) {
           if (Colors[labelConfig.clr]) {
-            labelStyle.color = Colors[labelConfig.clr];
+            labelStyle.color= Colors[labelConfig.clr]
           }
         }
       } catch (e) {}
@@ -87,16 +86,16 @@ export default class Todo extends React.Component {
     }
 
     let contextLabel;
-    if (todo.contextTopic.id) {
-      contextLabel = (<span className='label label-default' style={{marginRight:3}}>
+    if(todo.contextTopic.id) {
+      contextLabel = <span className='label label-default' style={{marginRight:3}}>
         {todo.workspace.name && <span>{todo.workspace.name} &rarr; </span>}
-        {todo.contextTopic.summary}</span>);
-    } else if (todo.workspace) {
+        {todo.contextTopic.summary}</span>;
+    } else if(todo.workspace) {
       contextLabel = <span className='label label-default' style={{marginRight:3}}>{todo.workspace.name}</span>;
     }
 
     let priorityLabel;
-    if (todo.priority) {
+    if(todo.priority) {
       let labelStyle = Object.assign({
         marginRight: todo.priority.value ? 5 : 0,
         fontWeight: 500,
@@ -107,7 +106,7 @@ export default class Todo extends React.Component {
     }
 
     let typeLabel = '';
-    if (todo.type && todo.type.name) {
+    if(todo.type && todo.type.name) {
       let labelStyle = Object.assign({
         marginRight: 5,
         fontWeight: 500,
@@ -125,14 +124,14 @@ export default class Todo extends React.Component {
       else
         currentQuery = {filter: {parentTopicId: todo.parent.id}};
 
-      parentLink = (<div className="">
+      parentLink = ( <div className="">
 
             <span className='label label-info'
                   onClick={(e)=>{
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.props.history.pushState(null, this.props.location.pathname, currentQuery);
-                  }}>{todo.parent.summary}
+                e.preventDefault();
+                e.stopPropagation();
+                this.props.history.pushState(null, this.props.location.pathname, currentQuery)
+              }}>{todo.parent.summary}
             </span>
         </div>
       );
@@ -162,7 +161,7 @@ export default class Todo extends React.Component {
             {contextLabel}
             {priorityLabel}
             {typeLabel}
-            <span style={{fontSize: '.88em', color:'#333', fontWeight:600}}>— {todo.wfStage}</span>
+            <span style={{fontSize: '.88em',color:'#333', fontWeight:600}}>— {todo.wfStage}</span>
             {todo.text && <br />}
             {todo.text}
 

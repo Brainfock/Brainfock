@@ -7,7 +7,7 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import DocumentTitle from '../../client/components/Title';
+import DocumentTitle from 'react-document-title';
 import Html from './html.react';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
@@ -24,8 +24,6 @@ import {mapDispatchToProps} from '../../common';
 
 import createRoutes from '../../client/createRoutes.js';
 import {createMemoryHistory} from 'history';
-
-import { createServerRenderContext, ServerRouter } from 'react-router';
 
 import loopback from 'loopback';
 import app from '../main';

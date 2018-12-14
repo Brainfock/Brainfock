@@ -1,9 +1,9 @@
-import Component from 'react-addons-pure-render-mixin';
-import DocumentTitle from '../components/Title';
+import Component from 'react-pure-render/component';
+import DocumentTitle from 'react-document-title';
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 
-export default class NotFound extends React.Component {
+export default class NotFound extends Component {
 
   static propTypes = {
     msg: PropTypes.object

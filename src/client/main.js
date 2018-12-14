@@ -8,7 +8,7 @@ import createRoutes from './createRoutes';
 import {IntlProvider} from 'react-intl';
 import {Provider} from 'react-redux';
 
-import injectTapEventPlugin from 'react-tap-event-plugin';
+import injectTapEventPlugin from "react-tap-event-plugin";
 
 const app = document.getElementById('app');
 const engine = createEngine('este-app');

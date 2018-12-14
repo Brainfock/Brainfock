@@ -7,7 +7,7 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
@@ -23,11 +23,11 @@ import {
 import {
   AppCanvas,
   AppBar,
-  //DropDownMenu,
+  DropDownMenu,
   Styles,
   Avatar,
-  RaisedButton
-  // TextField
+  RaisedButton,
+  TextField
 } from 'material-ui';
 
 import './app.styl';
@@ -35,14 +35,13 @@ import '../../less/main.less';
 
 import {mapDispatchToProps, mapStateToProps} from '../../common';
 import AppSideNav from './components/app-left-nav';
-//import Chat from '../components/chat/Chat';
+import Chat from '../components/chat/Chat';
 import QuickAdd from './components/QuickAdd';
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+const ThemeManager = Styles.ThemeManager;
+const DefaultRawTheme = Styles.LightRawTheme;
 
-// const DefaultRawTheme = Styles.LightRawTheme;
-
-export class App extends React.Component {
+export class App extends Component {
 
   static propTypes = {
     actions: PropTypes.object.isRequired,
@@ -55,12 +54,12 @@ export class App extends React.Component {
   };
 
   static childContextTypes = {
-  //  muiTheme: React.PropTypes.object
+    muiTheme: React.PropTypes.object
   };
 
   getChildContext() {
     return {
-    //  muiTheme: this.state.muiTheme
+      muiTheme: this.state.muiTheme
     };
   }
 
@@ -68,7 +67,7 @@ export class App extends React.Component {
     super(args);
     this.state = {
       showUserMenu: false,
-    //  muiTheme: ThemeManager.getMuiTheme(DefaultRawTheme)
+      muiTheme: ThemeManager.getMuiTheme(DefaultRawTheme)
     };
   }
 
@@ -94,7 +93,7 @@ export class App extends React.Component {
 
         if (!this.ioSubscribed) {
           this.ioSubscribed = true;
-          this.io.on('new-comment', function(data) {
+          this.io.on('new-comment', function (data) {
             this.props.actions.catchComment(data.data);
           }.bind(this));
         }
@@ -141,7 +140,7 @@ export class App extends React.Component {
 
     let sectionTitle = this.props.app.activeSectionLabel || 'Brainfock';
     if (this.props.app.activeSectionLabel && this.props.app.activeSubSectionLabel) {
-      sectionTitle = `${this.props.app.activeSectionLabel} » ${this.props.app.activeSubSectionLabel}`;
+      sectionTitle = `${this.props.app.activeSectionLabel} » ${this.props.app.activeSubSectionLabel}`
     }
     if (viewer && viewer.username) {
       // TODO: use avatar instead when available
@@ -205,6 +204,14 @@ export class App extends React.Component {
         </div>
       );
     }
+    let menuItems = [
+      { payload: '1', text: 'Never' },
+      { payload: '2', text: 'Every Night' },
+      { payload: '3', text: 'Weeknights' },
+      { payload: '4', text: 'Weekends' },
+      { payload: '5', text: 'Weekly' },
+    ];
+
     /*title={
      <div>
      <h3 style={{
@@ -213,13 +220,7 @@ export class App extends React.Component {
      lineHeight:`${this.state.muiTheme.appBar.height}px`,
      }}>
      Brainfock
-     <DropDownMenu menuItems={[
-     {payload: '1', text: 'Never'},
-     {payload: '2', text: 'Every Night'},
-     {payload: '3', text: 'Weeknights'},
-     {payload: '4', text: 'Weekends'},
-     {payload: '5', text: 'Weekly'},
-     ]} />
+     <DropDownMenu menuItems={menuItems} />
 
      <TextField style={{position:'absolute',left:'37%'}}/>
      </h3>
@@ -227,7 +228,6 @@ export class App extends React.Component {
 
     // todo: looks like we may remove `onLeftIconButtonTouchTap` event
     return (
-        <MuiThemeProvider>
       <AppCanvas predefinedLayout={1}>
         <AppBar
           autoWidth={false}
@@ -236,12 +236,14 @@ export class App extends React.Component {
           onLeftIconButtonTouchTap={this._onLeftIconButtonTouchTap.bind(this)}
           pathname={pathname}
           style={{borderBottom:'1px solid #E0E0E0'}}
-          /*title={<DropDownMenu menuItems={menuItems} />}
           title={this.props.workspace.active.data.name}
-          title={this.props.app.activeSectionLabel || 'Brainfock'}*/
+          title={this.props.app.activeSectionLabel || 'Brainfock'}
           title={sectionTitle}
+          __title="Brainfock"
+          _title={<DropDownMenu menuItems={menuItems} />}
           zDepth={0}
-          />
+          >
+        </AppBar>
         <AppSideNav ref="leftNav" {...this.props} />
 
         <div style={{
@@ -252,7 +254,6 @@ export class App extends React.Component {
           {React.cloneElement(children, props)}
         </div>
       </AppCanvas>
-          </MuiThemeProvider>
     );
   }
 
@@ -262,11 +263,5 @@ export class App extends React.Component {
   }
 };
 
-//
-// class AppExp extends App {
-// @connect(mapStateToProps, mapDispatchToProps)
-// }
-//
-// export default AppExp;
-
-module.exports = connect(mapStateToProps, mapDispatchToProps)(App);
+@connect(mapStateToProps, mapDispatchToProps)
+export default class extends App{};

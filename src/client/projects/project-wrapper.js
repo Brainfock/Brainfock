@@ -8,61 +8,52 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-addons-pure-render-mixin';
-import PageWithNav from '../components/layout/page-with-nav';
-import Loader from '../components/Loader';
-import AppContentCanvas from '../components/layout/AppContentCanvas';
+import Component from 'react-pure-render/component';
 
-class Layout extends React.Component {
-  static propTypes = {
-    actions: React.PropTypes.object,
-    boards: React.PropTypes.object,
-    children: React.PropTypes.object,
-    msg: React.PropTypes.object,
-    params: React.PropTypes.object,
-    topicActions: React.PropTypes.object,
-    workspace: React.PropTypes.object,
-  }
+let PageWithNav = require('../components/layout/page-with-nav');
+let Loader = require('../components/Loader');
+let AppContentCanvas = require('../components/layout/AppContentCanvas');
+
+class Layout extends Component {
 
   updateAppSectionLabels(props) {
     this.props.actions.appSetActiveSectionLabel(props.workspace.active.data.name,  props.boards.board.data.summary);
   }
-
   componentDidMount() {
     if (process.env.IS_BROWSER === true) {
       this.updateAppSectionLabels(this.props);
 
       // load info about CURRENT BOARD
-      this.props.topicActions.loadCurrent(this.props.params.board_id, this.props.params.namespace);
-      this.props.topicActions.fetchTopicMenu(this.props.params.board_id, this.props.params.namespace);
+      this.props.topic_actions.loadCurrent(this.props.params.board_id, this.props.params.namespace);
+      this.props.topic_actions.fetchTopicMenu(this.props.params.board_id, this.props.params.namespace);
       this.props.actions.workspaceFindById(this.props.params.namespace);
       // load TOPIC of this BOARD
-     // this.props.topicActions.find(this.props.groupKey || 'board_topic', {},this.props.params.board_id);
+     // this.props.topic_actions.find(this.props.groupKey || 'board_topic', {},this.props.params.board_id);
     }
   }
 
   componentWillReceiveProps(newProps) {
-    if (this.props.workspace.active.data.name !== newProps.workspace.active.data.name) {
+    if(this.props.workspace.active.data.name !== newProps.workspace.active.data.name) {
       this.updateAppSectionLabels(newProps);
     }
   }
 
   componentWillUpdate(newProps) {
-    if (this.props.workspace.active.data.name !== newProps.workspace.active.data.name) {
+    if(this.props.workspace.active.data.name !== newProps.workspace.active.data.name) {
       this.updateAppSectionLabels(newProps);
     }
   }
 
 
-  render() {
+  render () {
 
     // return full-page loader only if there's really no data
-    if (this.props.workspace.active.meta.isFetching || !this.props.boards.board || this.props.boards.board.loading === true) {
-      return (<AppContentCanvas header={
+    if (this.props.workspace.active.meta.isFetching || !this.props.boards.board || this.props.boards.board.loading == true) {
+      return <AppContentCanvas header={
         <h1>
           <Loader />
         </h1>
-      }/>);
+      }/>
     }
 
     return (
@@ -102,19 +93,19 @@ class Layout extends React.Component {
       },
     ];
     //if(this.props.boards.board.menu.size && this.props.boards.board.menu.size > 0) {
-    this.props.boards.board.menu.forEach(item => {
-      menu.push({
-        route: (item.link.charAt(0) !== '/' ? homeUrl + '/' + item.link : item.link),
-        text: item.label,
-      });
-    });
+      this.props.boards.board.menu.forEach(item => {
+        menu.push({
+          route: (item.link.charAt(0) !== '/' ? homeUrl + '/' + item.link : item.link),
+          text: item.label,
+        })
+      })
    // }
 
-    menu.push({route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/users`, text: 'Users'});
-    menu.push({route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/settings`, text: 'Settings'});
+    menu.push({route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/users`, text: 'Users'})
+    menu.push({route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/settings`, text: 'Settings'})
 
     return menu;
-    /*return [
+    return [
       {
         route: `/${this.props.workspace.active.data.namespace}/${this.props.boards.board.data.contextTopicKey}`,
         text: (
@@ -156,8 +147,8 @@ class Layout extends React.Component {
       // Like agile or scrum boards, custom reports?
       {route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/users`, text: 'Users'},
       {route: `/${this.props.params.namespace}/${this.props.boards.board.data.contextTopicKey}/settings`, text: 'Settings'},
-    ];*/
+    ];
   }
-}
+};
 
 export default Layout;

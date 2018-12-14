@@ -407,5 +407,5 @@
       "property": "upsert"
     }
   ],
-  "methods": []
+  "methods": {}
 }

@@ -53,13 +53,13 @@ module.exports = function(Workspace) {
       function(resolve, reject) {
         Workspace.findById(modelId, function(err, instance) {
           if (err || !instance) return reject(null, false);
-          instance.checkUserAccess(userId, function(err, isAllowed) {
+          instance.checkUserAccess(userId, function (err, isAllowed) {
             if (err || !isAllowed) return reject(null, false);
             return resolve(instance, true);
           });
         });
       });
-  };
+  }
 
   /**
    * Get IDs of all workspaces available for user to read
@@ -82,19 +82,19 @@ module.exports = function(Workspace) {
         } else {
           where = {
             accessPrivateYn: '0'
-          };
+          }
         }
         Workspace.find({where: where}, function(err, data) {
           if (err || !data) return resolve([]);
 
           data.forEach(item => {
-            ids.push(item.id);
+            ids.push(item.id)
           });
           // TODO: add workspaces that user explicitly assigned to
           resolve(ids);
         });
       });
-  };
+  }
 
   Workspace.on('attached', function() {
     Workspace.nestRemoting('topics');
@@ -184,16 +184,16 @@ module.exports = function(Workspace) {
         // lookup operations based && next()
 
        // modelInstance.applyContentParsers(() => {
-        modelInstance.getOperations(function(err, operations) {
-          if (err) return next(err);
-          modelInstance.operations = operations;
-          return next();
-        });
+          modelInstance.getOperations(function(err, operations) {
+            if (err) return next(err);
+            modelInstance.operations = operations;
+            return next();
+          });
         //});
 
       } else {
         //modelInstance.applyContentParsers(() => {
-        return next();
+          return next();
         //});
       }
     } else {
@@ -209,7 +209,7 @@ module.exports = function(Workspace) {
    * @param cb
    * @private
    */
-  Workspace.__findByKey__topics = function(namespace, nTopicId, groupKey, topicNum, cb) { // eslint-disable-line camelcase
+  Workspace.__findByKey__topics = function(namespace, nTopicId, groupKey, topicNum, cb) {
 
     const currentUser = loopback.getCurrentContext().get('currentUser');
     const userId = currentUser ? currentUser.id : null;
@@ -224,8 +224,8 @@ module.exports = function(Workspace) {
 
       wspcInstance.checkUserAccess(userId, function(err, isAllowed) {
 
-        if (err) return cb(err, null);
-        if (!isAllowed) {
+        if(err) return cb(err, null);
+        if(!isAllowed) {
           let e = new Error('Authorization Required');
           e.status = e.statusCode = 401;
           e.code = 'AUTHORIZATION_REQUIRED';
@@ -305,7 +305,7 @@ module.exports = function(Workspace) {
    * @param cb
    * @private
    */
-  Workspace.__findByKey__topics__topics = function(namespace, nTopicId, groupKey, topicNum, cb) { // eslint-disable-line camelcase
+  Workspace.__findByKey__topics__topics = function(namespace, nTopicId, groupKey, topicNum, cb) {
 
     const currentUser = loopback.getCurrentContext().get('currentUser');
     const userId = currentUser ? currentUser.id : null;
@@ -320,8 +320,8 @@ module.exports = function(Workspace) {
 
       wspcInstance.checkUserAccess(userId, function(err, isAllowed) {
 
-        if (err) return cb(err, null);
-        if (!isAllowed) {
+        if(err) return cb(err, null);
+        if(!isAllowed) {
           let e = new Error('Authorization Required');
           e.status = e.statusCode = 401;
           e.code = 'AUTHORIZATION_REQUIRED';

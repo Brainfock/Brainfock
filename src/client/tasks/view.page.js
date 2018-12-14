@@ -8,45 +8,38 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import {Link} from 'react-router';
-import {MenuItem} from 'react-bootstrap';
+var mui = require('material-ui');
+var bs = require('react-bootstrap'),
+  {Nav, NavItem, ButtonToolbar, ButtonGroup, Button, Glyphicon,  TabbedArea, TabPane, DropdownButton, MenuItem} = bs;
 
-import Issue from '../projects/components/Issue.js';
+import Issue from '../projects/components/Issue.js'
+var Loader = require('../components/Loader');
+var AppContentCanvas = require('../components/layout/AppContentCanvas');
 /**
  *
  */
-class ViewTaskPage extends React.Component {
+class ViewTaskPage extends Component {
   static contextTypes = {
     muiTheme: React.PropTypes.object,
   };
 
-  static propTypes = {
-    actions: React.PropTypes.object,
-    boards: React.PropTypes.object,
-    children: React.PropTypes.object,
-    io: React.PropTypes.object,
-    msg: React.PropTypes.object,
-    params: React.PropTypes.object,
-    topicActions: React.PropTypes.object,
-  }
-
   componentDidMount() {
-    if (process.env.IS_BROWSER === true) {
+    if(process.env.IS_BROWSER==true) {
       if (this.props.params.id) {
-        this.props.topicActions.loadTopic(this.props.params.id);
+        this.props.topic_actions.loadTopic(this.props.params.id);
       }
     }
   }
   comments() {
-    if (this.props.boards.viewTopic.type && this.props.boards.viewTopic.type.commentsEnabled) {
-      let Comments  = require('../topic/components/comments');
-      return  (<Comments
-        actions={this.props.actions}
+    if(this.props.boards.viewTopic.type && this.props.boards.viewTopic.type.commentsEnabled) {
+      var Comments  = require('../topic/components/comments');
+      return  <Comments
+        topic={this.props.boards.viewTopic}
         comments={this.props.boards.viewTopic.comments}
         io={this.props.io}
-        topic={this.props.boards.viewTopic}
-        />);
+        actions={this.props.actions} />
     }
   }
   /**
@@ -57,48 +50,43 @@ class ViewTaskPage extends React.Component {
     const viewTopic = this.props.boards.viewTopic;
     let operaitons = [];
     let i = 0;
-    if (viewTopic.operations) {
-      viewTopic.operations.forEach(function(op) {
+    if(viewTopic.operations) {
+      viewTopic.operations.forEach(function(op){
         i++;
-        let _style = {};
-        let active = false;
-        if (viewTopic.workflowStageId === op.id) {
-          _style['font-weight'] = 800;
-          active = true;
+        var _style={};
+        var active=false;
+        if(viewTopic.workflowStageId==op.id) {
+          _style['font-weight']=800;
+          active=true;
         }
-        operaitons.push(<MenuItem
-          active={active}
-          data-operation-id={op.id}
-          eventKey={i}
-          onClick={self.applyOperation}
-          >{op.name}</MenuItem>);
-      });
+        operaitons.push(<MenuItem onClick={self.applyOperation} data-operation-id={op.id} eventKey={i} active={active}>{op.name}</MenuItem>);
+      })
     }
     let style = {
-      opacity: this.props.boards.viewTopic.loading === true ? .3 : 1,
+      opacity: this.props.boards.viewTopic.loading == true ? .3 : 1,
       position: 'relative'
     };
 
     return (
       <div>
         <div className="breadcrumbs-bar" style={{
-          background: '#8982A2', // variants: 8C8D98, 7F8090, 7E848E, DAD9E6, FDFDFD
-          padding: '5px 15px',
-          margin: 0,
-          color: '#fff'
-        }}>
+            background: '#8982A2', // variants: 8C8D98, 7F8090, 7E848E, DAD9E6, FDFDFD
+            padding: '5px 15px',
+            margin: 0,
+            color: '#fff'
+          }}>
           <h4>
-            <Link style={{color: '#EFEFEF', textDecoration:'underline'}}
-                  to='/tasks'>Tasks</Link>
+            <Link to='/tasks'
+                  style={{color: '#EFEFEF',textDecoration:'underline'}}>Tasks</Link>
             {this.props.boards.viewTopic.summary && <span> > {this.props.boards.viewTopic.summary}</span>}
           </h4>
         </div>
-        <div className="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1" style={style}>
+        <div style={style} className="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
           <Issue
             actions={this.props.actions}
             io={this.props.io}
             topic={this.props.boards.viewTopic}
-            topicActions={this.props.topicActions}
+            topic_actions={this.props.topic_actions}
             />
         </div>
       </div>

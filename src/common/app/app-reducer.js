@@ -34,7 +34,7 @@ export default function authReducer(state = initialState, action) {
     case topicActions.LOAD_TOPIC_GROUP_ERROR: {
       const error = action.payload.message ? action.payload.message : null;
       if (error) {
-        alert(error);
+      	alert(error);
       }
       //return state.set('baseUrl', action.payload);
     }

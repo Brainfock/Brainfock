@@ -8,7 +8,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 import {apiPost, apiGet} from '../lib/services';
-import {toQueryString} from '../utils/model.js';
 
 export const CREATE = 'WORKSPACE_SAVE_PENDING';
 export const CREATE_ERROR = 'WORKSPACE_SAVE_ERROR';
@@ -43,7 +42,7 @@ export function postWorkspace(fields) {
             throw response;
           }
         })
-        .then(function(jsonResponce) {
+        .then(function (jsonResponce) {
           if (jsonResponce.error) {
             throw jsonResponce;
           }
@@ -88,16 +87,16 @@ export function workspaceFindById(id) {
 export function fetchWorkspaceHomepage(data) {
 
   const {
-    //location,
+    location,
     params,
-    //props,
+    props,
     app,
     users
     } = data;
 
   let query = [];
   if (users && users.viewer) {
-    query.push('access_token=' + users.viewer.authToken);
+    query.push('access_token=' + users.viewer.authToken)
   }
 
   const host = app.baseUrl;

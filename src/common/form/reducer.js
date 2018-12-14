@@ -7,6 +7,7 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import {createStore, combineReducers} from 'redux';
 import {reducer as formReducer} from 'redux-form';
 
 import {CREATE_ERROR} from '../workspace/actions';
@@ -67,14 +68,14 @@ module.exports =  formReducer.plugin({
             return { //
               ...state,
             };
-            //return {
-            //  ...state,
-            //  namespace: {
-            //    asyncError: action.payload.error.details.messages.namespace.join('; '),
-            //    touched: true,
-            //    value: state.namespace.value
-            //  }
-            //};
+            return {
+              ...state,
+              namespace: {
+                asyncError: action.payload.error.details.messages.namespace.join('; '),
+                touched: true,
+                value: state.namespace.value
+              }
+            };
           } else if (action.payload.error) {
             return { //
               ...state,
@@ -117,4 +118,4 @@ module.exports =  formReducer.plugin({
         return state;
     }
   }
-});
+})

@@ -1,10 +1,10 @@
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import React from 'react';
 
 // When UI renders thousands components, it's useful to check render time.
 // Example:
 //  @logRenderTime
-//  export default class App extends React.Component {}
+//  export default class App extends Component {}
 export default function logRenderTime(BaseComponent) {
 
   return class LogRenderTime extends Component {

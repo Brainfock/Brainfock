@@ -8,7 +8,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-addons-pure-render-mixin';
 
 import ProjectsEmpty from './components/empty-list-fallback.js';
 import MasterDetailsListView from '../projects/components/master-detail.list';
@@ -22,26 +21,18 @@ const views = {
   'boards.homepage': ListView,
 };
 
-export default class OpportunitiesIndex extends React.Component {
-  static propTypes = {
-    actions: React.PropTypes.object,
-    boards: React.PropTypes.object,
-    children: React.PropTypes.object,
-    history: React.PropTypes.object,
-    location: React.PropTypes.object,
-    msg: React.PropTypes.object,
-    params: React.PropTypes.object,
-  }
+module.exports = React.createClass({
 
   componentWillMount() {
     this.props.actions.appSetActiveSectionLabel('Opportunities');
     if (process.env.IS_BROWSER === true) {
-      //this.props.topicActions.loadTopicGroup('board');
-      //this.props.topicActions.find('project', {}/*, this.props.parentModel*/);
+      //this.props.topic_actions.loadTopicGroup('board');
+      //this.props.topic_actions.find('project', {}/*, this.props.parentModel*/);
     }
-  }
+  },
 
-  render() {
+  render: function()
+  {
     let View;
     if (views[this.props.boards.group.view]) {
       View = views[this.props.boards.group.view];
@@ -53,43 +44,47 @@ export default class OpportunitiesIndex extends React.Component {
 
     const {children, ...passProps} = this.props;
     return (
-      <PageWithNav
-        history={this.props.history}
-        menuItems={this.menuItems()}>
-        <View
-          browseAll
-          containerTopic={null}
-          disableDetails_
-          emptyListFallback={ProjectsEmpty}
-          groupBy={this.props.location.query && this.props.location.query.groupBy}
-          groupKey='opportunity'
-          listViewItem={TaskListItem}
-          {...passProps}
-          />
-      </PageWithNav>
+    <PageWithNav
+      history={this.props.history}
+      menuItems={this.menuItems()}>
+      <View
+        containerTopic={null}
+        disableDetails_
+        browseAll
+        emptyListFallback={ProjectsEmpty}
+        groupKey='opportunity'
+        listViewItem={TaskListItem}
+        groupBy={this.props.location.query && this.props.location.query.groupBy}
+        {...passProps}
+        />
+    </PageWithNav>
     );
-  }
+  },
 
   /**
    * @todo i18n
    * @returns {*[]}
    */
   menuItems() {
+    let icon;
+    if (this.props.boards.board.accessPrivateYn) {
+      icon = (<i className="fa fa-eye-slash"></i>);
+    }
     return [
       {
-        route: '/tasks/',
+        route: `/tasks/`,
         text: 'All tasks',
       },
       {
-        route: '/tasks/?filter[wfStatus][inq]=open&filter[wfStatus][inq]=progress',
+        route: `/tasks/?filter[wfStatus][inq]=open&filter[wfStatus][inq]=progress`,
         text: 'Open & in Progress',
       },
       {
-        route: '/tasks/?filter[isStarred]=1',
+        route: `/tasks/?filter[isStarred]=1`,
         text: 'Starred',
       },
       {
-        route: '/tasks/?filter[status]=draft',
+        route: `/tasks/?filter[status]=draft`,
         text: 'Drafts',
       },
       {
@@ -100,4 +95,4 @@ export default class OpportunitiesIndex extends React.Component {
       }
     ];
   }
-}
+});

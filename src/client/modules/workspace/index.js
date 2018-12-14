@@ -1,4 +1,4 @@
-module.exports = { // eslint-disable-line no-undef
+module.exports = {
   path: '/workspaces/:namespace',
 
   //getIndexRoute(location, cb) {
@@ -13,8 +13,8 @@ module.exports = { // eslint-disable-line no-undef
   getComponent(location, cb) {
     if (process.env.IS_BROWSER) {
       require.ensure([], (require) => {
-        cb(null, require('./pages/Home'));
-      });
+        cb(null, require('./pages/Home'))
+      })
     } else {
       cb(null, require('./pages/Home'));
     }
@@ -25,14 +25,14 @@ module.exports = { // eslint-disable-line no-undef
     if (process.env.IS_BROWSER)
       require.ensure([], (require) => {
         [
-          cb(null, require('./modules/settings')),
-          cb(null, require('./modules/members'))
-        ];
-      });
+        cb(null, require('./modules/settings')),
+        cb(null, require('./modules/members'))
+        ]
+      })
     else cb(null, [
       require('./modules/settings'),
       require('./modules/members'),
-    ]);
+    ])
   },
 
-};
+}

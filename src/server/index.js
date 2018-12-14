@@ -2,8 +2,8 @@ const areIntlLocalesSupported = require('intl-locales-supported');
 const config = require('./config');
 const pkg = require('../../package.json');
 
-VERSION = JSON.stringify(pkg.version); // eslint-disable-line no-undef
-VERSION_FULL = JSON.stringify(pkg.name + ' ' + pkg.version);  // eslint-disable-line no-undef
+VERSION = JSON.stringify(pkg.version);
+VERSION_FULL = JSON.stringify(pkg.name + ' ' + pkg.version);
 
 if (!process.env.NODE_ENV)
   throw new Error('Environment variable NODE_ENV isn\'t set. Remember it\'s up your production enviroment to set NODE_ENV and maybe other variables.');
@@ -22,8 +22,7 @@ if (global.Intl) {
   global.Intl = require('intl');
 }
 
-// require('babel/register')({stage: 0});
-require("babel-core/register"); // require('babel/register')({optional: ['es7']});
+require('babel/register')({stage: 0});
 
 // To ignore webpack custom loaders on server.
 config.webpackStylesExtensions.forEach(function(ext) {

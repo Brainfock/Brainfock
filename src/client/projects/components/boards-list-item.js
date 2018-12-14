@@ -7,13 +7,14 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import mui from 'material-ui';
-import {List, ListItem} from 'material-ui/List';
-import {Colors} from 'material-ui/styles';
 
-export default class Todo extends React.Component {
+import {Styles} from 'material-ui';
+const Colors = Styles.Colors;
+
+export default class Todo extends Component {
 
   static propTypes = {
     actions: PropTypes.object.isRequired,
@@ -22,7 +23,7 @@ export default class Todo extends React.Component {
     params: PropTypes.object.isRequired,
     todo: PropTypes.object.isRequired,
     topicGroupKey: PropTypes.string.isRequired,
-    viewTopic: PropTypes.object,
+    viewTopic: PropTypes.object
   };
 
   static defaultProps = {
@@ -46,14 +47,14 @@ export default class Todo extends React.Component {
         const labelConfig = JSON.parse(possibleConfig);
         if (labelConfig.bg) {
           if (Colors[labelConfig.bg]) {
-            labelStyle.backgroundColor = Colors[labelConfig.bg];
+            labelStyle.backgroundColor = Colors[labelConfig.bg]
             labelStyle.padding = '2px 3px 2px 3px';
             labelStyle.borderRadius = '3px';
           }
         }
         if (labelConfig.clr) {
           if (Colors[labelConfig.clr]) {
-            labelStyle.color = Colors[labelConfig.clr];
+            labelStyle.color= Colors[labelConfig.clr]
           }
         }
       } catch (e) {}
@@ -86,7 +87,7 @@ export default class Todo extends React.Component {
 
     let priorityLabel;
 
-    if (todo.priority) {
+    if(todo.priority) {
       let labelStyle = Object.assign({
         marginRight: todo.priority.value ? 5 : 0,
         fontWeight: 500,
@@ -97,7 +98,7 @@ export default class Todo extends React.Component {
     }
 
     let typeLabel = '';
-    if (todo.type && todo.type.name) {
+    if(todo.type && todo.type.name) {
       let labelStyle = Object.assign({
         marginRight: 5,
         fontWeight: 500,
@@ -125,7 +126,7 @@ export default class Todo extends React.Component {
 
               </div>
             }
-          /*_primaryText={
+          _primaryText={
             <div>
               <div className="pull-left" style={{marginRight:5}}>
                 <div className="stats" style={{marginRight:5, width:'100%'}}>
@@ -157,11 +158,11 @@ export default class Todo extends React.Component {
               {todo.summary}
 
             </div>
-            }*/
+            }
           secondaryText={<span>
           {priorityLabel}
           {typeLabel}
-          <span style={{fontSize: '.88em', color:'#333', fontWeight:600}}>— {todo.wfStage}</span>
+          <span style={{fontSize: '.88em',color:'#333', fontWeight:600}}>— {todo.wfStage}</span>
           {todo.text && <br />}
           {todo.text}
 

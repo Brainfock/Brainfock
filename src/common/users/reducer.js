@@ -12,8 +12,7 @@ import * as actions from '../users/actions';
 import User from './user';
 import CurrentUser from './currentUser';
 import ChangePasswordForm from './changePassword.form.js';
-import ChangeEmailForm from './changeEmail.form.js';
-import {List, Record, Map} from 'immutable';
+import {List, Range, Record, Map} from 'immutable';
 import getRandomString from '../lib/getRandomString';
 
 const InitialState = Record({
@@ -49,7 +48,7 @@ export default function usersReducer(state = initialState, action) {
     // TODO: remove 'LOGOUT' action from list when logout fetch is fixed
     case authActions.LOGOUT:
     case authActions.LOGOUT_SUCCESS: {
-      return state.set('viewer', null);
+      return state.set('viewer',null);
     }
 
     case actions.FIND:
@@ -58,7 +57,7 @@ export default function usersReducer(state = initialState, action) {
         .update('list', list => list.clear());
 
     case actions.FIND_ERROR:
-      return state.setIn(['listMeta', 'isFetching'], false);
+      return state.setIn(['listMeta', 'isFetching'], false)
 
     case actions.FIND_SUCCESS: {
       const newlist = action.payload.map((item) => {
@@ -75,7 +74,7 @@ export default function usersReducer(state = initialState, action) {
     case actions.SETUP_USER_UPDATE_FORM: {
       if (!state.getIn(['forms', 'id', action.payload.userId, action.payload.formKey])) {
         return state
-          .setIn(['forms', 'id', action.payload.userId, action.payload.formKey], new (ChangePasswordForm));
+          .setIn(['forms', 'id', action.payload.userId, action.payload.formKey], new (ChangePasswordForm))
       } else {
         return state;
       }
@@ -85,7 +84,7 @@ export default function usersReducer(state = initialState, action) {
       return state
         .setIn(['forms', 'id', userId, formKey, 'data', name], value)
         .deleteIn(['forms', 'id', userId, formKey, 'meta', 'errors', name])
-        .deleteIn(['forms', 'id', userId, formKey, 'meta', 'postedOn']);
+        .deleteIn(['forms', 'id', userId, formKey, 'meta', 'postedOn'])
     }
 
     case actions.SAVE_USER_CREATE_FORM: {
@@ -93,7 +92,6 @@ export default function usersReducer(state = initialState, action) {
       return state
         .setIn(['forms', 'id', userId, formKey, 'meta', 'isSubmitting'], true);
     }
-
     case actions.SAVE_USER_CREATE_FORM_SUCCESS: {
       const {userId, formKey} = action.meta;
       return state
@@ -129,25 +127,6 @@ export default function usersReducer(state = initialState, action) {
           .setIn(['forms', 'id', userId, formKey, 'meta', 'isSubmitting'], false);
       }
     }
-
-    case actions.SETUP_USER_PASSWORD_FORM: {
-      if (!state.getIn(['forms', 'id', action.payload.userId, 'password'])) {
-        return state
-          .setIn(['forms', 'id', action.payload.userId, 'password'], new (ChangePasswordForm));
-      } else {
-        return state;
-      }
-    }
-
-    case actions.SETUP_USER_EMAIL_FORM: {
-      if (!state.getIn(['forms', 'id', action.payload.userId, 'email'])) {
-        return state
-          .setIn(['forms', 'id', action.payload.userId, 'email'], new (ChangeEmailForm));
-      } else {
-        return state;
-      }
-    }
-
   }
 
   return state;

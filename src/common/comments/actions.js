@@ -19,8 +19,9 @@ export const POST_COMMENT_ERROR = 'POST_COMMENT_ERROR';
 
 import {apiGet, apiPost} from '../lib/services';
 
-export function loadEntityComments(entity_id) { // eslint-disable-line camelcase
-  let endpoint = 'entities/' + entity_id + '/comments?filter[include][user]'; // eslint-disable-line camelcase
+export function loadEntityComments(entity_id) {
+
+  let endpoint = 'entities/'+entity_id+'/comments?filter[include][user]' ;
 
   return ({fetch, validate}) => ({
     type: 'LOAD_COMMENTS',
@@ -39,8 +40,8 @@ export function catchComment(data) {
     payload: data
   };
 }
-export function postComment(entity_id, data) { // eslint-disable-line camelcase
-  const endpoint = 'entities/' + entity_id + '/comments?include=user'; // eslint-disable-line camelcase
+export function postComment(entity_id, data) {
+  const endpoint = 'entities/'+entity_id+'/comments?include=user';
 
   return ({fetch, validate}) => ({
     type: 'POST_COMMENT',

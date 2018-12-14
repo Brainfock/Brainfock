@@ -4,30 +4,6 @@ Changelog
 Summary of most notable changes in Brainfock project code. Changelog entries usually are split into `Features`, `Fixes` and `Style tweaks` sections.
 When makes sense, items in these section may be subdivided by application component (e.g. `Server`, `API`, `iOS Client`).
 
-## 15 Jun 2016; Sergii Gamaiunov <hello@webkadabra.com> v0.28.0:
-* Add SQL update files, see `server/db-migrations` - each release that has db schema changes (and oh there will be some) will include SQL file with respective name that should be ran once for upgrades.
-### Breaking
-* Rename  app's redux actions from `topic_actions` to `topicActions`
-### Features
-* List users of a topic
-* Invite users to topics (basic)
-### Fixes
-* Missing model `UserWorkspace`
-* Tests
-
-## 30 May 2016; Sergii Gamaiunov <hello@webkadabra.com> v0.27.0 - **public code release**:
-* Update `Loopback``
-* Provide license, copyright info
-* Add SQL DB schema file: `src/branfock_install.sql` - run it once for installation
-### Features
-* Admin: add form to create new user accounts
-* Add Special:Index support for project's Wikis
-### Style & UI tweaks
-* Add active section/module/project label to main navigation bar
-* Add basic "Opportunities" page
-### Fixes
-* Empty project menu
-
 ## 15 Mar 2016; Sergii Gamaiunov <hello@webkadabra.com> v0.26.0:
 * Add customizable terms to topics/issues (priority etc.)
 * Improve tests stack

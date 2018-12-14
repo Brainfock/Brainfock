@@ -7,15 +7,15 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-module.exports = { // eslint-disable-line no-undef
+module.exports = {
 
   path: ':userId',
 
   getComponent(location, cb) {
     if (process.env.IS_BROWSER) {
       require.ensure([], (require) => {
-        cb(null, require('./components/View'));
-      });
+        cb(null, require('./components/View'))
+      })
     } else {
       cb(null, require('./components/View'));
     }
@@ -29,4 +29,4 @@ module.exports = { // eslint-disable-line no-undef
   //    cb(null, require('./components/View'));
   //  }
   //},
-};
+}

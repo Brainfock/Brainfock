@@ -1,18 +1,18 @@
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import React from 'react';
 import Todo from './boards.board.react';
 
-export default class List extends React.Component {
+export default class List extends Component {
 
   static propTypes = {
     actions: React.PropTypes.object.isRequired,
-    children: React.PropTypes.object,
-    followItemOnClick: React.PropTypes.bool, // whether list should follow link when list item is clicked or just load u details
+    // whether list should follow link when list item is clicked or just load u details
+    followItemOnClick: React.PropTypes.bool,
     group: React.PropTypes.isRequired,
-    groupBy: React.PropTypes.string,
     itemComponent: React.PropTypes.element,
     list: React.PropTypes.isRequired,
     msg: React.PropTypes.object.isRequired,
+    groupBy: React.PropTypes.string,
   };
 
   static defaultProps = {

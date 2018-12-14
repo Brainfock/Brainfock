@@ -7,9 +7,10 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
-import Component from 'react-addons-pure-render-mixin';
+import React from 'react'
+import Component from 'react-pure-render/component';
 import {Link} from 'react-router';
+import {Paper} from 'material-ui';
 
 import fetch from '../../../../common/components/fetch';
 import {fetchWorkspaceHomepage} from '../../../../common/workspace/actions';
@@ -19,14 +20,7 @@ import Loader from '../../../components/Loader.js';
 /**
  * @todo since this is the last route in applicaiton that catches ANY route, this is where we have to handle 404 error
  */
-@fetch(fetchWorkspaceHomepage) class WorkspaceHome extends React.Component {
-
-  static propTypes = {
-    actions: React.PropTypes.object,
-    children: React.PropTypes.object,
-    msg: React.PropTypes.object,
-    workspace: React.PropTypes.object,
-  }
+@fetch(fetchWorkspaceHomepage) class WorkspaceHome extends Component {
 
   componentWillMount() {
     this.props.actions.appSetActiveSectionLabel(this.props.workspace.active.data.name || 'Workspaces');
@@ -36,7 +30,7 @@ import Loader from '../../../components/Loader.js';
 
     const workspace = this.props.workspace.active;
     if (workspace.meta.isFetching || !workspace.data.id) {
-      return <Loader noLabel/>;
+      return <Loader noLabel/>
     }
 
     const {children, ...props} = this.props;
@@ -52,10 +46,10 @@ import Loader from '../../../components/Loader.js';
             <div className="row">{React.cloneElement(children, props)} </div>
           </div>
         </div>
-      );
+      )
     }
 
-    const className = 'col-xs-6 col-sm-3';
+    const className = "col-xs-6 col-sm-3";
 
     return (
       <div>
@@ -73,7 +67,7 @@ import Loader from '../../../components/Loader.js';
                 <Link to={`/projects/?filter[workspaceId]=${workspace.data.id}`}><i className="fa fa-sitemap fa-4x"></i>
                   <br />
 
-                  <h3>Projects &amp; Initiatives</h3></Link>
+                  <h3>Projects & Initiatives</h3></Link>
 
                 <p>Manage your business</p>
               </div>
@@ -104,8 +98,8 @@ import Loader from '../../../components/Loader.js';
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default WorkspaceHome;
+export default WorkspaceHome

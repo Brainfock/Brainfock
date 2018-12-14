@@ -7,17 +7,14 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-/* global VERSION_FULL */
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
+import Router, {Route, Redirect, Link} from 'react-router';
 import mui from 'material-ui';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/MenuItem';
-import Subheader from 'material-ui/Subheader';
 
 // TODO: i18n
 // TODO: add ability to reorder & add custom elements
-let menuItems = [
+var menuItems = [
   {
     // matching any of these routes will make this link "active"
     //routes: ['projects','project'],
@@ -27,31 +24,32 @@ let menuItems = [
     text: 'Projects',
   },
   // { route: '/issues', params:{}, text: 'Issues' },
-  {route: '/tasks', params:{}, text: 'Tasks'},
-  {route: '/boards?groupBy=workspace', params:{}, text: 'Discussions'},
-  {route: '/opportunities', params:{}, text: 'Opportunities'},
-  {route: '/wiki/Homepage', params:{uid:'Index'}, text: 'Wiki'},
- // {type: MenuItem.Types.SUBHEADER, text: 'Resources'},
+  { route: '/tasks', params:{}, text: 'Tasks' },
+  { route: '/boards?groupBy=workspace', params:{}, text: 'Discussions' },
+  { route: '/opportunities', params:{}, text: 'Opportunities' },
+  { route: '/wiki/Homepage', params:{uid:'Index'}, text: 'Wiki' },
+  { type: mui.MenuItem.Types.SUBHEADER, text: 'Resources' },
   // Link to Brainfock guides in global wiki:
-  {route: '/wiki/BFK_Guide',
-    text: 'Brainfock Help'},
+  { route: '/wiki/BFK_Guide',
+    text: 'Brainfock Help' },
   // TODO: hide from non-admin users
-  //{type: MenuItem.Types.SUBHEADER, text: ' '},
-  {route: '/admin', params:{}, text: <span>System Admin <i className="fa fa-cog"></i></span>},
-  {route: '/workspaces/create', params:{}, text: 'Create Workspace'},
+  { type: mui.MenuItem.Types.SUBHEADER, text: ' '},
+  { route: '/admin', params:{}, text: <span>System Admin <i className="fa fa-cog"></i></span>},
+  { route: '/workspaces/create', params:{}, text: "Create Workspace"},
   // Link to Brainfock website & version, don't remove
-  {route: '/wiki/Brainfock:About',
+  { route: '/wiki/Brainfock:About',
     text: <div style={{
       position: 'absolute',
       bottom: 0,
       marginLeft: '-24px',
       fontSize:'11px'
     }}>
-      <img
-        alt={VERSION_FULL}
-        src="/assets/img/logo_white_bg.png"
-        style={{height:'50px'}}
-        title={VERSION_FULL}
+      <img src="/assets/img/logo_white_bg.png"
+           style={{
+                  height:"50px"
+               }}
+           alt={VERSION_FULL}
+           title={VERSION_FULL}
         />
       Powered by {VERSION_FULL}</div>
   },
@@ -62,7 +60,7 @@ let menuItems = [
  *
  * @author sergii gamaiunov <hello@webkadabra.com>
  */
-export default class AppLeftNav extends React.Component {
+export default class AppLeftNav extends Component {
 
   static propTypes = {
     history: PropTypes.object,
@@ -110,17 +108,17 @@ export default class AppLeftNav extends React.Component {
         // see if any *one* route is valid
         for (let i2 = currentItem.routes.length - 1; i2 >= 0; i2--) {
           let _routeName = currentItem.routes[i2];
-          if (this.props.history.isActive(_routeName)) {return i;};
+          if (this.props.history.isActive(_routeName)) {return i};
 
         }
       }
-      if (currentItem.route && this.props.history.isActive(currentItem.route, (currentItem.params ? currentItem.params : []))) return i;
+      if (currentItem.route && this.props.history.isActive(currentItem.route, (currentItem.params ? currentItem.params: []))) return i;
     }
   }
 
   /**
    * fired only when LeftNav has changed selected item
-   *
+   * 
    * @param e
    * @param key
    * @param payload
@@ -140,4 +138,4 @@ export default class AppLeftNav extends React.Component {
   }
 };
 
-module.exports = AppLeftNav; // eslint-disable-line no-undef
+module.exports = AppLeftNav;

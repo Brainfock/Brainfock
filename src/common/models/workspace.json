@@ -245,5 +245,5 @@
       "_comment": "principal sohuld be of lower level e.g. `createWorkspace`"
     }
   ],
-  "methods": []
+  "methods": {}
 }

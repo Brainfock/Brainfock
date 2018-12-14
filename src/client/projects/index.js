@@ -8,21 +8,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 
 import ProjectsEmpty from './components/projects-empty';
 import ListViewItem from './components/project-list-item';
 import MasterDetailsListView from './components/master-detail.list';
 
-export default class ProjectsIndex extends React.Component {
-  static propTypes = {
-    actions: React.PropTypes.object,
-    boards: React.PropTypes.object,
-    children: React.PropTypes.object,
-    location: React.PropTypes.object,
-    msg: React.PropTypes.object,
-    params: React.PropTypes.object,
-  }
+export default class ProjectsIndex extends Component {
+
   componentWillMount() {
     this.props.actions.appSetActiveSectionLabel('Projects');
   }
@@ -33,9 +26,9 @@ export default class ProjectsIndex extends React.Component {
         containerTopic={null}
         disableDetails
         emptyListFallback={ProjectsEmpty}
-        groupBy={this.props.location.query && this.props.location.query.groupBy}
-        groupKey='project'
         listViewItem={ListViewItem}
+        groupKey='project'
+        groupBy={this.props.location.query && this.props.location.query.groupBy}
         {...passProps}
         />
     );

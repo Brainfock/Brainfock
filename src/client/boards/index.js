@@ -19,25 +19,18 @@ const views = {
   'boards.homepage': ListView,
 };
 
-module.exports = React.createClass({ // eslint-disable-line no-undef
-
-  propTypes: {
-    actions: React.PropTypes.object.isRequired,
-    boards: React.PropTypes.object,
-    children: React.PropTypes.object,
-    location: React.PropTypes.object,
-    topicActions: React.PropTypes.object,
-  },
+module.exports = React.createClass({
 
   componentWillMount() {
     this.props.actions.appSetActiveSectionLabel('Discussion Boards');
     if (process.env.IS_BROWSER === true) {
-      this.props.topicActions.loadTopicGroup('board');
-      //this.props.topicActions.find('project', {}/*, this.props.parentModel*/);
+      this.props.topic_actions.loadTopicGroup('board');
+      //this.props.topic_actions.find('project', {}/*, this.props.parentModel*/);
     }
   },
 
-  render: function() {
+  render: function()
+  {
     let View;
     if (views[this.props.boards.group.view]) {
       View = views[this.props.boards.group.view];
@@ -53,8 +46,8 @@ module.exports = React.createClass({ // eslint-disable-line no-undef
         containerTopic={null}
         disableDetails
         emptyListFallback={ProjectsEmpty}
-        groupBy={this.props.location.query && this.props.location.query.groupBy}
         groupKey='board'
+        groupBy={this.props.location.query && this.props.location.query.groupBy}
         {...passProps}
         />
     );

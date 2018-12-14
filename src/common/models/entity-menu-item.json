@@ -3,12 +3,12 @@
   "base": "PersistedModel",
   "strict": false,
   "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
   "mysql": {
     "schema": "brainfock_node",
     "table": "entity_menu_item"
-  },
-  "options": {
-    "validateUpsert": true
   },
   "properties": {
     "id": {
@@ -51,5 +51,5 @@
       "permission": "DENY"
     }
   ],
-  "methods": []
+  "methods": {}
 }

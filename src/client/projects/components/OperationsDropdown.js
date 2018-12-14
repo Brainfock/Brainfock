@@ -1,17 +1,9 @@
-/**
- * Brainfock, <http://www.brainfock.org>
- *
- * Copyright (C) 2015-present Sergii Gamaiunov <hello@webkadabra.com>
- * All rights reserved.
- *
- * This source code is licensed under the GPL-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
-import {DropdownButton, MenuItem} from 'react-bootstrap';
+import {Button, DropdownButton, MenuItem} from 'react-bootstrap';
 
-export default class ProjectsEmpty extends React.Component {
+export default class ProjectsEmpty extends Component {
+
   static propTypes = {
     activeStageId: PropTypes.any,
     onSelectDelete: PropTypes.func.isRequired,
@@ -23,6 +15,7 @@ export default class ProjectsEmpty extends React.Component {
    * @returns {XML}
    */
   render() {
+
     let operaitons = [];
     let i = 0;
     const self = this;

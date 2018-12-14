@@ -1,11 +1,10 @@
-import Component from 'react-addons-pure-render-mixin';
-import DocumentTitle from '../components/Title';
+import Component from 'react-pure-render/component';
+import DocumentTitle from 'react-document-title';
 import React, {PropTypes} from 'react';
-// import ToCheck from '../home/toCheck.react';
-// import {FormattedHTMLMessage} from 'react-intl';
+import ToCheck from '../home/toCheck.react';
+import {FormattedHTMLMessage} from 'react-intl';
 
-// <FormattedHTMLMessage defaultMessage={msg.home.infoHtml} />
-export default class Home extends React.Component {
+export default class Home extends Component {
 
   // Why not .isRequired? https://github.com/rackt/react-router/issues/1505
   static propTypes = {
@@ -25,29 +24,15 @@ export default class Home extends React.Component {
     return (
       <DocumentTitle title={msg.home.title}>
         <div className="home-page" style={{
-          marginLeft:this.getTheme().width + 10
+          marginLeft:this.getTheme().width+10
         }}>
           <p>
-            {msg.home.infoHtml}
+            <FormattedHTMLMessage defaultMessage={msg.home.infoHtml} />
           </p>
+          <ToCheck msg={msg.home.toCheck} />
         </div>
       </DocumentTitle>
     );
   }
 
 }
-
-/*
- return (
- <DocumentTitle title={msg.home.title}>
- <div className="home-page" style={{
- marginLeft:this.getTheme().width + 10
- }}>
- <p>
- {msg.home.infoHtml}
- </p>
- <ToCheck msg={msg.home.toCheck} />
- </div>
- </DocumentTitle>
- );
- */

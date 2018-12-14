@@ -7,12 +7,16 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
-//import {Button} from 'react-bootstrap';
-import Select from 'react-select';
+var React = require('react'),
+    bs = require('react-bootstrap'),
+    {Button} = bs;
 
+import Select from 'react-select';
 import RemoteSelectField from './form/RemoteSelectField';
+var mui = require('material-ui');
+
 require('react-select/less/select.less');
+
 
 /**
  * Renders filters based on props.filters configuration
@@ -20,21 +24,16 @@ require('react-select/less/select.less');
  *
  * @author sergii gamaiunov <hello@webkadabra.com>
  */
-let UISimpleFilters = React.createClass({
-  propTypes: {
-    actions: React.PropTypes.any,
-    filters: React.PropTypes.any,
-    header: React.PropTypes.element,
-    onApply: React.PropTypes.any,
-    style: React.PropTypes.object,
-  },
+var UISimpleFilters = React.createClass({
+
   getInitialState: function() {
     return {
 
     };
   },
 
-  getDefaultProps() {
+  getDefaultProps: function()
+  {
     return {
       filters: [
       ],
@@ -42,85 +41,94 @@ let UISimpleFilters = React.createClass({
       onApply: function(selectedFilters) {
       },
       header:null,
-    };
+    }
   },
 
   applyFilters: function() {
+
     let send = {};
 
-    for (let i = 0; i < this.filters.length; i++) {
+    for(let i =0;i<this.filters.length;i++) {
       let filterId = this.filters[i];
-      if (this.refs[filterId]) {
+      if(this.refs[filterId]) {
         send[filterId] = this.refs[filterId].state.values;
         //console.log('filter ' +filterId + ' value:',this.refs[filterId].state.values)
-      } else {
+      }
+      else {
         send[filterId] = null;
       }
     }
 
-    this.props.onApply(send);
+    this.props.onApply(send)
 
   },
-
-  onFilterChange: function(a, b, c) {
+  onFilterChange: function(a,b,c) {
+    //console.log('onFilterChange')
+    //console.log('a',a)
+    //console.log('b',b)
   },
 
   /**
    * @todo implement master-detail view (optional)
    * @returns {*}
    */
-  render() {
-    const {filters} = this.props;
+  render: function()
+  {
+    const {filters, actions} = this.props;
     let styles = this.props.style || {};
     return (
-      <div className="clearfix" style={styles}>
+      <div style={styles} className="clearfix">
         {this.props.header}
         {filters.map(filter =>
           this.renderItem(filter)
         )}
       </div>
     );
-    //return (<div style={styles} className="clearfix">
-    //  {this.props.filters.map(this.renderItem)}
-    //   <Button onClick={this.applyFilters}>Apply</Button>
-    //  </div>);
+
+
+    return <div style={styles} className="clearfix">
+      {this.props.filters.map(this.renderItem)}
+       <Button onClick={this.applyFilters}>Apply</Button>
+      </div>
   },
   filters:[],
-  renderItem(item) {
-    if (item.type === 'select' || item.type === 'multiselect') {
+  renderItem:function(item)
+  {
+    if(item.type == 'select' || item.type == 'multiselect') {
       let props = {
         name:item.id,
         placeholder:item.label,
         options:item.options,
       };
-      if (item.type === 'multiselect') {
+      if(item.type == 'multiselect') {
         props.multi = true;
       }
       props.ref = item.id;
       this.filters.push(props.ref);
 
       // this is a must - `react-select` assumes this property to be at least empty string
-      props.value = '';
+      props.value='';
 
       let Filter;
-      if (item.endpoint) {
-        Filter = (<RemoteSelectField
+      if(item.endpoint) {
+        Filter = <RemoteSelectField
           {...props}
           endpoint={item.endpoint}
           onChange={this.onFilterChange}
-          />);
-      } else {
-        Filter = (<Select
+          />;
+      }
+      else {
+        Filter = <Select
           {...props}
           onChange={this.onFilterChange}
-          />);
+          />;
       }
 
-      return (<div className="pull-left" style={{
+      return <div className="pull-left" style={{
         minWidth:'150px',
         maxWidth:'390px',
-      }}>
-        {Filter}</div>);
+        }}>
+        {Filter}</div>;
     }
 
     // TODO: implement
@@ -148,4 +156,4 @@ let UISimpleFilters = React.createClass({
   },
 });
 
-module.exports = UISimpleFilters; // eslint-disable-line no-undef
+module.exports=UISimpleFilters;

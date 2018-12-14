@@ -7,17 +7,17 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import React from 'react';
 import Todo from './board.topic.react';
+//import Todo from './todo.react';
 
-export default class List extends React.Component {
+export default class List extends Component {
 
   static propTypes = {
-    actions: React.PropTypes.object,
+    //actions: React.PropTypes.object.isRequired,
     list: React.PropTypes.object.isRequired,
-    msg: React.PropTypes.object,
-    parentBoard: React.PropTypes.object,
+    //msg: React.PropTypes.object.isRequired
   }
 
   render() {
@@ -30,12 +30,7 @@ export default class List extends React.Component {
     return (
       <ol className="todos">
         {list.map(todo =>
-            <Todo
-              actions={actions}
-              key={todo.id}
-              parent={this.props.parentBoard}
-              todo={todo}
-              />
+            <Todo actions={actions} key={todo.id} todo={todo} parent={this.props.parentBoard} />
         )}
       </ol>
     );

@@ -7,43 +7,42 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
+import {Link} from 'react-router';
+import mui, {Styles, Avatar, IconButton} from 'material-ui';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
+const Colors = Styles.Colors;
 
-import Avatar from 'material-ui/Avatar';
-import {List, ListItem} from 'material-ui/List';
-import {Colors} from 'material-ui/styles';
-import FlatButton from 'material-ui/FlatButton';
-import IconButton from 'material-ui/IconButton';
-import Dialog from 'material-ui/Dialog';
-
-export default class Todo extends React.Component {
+export default class Todo extends Component {
 
   static propTypes = {
-    actions: PropTypes.object,
     group: PropTypes.object,
-    history: PropTypes.object,
-    isPreview: PropTypes.bool,
-    location: PropTypes.object,
-    params: PropTypes.object,
+    actions: PropTypes.object,
     todo: PropTypes.object.isRequired,
+    isPreview: PropTypes.bool
   }
 
   render() {
-    const {todo} = this.props;
+    const {actions, todo} = this.props;
 
     const color = Colors[todo.logoBackground];
-    const icon = 'fa ' + todo.logoIcon;
+    const icon = "fa "+todo.logoIcon;
 
     let privacyIcon;
     if (todo.accessPrivateYn) {
       privacyIcon = (
         <span>
           <IconButton iconClassName="fa fa-eye-slash"
-                      iconStyle={{height:'16px', fontSize:'19px'}}
-                      style={{marginTop:'-25px', height:'16px'}}
                       tooltip="Private & Invisible"
+                      style={{
+              marginTop:'-25px',
+              height:'16px'
+            }}
+                      iconStyle={{
+              height:'16px',
+              fontSize:'19px',
+            }}
             />
         </span>
       );
@@ -62,17 +61,13 @@ export default class Todo extends React.Component {
       const tooltip = (
         <Tooltip>Show only items in this workspace</Tooltip>
       );
-      rightAvatar = (<div className="">
-          <OverlayTrigger
-            id="listTooltip"
-            overlay={tooltip}
-            placement="top"
-            >
+      rightAvatar = ( <div className="">
+          <OverlayTrigger placement="top" overlay={tooltip} id="listTooltip">
             <span className='label label-info'
               onClick={(e)=>{
                 e.preventDefault();
                 e.stopPropagation();
-                this.props.history.replaceState(null, this.props.location.pathname, currentQuery);
+                this.props.history.replaceState(null, this.props.location.pathname, currentQuery)
               }}>{todo.workspace.name}
             </span>
           </OverlayTrigger>
@@ -92,37 +87,38 @@ export default class Todo extends React.Component {
     //  );
     //}
 
-    return (<ListItem
-      backgroundColor={color}
-      leftAvatar={<Avatar icon={<span className={icon}/>} />}
-      onClick={this._onClick.bind(this)}
-      primaryText={<div>{todo.summary} {privacyIcon}</div>}
-      rightAvatar={rightAvatar}
+    return <mui.ListItem
+      primaryText={<div>{todo.summary}{privacyIcon}</div>}
       secondaryText={todo.text}
+      onClick={this._onClick.bind(this)}
+      rightAvatar={rightAvatar}
+      leftAvatar={<Avatar icon={<span className={icon}/>} backgroundColor={color} />}
       > {this.confirmDialog()}
-    </ListItem>);
+    </mui.ListItem>
   }
 
   confirmDialog() {
 
-    const dialogActions = [
-      <FlatButton
+    var dialogActions = [
+      <mui.FlatButton
         label='BTN_CANCEL'
-        onClick={this._onDialogCancel}
+        secondary={true}
         onTouchTap={this._onDialogCancel}
+        onClick={this._onDialogCancel}
         ref="BTN_CANCEL"
-        secondary
         />,
-      {text:'BTN_DELETE', onClick: this.delete}
+      { text:'BTN_DELETE', onClick: this.delete }
     ];
 
-    return (<Dialog actions={dialogActions} ref="confirmDialog" title='projects_deleteDialog_TITLE'>
+    var Dialog = <mui.Dialog title='projects_deleteDialog_TITLE' ref="confirmDialog" actions={dialogActions}>
       <p>Are you sure you want to delete this project? </p>
-    </Dialog>);
+    </mui.Dialog>
+
+    return Dialog;
   }
 
   _onClick() {
-    if (this.props.isPreview === true) {
+    if(this.props.isPreview === true) {
       alert('This is a preview :)');
       return;
     }

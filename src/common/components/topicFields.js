@@ -7,9 +7,9 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-let FieldTypes = {
+var FieldTypes = {
   select:'select',
   multiselect:'multiselect',
 };
 
-module.exports = FieldTypes;
+module.exports=FieldTypes;

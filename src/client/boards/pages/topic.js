@@ -1,38 +1,35 @@
-/**
- * Brainfock, <http://www.brainfock.org>
- *
- * Copyright (C) 2015-present Sergii Gamaiunov <hello@webkadabra.com>
- * All rights reserved.
- *
- * This source code is licensed under the GPL-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
 import React from 'react';
 import {Link} from 'react-router';
-import {Card, CardHeader, Avatar, CardText} from 'material-ui';
-import {DropdownButton, MenuItem} from 'react-bootstrap';
+var mui = require('material-ui');
+var bs = require('react-bootstrap'),
+  {Nav, NavItem, ButtonToolbar, ButtonGroup, Button, Glyphicon,  TabbedArea, TabPane, DropdownButton, MenuItem} = bs;
 
-import Loader from '../../components/Loader';
-import AppContentCanvas from '../../components/layout/AppContentCanvas';
+var Loader = require('../../components/Loader');
+var AppContentCanvas = require('../../components/layout/AppContentCanvas');
+
+var ListActions =  require('../../components/UIListActions');
+
+var EmptyComponent =  React.createClass({
+  render: function() {
+    return <div className="alert alert-info">
+      <p>TopicItems_ListEmpty</p>
+    </div>
+  }
+});
+
+
 /**
  * Project Issues
  */
-let Issues = React.createClass({
-  propTypes: {
-    actions:React.PropTypes.object,
-    boards:React.PropTypes.object,
-    groupKey:React.PropTypes.string,
-    io:React.PropTypes.object,
-    params:React.PropTypes.object,
-    topicActions:React.PropTypes.object,
-  },
+var Issues = React.createClass({
+
   /**
    * This component's user-friendly name for breadcrumbs
    * @param bcComponent
    * @returns {string}
    */
   displayName: function(bcComponent) {
-    return bcComponent.props.model.attributes.summary;
+    return bcComponent.props.model.attributes.summary
   },
 
   contextTypes: {
@@ -61,23 +58,26 @@ let Issues = React.createClass({
   /**
    * prealod board info
    */
-  componentDidMount() {
+  componentDidMount: function()
+  {
+
     if (process.env.IS_BROWSER === true) {
       //// load info about CURRENT BOARD
-      //this.props.topicActions.loadCurrent(this.props.params.board_id);
+      //this.props.topic_actions.loadCurrent(this.props.params.board_id);
 
       if (!this.props.boards.groups.has(this.props.groupKey))
-        this.props.topicActions.loadTopicGroup('board')
+        this.props.topic_actions.loadTopicGroup('board')
           .then(()=> {
-            //this.props.topicActions.loadTopicGroup('board')
-          });
+            //this.props.topic_actions.loadTopicGroup('board')
+          })
 
-      //this.props.topicActions.find('project', {}/*, this.props.parentModel*/);
+      //this.props.topic_actions.find('project', {}/*, this.props.parentModel*/);
     }
 
-    if (this.props.params.id) {
-      if (process.env.IS_BROWSER === true) {
-        this.props.topicActions.loadTopic(this.props.params.id);
+    if(this.props.params.id)
+    {
+      if(process.env.IS_BROWSER==true) {
+        this.props.topic_actions.loadTopic(this.props.params.id);
         //this.props.actions.topic.query('board_topic', {}, this.props.board_id);
       }
 
@@ -89,7 +89,8 @@ let Issues = React.createClass({
       //    .done(function() {
       //      this.setState({model: model})
       //    }.bind(this))
-    } else {
+    }
+    else {
       this.transitionTo('/?ERR=board_id-3');
     }
   },
@@ -98,53 +99,48 @@ let Issues = React.createClass({
    * @returns {XML}
    */
   comments: function() {
-    if (this.props.boards.viewTopic.type && this.props.boards.viewTopic.type.commentsEnabled) {
-      let Comments  = require('../../topic/components/comments');
-      return  (<Comments
-        actions={this.props.actions}
+    if(this.props.boards.viewTopic.type && this.props.boards.viewTopic.type.commentsEnabled) {
+      var Comments  = require('../../topic/components/comments');
+      return  <Comments
+        topic={this.props.boards.viewTopic}
         comments={this.props.boards.viewTopic.comments}
         io={this.props.io}
-        topic={this.props.boards.viewTopic}
-        />);
+        actions={this.props.actions} />
     }
   },
 
   /**
    * @returns {XML}
    */
-  render: function() {
+  render: function () {
 
     const viewTopic = this.props.boards.viewTopic;
 
     let operaitons = [];
     let i = 0;
-    if (viewTopic.operations) {
-      viewTopic.operations.forEach(function(op) {
+    if(viewTopic.operations) {
+      viewTopic.operations.forEach(function(op){
         i++;
-        let _style = {};
-        let active = false;
-        if (viewTopic.workflowStageId === op.id) {
-          _style['font-weight'] = 800;
-          active = true;
+        var _style={};
+        var active=false;
+        if(viewTopic.workflowStageId==op.id) {
+          _style['font-weight']=800;
+          active=true;
         }
-        operaitons.push(<MenuItem
-          active={active}
-          data-operation-id={op.id}
-          eventKey={i}
-          onClick={self.applyOperation}
-          >{op.name}</MenuItem>);
-      });
+        operaitons.push(<MenuItem onClick={self.applyOperation} data-operation-id={op.id} eventKey={i} active={active}>{op.name}</MenuItem>);
+      })
     }
 
     let style = {
-      opacity: this.props.boards.viewTopic.loading === true ? .3 : 1,
+      opacity: this.props.boards.viewTopic.loading == true ? .3 : 1,
       position: 'relative'
     };
 
-    const BoardGroup = this.props.boards.groups.get('board');
+    const BoardGroup = this.props.boards.groups.get('board')
 
     return (
       <div>
+
         <div className="breadcrumbs-bar" style={{
           background: '#8982A2', // variants: 8C8D98, 7F8090, 7E848E, DAD9E6, FDFDFD
           padding: '5px 15px',
@@ -153,16 +149,15 @@ let Issues = React.createClass({
         }}>
           {BoardGroup &&
           <h4>
-            <Link style={{color: '#EFEFEF', textDecoration:'underline'}}
-                  to='/boards'
-                  >{BoardGroup.summary}</Link>
-            &gt; <Link style={{color: '#EFEFEF', textDecoration:'underline'}}
-                    to={`/board/${this.props.boards.board.id}/${this.props.boards.board.contextTopicKey}/`}>{this.props.boards.board.summary}</Link>
+            <Link to='/boards'
+                  style={{color: '#EFEFEF',textDecoration:'underline'}}>{BoardGroup.summary}</Link>
+            > <Link to={`/board/${this.props.boards.board.id}/${this.props.boards.board.contextTopicKey}/`}
+                    style={{color: '#EFEFEF',textDecoration:'underline'}}>{this.props.boards.board.summary}</Link>
             {this.props.boards.viewTopic.summary && <span> > {this.props.boards.viewTopic.summary}</span>}
           </h4>}
         </div>
 
-        <div className="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1" style={style}>
+        <div style={style} className="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
           <DropdownButton className="pull-right" eventKey={3} title="">
             {operaitons}
           </DropdownButton>
@@ -230,25 +225,26 @@ let Issues = React.createClass({
 
     const viewTopic = this.props.boards.viewTopic;
 
-    if (viewTopic.loading === true) {
-      return (<AppContentCanvas header={
+    if (viewTopic.loading == true) {
+      return <AppContentCanvas header={
         <h4 className="pull-left"><Loader /></h4>
-      }/>);
+      }/>
     }
 
     return (
-      <Card>
-        <CardHeader
-          avatar={viewTopic.author.username && <Avatar>{viewTopic.author.username.charAt(0)}</Avatar>}
+      <mui.Card>
+        <mui.CardHeader
+          title={viewTopic.author && <b>{viewTopic.author.username}</b>}
           subtitle={viewTopic.createdOn}
-          title={viewTopic.author && <b>{viewTopic.author.username}</b>} />
+          avatar={viewTopic.author.username && <mui.Avatar>{viewTopic.author.username.charAt(0)}</mui.Avatar>}/>
+
         {this.props.boards.viewTopic.text
-        && <CardText>{this.props.boards.viewTopic.text}</CardText>}
-      </Card>
-    );
+        && <mui.CardText>{this.props.boards.viewTopic.text}</mui.CardText>}
+      </mui.Card>
+    )
 
   }
 
 });
 
-module.exports = Issues; // eslint-disable-line no-undef
+module.exports = Issues;

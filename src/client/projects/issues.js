@@ -8,22 +8,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 
 import MasterDetailsListView from './components/master-detail.list';
 import ListViewItem from './components/issues-list-item';
 import ProjectsEmpty from './components/projects-empty';
 import IssueView from './components/Issue';
 
-export default class ProjectIssues extends React.Component {
-  static propTypes = {
-    boards: React.PropTypes.object,
-    children: React.PropTypes.object,
-    msg: React.PropTypes.object,
-    params: React.PropTypes.object,
-  }
+export default class ProjectIssues extends Component {
+
   render() {
-    const {board} = this.props.boards;
+    const {board, meta, listFilters, newTopic, formFields} = this.props.boards;
+    const msg = this.props.msg.topics;
     const {children, ...passProps} = this.props;
     return (
       <MasterDetailsListView

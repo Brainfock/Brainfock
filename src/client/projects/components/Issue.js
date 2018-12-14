@@ -7,23 +7,24 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
-import {Card, CardHeader, CardText, Avatar, FlatButton, Dialog} from 'material-ui';
+import {RaisedButton, Paper, Card, CardHeader, CardText, Avatar, FlatButton, Dialog} from 'material-ui';
 import OperationsDropdown from './OperationsDropdown.js';
 import Loader from '../../components/Loader.js';
 import Comments from '../../topic/components/comments';
 import {FormattedDate} from 'react-intl';
 import {TextField} from 'material-ui';
 
-export default class Issue extends React.Component {
+export default class Issue extends Component {
+
   static propTypes = {
     actions: PropTypes.object.isRequired,
     io: PropTypes.object.isRequired,
     isBirdview: PropTypes.bool,
     onDeleted: PropTypes.func,
     topic: PropTypes.object.isRequired,
-    topicActions: PropTypes.object.isRequired
+    topic_actions: PropTypes.object.isRequired
   };
 
   static defaultProps = {
@@ -46,6 +47,7 @@ export default class Issue extends React.Component {
    * @returns {XML}
    */
   render() {
+
     const topic = this.props.topic;
 
     const displayDate = (
@@ -63,13 +65,13 @@ export default class Issue extends React.Component {
     return (
       <div>
         <WrapperEl>
-          {topic.loading && <div style={{position:'absolute', width:'100%'}}><Loader noLabel/></div>}
+          {topic.loading && <div style={{position:'absolute',width:'100%'}}><Loader noLabel/></div>}
 
           <OperationsDropdown
             activeStageId={topic.workflowStageId}
+            operations={topic.operations}
             handleOperation={this.applyOperation.bind(this)}
             onSelectDelete={this.showDeletePrompt.bind(this)}
-            operations={topic.operations}
             />
 
 
@@ -81,25 +83,26 @@ export default class Issue extends React.Component {
 
           {topic &&
           this.state.showForm &&
-          <a href={'#'} onClick={()=>{this.setState({'showForm': false});}}>[save]</a>}
+          <a href={'#'} onClick={()=>{this.setState({'showForm': false})}}>[save]</a>}
 
           {topic &&
           <h2 style={{
-            fontWeight:800,
-            display: (this.state.showForm === false ? 'inline' : 'none')
+          fontWeight:800,
+            display: (this.state.showForm == false ? 'inline' : 'none')
           }}>
             {!this.props.isBirdview &&
             <span
               className="stats"
               title={`ID ${topic.id}`}>
-              <span className="prop" style={{
-                fontSize: '14pt',
-                margin: '0 5px 0px 0px',
-                lineHeight: '18pt',
-                verticalAlign: 'text-bottom'
-              }}>#{topic.contextTopicNum}</span></span>}
+              <span style={{
+              fontSize: '14pt',
+              margin: '0 5px 0px 0px',
+              lineHeight: '18pt',
+              verticalAlign: 'text-bottom'
+             }}
+                    className="prop">#{topic.contextTopicNum}</span></span>}
             {topic.summary}
-            <a href={'#'} onClick={()=>{this.setState({'showForm': true});}}>[edit]</a>
+            <a href={'#'} onClick={()=>{this.setState({'showForm': true})}}>[edit]</a>
             <span className="label label-primary ">
               {topic.wfStage}
             </span>
@@ -131,7 +134,7 @@ export default class Issue extends React.Component {
    * @private
    */
   applyOperation(opName) {
-    this.props.topicActions.runOperation(this.props.topic.id, opName);
+    this.props.topic_actions.runOperation(this.props.topic.id, opName);
   }
 
   renderDeleteDialog() {
@@ -186,7 +189,7 @@ export default class Issue extends React.Component {
   }
 
   doDelete() {
-    this.props.topicActions.deleteTopic(this.props.topic.id)
+    this.props.topic_actions.deleteTopic(this.props.topic.id)
       .then(({error, payload}) => {
         if (!error) {
           this.handleCloseDialog();
@@ -206,11 +209,10 @@ export default class Issue extends React.Component {
     if (this.props.topic.type && this.props.topic.type.commentsEnabled && !this.props.topic.loading) {
       return (
         <Comments
-          actions={this.props.actions}
+          topic={this.props.topic}
           comments={this.props.topic.comments}
           io={this.props.io}
-          topic={this.props.topic}
-          />
+          actions={this.props.actions}/>
       );
     } else {
       return null;

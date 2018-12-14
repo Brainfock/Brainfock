@@ -7,30 +7,23 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
-import {Link} from 'react-router';
-import {Table, TableHeader, TableRow, TableHeaderColumn, TableBody, TableRowColumn, TableFooter} from 'material-ui';
+import React from 'react'
+import {Link} from 'react-router'
+import {Table, TableHeader, TableRow, TableHeaderColumn, TableBody, TableRowColumn, TableFooter, Styles} from 'material-ui';
+const {Spacing, Colors} = Styles;
 
 import Loader from '../../../../../components/Loader';
 import UserAvatar from '../../../../../users/components/Avatar';
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 
 import {Utils} from 'material-ui';
 const Events = Utils.Events;
 
-class Users extends React.Component {
+class Users extends Component {
 
   static contextTypes = {
     muiTheme: React.PropTypes.object,
   };
-
-  static propTypes = {
-    actions: React.PropTypes.object,
-    children: React.PropTypes.object,
-    msg: React.PropTypes.object,
-    users: React.PropTypes.object,
-    workspace: React.PropTypes.object,
-  }
 
   constructor(props) {
     super(props);
@@ -44,7 +37,7 @@ class Users extends React.Component {
       enableSelectAll: false,
       deselectOnClickaway: true,
       displayRowCheckbox: false,
-      tableHeight: '300px',
+      tableHeight: `300px`,
       deviceHeight: 300,
     };
   }
@@ -87,11 +80,11 @@ class Users extends React.Component {
 
     const {children, ...props} = this.props;
 
-    if (children) {
+    if(children) {
       return React.cloneElement(children, props);
     }
 
-    const {workspace: {list, listMeta:{isFetching}}} = this.props;
+    const {workspace: {list, listMeta:{isFetching, count}}} = this.props;
     const msg = this.props.msg.users;
 
     if (isFetching === true) return (
@@ -105,34 +98,32 @@ class Users extends React.Component {
 
     return (
       <Table
-        fixedFooter={this.state.fixedFooter}
-        fixedHeader={this.state.fixedHeader}
         height={this.state.tableHeight}
-        multiSelectable={this.state.multiSelectable}
-        onRowSelection={this._onRowSelection}
+        fixedHeader={this.state.fixedHeader}
+        fixedFooter={this.state.fixedFooter}
         selectable={this.state.selectable}
-        >
-        <TableHeader displaySelectAll={false} enableSelectAll={this.state.enableSelectAll}>
+        multiSelectable={this.state.multiSelectable}
+        onRowSelection={this._onRowSelection}>
+        <TableHeader enableSelectAll={this.state.enableSelectAll} displaySelectAll={false}>
           <TableRow>
-            <TableHeaderColumn colSpan="4" style={{textAlign: 'center'}} tooltip='Super Header'>
+            <TableHeaderColumn colSpan="4" tooltip='Super Header' style={{textAlign: 'center'}}>
               <h4>Workspaces</h4>
             </TableHeaderColumn>
           </TableRow>
           <TableRow>
             <TableHeaderColumn tooltip={msg.list.column.hint.id}>ID</TableHeaderColumn>
-            <TableHeaderColumn />
+            <TableHeaderColumn></TableHeaderColumn>
             <TableHeaderColumn tooltip={msg.list.column.hint.name}>{msg.list.column.label.name}</TableHeaderColumn>
             <TableHeaderColumn tooltip={msg.list.column.hint.owner}>{msg.list.column.label.owner}</TableHeaderColumn>
           </TableRow>
         </TableHeader>
         <TableBody
           deselectOnClickaway={this.state.deselectOnClickaway}
-          displayRowCheckbox={this.state.displayRowCheckbox}
           showRowHover={this.state.showRowHover}
-          stripedRows={this.state.stripedRows}
-          >
+          displayRowCheckbox={this.state.displayRowCheckbox}
+          stripedRows={this.state.stripedRows}>
           {list.map(todo =>
-              <TableRow selectable={false} selected={false}>
+              <TableRow selected={false} selectable={false}>
                 <TableRowColumn>{todo.id}</TableRowColumn>
                 <TableRowColumn><UserAvatar user={todo}/></TableRowColumn>
                 <TableRowColumn><Link to={`/${todo.data.namespace}`}>{todo.data.name}</Link></TableRowColumn>
@@ -152,4 +143,4 @@ class Users extends React.Component {
   }
 }
 
-export default Users;
+export default Users

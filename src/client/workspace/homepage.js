@@ -6,16 +6,16 @@
  *
  * @type {{path: string, getComponent}}
  */
-module.exports = { // eslint-disable-line no-undef
+module.exports = {
   path: ':namespace',
 
   getComponent(location, cb) {
     if (process.env.IS_BROWSER) {
       require.ensure([], (require) => {
-        cb(null, require('../modules/workspace/pages/Home'));
-      });
+        cb(null, require('../modules/workspace/pages/Home'))
+      })
     } else {
       cb(null, require('../modules/workspace/pages/Home'));
     }
   }
-};
+}

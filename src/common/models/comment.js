@@ -54,31 +54,31 @@ module.exports = function(Comment) {
   });
 
   Comment.afterRemote('find', function(ctx, data, next) {
-    function populateValue($modelInstance, callback) {
-
-      marked($modelInstance.text, {
-        renderer: new marked.Renderer(),
-        gfm: true,
-        tables: true,
-        breaks: false,
-        pedantic: false,
-        sanitize: true,
-        smartLists: true,
-        smartypants: false
-      }, function(err, content) {
-        if (err) throw err;
-        $modelInstance.contentRendered = content;
-        return callback();
-      });
-    }
-
     if (ctx.result) {
+      function populateValue($modelInstance, callback) {
+
+        marked($modelInstance.text, {
+          renderer: new marked.Renderer(),
+          gfm: true,
+          tables: true,
+          breaks: false,
+          pedantic: false,
+          sanitize: true,
+          smartLists: true,
+          smartypants: false
+        }, function(err, content) {
+          if (err) throw err;
+          $modelInstance.contentRendered = content;
+          return callback();
+        });
+      }
+
       let resCount = data.length;
       let lopRes = [];
       ctx.result.forEach(function(/* SettingsField model instance */ item) {
         populateValue(item, function(result) {
           lopRes.push(1);
-          if (lopRes.length === (resCount)) {
+          if (lopRes.length == (resCount)) {
             next();
           }
         });

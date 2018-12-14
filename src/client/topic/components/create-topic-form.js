@@ -9,7 +9,8 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
+
 import mui, {Snackbar} from 'material-ui';
 import Loader from '../../components/Loader';
 import SimpleFormFactory from '../../components/UISimpleFormFactory';
@@ -21,7 +22,7 @@ import SelectField from '../../components/form/RemoteSelectField.js';
  * @category client/components/smart
  * @author sergii gamaiunov <hello@webkadabra.com>
  */
-export default class CreateTopicForm extends React.Component {
+export default class CreateTopicForm extends Component {
 
   static defaultProps = {
     sysFields: ['namespace', 'accessPrivateYn', 'createGroup']
@@ -29,15 +30,14 @@ export default class CreateTopicForm extends React.Component {
 
   static propTypes = {
     actions: React.PropTypes.any.isRequired,
+    topic_actions: React.PropTypes.any.isRequired,
     containerStore: React.PropTypes.any.isRequired,
     formData: React.PropTypes.object,
     formFields: React.PropTypes.object,
     newTopic: React.PropTypes.any.isRequired,
     params: React.PropTypes.object.isRequired,
-    sysFields: React.PropTypes.array,
-    topicActions: React.PropTypes.any.isRequired,
-    topicGroup: React.PropTypes.string.isRequired, // topic group to load form for, e.g. `issue` if we want to greate topic in group `issue`
-    workspace: React.PropTypes.object,
+    // topic group to load form for, e.g. `issue` if we want to greate topic in group `issue`
+    topicGroup: React.PropTypes.string.isRequired
   };
 
   componentWillMount() {
@@ -49,13 +49,13 @@ export default class CreateTopicForm extends React.Component {
     if (!this.props.formFields || (this.props.formFields && this.props.formFields.fields.size === 0)
       || (this.props.formFields.group !== this.props.topicGroup)) {
 
-      this.props.topicActions.loadFormFields(this.props.topicGroup,
+      this.props.topic_actions.loadFormFields(this.props.topicGroup,
         (this.props.containerStore ? this.props.containerStore.id : 0));
     }
 
     // TODO: looks like it belongs to parent component
     if (!this.props.formData) {
-      this.props.topicActions.findOrCreateForm((this.props.containerStore ? this.props.containerStore.id : 0),
+      this.props.topic_actions.findOrCreateForm((this.props.containerStore ? this.props.containerStore.id : 0),
         this.props.topicGroup, {
           // initial values for new form
           createGroup: this.props.topicGroup,
@@ -100,10 +100,10 @@ export default class CreateTopicForm extends React.Component {
       : [
         // for `react-select` we must provide {Array} with {Object}s
         {label: this.props.containerStore.summary, value: this.props.containerStore.id}
-      ];
+      ]
     }
 
-    this.props.topicActions.applyTopicFormDefaults(this.props.formData.cid, applyDefault, overwrite);
+    this.props.topic_actions.applyTopicFormDefaults(this.props.formData.cid, applyDefault, overwrite);
   }
 
   componentWillReceiveProps(newProps) {
@@ -142,55 +142,50 @@ export default class CreateTopicForm extends React.Component {
       return <Loader noLabel />;
     }
     return (
-      <form
-        className="form-horizontal"
-        onSubmit={this.onFormSubmit.bind(this)}
-        ref="frm" >
+      <form ref="frm" onSubmit={this.onFormSubmit.bind(this)} className="form-horizontal">
         {this.props.formData && this.props.formData.meta.error
         && <div className="alert alert-danger">
-          <i className="fa fa-times" onClick={this.props.topicActions.cleanErrorSummary}></i> {this.props.formData.meta.error}
+          <i onClick={this.props.topic_actions.cleanErrorSummary} className="fa fa-times"></i> {this.props.formData.meta.error}
         </div>
         }
 
         {this.props.formData && this.props.formData.meta.isSubmitting
         && <Snackbar
-          _action="undo"
-          autoHideDuration={0}
-          message="Saving..."
           openOnMount
+          message="Saving..."
           style={{
             bottom: 0,
             left:'30%'
           }}
-          /> }
+          _action="undo"
+          autoHideDuration={0} /> }
 
         {this.props.formData && this.props.formData.meta.postedOn
         && <Snackbar
-          // TODO: action to open item details
-          _action="undo"
-          autoHideDuration={3000}
-          message="Item created!"
           openOnMount
           postedOn={this.props.formData.meta.postedOn}
+          message="Item created!"
           style={{
             top: 0,
             left:'30%'
           }}
-          /> }
+          // TODO: action to open item details
+          _action="undo"
+          autoHideDuration={3000} /> }
         {this.renderForm()}
         <br />
         <mui.Checkbox
           defaultChecked={this.props.formData.data.accessPrivateYn}
           label='createForm_LABEL_access_private_yn'
           name="accessPrivateYn"
-          onCheck={(function(event, isChecked) {
-            this.props.topicActions.setNewTopicField({
-              target:{
-                name: event.target.name,
-                value: isChecked
-              }
-            }, {cid: this.props.formData.cid});
-          }).bind(this)}
+          onCheck={(function(event, isChecked){
+                this.props.topic_actions.setNewTopicField({
+                  target:{
+                    name: event.target.name,
+                    value: isChecked
+                  }
+                }, {cid: this.props.formData.cid})
+               }).bind(this)}
           ref="accessSettings"
           value="1"
           />
@@ -207,30 +202,30 @@ export default class CreateTopicForm extends React.Component {
     if (!this.props.formFields.fields || this.props.workspace.list.size === 0) {
       return <Loader />;
     }
-    if (1 === 2 && !this.props.containerStore) {
+    if (1===2 && !this.props.containerStore) {
 
-      let wspOptions = this.props.workspace.list.map(item => {
-        return {
-          label: item.data.name,
-          value: item.data.id
-        };
-      });
+      let wspOptions = this.props.workspace.list.map(item => { return {
+        label: item.data.name,
+        value: item.data.id
+      }});
+      console.log('> wspOptions', wspOptions)
+      //SelectField
 
-      return (<div className="clearfix">Select Workspace
+      return <div className="clearfix">Select Workspace
         <br />
-        <SelectField label={'Workspace'} options={wspOptions.toJS()}  value=''/>
-      </div>);
+        <SelectField options={wspOptions.toJS()} label={'Workspace'} value='' />
+      </div>
     } else {
 
-      return (
+    return (
       <div className="clearfix">
         <SimpleFormFactory
           form={this.props.formData}
           formScheme={this.props.formFields.fields}
-          handleSubmit={this.onFormSubmit.bind(this)}
           modelValues={this.props.formData.data}
           onChange={this.onChange.bind(this)}
           primaryInputName='summary'
+          handleSubmit={this.onFormSubmit.bind(this)}
           />
       </div>
     );
@@ -238,12 +233,12 @@ export default class CreateTopicForm extends React.Component {
   }
 
   onChange(e) {
-    this.props.topicActions.setNewTopicField(e, {cid: this.props.formData.cid});
+    this.props.topic_actions.setNewTopicField(e, {cid: this.props.formData.cid});
   }
 
   onFormSubmit(e) {
 
-    const {topicActions, formData} = this.props;
+    const {topic_actions, formData} = this.props;
 
     const cid = formData.cid;
     const data = formData.toJS().data;
@@ -273,7 +268,7 @@ export default class CreateTopicForm extends React.Component {
       postData.contextTopicId = this.props.containerStore.id;
 
     //actions.create(postData)
-    topicActions.postTopicFormData(cid, postData)
+    topic_actions.postTopicFormData(cid, postData)
       .then(({error, payload}) => {
         if (error) {
           // TODO: snackbar message?
@@ -281,7 +276,7 @@ export default class CreateTopicForm extends React.Component {
         } else {
           const node = ReactDOM.findDOMNode(this);
           if (!node) return;
-          let el = node.querySelector('[name="summary"]');
+          let el = node.querySelector(`[name="summary"]`);
           if (el) {
             el.focus();
           }

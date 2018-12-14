@@ -1,4 +1,4 @@
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import focusInvalidField from '../lib/focusInvalidField';
 import {Grid, Row, Col} from 'react-bootstrap';
@@ -8,7 +8,7 @@ import {Link} from 'react-router';
 if (process.env.IS_BROWSER)
   require('./login.styl');
 
-export default class Login extends React.Component {
+export default class Login extends Component {
 
   static propTypes = {
     actions: PropTypes.object.isRequired,
@@ -43,15 +43,13 @@ export default class Login extends React.Component {
 
     const {actions, auth: {form}, msg: {auth: {form: msg}}} = this.props;
 
-    let ver = VERSION;  // eslint-disable-line no-undef
-
     return (
       <div className="login" style={{paddingTop:20}}>
         <Grid>
           <Row>
             <Col sm={6} smOffset={3} xs={6} xsOffset={2}>
               <div className="headline">
-                <h1 className="brand" title={`Powered by Brainfock ${ver}`}>Brainfock</h1>
+                <h1 className="brand" title={`Powered by Brainfock ${VERSION}`}>Brainfock</h1>
                 <h2>{msg.legend}</h2>
                 </div>
               <Paper>
@@ -60,25 +58,25 @@ export default class Login extends React.Component {
                     <fieldset disabled={form.disabled}>
                       <mui.TextField
                         autoFocus
-                        fullWidth
                         hintText={msg.placeholder.email}
+                        fullWidth
                         name="email"
                         onChange={actions.setFormField}
                         value={form.fields.email}/>
                       <br />
                       <mui.TextField
-                        fullWidth
                         hintText={msg.placeholder.password}
                         name="password"
+                        fullWidth
                         onChange={actions.setFormField}
                         type="password"
                         value={form.fields.password}/>
                       <br />
                       <mui.RaisedButton
                         disabled={form.disabled}
-                        fullWidth
                         label={msg.button.login}
                         primary
+                        fullWidth
                         type="submit"
                         />
                       {form.error &&

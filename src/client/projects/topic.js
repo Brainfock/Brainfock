@@ -7,10 +7,15 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
-import Loader from '../components/Loader';
-import AppContentCanvas from '../components/layout/AppContentCanvas';
-import Issue from './components/Issue.js';
+var React = require('react');
+var mui = require('material-ui');
+var bs = require('react-bootstrap'),
+  {Nav, NavItem, ButtonToolbar, ButtonGroup, Button, Glyphicon, TabbedArea, TabPane, DropdownButton, MenuItem} = bs;
+
+var Loader = require('../components/Loader');
+var AppContentCanvas = require('../components/layout/AppContentCanvas');
+import OperationsDropdown from './components/OperationsDropdown.js'
+import Issue from './components/Issue.js'
 
 /**
  * TopicView
@@ -18,14 +23,7 @@ import Issue from './components/Issue.js';
  * @todo define propTypes
  * @author sergii gamaiunov <hello@webkadabra.com>
  */
-let TopicView = React.createClass({
-  propTypes: {
-    actions: React.PropTypes.object,
-    boards: React.PropTypes.object,
-    io: React.PropTypes.object,
-    params: React.PropTypes.object,
-    topicActions: React.PropTypes.object,
-  },
+var TopicView = React.createClass({
 
   contextTypes: {
     muiTheme: React.PropTypes.object,
@@ -34,28 +32,30 @@ let TopicView = React.createClass({
   /**
    * prealod board info
    */
-  componentDidMount: function() {
-    if (process.env.IS_BROWSER === true) {
+  componentDidMount: function () {
+    if(process.env.IS_BROWSER==true) {
       if (this.props.params.id) {
-        this.props.topicActions.loadNamespaceTopicByNum(this.props.params.namespace, this.props.params.board_id, this.props.params.group_key, this.props.params.id);
+        this.props.topic_actions.loadNamespaceTopicByNum(this.props.params.namespace, this.props.params.board_id, this.props.params.group_key, this.props.params.id);
       }
     }
   },
 
-  componentWillReceiveProps: function(newProps) {
+  componentWillReceiveProps: function (newProps) {
     if (newProps.params.namespace && newProps.params.group_key && newProps.params.id && (this.props.params !== newProps.params)) {
-      this.props.topicActions.loadNamespaceTopicByNum(this.props.params.namespace, this.props.params.board_id, this.props.params.group_key, this.props.params.id);
+      this.props.topic_actions.loadNamespaceTopicByNum(this.props.params.namespace, this.props.params.board_id, this.props.params.group_key, this.props.params.id);
     }
   },
 
   /**
    * @returns {XML}
    */
-  render: function() {
+  render: function () {
+
     const viewTopic = this.props.boards.viewTopic;
-    if (viewTopic.loading === true &&
+
+    if (viewTopic.loading == true &&
         // replace whole page by loader only if we're switching between topics, or else we get unnecessary redraw of comments etc.
-      (!viewTopic.id || parseInt(viewTopic.contextTopicNum, 10) !== parseInt(this.props.params.id, 10))) {
+      (!viewTopic.id || parseInt(viewTopic.contextTopicNum) !== parseInt(this.props.params.id))) {
 
       return (
         <AppContentCanvas header={
@@ -65,21 +65,21 @@ let TopicView = React.createClass({
     }
 
     let style = {
-      opacity: this.props.boards.viewTopic.loading === true ? .3 : 1,
+      opacity: this.props.boards.viewTopic.loading == true ? .3 : 1,
       position: 'relative'
     };
 
     return (
-      <div className="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1" style={style}>
+      <div style={style} className="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
         <Issue
           actions={this.props.actions}
           io={this.props.io}
           topic={this.props.boards.viewTopic}
-          topicActions={this.props.topicActions}
+          topic_actions={this.props.topic_actions}
           />
       </div>
     );
   },
 });
 
-module.exports = TopicView; // eslint-disable-line no-undef
+module.exports = TopicView;

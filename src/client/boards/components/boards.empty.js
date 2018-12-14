@@ -7,17 +7,16 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import {RaisedButton, Paper} from 'material-ui';
 
-export default class ProjectsEmpty extends React.Component {
+export default class ProjectsEmpty extends Component {
 
   static propTypes = {
     boards: PropTypes.object.isRequired,
-    form: PropTypes.object,
     params: PropTypes.object.isRequired,
-    topicActions: PropTypes.object.isRequired,
+    topic_actions: PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -32,6 +31,9 @@ export default class ProjectsEmpty extends React.Component {
    * @returns {XML}
    */
   render() {
+
+    const {newTopic, formFields} = this.props.boards;
+
     const formContent = React.cloneElement(this.props.form, {ref: 'formView'});
 
     let formStyles = {
@@ -61,9 +63,9 @@ export default class ProjectsEmpty extends React.Component {
               <RaisedButton
                 label="Create your first board"
                 onClick={e => this.setState({
-                  target: e.target,
-                  showForm: !this.state.showForm
-                })}
+                target: e.target,
+                showForm: !this.state.showForm
+              })}
                 primary
                 />
             </div>
@@ -83,9 +85,9 @@ export default class ProjectsEmpty extends React.Component {
                 children="Do it later"
                 href="#"
                 onClick={e => this.setState({
-                  target: e.target,
-                  showForm: !this.state.showForm
-                })}
+                target: e.target,
+                showForm: !this.state.showForm
+              })}
                 />
             </Paper>
           </div>

@@ -1,8 +1,8 @@
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import Todo from './todo.react';
 
-export default class Todos extends React.Component {
+export default class Todos extends Component {
 
   static propTypes = {
     actions: PropTypes.object.isRequired,

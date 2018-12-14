@@ -7,9 +7,10 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import * as authActions from '../auth/actions';
 import * as actions from './actions';
 import GroupSchemeRecord from './groupScheme.record.js';
-import {List, Record} from 'immutable';
+import {List, Range, Record} from 'immutable';
 import getRandomString from '../lib/getRandomString';
 
 const InitialState = Record({
@@ -38,7 +39,7 @@ export default function usersReducer(state = initialState, action) {
         .update('list', list => list.clear());
 
     case actions.FIND_ERROR:
-      return state.setIn(['listMeta', 'isFetching'], false);
+      return state.setIn(['listMeta', 'isFetching'], false)
 
     case actions.FIND_SUCCESS: {
       const newlist = action.payload.map((item) => {

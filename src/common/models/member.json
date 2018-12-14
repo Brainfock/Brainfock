@@ -11,7 +11,7 @@
     "table": "user"
   },
   "hidden": [
-    "password", "verificationToken", "challenges"
+    "password"
   ],
   "properties": {
     "realm": {
@@ -72,5 +72,5 @@
     }
   },
   "acls": [],
-  "methods": []
+  "methods": {}
 }

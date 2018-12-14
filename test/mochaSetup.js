@@ -15,9 +15,6 @@ let win = doc.defaultView;
 global.document = doc;
 global.window = win;
 
-global.VERSION = '0.0.0-test.1';
-global.FULL_VERSION = '0.0.0-test.1';
-
 // Take all properties of the window object and also attach it to the
 //  mocha global object
 propagateToGlobal(win);
@@ -25,8 +22,10 @@ propagateToGlobal(win);
 // From mocha-jsdom https://github.com/rstacruz/mocha-jsdom/blob/master/index.js#L80
 function propagateToGlobal(window) {
   for (let key in window) {
-    if (!window.hasOwnProperty(key)) continue;
-    if (key in global) continue;
+    if (!window.hasOwnProperty(key)) continue
+    if (key in global) continue
+
     global[key] = window[key]
   }
-}
+  ;
+};

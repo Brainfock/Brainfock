@@ -110,7 +110,7 @@ export default class FeaturesHandler {
           if (parentGroup) {
             resolve({
               //label: `File under ${parentGroup.name}`,
-              label: 'Select category',
+              label: `Select category`,
               // `name` is used for form inputs to identify model's attribute
               name: data.key,
               type: 'select', // todo: hasOne rather
@@ -156,7 +156,7 @@ export default class FeaturesHandler {
           // todo: pre-load options (not full list, tops 100); this has to take into account topic access, of course
           options:[],
           endpoint: `/api/topics?filter[where][groupKey]=${data.group.groupKey}`
-          + '&filter[where][contextTopicId]=' + data.contextTopic.id,
+          + '&filter[where][contextTopicId]='+data.contextTopic.id,
           // todo: add topicType IDs into filter query and only show topics that have type with enabled sub-topic option
           endpointIncludeValues: [
             {'workspaceId': 'filter[where][workspaceId]='}
@@ -314,11 +314,11 @@ export default class FeaturesHandler {
             name: data.key,
             type: 'select',
             options:[],
-            endpoint: '/api/terms/values/priority'
+            endpoint: `/api/terms/values/priority`
           });
         }
       }
-    );
+    )
   }
 
 };

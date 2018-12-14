@@ -9,48 +9,43 @@
  */
 import React from 'react';
 import mui from 'material-ui';
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import {FormattedMessage} from 'react-intl';
 import {Grid, Row, Col, Affix} from 'react-bootstrap';
-import DocumentTitle from '../../components/Title';
-import IconMenu from 'material-ui/IconMenu';
+import DocumentTitle from 'react-document-title';
+
 import Loader from '../../components/Loader';
 import ListActions from '../../components/UIListActions';
 import Form from '../../topic/components/create-topic-form';
-import ListView from '../../boards/boards.react';
-import MenuItem from 'material-ui/MenuItem';
-import Filters from '../../components/UISimpleFilters';
-import IconButton from 'material-ui/IconButton';
 
-export default class ProjectIssues extends React.Component {
+import ListView from '../../boards/boards.react';
+import ListViewItem from './issues-list-item';
+import MenuItem from 'material-ui/lib/menus/menu-item';
+import Filters from '../../components/UISimpleFilters';
+
+export default class ProjectIssues extends Component {
 
   static propTypes = {
-    actions: React.PropTypes.object,
     boards: React.PropTypes.object.isRequired,
-    children: React.PropTypes.object,
-    containerTopic: React.PropTypes.object,
-    disableDetails: React.PropTypes.bool,
-    emptyListFallback: React.PropTypes.element,
     groupKey: React.PropTypes.string.isRequired,
     history: React.PropTypes.object.isRequired,
     listViewItem: React.PropTypes.object.isRequired,
     location: React.PropTypes.object.isRequired,
     msg: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired,
-    topicActions: React.PropTypes.object.isRequired,
-    workspace: React.PropTypes.object,
+    topic_actions: React.PropTypes.object.isRequired,
   }
 
   constructor(props, props2) {
     super(props);
     this.state = {
       count:0,
-      disableDetails: true,
       filters:(props.location.query && props.location.query.filter ? props.location.query.filter : null),
       filtersOpen:false,
       loading:true,
       searchQuery:(props.location.query && props.location.query.query ? props.location.query.query : ''),
       showDetails: true,
+      disableDetails: true,
     };
   }
 
@@ -59,13 +54,13 @@ export default class ProjectIssues extends React.Component {
     if (process.env.IS_BROWSER === true) {
       const groupKey = this.props.groupKey;
       // load TOPICS of this BOARD
-      this.props.topicActions.count(groupKey, this.state.filters, this.props.params.board_id);
-      this.props.topicActions.find(groupKey, this.state.filters, this.props.params.board_id);
+      this.props.topic_actions.count(groupKey, this.state.filters, this.props.params.board_id);
+      this.props.topic_actions.find(groupKey, this.state.filters, this.props.params.board_id);
       // load available filters
-      this.props.topicActions.loadFilters(groupKey, {}, this.props.params.board_id);
+      this.props.topic_actions.loadFilters(groupKey, {}, this.props.params.board_id);
 
       if (!this.props.boards.group)
-        this.props.topicActions.loadTopicGroup(groupKey, {}/*, this.props.parentModel*/);
+        this.props.topic_actions.loadTopicGroup(groupKey, {}/*, this.props.parentModel*/);
     }
   }
 
@@ -73,8 +68,8 @@ export default class ProjectIssues extends React.Component {
     if (process.env.IS_BROWSER === true) {
       const groupKey = this.props.groupKey;
       if (newProps.location.query !== this.props.location.query) {
-        this.props.topicActions.count(groupKey, (newProps.location.query.filter || null), this.props.params.board_id);
-        this.props.topicActions.find(groupKey, (newProps.location.query.filter || null), this.props.params.board_id);
+        this.props.topic_actions.count(groupKey, (newProps.location.query.filter || null), this.props.params.board_id);
+        this.props.topic_actions.find(groupKey, (newProps.location.query.filter || null), this.props.params.board_id);
       }
     }
   }
@@ -90,7 +85,7 @@ export default class ProjectIssues extends React.Component {
     }
 
     let filterToggleButton = (
-      <IconButton
+      <mui.IconButton
         iconClassName="fa fa-filter fa-lg"
         onClick={this.toggleFilters.bind(this)}
         tooltip="Filter"
@@ -129,14 +124,14 @@ export default class ProjectIssues extends React.Component {
     const addItemForm = (
       <Form
         actions={this.props.actions}
+        topic_actions={this.props.topic_actions}
+        workspace={this.props.workspace}
         containerStore={this.props.containerTopic}
         formFields={formFields}
         newTopic={newTopic}
         params={this.props.params}
         ref="formView"
-        topicActions={this.props.topicActions}
         topicGroup={this.props.groupKey}
-        workspace={this.props.workspace}
         />
     );
 
@@ -156,14 +151,14 @@ export default class ProjectIssues extends React.Component {
     const ListActionsRendered = (
       <div className="pull-right">
         {summary}
-        <IconButton
+        <mui.IconButton
           iconClassName={detailsToggleIconClass}
           onClick={e => this.setState({
             showDetails: !this.state.showDetails,
             target: e.target
           })}
           style={{
-            display: this.props.disableDetails === true ? 'none' : '',
+            display: this.props.disableDetails == true ? 'none' : '',
             height:38,
             padding:9,
             width:38,
@@ -173,15 +168,15 @@ export default class ProjectIssues extends React.Component {
 
         <ListActions
           addItemForm={addItemForm}
-          buttonActionLabel={msg.list.addNew.button}
+          BUTTON_ACTION_LABEL={msg.list.addNew.button}
           formFields={formFields}
           msg={msg}
-          title={titleMsg}
+          TITLE={titleMsg}
           />
       </div>
     );
 
-    const iconButtonElement = <IconButton iconClassName="fa fa-list-alt" tooltip="Filter presets"/>;
+    const iconButtonElement = <mui.IconButton iconClassName="fa fa-list-alt" tooltip="Filter presets"/>;
 
     const content = this.renderListContent();
 
@@ -201,12 +196,12 @@ export default class ProjectIssues extends React.Component {
             {filterToggleButton}
 
             <Filters
-              actions={this.props.topicActions}
+              actions={this.props.topic_actions}
               containerStore={board}
               filters={listFilters}
               header={
                <div className="pull-left">
-                 <IconMenu iconButtonElement={iconButtonElement}>
+                 <mui.IconMenu iconButtonElement={iconButtonElement}>
                    <MenuItem onClick={
                     function() {
                       this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStatus][]=open`);
@@ -222,7 +217,7 @@ export default class ProjectIssues extends React.Component {
                       this.props.history.pushState(null, `/${this.props.params.namespace}/${this.props.params.board_id}/issues?filter[wfStage][]=Backlog`);
                     }.bind(this)
                    } primaryText="Backlog"/>
-                 </IconMenu>
+                 </mui.IconMenu>
                </div>
              }
               onApply={this.onApplyFilters}
@@ -280,10 +275,10 @@ export default class ProjectIssues extends React.Component {
 
     return (
       <ListView
-        // whether list should follow link when list item is clicked or just load u details
-        actions={this.props.topicActions}
-        followItemOnClick={!this.state.showDetails || !this.state.disableDetails}
+        actions={this.props.topic_actions}
         group={this.props.boards.group}
+        // whether list should follow link when list item is clicked or just load u details
+        followItemOnClick={!this.state.showDetails || !this.state.disableDetails}
         history={this.props.history}
         itemComponent={this.props.listViewItem}
         list={this.props.boards.list}

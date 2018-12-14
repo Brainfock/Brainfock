@@ -1,28 +1,14 @@
-![Brainfock](https://brainfock.files.wordpress.com/2014/11/logo_greenhex_trans.png?w=250 "Brainfock Logo")
+[![Brainfock](https://brainfock.files.wordpress.com/2014/11/logo_greenhex_trans.png?w=250)](http://brainfock.org)
 
-## Brainfock - Project and Team Management Solution
-
-[![Gitter chat https://gitter.im/Brainfock/Brainfock](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Brainfock/Brainfock?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![CircleCI](https://img.shields.io/circleci/project/Brainfock/Brainfock.svg?maxAge=7200)](https://circleci.com/gh/Brainfock/Brainfock)
-
-## Donate Bitcoin 
-
-> 1Ceg8xdYpFmyPgeqqWDBBXVztcuNsWTMpq
-
-### Fucking PayPal does not allow to get donations, because it's great to live in Ukraine. If you can, please support my metabolism with a few $ via bitcoin or https://streamlabs.com/sergiig
-
+## Brainfock — Business and Community Management Solution
 
 Written in universal JavaScript, NodeJS server with Loopback, ReactJS client with everything.
 
 Copyright (C) 2015-present Sergii Gamaiunov [@SergiiGama](https://twitter.com/SergiiGama)
 
-### Please, consider a donation to support this project. I've worked many months to build it ðŸ’ª
-
 > Brainfock is a modern web-based CMF started out as task & project management tool and ended up as something that angels might have crafted. It  will help you manage projects, project's tasks, deals, contacts, run community (discussion boards), manage documents like Wiki & much more. WIP, however!
 
-Check out ~~live demo~~-! Then, give Brainfock a star on [GitHub](https://github.com/Brainfock/Brainfock) and follow project's pages on [Twitter](https://twitter.com/brainfockapp) or [Facebook](https://www.facebook.com/Brainfock) for updates. Also, say hi to me [@SergiiGama](https://twitter.com/SergiiGama) so that I know that you know, you know. **If you like the code** you're having here and you have a really bad urge to thank me somehow - that is absolutely alright and welcomed. All the buttons and options are there, and be sure - it's worth it!  
-
-
+Follow Brainfock on [GitHub](https://github.com/Brainfock/Brainfock) or [Facebook](https://www.facebook.com/Brainfock) for updates, and say hi to me [@SergiiGama](https://twitter.com/SergiiGama) so that I know that you know, you know. Oh, and finally there is [![Gitter chat https://gitter.im/Brainfock/Brainfock](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Brainfock/Brainfock?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Features
 --------------------------
 Whether you represent a **company** or a **single developer**, Brainfock at this stage is a great product if you want to join Open Source development, as it can be a great learning source because of it's development stack with live reloads of code, rich tests and cutting-edge technologies. Project is WIP, join and support!
@@ -43,6 +29,13 @@ Whether you represent a **company** or a **single developer**, Brainfock at this
 
 ![](http://i57.tinypic.com/5cjfkh.png)
 
+Status
+--------------------------
+Currently under **heavy development**, rewriting PHP/Backbone code to Node/React. Public code release is planned with version 0.x.0-beta.1
+
+Stay tuned for updates and definitely hit me up with a quick shouts  [@SergiiGama](https://twitter.com/SergiiGama) if you've read to this point, such support means a lot!
+
+
 Tech summary
 --------------------------
 - React.js + Redux
@@ -60,7 +53,7 @@ Installation
 
 Contribution & support
 --------------------------
-Want to contribute? Great! Just create a pull request and you're in - welcome!
+Want to contribute? Great! I'll be very happy to get help. More info is coming closer to public code release.
 
 
 Contacts

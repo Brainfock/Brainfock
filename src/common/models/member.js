@@ -16,60 +16,60 @@ module.exports = function(Member) {
       'principalId': '$everyone',
       'permission': 'DENY'
     },
-    //{
+    // {
     //  'principalType': 'ROLE',
     //  'principalId': '$everyone',
     //  'permission': 'ALLOW',
     //  'property': 'create'
-    //},
-    //{
+    // },
+    // {
     //  'principalType': 'ROLE',
     //  'principalId': '$owner',
     //  'permission': 'ALLOW',
     //  'property': 'deleteById'
-    //},
-    //{
+    // },
+    // {
     //  'principalType': 'ROLE',
     //  'principalId': '$everyone',
     //  'permission': 'ALLOW',
     //  'property': 'login'
-    //},
-    //{
+    // },
+    // {
     //  'principalType': 'ROLE',
     //  'principalId': '$everyone',
     //  'permission': 'ALLOW',
     //  'property': 'logout'
-    //},
-    //{
+    // },
+    // {
     //  'principalType': 'ROLE',
     //  'principalId': '$owner',
     //  'permission': 'ALLOW',
     //  'property': 'findById'
-    //},
-    //{
+    // },
+    // {
     //  'principalType': 'ROLE',
     //  'principalId': '$owner',
     //  'permission': 'ALLOW',
     //  'property': 'updateAttributes'
-    //},
-    //{
+    // },
+    // {
     //  'principalType': 'ROLE',
     //  'principalId': '$everyone',
     //  'permission': 'ALLOW',
     //  'property': 'confirm'
-    //},
-    //{
+    // },
+    // {
     //  'principalType': 'ROLE',
     //  'principalId': '$everyone',
     //  'permission': 'ALLOW',
     //  'property': 'resetPassword',
     //  'accessType': 'EXECUTE'
-    //},
+    // },
 
     // Brainfock custom ACLs for built-in `User` model:
     {
       'principalType': 'ROLE',
-      'principalId': '$authenticated',
+      'principalId': 'Admin',
       'permission': 'ALLOW',
       'property': 'find'
     },

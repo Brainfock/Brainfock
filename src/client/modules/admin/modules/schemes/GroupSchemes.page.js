@@ -1,25 +1,20 @@
-import React from 'react';
-import {Link} from 'react-router';
-import {RadioButton, Table, TableHeader, TableRow, TableHeaderColumn, TableBody, TableRowColumn, TableFooter} from 'material-ui';
-import Loader from '../../../../components/Loader';
-import Component from 'react-addons-pure-render-mixin';
-import {Utils} from 'material-ui';
+import React from 'react'
+import {Link} from 'react-router'
+import {RadioButton, Table, TableHeader, TableRow, TableHeaderColumn, TableBody, TableRowColumn, TableFooter, Styles} from 'material-ui';
+const {Spacing, Colors} = Styles;
 
+import Loader from '../../../../components/Loader';
+
+import Component from 'react-pure-render/component';
+
+import {Utils} from 'material-ui';
 const Events = Utils.Events;
 
-class Users extends React.Component {
+class Users extends Component {
 
   static contextTypes = {
     muiTheme: React.PropTypes.object,
   };
-
-  static propTypes = {
-    actions: React.PropTypes.object,
-    children: React.PropTypes.object,
-    groupSchemes: React.PropTypes.object,
-    msg: React.PropTypes.object,
-    users: React.PropTypes.object,
-  }
 
   constructor(props) {
     super(props);
@@ -33,7 +28,7 @@ class Users extends React.Component {
       enableSelectAll: false,
       deselectOnClickaway: true,
       displayRowCheckbox: false,
-      tableHeight: '300px',
+      tableHeight: `300px`,
       deviceHeight: 300,
     };
   }
@@ -76,11 +71,11 @@ class Users extends React.Component {
 
     const {children, ...props} = this.props;
 
-    if (children) {
+    if(children) {
       return React.cloneElement(children, props);
     }
 
-    const {groupSchemes: {list, listMeta:{isFetching}}} = this.props;
+    const {groupSchemes: {list, listMeta:{isFetching, count}}} = this.props;
     const msg = this.props.msg.groupSchemes;
 
     if (isFetching === true) return (
@@ -95,16 +90,15 @@ class Users extends React.Component {
     let i = -1;
     return (
       <Table
-        fixedFooter={this.state.fixedFooter}
-        fixedHeader={this.state.fixedHeader}
         height={this.state.tableHeight}
-        multiSelectable={this.state.multiSelectable}
-        onRowSelection={this._onRowSelection}
+        fixedHeader={this.state.fixedHeader}
+        fixedFooter={this.state.fixedFooter}
         selectable={this.state.selectable}
-        >
-        <TableHeader displaySelectAll={false} enableSelectAll={this.state.enableSelectAll}>
+        multiSelectable={this.state.multiSelectable}
+        onRowSelection={this._onRowSelection}>
+        <TableHeader enableSelectAll={this.state.enableSelectAll} displaySelectAll={false}>
           <TableRow>
-            <TableHeaderColumn colSpan="4" style={{textAlign: 'center'}} tooltip='Super Header' >
+            <TableHeaderColumn colSpan="4" tooltip='Super Header' style={{textAlign: 'center'}}>
               <h4>Topic Group Schemes Management</h4>
             </TableHeaderColumn>
           </TableRow>
@@ -117,19 +111,18 @@ class Users extends React.Component {
         </TableHeader>
         <TableBody
           deselectOnClickaway={this.state.deselectOnClickaway}
-          displayRowCheckbox={this.state.displayRowCheckbox}
           showRowHover={this.state.showRowHover}
-          stripedRows={this.state.stripedRows}
-          >
+          displayRowCheckbox={this.state.displayRowCheckbox}
+          stripedRows={this.state.stripedRows}>
           {list.map(todo =>
-              <TableRow selectable={false} selected={false}>
+              <TableRow selected={false} selectable={false}>
                 <TableRowColumn>{todo.id}</TableRowColumn>
                 <TableRowColumn><Link to={`/admin/users/${todo.id}`}>{todo.name}</Link></TableRowColumn>
                 <TableRowColumn>
                   {todo.groups && todo.groups.map(group =>
                     <span>
-                      <span className="label label-primary" style={{marginRight:5, display:'inline-block'}}>{group.name}</span>
-                      {(i++) % 2 === 0 && <br />}
+                      <span className="label label-primary" style={{marginRight:5,display:'inline-block'}}>{group.name}</span>
+                      {(i++) % 2 == 0 && <br />}
                     </span>
                   )}
                 </TableRowColumn>
@@ -151,4 +144,4 @@ class Users extends React.Component {
   }
 }
 
-export default Users;
+export default Users

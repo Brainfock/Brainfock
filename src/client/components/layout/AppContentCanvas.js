@@ -9,29 +9,24 @@
  */
 let React = require('react');
 import StylePropable from 'material-ui';
+
 /**
  * AppContentCanvas is an attempt to keep code in KISS
  */
 let AppContentCanvas = React.createClass({
   mixins: [StylePropable],
 
-  propTypes: {
-    children: React.PropTypes.object,
-    header: React.PropTypes.element,
-    style: React.PropTypes.object,
-  },
-
   contextTypes: {
     muiTheme: React.PropTypes.object,
   },
 
   render() {
-    let styles = this.props.style ? this.props.style : {};
+    let styles = this.props.style?this.props.style:{};
 
     let header = this.props.header ?
         <div className="page-header clearfix">{this.props.header}</div> : null;
     return (
-        <div className="app-content-canvas bfk-browse" style={styles}>
+        <div style={styles} className="app-content-canvas bfk-browse">
           {header}
           <div className="container-fluid">
           <div className="row">
@@ -44,4 +39,4 @@ let AppContentCanvas = React.createClass({
 
 });
 
-module.exports = AppContentCanvas; // eslint-disable-line no-undef
+module.exports = AppContentCanvas;

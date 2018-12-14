@@ -1,17 +1,18 @@
 import React, {PropTypes} from 'react';
-import Component from 'react-addons-pure-render-mixin';
-import DocumentTitle from '../components/Title';
+import {FormattedMessage} from 'react-intl';
+import Component from 'react-pure-render/component';
+import DocumentTitle from 'react-document-title';
 import mui, {TextField, RaisedButton} from 'material-ui';
-import {Grid, Row, Col} from 'react-bootstrap';
-import Paper from 'material-ui/Paper';
+import {ButtonToolbar, Overlay, Popover, Grid, Row, Col} from 'react-bootstrap';
+
+import Logout from '../auth/logout.react';
 import Loader from '../components/Loader.js';
-import {CardTitle, CardText} from 'material-ui/Card';
-export default class Me extends React.Component {
+
+export default class Me extends Component {
 
   static propTypes = {
-    actions: PropTypes.object,
     msg: PropTypes.object,
-    users: PropTypes.object,
+    users: PropTypes.object
   }
 
   constructor(props) {
@@ -20,9 +21,7 @@ export default class Me extends React.Component {
       formStep: {
         email: 1
       }
-    };
-
-    // this.handleClick = this.handleClick.bind(this);
+    }
   }
 
   componentWillMount() {
@@ -31,21 +30,11 @@ export default class Me extends React.Component {
     const {users: {viewer}, actions} = this.props;
 
     if (!this.props.users.getIn(['forms', 'id', viewer.id, 'password'])) {
-      actions.setupUserPasswordForm(viewer.id);
+      actions.makeUserUpdateFormRecord(viewer.id, 'password');
     }
     if (!this.props.users.getIn(['forms', 'id', viewer.id, 'email'])) {
-      actions.setupUserEmailForm(viewer.id);
+      actions.makeUserUpdateFormRecord(viewer.id, 'email');
     }
-  }
-
-  newEmailChanged(e) {
-    this.props.actions.setUserUpdateFormField(e, viewer.id, 'email');
-  }
-  currentPasswordChanged(e) {
-    this.props.actions.setUserUpdateFormField(e, viewer.id, 'email');
-  }
-  passwordChanged(e) {
-    this.props.actions.setUserUpdateFormField(e, viewer.id, 'password');
   }
 
   renderEmailChangeForm() {
@@ -56,30 +45,29 @@ export default class Me extends React.Component {
       return (
         <span>
         <TextField
-          errorText={emailForm.meta.errors.get('newEmail') || null}
-          fullWidth
-          name='newEmail'
-          onChange={::this.newEmailChanged}
           placeholder='New Email'
+          name='newEmail'
+          fullWidth
           value={emailForm.data.newEmail}
+          errorText={emailForm.meta.errors.get('newEmail') || null}
+          onChange={(e)=>{
+                    this.props.actions.setUserUpdateFormField(e, viewer.id, 'email')
+                    }.bind(this)}
           />
         <br />
         <TextField
-          errorText={emailForm.meta.errors.get('currentPassword') || null}
-          fullWidth
-          name='currentPassword'
-          onChange={::this.currentPasswordChanged}
           placeholder='Your current password'
+          name='currentPassword'
           type='password'
+          fullWidth
           value={emailForm.data.currentPassword}
+          errorText={emailForm.meta.errors.get('currentPassword') || null}
+          onChange={(e)=>{
+                    this.props.actions.setUserUpdateFormField(e, viewer.id, 'email')
+                    }.bind(this)}
           />
         <br />
-        <RaisedButton
-          disabled={!(emailForm.data.newEmail && emailForm.data.currentPassword)}
-          label="Next"
-          primary
-          type="submit"
-          />
+        <RaisedButton type="submit" label="Next" primary disabled={!(emailForm.data.newEmail && emailForm.data.currentPassword)} />
         </span>
       );
 
@@ -88,21 +76,16 @@ export default class Me extends React.Component {
         <span>
           <p>You will receive a link to confirm your new email.</p>
         <br />
-        <RaisedButton
-          disabled={!(emailForm.data.newEmail && emailForm.data.currentPassword)}
-          label="Send confirmation link"
-          primary
-          type="submit"
-          />
+        <RaisedButton type="submit" label="Send confirmation link" primary disabled={!(emailForm.data.newEmail && emailForm.data.currentPassword)} />
           <span> </span>
-        <RaisedButton label="Cancel" onClick={(e)=>{this.resetFormStep(e, 'email');}}/>
+        <RaisedButton onClick={(e)=>{this.resetFormStep(e, 'email')}} label="Cancel" />
       </span>
           );
     }
   }
   render() {
 
-    const {msg, users: {viewer, viewer: {email}}} = this.props;
+    const {msg, users: {viewer, viewer: {email}}, actions} = this.props;
 
     const passwordForm = this.props.users.getIn(['forms', 'id', viewer.id, 'password']);
     const emailForm = this.props.users.getIn(['forms', 'id', viewer.id, 'email']);
@@ -120,7 +103,7 @@ export default class Me extends React.Component {
     return (
       <DocumentTitle title={msg.me.title}>
 
-        <Grid fluid style={{marginTop:20}}>
+        <Grid fluid={true} style={{marginTop:20}}>
           <Row style={{marginBottom:20}}>
             <Col style={{textAlign:'center'}}>
               <mui.Avatar>
@@ -138,41 +121,44 @@ export default class Me extends React.Component {
               { /*<h3>Security & Email</h3> */ }
 
               <h4>Change password</h4>
-              <form onSubmit={(e)=>{this.handleFormSubmit(e, 'password');}}>
+              <form onSubmit={(e)=>{this.handleFormSubmit(e, 'password')}}>
+
+
                 <TextField
-                  errorText={passwordForm.meta.errors.get('password') || null}
-                  fullWidth
-                  name='password'
-                  onChange={::this.passwordChanged}
                   placeholder='New Password'
+                  name='password'
                   type='password'
+                  fullWidth
                   value={passwordForm.data.password}
+                  errorText={passwordForm.meta.errors.get('password') || null}
+                  onChange={(e)=>{
+                    this.props.actions.setUserUpdateFormField(e, viewer.id, 'password')
+                    }.bind(this)}
                   />
                 <br />
-                <TextField
-                  errorText={passwordForm.meta.errors.get('confirmPassword') || null}
-                  name='confirmPassword'
-                  onChange={::this.passwordChanged}
+                { /*<TextField
                   placeholder='Type new pasword again'
+                  name='confirmPassword'
                   type='password'
                   value={passwordForm.data.confirmPassword}
+                  errorText={passwordForm.meta.errors.get('confirmPassword') || null}
+                  onChange={(e)=>{
+                    this.props.actions.setUserUpdateFormField(e, viewer.id, 'password')
+                    }.bind(this)}
                   />
                 <br />
                 <TextField
-                  errorText={passwordForm.meta.errors.get('currentPassword') || null}
-                  name='currentPassword'
-                  onChange={::this.passwordChanged}
                   placeholder='Your current password'
+                  name='currentPassword'
                   type='password'
                   value={passwordForm.data.currentPassword}
+                  errorText={passwordForm.meta.errors.get('currentPassword') || null}
+                  onChange={(e)=>{
+                    this.props.actions.setUserUpdateFormField(e, viewer.id, 'password')
+                    }.bind(this)}
                   />
-                <br />
-                <RaisedButton
-                  disabled={!(passwordForm.data.password && passwordForm.data.confirmPassword && passwordForm.data.currentPassword)}
-                  label="Save"
-                  primary
-                  type="submit"
-                  />
+                <br /> */ }
+                <RaisedButton type="submit" label="Save" primary disabled={!(passwordForm.data.password && passwordForm.data.confirmPassword && passwordForm.data.currentPassword)} />
               </form>
 
               <br />
@@ -180,21 +166,22 @@ export default class Me extends React.Component {
 
               <h4>Change email</h4>
 
-              <form onSubmit={(e)=>{this.nextFormStep(e, 'email');}}>
+              <form onSubmit={(e)=>{this.nextFormStep(e, 'email')}}>
                 {this.renderEmailChangeForm()}
               </form>
 
             </Col>
 
+            { /*
             <Col md={3} mdOffset={1} sm={6} smOffset={3}>
-              <Paper zDepth={1}>
-                <CardTitle title="Work in progress"/>
-                <CardText>
+              <mui.Paper zDepth={1}>
+                <mui.CardTitle title="Work in progress"/>
+                <mui.CardText>
                   <p>Please note that Brainfock is currently under heavy development, and many features are missing in release.</p>
                   <p>Todo list includes linking third-party accouns (Facebook, github, Twitter, LinkedIn etc.), session management, privacy settings and others. </p>
-                </CardText>
-              </Paper>
-            </Col>
+                </mui.CardText>
+              </mui.Paper>
+            </Col> */ }
 
           </Row>
         </Grid>
@@ -207,7 +194,7 @@ export default class Me extends React.Component {
   nextFormStep(e, formKey) {
     e.preventDefault();
     let state = this.state;
-    state.formStep[formKey]++;
+    state.formStep[formKey]++
     this.setState(state);
     this.setState({test:Math.random()});
   }
@@ -225,7 +212,7 @@ export default class Me extends React.Component {
     e.preventDefault();
     const data = this.props.users.getIn(['forms', 'id', this.props.users.viewer.id, formKey]).data;
 
-    this.props.actions.saveUserUpdateForm(this.props.users.viewer.id, formKey, data.toJS());
+    this.props.actions.saveUserUpdateForm(this.props.users.viewer.id, formKey, data.toJS())
   }
 
 }

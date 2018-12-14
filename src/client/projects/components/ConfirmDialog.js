@@ -7,22 +7,18 @@
  * This source code is licensed under the GPL-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
-import {FlatButton, Dialog} from 'material-ui';
+import {RaisedButton, Paper, FlatButton, Dialog} from 'material-ui';
 
-export default class ConfirmDialog extends React.Component {
+export default class ConfirmDialog extends Component {
 
   static propTypes = {
-    activeStageId: PropTypes.any,
-    deleteAction: PropTypes.function,
-    onDelete: PropTypes.function,
-    onDismiss: PropTypes.function,
-    onSelectDelete: PropTypes.func.isRequired,
     operations: PropTypes.array.isRequired,
-    show: PropTypes.bool,
-    topic: PropTypes.object,
+    onSelectDelete: PropTypes.func.isRequired,
+    activeStageId: PropTypes.any,
+
   };
 
   render() {
@@ -62,9 +58,9 @@ export default class ConfirmDialog extends React.Component {
     return (
       <Dialog
         actions={dialogActions}
-        onDismiss={this.props.onDismiss}
-        openImmediately={this.props.show}
         ref='deletePrompt'
+        openImmediately={this.props.show}
+        onDismiss={this.props.onDismiss}
         title='Topic_deleteDialog_TITLE'
         >
         {this.props.topic.meta.error && <div className="alert alert-warning">{this.props.topic.meta.error}</div>}

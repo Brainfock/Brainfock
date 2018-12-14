@@ -1,19 +1,19 @@
 export default {
   app: {
     footer: {
-      madeByHtml: 'made by <a href="https://twitter.com/webkadabra">Webkadabra</a>'
+      madeByHtml: `made by <a href="https://twitter.com/webkadabra">Webkadabra</a>`
     },
     header: {
       user: {
-        welcome: 'Logged in as',
+        welcome: `Logged in as`,
         accountButton: {
-          label: 'My account'
+          label: `My account`
         },
         signinButton: {
-          label: 'Sign in'
+          label: `Sign in`
         }
       },
-      h1: 'Home',
+      h1: `Home`,
       login: 'Login',
       me: 'Me (protected)',
       todos: 'Todos'
@@ -40,8 +40,8 @@ export default {
       title: 'Login'
     },
     validation: {
-      email: 'Email address is not valid.',
-      password: 'Password must contain at least {minLength} characters.',
+      email: `Email address is not valid.`,
+      password: `Password must contain at least {minLength} characters.`,
       required: `Please fill out {prop, select,
         email {email}
         password {password}
@@ -61,22 +61,22 @@ export default {
       itemListHtml: [
         {
           key: 'source',
-          txt: 'Server rendering.'
+          txt: `Server rendering.`
         },
         {
           key: 'development',
-          txt: 'Hot reloadable styles, components, actions, stores, messages.'
+          txt: `Hot reloadable styles, components, actions, stores, messages.`
         },
         {
           key: 'production',
-          txt: 'App performance and size in production mode (<code>npm web-start</code>)'
+          txt: `App performance and size in production mode (<code>npm web-start</code>)`
         }
       ]
     }
   },
   me: {
     title: 'Me',
-    welcome: 'Hi {email}. This is your secret page.'
+    welcome: `Hi {email}. This is your secret page.`
   },
   notFound: {
     continueMessage: 'Continue here please.',
@@ -131,7 +131,7 @@ export default {
         danger: 'Danger zone',
       },
       deleteItem: {
-        button: 'Delete this project',
+         button: 'Delete this project',
       }
       //summary: {
       //  label: 'Available to invited users only',
@@ -193,7 +193,7 @@ export default {
         danger: 'Danger zone',
       },
       deleteItem: {
-        button: 'Delete this project',
+         button: 'Delete this project',
       }
       //summary: {
       //  label: 'Available to invited users only',
@@ -257,7 +257,7 @@ export default {
         danger: 'Danger zone',
       },
       deleteItem: {
-        button: 'Delete this project',
+         button: 'Delete this project',
       }
       //summary: {
       //  label: 'Available to invited users only',

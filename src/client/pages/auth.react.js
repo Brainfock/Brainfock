@@ -1,9 +1,9 @@
-import Component from 'react-addons-pure-render-mixin';
-import DocumentTitle from '../components/Title';
+import Component from 'react-pure-render/component';
+import DocumentTitle from 'react-document-title';
 import Login from '../auth/login.react';
 import React, {PropTypes} from 'react';
 
-export default class Auth extends React.Component {
+export default class Auth extends Component {
 
   static propTypes = {
     msg: PropTypes.object

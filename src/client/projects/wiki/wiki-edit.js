@@ -8,10 +8,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, {PropTypes} from 'react';
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import {HotKeys} from 'react-hotkeys';
 import {FormattedRelative, FormattedDate} from 'react-intl';
-import {Link} from 'react-router';
+import Router, {Link, Navigation} from 'react-router';
 import {TextField, RaisedButton} from 'material-ui';
 
 // define hotkeys
@@ -19,11 +19,10 @@ const keyMap = {
   saveWiki: 'ctrl+s'
 };
 
-export default class Page extends React.Component {
+export default class Page extends Component{
 
   static propTypes = {
     actions: PropTypes.object,
-    boards: PropTypes.object,
     history: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     wiki: PropTypes.object.isRequired,
@@ -92,18 +91,18 @@ export default class Page extends React.Component {
                 <h3>{page.pageUid} - edit</h3>
                 <HotKeys handlers={handlers}>
                   <TextField
+                    ref="contentInput"
                     //hintText="Hint Text (MultiLine)"
                     defaultValue={page.content}
-                    multiLine
-                    name="content"
-                    onChange={this.props.actions.setWikiViewPageField}
-                    ref="contentInput"
-                    style={{width:'99%'}}
                     value={page.content}
+                    name="content"
+                    multiLine={true}
+                    style={{width:"99%"}}
+                    onChange={this.props.actions.setWikiViewPageField}
                     />
-                  <RaisedButton disabled={disabled}  label="Save" onClick={this.save.bind(this)} primary />
-                  &nbsp;<RaisedButton disabled={disabled} label="Cancel" onClick={this.cancelAndReturn.bind(this)} primary={false} />
-                  &nbsp;<RaisedButton disabled={disabled} label="Return" onClick={this.cancelAndReturn.bind(this)} primary={false} />
+                  <RaisedButton label="Save" primary={true}  disabled={disabled}  onClick={this.save.bind(this)}  />
+                  &nbsp;<RaisedButton label="Cancel" primary={false}  disabled={disabled} onClick={this.cancelAndReturn.bind(this)} />
+                  &nbsp;<RaisedButton label="Return" primary={false}  disabled={disabled} onClick={this.cancelAndReturn.bind(this)} />
                   <span style={{textColor:(this.state.hasBeenSaved ? '#8C8C8C' : '#C1C1C1'), paddingLeft:15}}>
                     {this.state.hasBeenSaved && page.clientSavedOn && <FormattedRelative elapsed={this.state.elapsed} value={page.clientSavedOn} />}
                     {!this.state.hasBeenSaved && page.updatedOn &&

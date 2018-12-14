@@ -9,43 +9,45 @@
  */
 import React from 'react';
 import mui from 'material-ui';
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import {FormattedMessage} from 'react-intl';
 import {Grid, Row, Col, Affix} from 'react-bootstrap';
-import DocumentTitle from '../../components/Title';
-import MenuItem from 'material-ui/MenuItem';
+import DocumentTitle from 'react-document-title';
+
 import Loader from '../../components/Loader';
 import ListActions from '../../components/UIListActions';
 import Form from '../../topic/components/create-topic-form';
+
 import ListView from '../../boards/boards.react';
+import MenuItem from 'material-ui/lib/menus/menu-item';
 import Filters from '../../components/UISimpleFilters';
 import FetchActionError from '../../components/FetchActionError';
-import IconButton from 'material-ui/IconButton';
 
-export default class ProjectIssues extends React.Component {
+export default class ProjectIssues extends Component {
+
   static propTypes = {
-    actions: React.PropTypes.object.isRequired,
     boards: React.PropTypes.object.isRequired,
-    browseAll: React.PropTypes.bool,
-    browseBoardNum: React.PropTypes.number,
-    children: React.PropTypes.any,
+
     // "Context" of this topic; a link to {Topic} by contextTopicId.
     // Must be `null` for root views (e.g. list all projects, boards etc.)
     containerTopic: React.PropTypes.any,
-    detailsComponent: React.PropTypes.element, // React Component to render in details section
-    disableDetails: React.PropTypes.bool, // disable details panel
-    emptyListFallback: React.PropTypes.element, // React Component to render is list is empty
-    groupBy: React.PropTypes.string,
+    // React Component to render in details section
+    detailsComponent: React.PropTypes.element,
+    // disable details panel
+    disableDetails: React.PropTypes.bool,
+    // React Component to render is list is empty
+    emptyListFallback: React.PropTypes.element,
     groupKey: React.PropTypes.string.isRequired,
-    history: React.PropTypes.object.isRequired, // react-router history
-    io: React.PropTypes.object,
+    // react-router history
+    history: React.PropTypes.object.isRequired,
     listViewItem: React.PropTypes.object.isRequired,
     location: React.PropTypes.object.isRequired,
     msg: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired,
+    topic_actions: React.PropTypes.object.isRequired,
     pathname: React.PropTypes.any,
-    topicActions: React.PropTypes.object.isRequired,
-    workspace: React.PropTypes.object,
+    groupBy: React.PropTypes.string,
+    browseAll: React.PropTypes.bool,
   };
 
   static contextTypes = {
@@ -80,13 +82,13 @@ export default class ProjectIssues extends React.Component {
         // load()
       } else {
 
-        this.props.topicActions.count(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
-        this.props.topicActions.find(groupKey, this.state.filters, (this.props.browseAll ? '*' : this.props.params.board_id), this.props.params.namespace);
-        this.props.topicActions.loadFilters(groupKey, {}, this.props.params.board_id);
+        this.props.topic_actions.count(groupKey, this.state.filters, this.props.params.board_id, this.props.params.namespace);
+        this.props.topic_actions.find(groupKey, this.state.filters, (this.props.browseAll ? '*' : this.props.params.board_id), this.props.params.namespace);
+        this.props.topic_actions.loadFilters(groupKey, {}, this.props.params.board_id);
       }
 
       if (!this.props.boards.group || this.props.boards.group.groupKey !== groupKey) {
-        this.props.topicActions.loadTopicGroup(groupKey);
+        this.props.topic_actions.loadTopicGroup(groupKey);
       }
     }
   }
@@ -98,8 +100,12 @@ export default class ProjectIssues extends React.Component {
   componentWillUpdate(newProps) {
 
     if (process.env.IS_BROWSER === true) {
+
+      console.log('> will update', this.props, newProps.location)
+      console.log('> will update grp ',  newProps.groupKey, this.props.groupKey)
       if (`${newProps.location.search}` !== `${this.props.location.search}`
-      || (newProps.groupKey && this.props.groupKey  && newProps.groupKey !== this.props.groupKey)) {
+      || (newProps.groupKey && this.props.groupKey  && newProps.groupKey != this.props.groupKey )) {
+
         let query = {};
         if (this.state.searchQuery) {
 
@@ -107,8 +113,8 @@ export default class ProjectIssues extends React.Component {
           query.summary = {like: queryString};
         }
         let filter = Object.assign(query, newProps.location.query.filter);
-        this.props.topicActions.count(newProps.groupKey, filter, newProps.params.board_id, newProps.params.namespace);
-        this.props.topicActions.find(newProps.groupKey, filter, (newProps.browseAll ? '*' : newProps.params.board_id), newProps.params.namespace);
+        this.props.topic_actions.count(newProps.groupKey, filter, newProps.params.board_id, newProps.params.namespace);
+        this.props.topic_actions.find(newProps.groupKey, filter, (newProps.browseAll ? '*' : newProps.params.board_id), newProps.params.namespace);
       }
     }
   }
@@ -119,7 +125,7 @@ export default class ProjectIssues extends React.Component {
     const msg = this.props.msg.topics;
 
     let filterToggleButton = (
-      <IconButton
+      <mui.IconButton
         iconClassName="fa fa-filter fa-lg"
         onClick={this.toggleFilters.bind(this)}
         tooltip="Filter"
@@ -168,16 +174,16 @@ export default class ProjectIssues extends React.Component {
 
     const addItemForm = (
       <Form
+        workspace={this.props.workspace}
         actions={this.props.actions}
+        topic_actions={this.props.topic_actions}
         containerStore={this.props.containerTopic}
         form={this.props.boards.form}
         formData={formData}
         formFields={formFields}
         newTopic={newTopic}
         params={this.props.params}
-        topicActions={this.props.topicActions}
         topicGroup={this.props.groupKey}
-        workspace={this.props.workspace}
         />
     );
 
@@ -201,7 +207,7 @@ export default class ProjectIssues extends React.Component {
     const ListActionsRendered = (
       <div className="pull-right">
         {summary}
-        <IconButton
+        <mui.IconButton
           iconClassName={detailsToggleIconClass}
           onClick={e => this.setState({
             showDetails: !this.state.showDetails,
@@ -217,13 +223,14 @@ export default class ProjectIssues extends React.Component {
 
         <ListActions
           addItemForm={addItemForm}
-          buttonActionLabel={msg.list.addNew.button}
+          BUTTON_ACTION_LABEL={msg.list.addNew.button}
           isLoading={!formData || formData.meta.isSubmitting ? true : false}
           msg={msg}
-          title={titleMsg}
+          TITLE={titleMsg}
           />
       </div>
     );
+
 
     const content = this.renderListContent();
 
@@ -249,7 +256,7 @@ export default class ProjectIssues extends React.Component {
             {filterToggleButton}
 
             <Filters
-              actions={this.props.topicActions}
+              actions={this.props.topic_actions}
               containerStore={board}
               filters={listFilters}
               onApply={this.onApplyFilters}
@@ -280,7 +287,7 @@ export default class ProjectIssues extends React.Component {
    */
   renderfilterDropdownMenu() {
 
-    const iconButtonElement = <IconButton iconClassName="fa fa-list-alt" tooltip="Filter presets"/>;
+    const iconButtonElement = <mui.IconButton iconClassName="fa fa-list-alt" tooltip="Filter presets"/>;
     return (
       <mui.IconMenu iconButtonElement={iconButtonElement} openDirection={'bottom-right'}>
         <MenuItem innerDivStyle={{fontWeight: this.state.filterId === 1 ? 600 : 400}} onClick={
@@ -379,10 +386,9 @@ export default class ProjectIssues extends React.Component {
     const groupKey = this.props.groupKey;
     return (
       <ListView
-        actions={this.props.topicActions}
+        actions={this.props.topic_actions}
         followItemOnClick={!this.state.showDetails || this.state.disableDetails}
         group={this.props.boards.group}
-        groupBy={this.props.groupBy}
         history={this.props.history}
         itemComponent={this.props.listViewItem}
         list={this.props.boards.list}
@@ -391,6 +397,7 @@ export default class ProjectIssues extends React.Component {
         params={this.props.params}
         topicGroupKey={groupKey}
         viewTopic={this.props.boards.viewTopic}
+        groupBy={this.props.groupBy}
         />
     );
   }
@@ -417,17 +424,15 @@ export default class ProjectIssues extends React.Component {
 
     if (this.props.detailsComponent) {
       const Details = this.props.detailsComponent;
-      return (
-        <Details
-          actions={this.props.actions}
-          io={this.props.io}
-          onDeleted={()=>{
-            // TODO: close details panel?
-          }}
-          topic={this.props.boards.viewTopic}
-          topicActions={this.props.topicActions}
+      return <Details
+        actions={this.props.actions}
+        io={this.props.io}
+        onDeleted={()=>{
+          // TODO: close details panel?
+        }.bind(this)}
+        topic={this.props.boards.viewTopic}
+        topic_actions={this.props.topic_actions}
         />
-      );
     } else {
       return (
         <mui.Paper>
@@ -470,4 +475,4 @@ export default class ProjectIssues extends React.Component {
     if (e.key === 'Enter')
       this.applySearchQuery();
   }
-}
+};

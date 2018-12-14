@@ -14,19 +14,12 @@
     ]
   },
   "User": {
-    "dataSource": "db"
+    "dataSource": "db",
+    "public": true
   },
   "Member": {
     "dataSource": "db",
     "public": true
-  },
-  "UserWorkspace": {
-    "dataSource": "db",
-    "public": false
-  },
-  "UserTopic": {
-    "dataSource": "db",
-    "public": false
   },
   "AccessToken": {
     "dataSource": "db",
@@ -185,5 +178,9 @@
     "public": true,
     "$promise": {},
     "$resolved": true
+  },
+  "user": {
+    "dataSource": "db",
+    "public": true
   }
 }

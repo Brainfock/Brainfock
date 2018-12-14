@@ -1,10 +1,9 @@
 {
   "db": {
-    "host": "127.0.0.1",
+    "host": "localhost",
     "port": 0,
-    "url": "http://localhost",
     "database": "brainfock_node",
-    "password": "",
+    "password": "root",
     "name": "db",
     "connector": "mysql",
     "user": "root",

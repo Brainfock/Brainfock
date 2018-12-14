@@ -8,8 +8,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import Component from 'react-addons-pure-render-mixin';
+import Component from 'react-pure-render/component';
 import mui from 'material-ui';
+import Select from 'react-select';
+
+import Loader from './Loader';
 import RemoteSelectField from './form/RemoteSelectField';
 /**
  * Simple factory to build basic forms' UIs;
@@ -22,23 +25,7 @@ import RemoteSelectField from './form/RemoteSelectField';
  * @author sergii gamaiunov <hello@webkadabra.com>
  * @type {*|exports|module.exports}
  */
-class Page extends React.Component {
-
-  constructor(props) {
-    super(props);
-    // This binding is necessary to make `this` work in the callback
-    this.onDatepickerChange = this.onDatepickerChange.bind(this);
-    this.checkboxChanged = this.checkboxChanged.bind(this);
-  }
-
-  checkboxChanged(event, isChecked) {
-    this.props.onChange({
-      target:{
-        name: event.target.name,
-        value: isChecked
-      }
-    });
-  }
+class Page extends Component{
 
   static propTypes = {
     form: React.PropTypes.any.isRequired,
@@ -46,7 +33,7 @@ class Page extends React.Component {
     handleSubmit: React.PropTypes.func,
     modelValues: React.PropTypes.object,
     onChange: React.PropTypes.func.isRequired,
-    primaryInputName: React.PropTypes.string,
+    primaryInputName: React.PropTypes.string
   };
 
   render() {
@@ -58,13 +45,13 @@ class Page extends React.Component {
    * @returns {XML}
    */
   renderForm() {
-    if (!this.props.formScheme) {
+    if(!this.props.formScheme) {
       return <div></div>;
     }
-    return (<div className="clearfix">
+    return <div className="clearfix">
       {this.props.formScheme.map(this.renderItem.bind(this))}
       { /*<mui.RaisedButton primary={true} onClick={this.handleSubmit} label="Save" />*/ }
-    </div>);
+    </div>
   }
 
   /**
@@ -120,8 +107,8 @@ class Page extends React.Component {
 
     if (this.props.modelValues && this.props.modelValues[item.name]) {
       props.value = this.props.modelValues[item.name];
-    } else if (item.value) {
-      props.value = item.value;
+    } else {
+      if (item.value) props.value = item.value;
     }
 
     if (item.type === 'select' || item.type === 'multiselect') {
@@ -143,13 +130,12 @@ class Page extends React.Component {
 
       props.onChange = (function(newValue, newValues) {
         // in case of multiselect, pass `newValues` - form data has to be normalized before POSTing, see actions
-        this.onReactSelectChange(newValue, newValues, item.name);
-      }).bind(this);
+        this.onReactSelectChange(newValue, newValues, item.name)}).bind(this);
 
       // `react-select` does not like unset value, at least empty {String} is required
       if (!props.value) props.value = '';
 
-      //let FilterComponent = Select;
+      let FilterComponent = Select;
 
       if (item.endpoint) {
         props.endpoint = item.endpoint;
@@ -167,13 +153,13 @@ class Page extends React.Component {
                   ? this.props.form.data[prop][0].value
                   : this.props.form.data[prop][0];
 
-                props.endpoint += '&' + includeSettings[prop] + filterValue;
+                props.endpoint += '&'+includeSettings[prop]+filterValue;
               }
             }
           }
           props.endpointIncludeValues = item.endpointIncludeValues;
         }
-        //FilterComponent = RemoteSelectField;
+        FilterComponent = RemoteSelectField;
       }
 
       return (
@@ -213,12 +199,19 @@ class Page extends React.Component {
 
       props.label = item.label;
       if (item.value === true) props.defaultChecked = true;
-      // TODO: FIX
+
       return (
         <div  style={{'width':'100%'}}>
           <mui.Checkbox
             {...props}
-            onCheck={this.checkboxChanged}
+            onCheck={(function(event, isChecked){
+              this.props.onChange({
+                target:{
+                  name: event.target.name,
+                  value: isChecked
+                }
+              });
+             }).bind(this)}
             />
         </div>
       );
@@ -235,7 +228,7 @@ class Page extends React.Component {
 
       let Datepicker = (
         <mui.DatePicker {...props}
-          onChange={(nill, newDate)=>{this.onDatepickerChange(newDate, item.name);}}
+          onChange={(nill, newDate)=>{this.onDatepickerChange(newDate, item.name)}.bind(this)}
         />
       );
 
@@ -254,4 +247,4 @@ class Page extends React.Component {
   }
 };
 
-module.exports = Page; // eslint-disable-line no-undef
+module.exports = Page;
