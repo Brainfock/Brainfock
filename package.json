@@ -99,7 +99,7 @@
     "ip": "^1.0.2",
     "jest": "^18.1.0",
     "localforage": "^1.4.3",
-    "loopback": "~2.27.0",
+    "loopback": "~3.27.0",
     "loopback-boot": "~2.12.2",
     "loopback-connector-mysql": "~2.2.0",
     "loopback-datasource-juggler": "~2.40.1",
