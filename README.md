@@ -9,8 +9,7 @@
 
 > 1Ceg8xdYpFmyPgeqqWDBBXVztcuNsWTMpq
 
-### Fucking PayPal does not allow to get donations, because it's great to live in Ukraine. If you can, please support my metabolism with a few $ via bitcoin or https://streamlabs.com/sergiig
-
+### Fucking PayPal does not allow to get donations, because it's great to live in Ukraine. Fuck PayPal!
 
 Written in universal JavaScript, NodeJS server with Loopback, ReactJS client with everything.
 
