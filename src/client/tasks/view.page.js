@@ -55,7 +55,7 @@ class ViewTaskPage extends React.Component {
    */
   render() {
     const viewTopic = this.props.boards.viewTopic;
-    let operaitons = [];
+    let operations = [];
     let i = 0;
     if (viewTopic.operations) {
       viewTopic.operations.forEach(function(op) {
@@ -66,7 +66,7 @@ class ViewTaskPage extends React.Component {
           _style['font-weight'] = 800;
           active = true;
         }
-        operaitons.push(<MenuItem
+        operations.push(<MenuItem
           active={active}
           data-operation-id={op.id}
           eventKey={i}
